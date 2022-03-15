@@ -1,0 +1,12 @@
+{"data":{},"level":"debug","msg":"prince log Debug","time":"2022-03-06 23:33:56.312871"}
+{"data":{},"level":"info","msg":"prince log Info","time":"2022-03-06 23:33:56.313132"}
+{"data":{"WithField01":"WithFieldValue01 中国，我爱你"},"level":"debug","msg":"prince log Debug WithField","time":"2022-03-06 23:33:56.313236"}
+{"data":{},"level":"debug","msg":"prince log Debug 00","time":"2022-03-06 23:33:56.313579"}
+{"data":{},"level":"info","msg":"prince log Info 00","time":"2022-03-06 23:33:56.313803"}
+{"data":{"WithField01":"WithFieldValue01 中国，我爱你 00"},"level":"debug","msg":"prince log Debug WithField","time":"2022-03-06 23:33:56.313875"}
+{"data":{},"level":"debug","msg":"prince log Debug","time":"2022-03-15 20:37:10.201354"}
+{"data":{},"level":"info","msg":"prince log Info","time":"2022-03-15 20:37:10.201980"}
+{"data":{"WithField01":"WithFieldValue01 中国，我爱你"},"level":"debug","msg":"prince log Debug WithField","time":"2022-03-15 20:37:10.202018"}
+{"data":{},"level":"debug","msg":"prince log Debug 00","time":"2022-03-15 20:37:10.202087"}
+{"data":{},"level":"info","msg":"prince log Info 00","time":"2022-03-15 20:37:10.202118"}
+{"data":{"WithField01":"WithFieldValue01 中国，我爱你 00"},"level":"debug","msg":"prince log Debug WithField","time":"2022-03-15 20:37:10.202134"}
