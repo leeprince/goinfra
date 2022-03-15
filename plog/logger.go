@@ -53,7 +53,7 @@ func SetOutput(output io.Writer) {
 // 实现：github.com/sirupsen/logrus@v1.8.1/entry.go@getCaller 方法
 // 说明：retrieves the name of the first non-logrus calling function（译：检索第一个非logrus调用函数的名称）
 // 	1. 外部直接调用 Debug, Print, Info, Warn, Error, Fatal or Panic 等记录日志方法，记录的起始标记实际是 logger 的方法的位置（检索第一个非logrus调用函数的名称）
-// 	2. 开启标记之后，外部调用正确方式：需配合使用 WithXXX().记录日志方法(...)
+// 	2. 开启标记之后，外部调用正确方式：外部调用的地方配合使用 WithXXX().记录日志方法(...)
 func SetReportCaller(reportCaller bool) {
 	logger.SetReportCaller(reportCaller)
 }

@@ -4,6 +4,7 @@ import (
     jsoniter "github.com/json-iterator/go"
     "github.com/sirupsen/logrus"
     "goinfra/plog/formatters"
+    "goinfra/plog/hooks"
     "goinfra/resource/file"
     "io"
     "os"
@@ -34,7 +35,7 @@ func SetFormatterJsonInter(jsoniterAPI jsoniter.API) {
         PrettyPrint:      false,
         JSON:             jsoniterAPI,
     }
-    logger.SetFormatter(formatter)
+    SetFormatter(formatter)
 }
 
 // dirPath 支持多层级目录结构
@@ -59,16 +60,17 @@ func SetOutputFile(dirPath, filename string, isBothStdout bool) error {
     }
     
     if logger.Out == nil {
-        logger.SetOutput(writer)
+        SetOutput(writer)
     }
     
     if isBothStdout {
         // 支持 logger.Out 和 *io.file(可用于io) 的记录日志方式
         // MultiWriter同时接受了3种数据类型，分别是io.Writer、*os.File、io.WriteCloser
-        logger.SetOutput(io.MultiWriter(logger.Out, writer))
+        SetOutput(io.MultiWriter(logger.Out, writer))
     } else {
-        logger.SetOutput(writer)
+        SetOutput(writer)
     }
+    
     return nil
 }
 
@@ -79,8 +81,10 @@ func SetOutputFile(dirPath, filename string, isBothStdout bool) error {
 // AddHookOfReportCaller
 //  目标：检索第一个非 plog 包调用函数的名称
 func AddHookOfReportCaller(reportCaller bool) {
-    // TODO: [添加钩子，关闭默认的ReportCaller] - prince_todo 2022/3/6 下午11:59
-	logger.SetReportCaller(reportCaller)
+    // 开启 ReportCaller
+	SetReportCaller(true)
+	
+    AddHook(hooks.NewReportCallerHook(logrus.DebugLevel))
 }
 
 // --- 设置 logger 参数 - end
