@@ -16,5 +16,5 @@
 > 原始的 SetReportCaller，需特殊使用方可记录实际调用日志者的标记。具体说明：logger.go@SetReportCaller
 4. 日志切割（日志旋转） `SetOutputRotateFile`
 5. 记录同一个请求的 logID 标识 `WithFiledLogID`
-6. sentry
+6. 添加 `sentry` 告警 
 

@@ -34,8 +34,8 @@ func SetLogger(l *logrus.Logger) {
 	logger.Logger = l
 }
 
-func GetLogger() *logrus.Logger {
-	return logger.Logger
+func GetLogger() Plog {
+	return logger
 }
 
 // --- 设置 logger 参数
