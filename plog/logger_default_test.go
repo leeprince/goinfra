@@ -41,7 +41,7 @@ func TestDefaultLoggerWithField(t *testing.T) {
 }
 
 func TestDefaultLoggerSetReportCaller(t *testing.T) {
-    SetReportCaller(true, false)
+    SetReportCaller(true)
     Debug("prince log Debug SetReportCaller")
     Debugf("prince log Debugf SetReportCaller")
     Debugln("prince log Debugln SetReportCaller")

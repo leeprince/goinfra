@@ -58,14 +58,14 @@ func SetOutput(output io.Writer) {
 // 		1. 外部直接调用 Debug, Print, Info, Warn, Error, Fatal or Panic 等记录日志方法，记录的起始标记实际是 logger 的方法的位置（检索第一个非logrus调用函数的名称）
 // 		2. 开启标记之后，外部调用正确方式：外部调用的地方配合使用 WithXXX().记录日志方法(...)
 // 目标：兼容原始的 logger.SetReportCaller() 方法，并且检索第一个非 plog 包调用函数的名称。外部可以直接使用本包中的 Debug, Print, Info, Warn, Error, Fatal or Panic 等记录日志方法，即可记录日志调用者的标记
-// 请求参数说明： reportCaller == true && isAddHook == true 时，自动添加钩子 `AddHookReportCaller`
+// 请求参数说明： reportCaller == true 自动添加钩子 `AddHookReportCaller` 实现目标
 // 使用注意：
 // 	1. 返回的 Plog 结构体当作 gorm.io/gorm 的 writer 时，gorm 会自动打印调用者的标记到 msg 中，无需打开此设置。即使打开记录的也是 gorm.io/gorm 的 logger 调用 github.com/sirupsen/logrus 的 Printf 的位置
-func SetReportCaller(reportCaller bool, isAddHook bool, levels ...logrus.Level) {
+func SetReportCaller(reportCaller bool, levels ...logrus.Level) {
 	// 开启 ReportCaller
  	logger.SetReportCaller(reportCaller)
 	
- 	if !reportCaller || !isAddHook {
+ 	if !reportCaller {
  		return
 	}
 	addHookReportCaller(levels...)
