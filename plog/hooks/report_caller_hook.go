@@ -25,7 +25,7 @@ var (
 )
 
 const (
-    myLoggerPackageFuncMark = "goinfra/plog."
+    myLoggerPackageFuncMark = "github.com/leeprince/goinfra/plog."
 )
 
 const (
@@ -109,3 +109,5 @@ func (h *ReportCallerHook) getPackageName(f string) string {
     
     return f
 }
+
+

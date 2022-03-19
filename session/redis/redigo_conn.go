@@ -3,7 +3,7 @@ package redis
 import (
     "fmt"
     "github.com/gomodule/redigo/redis"
-    "goinfra/config"
+    "github.com/leeprince/goinfra/config"
 )
 
 /**

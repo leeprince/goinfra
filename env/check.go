@@ -1,6 +1,6 @@
 package env
 
-import "goinfra/constants"
+import "github.com/leeprince/goinfra/constants"
 
 /**
  * @Author: prince.lee <leeprince@foxmail.com>

@@ -1,7 +1,7 @@
-package go_redis
+package goredis
 
 import (
-    "goinfra/config"
+    "github.com/leeprince/goinfra/config"
     "time"
 )
 

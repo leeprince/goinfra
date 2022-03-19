@@ -4,8 +4,8 @@ import (
     "context"
     "fmt"
     "github.com/go-redis/redis/v8"
-    "goinfra/config"
-    "goinfra/constants"
+    "github.com/leeprince/goinfra/config"
+    "github.com/leeprince/goinfra/constants"
 )
 
 /**

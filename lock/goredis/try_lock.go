@@ -1,4 +1,4 @@
-package go_redis
+package goredis
 
 import (
     "context"

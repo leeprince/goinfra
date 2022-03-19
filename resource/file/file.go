@@ -1,7 +1,7 @@
 package file
 
 import (
-	"goinfra/constants"
+	"github.com/leeprince/goinfra/constants"
 	"io/ioutil"
 	"os"
 	"path/filepath"

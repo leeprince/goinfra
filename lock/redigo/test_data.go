@@ -1,7 +1,7 @@
 package redigo
 
 import (
-    "goinfra/config"
+    "github.com/leeprince/goinfra/config"
     "time"
 )
 

@@ -71,7 +71,7 @@ type JSONFormatter struct {
 }
 
 // Format renders a single log entry
-// 参考：github.com/sirupsen/logrus@v1.8.1/json_formatter.go
+// 参考：github.com/sirupsen/logrus@v1.8.1/json_formatter.go@Format
 func (f *JSONFormatter) Format(entry *logrus.Entry) ([]byte, error) {
 	data := make(logrus.Fields, len(entry.Data)+4)
 	for k, v := range entry.Data {

@@ -2,7 +2,7 @@ package plog_test
 
 import (
     "fmt"
-    "goinfra/plog"
+    "github.com/leeprince/goinfra/plog"
     "testing"
 )
 
@@ -23,7 +23,7 @@ func TestSetReportCallerLogger(t *testing.T) {
     fmt.Println(">>>>> 002")
     plog.NewDefaultLogger()
     plog.Debug("prince log Debug SetReportCaller")
-    plog.AddHookOfReportCaller(true)
+    plog.AddHookReportCaller()
     plog.Debug("prince log Debug SetReportCaller 01")
     plog.WithField("WithField01", "WithFieldValue01").Debug("prince log Debug WithField")
 }

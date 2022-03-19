@@ -14,7 +14,7 @@ func NewDefaultLogger() {
         TimestampFormat:   "2006-01-02 15:04:05.000000",
         DisableTimestamp:  false,
         DisableHTMLEscape: true,
-        DataKey:           "data", // 允许将用户通过WithXXX设置的所有参数，放入该字段中，并且支持嵌套。不设置则平铺所有参数
+        DataKey:           "context", // 允许将用户通过WithXXX设置的所有参数，放入该字段中，并且支持嵌套。不设置则平铺所有参数
         FieldMap: logrus.FieldMap{
             logrus.FieldKeyTime: "time",
         },

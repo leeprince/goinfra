@@ -1,10 +1,10 @@
-package go_redis
+package goredis
 
 import (
     "context"
     "fmt"
     "github.com/go-redis/redis/v8"
-    goinfraRedis "goinfra/session/redis"
+    goinfraRedis "github.com/leeprince/goinfra/session/redis"
     "testing"
     "time"
 )

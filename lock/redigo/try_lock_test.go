@@ -3,7 +3,7 @@ package redigo
 import (
     "fmt"
     "github.com/gomodule/redigo/redis"
-    goinfraRedis "goinfra/session/redis"
+    goinfraRedis "github.com/leeprince/goinfra/session/redis"
     "testing"
 )
 
