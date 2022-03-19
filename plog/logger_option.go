@@ -136,14 +136,7 @@ func SetOutputRotateFile(dirPath, filename string, isBothStdout bool, rotationFi
 
 // AddHookReportCaller
 //  目标：检索第一个非 plog 包调用函数的名称
-// 对比logrus 的 SetReportCaller 方法
-//  是否记录日志调用者的标记(位置信息)。
-//  实现：github.com/sirupsen/logrus@v1.8.1/entry.go@getCaller 方法
-//  说明：retrieves the name of the first non-logrus calling function（译：检索第一个非 logrus 包调用函数的名称）
-func AddHookReportCaller(levels ...logrus.Level) {
-    // 开启 ReportCaller
-    SetReportCaller(true)
-    
+func addHookReportCaller(levels ...logrus.Level) {
     AddHook(hooks.NewReportCallerHook(levels...))
 }
 

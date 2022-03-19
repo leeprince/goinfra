@@ -50,6 +50,7 @@ func (h *ReportCallerHook) Levels() []logrus.Level {
     return h.levels
 }
 
+// 参考：github.com/sirupsen/logrus@v1.8.1/entry.go@getCaller 方法
 // 本方法可以优化为直接利用 frames := runtime.CallersFrames(pcs[:depth]) 去固定 plog 包应跳过的追踪栈
 func (h *ReportCallerHook) Fire(entry *logrus.Entry) error {
     // cache this package's fully-qualified name

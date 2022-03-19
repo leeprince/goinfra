@@ -16,14 +16,14 @@ func TestSetReportCallerLogger(t *testing.T) {
     fmt.Println(">>>>> 001")
     plog.NewDefaultLogger()
     plog.Debug("prince log Debug SetReportCaller")
-    plog.SetReportCaller(true)
+    plog.SetReportCaller(true, false)
     plog.Debug("prince log Debug SetReportCaller 01")
     plog.WithField("WithField01", "WithFieldValue01").Debug("prince log Debug WithField")
     
     fmt.Println(">>>>> 002")
     plog.NewDefaultLogger()
     plog.Debug("prince log Debug SetReportCaller")
-    plog.AddHookReportCaller()
+    plog.SetReportCaller(true, true)
     plog.Debug("prince log Debug SetReportCaller 01")
     plog.WithField("WithField01", "WithFieldValue01").Debug("prince log Debug WithField")
 }

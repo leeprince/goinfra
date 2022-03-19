@@ -80,7 +80,7 @@ func TestSetOutputFile(t *testing.T) {
 func TestSetReportCallerLogger(t *testing.T) {
     NewDefaultLogger()
     Debug("prince log Debug SetReportCaller")
-    SetReportCaller(true)
+    SetReportCaller(true, false)
     Debug("prince log Debug SetReportCaller 01")
     WithField("WithField01", "WithFieldValue01").Debug("prince log Debug WithField")
     
@@ -89,7 +89,7 @@ func TestSetReportCallerLogger(t *testing.T) {
     Debug("prince log Debug SetReportCaller")
     // 因为 AddHookReportCaller 目标是`检索第一个非 plog 包调用函数的名称`, 所以在当前包中测试不准确
     // 测试 AddHookReportCaller 的方法应在与 plog 包同目录的 plog_test 的 logger_option_test.go 中测试
-    AddHookReportCaller()
+    SetReportCaller(true, true)
     Debug("prince log Debug SetReportCaller 01")
     WithField("WithField01", "WithFieldValue01").Debug("prince log Debug WithField")
 }
