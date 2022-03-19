@@ -1,4 +1,4 @@
-package constants
+package consts
 
 /**
  * @Author: prince.lee <leeprince@foxmail.com>

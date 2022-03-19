@@ -13,10 +13,16 @@ import (
  * @Desc:
  */
 
+type Plog struct {
+	*logrus.Logger
+}
+
 var (
-	logger *logrus.Logger
+	logger Plog
     once   sync.Once
 )
+
+
 
 func init() {
     once.Do(func() {
@@ -25,11 +31,11 @@ func init() {
 }
 
 func SetLogger(l *logrus.Logger) {
-	logger = l
+	logger.Logger = l
 }
 
 func GetLogger() *logrus.Logger {
-	return logger
+	return logger.Logger
 }
 
 // --- 设置 logger 参数

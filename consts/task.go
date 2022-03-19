@@ -1,4 +1,4 @@
-package constants
+package consts
 
 /**
  * @Author: prince.lee <leeprince@foxmail.com>
@@ -7,6 +7,7 @@ package constants
  */
 
 const (
-    retryDefaultNum = 3 // 重试次数
-    retryDefaultNum = 3 // 重试时间
+    RetryDefaultNum = 3 // 重试次数
 )
+
+var RetryDefaulTime = 3 // 重试间隔时间

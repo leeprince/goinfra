@@ -1,6 +1,8 @@
 package env
 
-import "github.com/leeprince/goinfra/constants"
+import (
+    "github.com/leeprince/goinfra/consts"
+)
 
 /**
  * @Author: prince.lee <leeprince@foxmail.com>
@@ -10,7 +12,7 @@ import "github.com/leeprince/goinfra/constants"
 
 func IsProd(env string) (is bool) {
     is = false
-    if env == constants.EnvProd {
+    if env == consts.EnvProd {
         is = true
     }
     return
@@ -18,7 +20,7 @@ func IsProd(env string) (is bool) {
 
 func IsProdOrUat(env string) (is bool) {
     is = false
-    if env == constants.EnvProd || env == constants.EnvUat  {
+    if env == consts.EnvProd || env == consts.EnvUat  {
         is = true
     }
     return
@@ -26,7 +28,7 @@ func IsProdOrUat(env string) (is bool) {
 
 func IsLocal(env string) (is bool) {
     is = false
-    if env == constants.EnvLocal {
+    if env == consts.EnvLocal {
         is = true
     }
     return

@@ -18,10 +18,10 @@ func InitRedisClient(ctx context.Context, confs config.RedisConfs) (clients map[
     clients = make(map[string]*redis.Client, len(confs))
     for name, conf := range confs {
         if conf.PoolSize <= 0 {
-            conf.PoolSize = constants.RedisClientDefautlPoolSize
+            conf.PoolSize = consts.RedisClientDefautlPoolSize
         }
-        if conf.DB < constants.RedisClientMinDB || conf.DB > constants.RedisClientMaxDB {
-            conf.PoolSize = constants.RedisClientMinDB
+        if conf.DB < consts.RedisClientMinDB || conf.DB > consts.RedisClientMaxDB {
+            conf.PoolSize = consts.RedisClientMinDB
         }
         client := redis.NewClient(&redis.Options{
             Network:  conf.Network,

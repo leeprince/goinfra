@@ -1,6 +1,9 @@
 package retry
 
-import "time"
+import (
+    "github.com/leeprince/goinfra/consts"
+    "time"
+)
 
 /**
  * @Author: prince.lee <leeprince@foxmail.com>
@@ -16,13 +19,18 @@ type retryTask struct {
 type MessageHandleOption func(ms *retryTask)
 
 func NewRetryTask(opts ...MessageHandleOption) *retryTask {
-    mr := &retryTask{
-        retryNum:  3,
-        retryTime: 3 * time.Second,
-    }
+    mr := &retryTask{}
     
     for _, opt := range opts {
         opt(mr)
+    }
+    
+    if mr.retryNum == 0 {
+        mr.retryNum = consts.RetryDefaultNum
+    }
+    
+    if mr.retryTime == 0 {
+        mr.retryNum = consts.RetryDefaulTime
     }
     return mr
 }
@@ -56,7 +64,5 @@ func (mr *retryTask) Retry(retryData []byte, f func([]byte) error) error {
     
     return err
 }
-
-// TODO: 如果服务终止，如何保证消息正常推送 - prince@todo 2022/3/18 上午10:05
 
 // TODO: 退出策略 - prince@todo 2022/3/18 上午10:05
