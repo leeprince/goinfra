@@ -10,6 +10,7 @@ type Config struct {
     RedisConfs RedisConfs
 }
 
+// redis 配置
 type RedisConfs map[string]RedisConf
 
 type RedisConf struct {

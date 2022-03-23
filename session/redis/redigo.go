@@ -14,39 +14,128 @@ import (
  * @Desc:
  */
 
+// 全局变量
+var redigos map[string]*Redigo
+
+// Redigo 实现 RedisClient 接口
+var _ RedisClient = (*Redigo)(nil)
+
 type Redigo struct {
-    redis.Conn
+    ctx context.Context
+    redis.Pool
 }
 
-func InitRedisConn(confs config.RedisConfs) (conns map[string]redis.Conn, err error) {
-    conns = make(map[string]redis.Conn, len(confs))
+func InitRedigo(confs config.RedisConfs) error {
+    ctx := context.Background()
+    
+    redigos = make(map[string]*Redigo, len(confs))
     for name, conf := range confs {
-        conn, connErr := redis.Dial(conf.Network, conf.Addr)
-        if connErr != nil {
-            err = fmt.Errorf("[InitRedisClient] name:%s-err:%v", name, connErr)
-            return
+        dialFunc := func() (redis.Conn, error) {
+            conn, connErr := redis.Dial(
+                conf.Network,
+                conf.Addr,
+                redis.DialConnectTimeout(redigoDialConnectTimeout),
+                redis.DialReadTimeout(redigoDialReadTimeout),
+                redis.DialWriteTimeout(redigoDialWriteTimeout),
+            )
+            if connErr != nil {
+                return nil, fmt.Errorf("[InitGoredis] name:%s-err:%v", name, connErr)
+            }
+            return conn, nil
         }
-        conns[name] = conn
+        
+        pool := redis.Pool{
+            Dial:            dialFunc,
+            DialContext:     nil,
+            TestOnBorrow:    nil,
+            MaxIdle:         redigoMaxIdle,
+            MaxActive:       redigoMaxActive,
+            IdleTimeout:     redigoIdleTimeout,
+            Wait:            false,
+            MaxConnLifetime: redigoMaxConnLifetime,
+        }
+        
+        redigos[name] = &Redigo{
+            ctx:  ctx,
+            Pool: pool,
+        }
     }
-    return
-}
-
-func (c *Redigo) SetNX(ctx context.Context, key string, value interface{}, expiration time.Duration) bool {
-    return true
-}
-
-func (c *Redigo) GetAndDel(ctx context.Context, key string, value interface{}) bool {
-    return true
-}
-
-func (c *Redigo) GetString(ctx context.Context, key string) string {
-    return ""
-}
-
-func (c *Redigo) GetBytes(ctx context.Context, key string) []byte {
+    
     return nil
 }
 
-func (c *Redigo) GetScan(ctx context.Context, key string, value interface{}) error {
+func GetRedigo(name string) *Redigo {
+    redigo, ok := redigos[name]
+    if !ok {
+        return nil
+    }
+    return redigo
+}
+
+func (c *Redigo) WithContext(ctx context.Context) RedisClient {
+    c.ctx = ctx
+    return c
+}
+
+func (c *Redigo) SelectDB(index int) error {
+    redisPool := c.Get()
+    defer redisPool.Close()
+    if _, err := redisPool.Do("SELECT", index); err != nil {
+        return err
+    }
+    return nil
+}
+
+func (c *Redigo) SetKey(key string, value interface{}, expiration time.Duration) error {
+    redisPool := c.Get()
+    defer redisPool.Close()
+    if _, err := redisPool.Do("SET", key, value, "EX", int(expiration)); err != nil {
+        return err
+    }
+    return nil
+}
+
+func (c *Redigo) SetNx(key string, value interface{}, expiration time.Duration) error {
+    redisPool := c.Get()
+    defer redisPool.Close()
+    if _, err := redisPool.Do("SET", key, value, "EX", int(expiration), "NX"); err != nil {
+        return err
+    }
+    return nil
+}
+
+func (c *Redigo) GetAndDel(key string, value interface{}) error {
+    
+    return nil
+}
+
+func (c *Redigo) GetString(key string) string {
+    redisPool := c.Get()
+    defer redisPool.Close()
+    str, err := redis.String(redisPool.Do("GET", key))
+    if err != nil {
+        return ""
+    }
+    return str
+}
+
+func (c *Redigo) GetBytes(key string) ([]byte, error) {
+    redisPool := c.Get()
+    defer redisPool.Close()
+    str, err := redis.Bytes(redisPool.Do("GET", key))
+    return str, err
+}
+
+func (c *Redigo) GetScanStruct(key string, value interface{}) error {
+    redisPool := c.Get()
+    defer redisPool.Close()
+    valInterface, err := redisPool.Do("GET", key)
+    if err != nil {
+        return err
+    }
+    err = redis.ScanStruct([]interface{}{valInterface}, value)
+    if err != nil {
+        return err
+    }
     return nil
 }

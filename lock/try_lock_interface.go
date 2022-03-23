@@ -14,32 +14,24 @@ import (
 
 type TryLock struct {
     ctx        context.Context
-    client     LockInterface //
-    tickerTime time.Duration // 重新获取锁的间隔时间
-    timeOut    time.Duration // 获取锁总的超时时间. timeOut <= tickerTime 时只尝试获取一次
-    debug      bool          // 是否打印获取锁过程的记录
+    client     LockClientInterface //
+    tickerTime time.Duration       // 重新获取锁的间隔时间
+    timeOut    time.Duration       // 获取锁总的超时时间. timeOut <= tickerTime 时只尝试获取一次
+    debug      bool                // 是否打印获取锁过程的记录
 }
 
-type LockInterface interface {
-    Lock(key string, value interface{}, expirtime time.Duration) bool
-    UnLock(key string, value interface{}) bool
+type LockClientInterface interface {
+    Lock(ctx context.Context, key string, value interface{}, expirtime time.Duration) error
+    UnLock(ctx context.Context, key string, value interface{}) error
 }
 
 type TryLockOption struct {
     f func(*TryLock)
 }
 
-const (
-    DefaultTickerTime = time.Millisecond * 500
-    DefaultTimeOut    = time.Second * 2 // 相当于尝试4次+1次获取锁
-)
-
-const (
-    DefaultLockExpireTime = time.Second * 2 // 默认的锁过期时间
-)
-
-func NewTryLock(client LockInterface, opts ...TryLockOption) (tryLock *TryLock, err error) {
+func NewTryLock(ctx context.Context, client LockClientInterface, opts ...TryLockOption) (tryLock *TryLock, err error) {
     tryLock = &TryLock{
+        ctx:        ctx,
         client:     client,
         tickerTime: DefaultTickerTime,
         timeOut:    DefaultTimeOut,
@@ -82,7 +74,7 @@ func (l *TryLock) Lock(key string, value interface{}, expirtime time.Duration) b
     if expirtime == 0 {
         expirtime = DefaultLockExpireTime
     }
-    if l.client.Lock(key, value, expirtime) {
+    if err := l.client.Lock(l.ctx, key, value, expirtime); err == nil {
         if debug {
             fmt.Println("[TryLock@Lock] setLock Suucessfuly")
         }
@@ -103,7 +95,7 @@ func (l *TryLock) Lock(key string, value interface{}, expirtime time.Duration) b
             }
             return false
         case <-ticker.C:
-            if !l.client.Lock(key, value, expirtime) {
+            if err := l.client.Lock(l.ctx, key, value, expirtime); err != nil {
                 if debug {
                     fmt.Println("[TryLock@Lock] <-ticker.C continue")
                 }
@@ -117,6 +109,10 @@ func (l *TryLock) Lock(key string, value interface{}, expirtime time.Duration) b
     }
 }
 
-func (l *TryLock) UnLock(key string, value interface{}) error {
-    return l.client.UnLock(l.ctx, key, value)
+func (l *TryLock) UnLock(key string, value interface{}) bool {
+    err := l.client.UnLock(l.ctx, key, value)
+    if err != nil {
+        return false
+    }
+    return true
 }

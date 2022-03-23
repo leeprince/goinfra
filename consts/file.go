@@ -9,5 +9,5 @@ import "errors"
  */
 
 var (
-    FileNoExistErr = errors.New("file not exist.")
+    FileNoExistErr = errors.New("file not exist")
 )

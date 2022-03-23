@@ -12,9 +12,12 @@ import (
  */
 
 type RedisClient interface {
-    SetNX(ctx context.Context, key string, value interface{}, expiration time.Duration) bool
-    GetAndDel(ctx context.Context, key string, value interface{}) bool
-    GetString(ctx context.Context, key string) string
-    GetBytes(ctx context.Context, key string) []byte
-    GetScan(ctx context.Context, key string, value interface{}) error
+    WithContext(ctx context.Context) RedisClient
+    SelectDB(index int) error
+    SetKey(key string, value interface{}, expiration time.Duration) error
+    SetNx(key string, value interface{}, expiration time.Duration) error
+    GetAndDel(key string, value interface{}) error
+    GetString(key string) string
+    GetBytes(key string) ([]byte, error)
+    GetScanStruct(key string, value interface{}) error
 }
