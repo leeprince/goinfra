@@ -14,3 +14,7 @@
 
 ### redigo
 基于 `github.com/gomodule/redigo/redis` 实现
+
+
+# 修改记录
+- [ ] 定义接口，由各个 redis 库实现获取分布式锁

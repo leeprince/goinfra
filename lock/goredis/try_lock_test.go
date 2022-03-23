@@ -24,14 +24,13 @@ func TestNewTryLock(t *testing.T) {
         return
     }
     redisClient, _ := redisConns[RedisName]
-    // ---
+    // --- redis 客户端-end
     
     type args struct {
         ctx   context.Context
         redis *redis.Client
         opts  []TryLockOption
     }
-    
     
     tests := []struct {
         name        string
@@ -40,20 +39,21 @@ func TestNewTryLock(t *testing.T) {
         wantErr     bool
     }{
         {
-            args:args{
+            args: args{
                 ctx:   ctx,
                 redis: redisClient,
-                opts:  []TryLockOption{
+                opts: []TryLockOption{
                 },
             },
         },
         {
-            args:args{
+            args: args{
                 ctx:   ctx,
                 redis: redisClient,
-                opts:  []TryLockOption{
+                opts: []TryLockOption{
                     WithTickerTime(time.Millisecond * 500),
-                    WithTimeOut(time.Second * 2),
+                    WithTimeOut(time.Millisecond * 500),
+                    WithDebug(true),
                 },
             },
         },
@@ -62,16 +62,41 @@ func TestNewTryLock(t *testing.T) {
         t.Run(tt.name, func(t *testing.T) {
             gotTryLock, err := NewTryLock(tt.args.ctx, tt.args.redis, tt.args.opts...)
             if err != nil {
-                t.Errorf("[NewTryLock()] error = %v", tt.wantErr)
+                t.Errorf("[NewTryLock()] error = %v", err)
                 return
             }
             
             lock := gotTryLock.Lock(LockKey, LockValue, LockExpire)
             fmt.Printf("[NewTryLock() gotTryLock.Lock] lock:%v \n", lock)
             
-            err = gotTryLock.UnLock(LockKey)
-            // err = gotTryLock.UnLock(LockKey) // 测试未解锁情况下，获取锁
+            err = gotTryLock.UnLock(LockKey, LockValue)
+            // err = gotTryLock.UnLock(LockKey, LockValue) // 测试未解锁情况下，获取锁
             fmt.Printf("[NewTryLock() gotTryLock.UnLock] unLock err:%v \n", err)
         })
     }
+}
+
+func TestTryLock_UnLock(t *testing.T) {
+    // --- redis 客户端
+    ctx := context.Background()
+    redisConns, err := goinfraRedis.InitRedisClient(ctx, RedisConfs)
+    if err != nil {
+        fmt.Printf("[goinfraRedis.InitRedisClient] err:%v \n", err)
+        return
+    }
+    redisClient, _ := redisConns[RedisName]
+    // --- redis 客户端-end
+    gotTryLock, err := NewTryLock(context.Background(), redisClient)
+    if err != nil {
+        t.Errorf("[NewTryLock()] error = %v", err)
+        return
+    }
+    
+    err = gotTryLock.UnLock(LockKey, LockValue)
+    if err != nil {
+        fmt.Println("[NewTryLock()] UnLock error:", err)
+        return
+    }
+    fmt.Println("[NewTryLock()] UnLock Successful")
+    return
 }

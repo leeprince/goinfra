@@ -17,7 +17,8 @@ type TryLock struct {
     ctx        context.Context
     redis      *redis.Client
     tickerTime time.Duration // 重新获取锁的间隔时间
-    timeOut    time.Duration // 本次获取锁的超时时间. timeOut >= tickerTime
+    timeOut    time.Duration // 获取锁总的超时时间. timeOut <= tickerTime 时只尝试获取一次
+    debug      bool          // 是否打印获取锁过程的记录
 }
 
 type TryLockOption struct {
@@ -26,8 +27,7 @@ type TryLockOption struct {
 
 const (
     DefaultTickerTime            = time.Millisecond * 500
-    DefaultTimeOut               = time.Second * 2
-    DefaultTimeOutThanTickerTime = time.Millisecond * 2 // 默认的超时时间大于定时时间。只有 timeOut < tickerTime 时生效
+    DefaultTimeOut               = time.Second * 2 // 相当于尝试4次+1次获取锁
 )
 
 const (
@@ -44,60 +44,30 @@ func NewTryLock(ctx context.Context, redis *redis.Client, opts ...TryLockOption)
     for _, opt := range opts {
         opt.f(tryLock)
     }
-    if tryLock.timeOut < tryLock.tickerTime {
-        tryLock.timeOut = tryLock.tickerTime + DefaultTimeOutThanTickerTime
-    }
-    fmt.Println("[NewTryLock] tryLock:", tryLock)
+    // if tryLock.timeOut < tryLock.tickerTime {
+    //     tryLock.timeOut = tryLock.tickerTime + DefaultTimeOutThanTickerTime
+    // }
     return
-}
-
-func WithTickerTime(t time.Duration) TryLockOption {
-    return TryLockOption{
-        f: func(lock *TryLock) {
-            lock.tickerTime = t
-        },
-    }
-}
-
-func WithTimeOut(t time.Duration) TryLockOption {
-    return TryLockOption{
-        f: func(lock *TryLock) {
-            lock.timeOut = t
-        },
-    }
 }
 
 // 获取分布式锁
 func (l *TryLock) Lock(key string, value interface{}, expirtime time.Duration) bool {
-    if expirtime == 0 {
-        expirtime = DefaultLockExpireTime
-    }
-    setLock := l.redis.SetNX(l.ctx, key, value, expirtime).Val()
-    if setLock {
-        fmt.Println("[TryLock@Lock] setLock Suucessfuly")
-        return true
-    }
-    
-    ticker := time.NewTicker(l.tickerTime)
-    timeOutAfter := time.After(l.timeOut)
-    for {
-        select {
-        case <-timeOutAfter:
-            fmt.Println("[TryLock@Lock] setLock Fail <-time.After(l.timeOut):", l.timeOut)
-            return false
-        case <-ticker.C:
-            setLock := l.redis.SetNX(l.ctx, key, value, expirtime).Val()
-            if !setLock {
-                fmt.Println("[TryLock@Lock] setLock continue <-ticker.C")
-                continue
-            }
-            fmt.Println("[TryLock@Lock] setLock Suucessfuly <-ticker.C:")
-            return true
-        }
-    }
+    return l.redis.SetNX(l.ctx, key, value, expirtime).Val()
 }
 
 // 释放分布式锁
-func (l *TryLock) UnLock(key string) error {
-    return l.redis.Del(l.ctx, key).Err()
+func (l *TryLock) UnLock(key string, value interface{}) error {
+    script := `
+    if redis.call("GET", KEYS[1]) ~= ARGV[1] then
+        return nil
+    end
+    return redis.call("DEL", KEYS[1])
+    `
+    l.redis.Get().Scan()
+    
+    val, err := l.redis.Eval(l.ctx, script, []string{key}, value).Result()
+    if val == nil || err != nil {
+        return fmt.Errorf("[unLock] Fail.val:%v;err:%v", val, err)
+    }
+    return err
 }

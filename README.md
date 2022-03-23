@@ -7,6 +7,6 @@ go 基础服务
 
 ## 分布式锁
 
-- lock
-- - try_lock_v1.go
-- - try_lock_v2.go
+
+## 任务
+### 重试任务
