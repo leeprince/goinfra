@@ -26,7 +26,7 @@ func NewRedisClient(redis redis.RedisClient) *RedisClient {
     }
 }
 
-func (r *RedisClient) Lock(ctx context.Context, key string, value interface{}, expirtime time.Duration) error {
+func (r *RedisClient) Lock(ctx context.Context, key string, value interface{}, expirtime time.Duration) (bool, error) {
     return r.WithContext(ctx).SetNx(key, value, expirtime)
 }
 

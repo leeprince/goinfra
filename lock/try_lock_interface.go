@@ -21,7 +21,7 @@ type TryLock struct {
 }
 
 type LockClientInterface interface {
-    Lock(ctx context.Context, key string, value interface{}, expirtime time.Duration) error
+    Lock(ctx context.Context, key string, value interface{}, expirtime time.Duration) (bool, error)
     UnLock(ctx context.Context, key string, value interface{}) error
 }
 
@@ -74,14 +74,22 @@ func (l *TryLock) Lock(key string, value interface{}, expirtime time.Duration) b
     if expirtime == 0 {
         expirtime = DefaultLockExpireTime
     }
-    if err := l.client.Lock(l.ctx, key, value, expirtime); err == nil {
+    lock, err := l.client.Lock(l.ctx, key, value, expirtime)
+    if lock && err == nil {
         if debug {
-            fmt.Println("[TryLock@Lock] setLock Suucessfuly")
+            fmt.Println("[TryLock@Lock] Suucessfuly")
         }
         return true
     }
     
+    if debug {
+        fmt.Println("[TryLock@Lock] false continue")
+    }
+    
     if l.timeOut <= l.tickerTime {
+        if debug {
+            fmt.Println("[TryLock@Lock] l.timeOut <= l.tickerTime false")
+        }
         return false
     }
     
@@ -91,13 +99,20 @@ func (l *TryLock) Lock(key string, value interface{}, expirtime time.Duration) b
         select {
         case <-timeoutAfter:
             if debug {
-                fmt.Println("[TryLock@Lock] Fail <-time.After(l.timeOut):", l.timeOut)
+                fmt.Println("[TryLock@Lock] <-time.After(l.timeOut) false", l.timeOut)
             }
             return false
         case <-ticker.C:
-            if err := l.client.Lock(l.ctx, key, value, expirtime); err != nil {
+            lock, err = l.client.Lock(l.ctx, key, value, expirtime)
+            if err != nil {
                 if debug {
-                    fmt.Println("[TryLock@Lock] <-ticker.C continue")
+                    fmt.Println("[TryLock@Lock] <-ticker.C err false. err:", err)
+                }
+                return false
+            }
+            if !lock {
+                if debug {
+                    fmt.Println("[TryLock@Lock] <-ticker.C !lock continue")
                 }
                 continue
             }
@@ -112,6 +127,9 @@ func (l *TryLock) Lock(key string, value interface{}, expirtime time.Duration) b
 func (l *TryLock) UnLock(key string, value interface{}) bool {
     err := l.client.UnLock(l.ctx, key, value)
     if err != nil {
+        if l.debug {
+            fmt.Println("[TryLock@UnLock] false. err:", err)
+        }
         return false
     }
     return true

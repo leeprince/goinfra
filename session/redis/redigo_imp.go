@@ -5,6 +5,7 @@ import (
     "fmt"
     "github.com/gomodule/redigo/redis"
     "github.com/leeprince/goinfra/config"
+    "github.com/leeprince/goinfra/utils"
     "time"
 )
 
@@ -95,17 +96,18 @@ func (c *Redigo) SetKey(key string, value interface{}, expiration time.Duration)
     return nil
 }
 
-func (c *Redigo) SetNx(key string, value interface{}, expiration time.Duration) error {
+// NX:单位秒;PX:单位毫秒
+func (c *Redigo) SetNx(key string, value interface{}, expiration time.Duration) (bool, error) {
     redisPool := c.Get()
     defer redisPool.Close()
-    if _, err := redisPool.Do("SET", key, value, "EX", int(expiration), "NX"); err != nil {
-        return err
+    if utils.UseMillisecondUnit(expiration) {
+        return redis.Bool(redisPool.Do("SET", key, value, "PX", int(expiration), "NX"))
+    } else {
+        return redis.Bool(redisPool.Do("SET", key, value, "EX", int(expiration), "NX"))
     }
-    return nil
 }
 
 func (c *Redigo) GetAndDel(key string, value interface{}) error {
-    
     return nil
 }
 

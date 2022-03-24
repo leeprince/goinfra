@@ -84,8 +84,8 @@ func TestNewTryLock(t *testing.T) {
                 return
             }
             
-            _ = gotTryLock.Lock(LockKey, LockValue, LockExpire)
-            // fmt.Printf("[NewTryLock() gotTryLock.Lock] lock:%v \n", lock)
+            lock := gotTryLock.Lock(LockKey, LockValue, LockExpire)
+            fmt.Printf("[NewTryLock() gotTryLock.Lock] lock:%v \n", lock)
             
             // ok := gotTryLock.UnLock(LockKey, LockValue)
             // ok = gotTryLock.UnLock(LockKey, LockValue) // 测试未解锁情况下，获取锁

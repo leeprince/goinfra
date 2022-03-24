@@ -36,7 +36,7 @@ func InitGoredis(confs config.RedisConfs) error {
             conf.PoolSize = consts.RedisClientDefautlPoolSize
         }
         if conf.DB < consts.RedisClientMinDB || conf.DB > consts.RedisClientMaxDB {
-            conf.PoolSize = consts.RedisClientMinDB
+            conf.DB = consts.RedisClientMinDB
         }
         client := redis.NewClient(&redis.Options{
             Network:  conf.Network,
@@ -83,9 +83,9 @@ func (c *Goredis) SetKey(key string, value interface{}, expiration time.Duration
     return c.Set(c.ctx, key, value, expiration).Err()
 }
 
-// TODO: 是否成功，而不是是否有错误。不成功，有可能无错误 - prince@todo 2022/3/24 上午1:55
-func (c *Goredis) SetNx(key string, value interface{}, expiration time.Duration) error {
-    return c.SetNX(c.ctx, key, value, expiration).Err()
+func (c *Goredis) SetNx(key string, value interface{}, expiration time.Duration) (bool, error) {
+    boolCmd := c.SetNX(c.ctx, key, value, expiration)
+    return boolCmd.Val(), boolCmd.Err()
 }
 
 func (c *Goredis) GetAndDel(key string, value interface{}) error {

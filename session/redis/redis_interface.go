@@ -15,7 +15,7 @@ type RedisClient interface {
     WithContext(ctx context.Context) RedisClient
     SelectDB(index int) error
     SetKey(key string, value interface{}, expiration time.Duration) error
-    SetNx(key string, value interface{}, expiration time.Duration) error
+    SetNx(key string, value interface{}, expiration time.Duration) (bool, error)
     GetAndDel(key string, value interface{}) error
     GetString(key string) string
     GetBytes(key string) ([]byte, error)

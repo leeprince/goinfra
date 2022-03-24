@@ -9,8 +9,8 @@ import "time"
  */
 
 const (
-    DefaultTickerTime = time.Millisecond * 500
-    DefaultTimeOut    = time.Second * 2 // 相当于尝试4次+1次获取锁
+    DefaultTickerTime = time.Millisecond * 200
+    DefaultTimeOut    = time.Second * 1 // 相当于总共尝试获取1+5次锁
 )
 
 const (
