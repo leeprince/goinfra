@@ -14,7 +14,7 @@ import (
 
 type TryLock struct {
     ctx        context.Context
-    client     LockClientInterface //
+    client     LockClientInterface // 设置分布式锁的客户端
     tickerTime time.Duration       // 重新获取锁的间隔时间
     timeOut    time.Duration       // 获取锁总的超时时间. timeOut <= tickerTime 时只尝试获取一次
     debug      bool                // 是否打印获取锁过程的记录
@@ -99,7 +99,7 @@ func (l *TryLock) Lock(key string, value interface{}, expirtime time.Duration) b
         select {
         case <-timeoutAfter:
             if debug {
-                fmt.Println("[TryLock@Lock] <-time.After(l.timeOut) false", l.timeOut)
+                fmt.Println("[TryLock@Lock] <-time.After(l.timeOut) false. l.timeOut:", l.timeOut)
             }
             return false
         case <-ticker.C:

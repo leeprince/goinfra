@@ -89,7 +89,8 @@ func (c *Goredis) SetNx(key string, value interface{}, expiration time.Duration)
 }
 
 func (c *Goredis) GetAndDel(key string, value interface{}) error {
-    val, err := c.Eval(c.ctx, luaRedisScript, []string{key}, value).Result()
+    val, err := c.Eval(c.ctx, luaRedisGetAndDelScript, []string{key}, value).Result()
+    fmt.Println(">>>>>>>>>GetAndDel:", val, err)
     if val == nil || err != nil {
         return fmt.Errorf("[unLock] Fail.val:%v;err:%v", val, err)
     }

@@ -81,6 +81,7 @@ func (c *Redigo) WithContext(ctx context.Context) RedisClient {
 func (c *Redigo) SelectDB(index int) error {
     redisPool := c.Get()
     defer redisPool.Close()
+    
     if _, err := redisPool.Do("SELECT", index); err != nil {
         return err
     }
@@ -90,6 +91,7 @@ func (c *Redigo) SelectDB(index int) error {
 func (c *Redigo) SetKey(key string, value interface{}, expiration time.Duration) error {
     redisPool := c.Get()
     defer redisPool.Close()
+    
     if _, err := redisPool.Do("SET", key, value, "EX", int(expiration)); err != nil {
         return err
     }
@@ -100,20 +102,45 @@ func (c *Redigo) SetKey(key string, value interface{}, expiration time.Duration)
 func (c *Redigo) SetNx(key string, value interface{}, expiration time.Duration) (bool, error) {
     redisPool := c.Get()
     defer redisPool.Close()
+    
+    var str string
+    var err error
     if utils.UseMillisecondUnit(expiration) {
-        return redis.Bool(redisPool.Do("SET", key, value, "PX", int(expiration), "NX"))
+        str, err = redis.String(redisPool.Do("SET", key, value, "PX", expiration.Milliseconds(), "NX"))
     } else {
-        return redis.Bool(redisPool.Do("SET", key, value, "EX", int(expiration), "NX"))
+        str, err = redis.String(redisPool.Do("SET", key, value, "EX", expiration.Seconds(), "NX"))
     }
+    // 如果 key 已存在则返回 err == redis.ErrNil
+    if err == redis.ErrNil {
+        return false, nil
+    }
+    if err != nil {
+        return false, nil
+    }
+    if str != redigoStringOk {
+        return false, nil
+    }
+    
+    return true, nil
 }
 
 func (c *Redigo) GetAndDel(key string, value interface{}) error {
+    redisPool := c.Get()
+    defer redisPool.Close()
+    
+    s := redis.NewScript(1, luaRedisGetAndDelScript)
+    ok, err := redis.Bool(s.Do(redisPool, key, value))
+    fmt.Println(">>>>>>>>>GetAndDel:", ok, err)
+    if !ok || err != nil {
+        return fmt.Errorf("[unLock] Fail.val:%v;err:%v", ok, err)
+    }
     return nil
 }
 
 func (c *Redigo) GetString(key string) string {
     redisPool := c.Get()
     defer redisPool.Close()
+    
     str, err := redis.String(redisPool.Do("GET", key))
     if err != nil {
         return ""
@@ -124,6 +151,7 @@ func (c *Redigo) GetString(key string) string {
 func (c *Redigo) GetBytes(key string) ([]byte, error) {
     redisPool := c.Get()
     defer redisPool.Close()
+    
     str, err := redis.Bytes(redisPool.Do("GET", key))
     return str, err
 }
@@ -131,6 +159,7 @@ func (c *Redigo) GetBytes(key string) ([]byte, error) {
 func (c *Redigo) GetScanStruct(key string, value interface{}) error {
     redisPool := c.Get()
     defer redisPool.Close()
+    
     valInterface, err := redisPool.Do("GET", key)
     if err != nil {
         return err

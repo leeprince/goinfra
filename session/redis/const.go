@@ -8,7 +8,7 @@ import "time"
  * @Desc:
  */
 
-var luaRedisScript = `
+var luaRedisGetAndDelScript = `
     if redis.call("GET", KEYS[1]) ~= ARGV[1] then
         return nil
     end
@@ -23,4 +23,8 @@ const (
     redigoMaxActive = 100
     redigoIdleTimeout = time.Second * 60
     redigoMaxConnLifetime = time.Second * 60
+)
+
+const (
+    redigoStringOk = "OK"
 )

@@ -34,12 +34,23 @@ var (
 
 func TestNewTryLock(t *testing.T) {
     // --- redis 客户端
-    err := goinfraRedis.InitGoredis(RedisConfs)
+    
+    // Goredis 客户端
+    /*err := goinfraRedis.InitGoredis(RedisConfs)
     if err != nil {
         fmt.Printf("[goinfraRedis.InitGoredis] err:%v \n", err)
         return
     }
-    redisClient := goinfraRedis.GetGoredis(RedisName)
+    redisClient := goinfraRedis.GetGoredis(RedisName)*/
+    
+    // Redigo 客户端
+    err := goinfraRedis.InitRedigo(RedisConfs)
+    if err != nil {
+        fmt.Printf("[goinfraRedis.InitGoredis] err:%v \n", err)
+        return
+    }
+    redisClient := goinfraRedis.GetRedigo(RedisName)
+    
     // --- redis 客户端-end
     
     ctx := context.Background()
@@ -87,9 +98,9 @@ func TestNewTryLock(t *testing.T) {
             lock := gotTryLock.Lock(LockKey, LockValue, LockExpire)
             fmt.Printf("[NewTryLock() gotTryLock.Lock] lock:%v \n", lock)
             
-            // ok := gotTryLock.UnLock(LockKey, LockValue)
-            // ok = gotTryLock.UnLock(LockKey, LockValue) // 测试未解锁情况下，获取锁
-            // fmt.Printf("[NewTryLock() gotTryLock.UnLock] unLock bool:%v \n", ok)
+            // ok := gotTryLock.UnLock(LockKey+"-", LockValue)
+            ok := gotTryLock.UnLock(LockKey, LockValue) // 测试未解锁情况下，获取锁
+            fmt.Printf("[NewTryLock() gotTryLock.UnLock] unLock bool:%v \n", ok)
         })
     }
 }
