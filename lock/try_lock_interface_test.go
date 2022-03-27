@@ -4,7 +4,7 @@ import (
     "context"
     "fmt"
     "github.com/leeprince/goinfra/config"
-    goinfraRedis "github.com/leeprince/goinfra/session/redis"
+    goinfraRedis "github.com/leeprince/goinfra/storage/redis"
     "testing"
     "time"
 )

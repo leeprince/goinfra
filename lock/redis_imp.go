@@ -2,7 +2,7 @@ package lock
 
 import (
     "context"
-    "github.com/leeprince/goinfra/session/redis"
+    "github.com/leeprince/goinfra/storage/redis"
     "time"
 )
 

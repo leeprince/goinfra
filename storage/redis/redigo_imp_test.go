@@ -81,7 +81,7 @@ func TestRedigo_SetNx(t *testing.T) {
     }
 }
 
-// TODO: 测试。GetAndDel 返回 bool, error - prince@todo 2022/3/25 上午12:45
+// TODO: 测试。GetAndDel 返回 bool, error - prince@todo 2022/3/26 下午2:31
 func TestRedigo_GetAndDel(t *testing.T) {
     type fields struct {
         ctx  context.Context
