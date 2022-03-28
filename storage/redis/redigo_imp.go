@@ -115,7 +115,7 @@ func (c *Redigo) SetNx(key string, value interface{}, expiration time.Duration) 
         return false, nil
     }
     if err != nil {
-        return false, nil
+        return false, err
     }
     if str != redigoStringOk {
         return false, nil
@@ -130,9 +130,9 @@ func (c *Redigo) GetAndDel(key string, value interface{}) error {
     
     s := redis.NewScript(1, luaRedisGetAndDelScript)
     ok, err := redis.Bool(s.Do(redisPool, key, value))
-    fmt.Println(">>>>>>>>>GetAndDel:", ok, err)
+    
     if !ok || err != nil {
-        return fmt.Errorf("[unLock] Fail.val:%v;err:%v", ok, err)
+        return fmt.Errorf("[GetAndDel] Fail key:%v;val:%v;ok:%v;err:%v", key, value, ok, err)
     }
     return nil
 }

@@ -88,7 +88,7 @@ func (l *TryLock) Lock(key string, value interface{}, expirtime time.Duration) b
     
     if l.timeOut <= l.tickerTime {
         if debug {
-            fmt.Println("[TryLock@Lock] l.timeOut <= l.tickerTime false")
+            fmt.Println("[TryLock@Lock] l.timeOut <= l.tickerTime false and continue end")
         }
         return false
     }

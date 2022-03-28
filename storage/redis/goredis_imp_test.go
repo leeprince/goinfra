@@ -3,8 +3,7 @@ package redis
 import (
     "context"
     "fmt"
-    "github.com/gomodule/redigo/redis"
-    "github.com/leeprince/goinfra/config"
+    "github.com/go-redis/redis/v8"
     "testing"
     "time"
 )
@@ -15,37 +14,23 @@ import (
  * @Desc:
  */
 
-var (
-    RedisName  = "local"
-    RedisConfs = config.RedisConfs{
-        RedisName: config.RedisConf{
-            Network:  "tcp",
-            Addr:     "127.0.0.1:6379",
-            Username: "",
-            Password: "",
-            DB:       0,
-            PoolSize: 2,
-        },
-    }
-)
+var redisClientGoredis *Goredis
 
-var redisClientRedigo *Redigo
-
-func InitRedigoClient() {
-    // Redigo 客户端
-    err := InitRedigo(RedisConfs)
+func InitGoredisClient() {
+    // Goredis 客户端
+    err := InitGoredis(RedisConfs)
     if err != nil {
         fmt.Printf("[goinfraRedis.InitGoredis] err:%v \n", err)
     }
-    redisClientRedigo = GetRedigo(RedisName)
+    redisClientGoredis = GetGoredis(RedisName)
 }
 
-func TestRedigo_SetNx(t *testing.T) {
-    InitRedigoClient()
+func TestGoredis_SetNx(t *testing.T) {
+    InitGoredisClient()
     
     type fields struct {
         ctx  context.Context
-        Pool redis.Pool
+        Client *redis.Client
     }
     type args struct {
         key        string
@@ -83,18 +68,18 @@ func TestRedigo_SetNx(t *testing.T) {
     }
     for _, tt := range tests {
         t.Run(tt.name, func(t *testing.T) {
-            got, err := redisClientRedigo.SetNx(tt.args.key, tt.args.value, tt.args.expiration)
+            got, err := redisClientGoredis.SetNx(tt.args.key, tt.args.value, tt.args.expiration)
             fmt.Println("got, err:", got, "--", err)
         })
     }
 }
 
-func TestRedigo_GetAndDel(t *testing.T) {
-    InitRedigoClient()
+func TestGoredis_GetAndDel(t *testing.T) {
+    InitGoredisClient()
     
     type fields struct {
         ctx  context.Context
-        Pool redis.Pool
+        Client *redis.Client
     }
     type args struct {
         key   string
@@ -134,10 +119,10 @@ func TestRedigo_GetAndDel(t *testing.T) {
     }
     for _, tt := range tests {
         t.Run(tt.name, func(t *testing.T) {
-            GetAndDelErr := redisClientRedigo.GetAndDel(tt.args.key, tt.args.value)
+            GetAndDelErr := redisClientGoredis.GetAndDel(tt.args.key, tt.args.value)
             fmt.Println("GetAndDel>>>>>>>>", GetAndDelErr)
             
-            setErr := redisClientRedigo.SetKey(tt.args.key, tt.args.value, tt.args.expiration)
+            setErr := redisClientGoredis.SetKey(tt.args.key, tt.args.value, tt.args.expiration)
             fmt.Println("SetKey::::::::::::", setErr)
             
         })
