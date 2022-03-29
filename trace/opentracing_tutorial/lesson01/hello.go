@@ -63,7 +63,7 @@ func initJaegerLog(service string) (opentracing.Tracer, io.Closer) {
     if err != nil {
         panic(fmt.Sprintf("plog.SetOutputFile error:%v", err))
     }
-    tracer, closer, err := cfg.NewTracer(config.Logger(plog.GetLogger()))
+    tracer, closer, err := cfg.NewTracer(config.Logger(plog.JaegerLogger))
     if err != nil {
         panic(fmt.Sprintf("ERROR: cannot init Jaeger: %v\n", err))
     }

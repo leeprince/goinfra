@@ -1,0 +1,4 @@
+{"context":{},"level":"info","msg":"debug logging disabled","time":"2022-03-30 01:04:34.439374"}
+{"context":{},"level":"info","msg":"Initializing logging reporter","time":"2022-03-30 01:04:34.439653"}
+{"context":{},"level":"info","msg":"debug logging disabled","time":"2022-03-30 01:04:34.439745"}
+{"context":{},"level":"info","msg":"Reporting span 2a712107a4df70c9:2a712107a4df70c9:0000000000000000:1","time":"2022-03-30 01:04:34.440062"}
