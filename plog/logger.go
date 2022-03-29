@@ -90,55 +90,12 @@ func WithContext(ctx context.Context) *logrus.Entry {
 }
 // ---  设置 entry 参数, 并返回 Entry 对象 - end
 
-// --- 记录日志方法：按等级记录日志。底层每次都获取一个新的 entry
-func Debug(args ...interface{}) {
-	logger.Debug(args...)
-}
 
-func Debugf(format string, args ...interface{}) {
-	logger.Debugf(format, args...)
+// --- 实现 logger 接口 ---
+func (p Plog) Infof(format string, args ...interface{}) {
+	Infof(format, args...)
 }
-
-func Debugln(args ...interface{}) {
-	logger.Debugln(args...)
+func (p Plog) Error(args ...interface{}) {
+	Error(args...)
 }
-
-func Info(args ...interface{}) {
-	logger.Info(args...)
-}
-
-func Infof(format string, args ...interface{}) {
-	logger.Infof(format, args...)
-}
-
-func Warn(args ...interface{}) {
-	logger.Warn(args...)
-}
-
-func Warning(args ...interface{}) {
-	logger.Warning(args...)
-}
-
-func Error(args ...interface{}) {
-	logger.Error(args...)
-}
-
-func Errorf(format string, args ...interface{}) {
-	logger.Errorf(format, args...)
-}
-
-func Fatal(args ...interface{}) {
-	logger.Fatal(args...)
-}
-
-func Panic(args ...interface{}) {
-	logger.Panic(args...)
-}
-
-func PanicIfError(err error) {
-	if err == nil {
-		return
-	}
-	logger.Panic(err)
-}
-// --- 按等级记录日志 - end
+// --- 实现 logger 接口 -end ---
