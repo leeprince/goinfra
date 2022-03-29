@@ -92,10 +92,13 @@ func WithContext(ctx context.Context) *logrus.Entry {
 
 
 // --- 实现 logger 接口 ---
+// 实现 github.com/uber/jaeger-client-go@logger.go 的 Logger 接口
 func (p Plog) Error(msg string) {
 	Error(msg)
 }
 func (p Plog) Infof(msg string, args ...interface{}) {
 	Infof(msg, args...)
 }
+// 实现 github.com/uber/jaeger-client-go@logger.go 的 Logger 接口 -end
+
 // --- 实现 logger 接口 -end ---
