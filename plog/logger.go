@@ -92,10 +92,10 @@ func WithContext(ctx context.Context) *logrus.Entry {
 
 
 // --- 实现 logger 接口 ---
-func (p Plog) Infof(format string, args ...interface{}) {
-	Infof(format, args...)
+func (p Plog) Error(msg string) {
+	Error(msg)
 }
-func (p Plog) Error(args ...interface{}) {
-	Error(args...)
+func (p Plog) Infof(msg string, args ...interface{}) {
+	Infof(msg, args...)
 }
 // --- 实现 logger 接口 -end ---
