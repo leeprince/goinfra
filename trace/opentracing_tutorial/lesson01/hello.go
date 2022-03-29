@@ -19,7 +19,8 @@ func main() {
     
     // function opentracing.GlobalTracer() returns a no-op tracer by default.
     // tracer := opentracing.GlobalTracer()
-    tracer, closer := initJaeger(serverName)
+    // tracer, closer := initJaeger(serverName)
+    tracer, closer := initJaegerLog(serverName)
     defer closer.Close()
     
     span := tracer.StartSpan("say-hello")
@@ -58,8 +59,11 @@ func initJaegerLog(service string) (opentracing.Tracer, io.Closer) {
             LogSpans: true,
         },
     }
-    plog.SetOutputFile("./", "application.log", true)
-    tracer, closer, err := cfg.NewTracer(plog.GetLogger())
+    err := plog.SetOutputFile("./", "application.log", true)
+    if err != nil {
+        panic(fmt.Sprintf("plog.SetOutputFile error:%v", err))
+    }
+    tracer, closer, err := cfg.NewTracer(config.Logger(plog.GetLogger()))
     if err != nil {
         panic(fmt.Sprintf("ERROR: cannot init Jaeger: %v\n", err))
     }
