@@ -1,17 +1,19 @@
 package main
 
 import (
+    "context"
     "fmt"
+    "github.com/leeprince/goinfra/http/httpcli"
     "github.com/leeprince/goinfra/plog"
     "github.com/opentracing/opentracing-go"
-    "github.com/opentracing/opentracing-go/log"
     "github.com/uber/jaeger-client-go"
     "github.com/uber/jaeger-client-go/config"
     "io"
+    "time"
 )
 
 const (
-    serverName = "princeJaeger-lesson01"
+    serverName = "princeJaeger-lesson02"
 )
 
 func main() {
@@ -23,6 +25,7 @@ func main() {
     
     // tracer, closer := initJaeger(serverName)
     tracer, closer := initJaegerLog(serverName)
+    opentracing.SetGlobalTracer(tracer)
     
     defer closer.Close()
     
@@ -30,23 +33,27 @@ func main() {
     span := tracer.StartSpan("say-hello")
     defer span.Finish()
     
-    // SetTag
-    println("span.SetTag>>>>")
-    span.SetTag("SetTag:princeTag001", "value001")
+    // 传递上下文 context 代替将 span 作为每个函数的第一个参数【最终方案】
+    ctx := opentracing.ContextWithSpan(context.Background(), span)
     
-    // LogFields
-    println("span.LogFields>>>>")
-    span.LogFields(
-        log.String("LogFields:event", "string-format"),
-        log.String("LogFields:value", helloStr),
-    )
-    // span.LogFields(log.String("LogFields:event01", "string-format"))
-    // span.LogFields(log.String("LogFields:value01", helloStr))
+    RPCFormatter(ctx)
+    RPCPublisher(ctx)
+    // 传递上下文 context 代替将 span 作为每个函数的第一个参数 -end
+}
+
+func RPCFormatter(ctx context.Context) {
+    // - 传递上下文 context 代替将 span 作为每个函数的第一个参数
+    span, _ := opentracing.StartSpanFromContext(ctx, "ContextSpanLogKV")
+    defer span.Finish()
     
-    // LogKV
-    println("span.LogKV>>>>")
-    span.LogKV("LogKV:event", "println")
+    println("ContextSpanLogKV@span.LogKV>>>>", time.Now().Format("2006-01-02 15:04:05.999999999"))
+    span.LogKV("LogKV:event004", "println")
     
+    httpcli.Do()
+}
+
+func RPCPublisher(ctx context.Context) {
+
 }
 
 // initJaeger returns an instance of Jaeger Tracer that samples 100% of traces and logs all spans to stdout.
