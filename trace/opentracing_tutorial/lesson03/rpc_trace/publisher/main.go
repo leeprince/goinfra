@@ -1,59 +1,47 @@
 package main
 
 import (
-    "context"
     "fmt"
-    "github.com/leeprince/goinfra/http/httpcli"
     "github.com/leeprince/goinfra/plog"
     "github.com/opentracing/opentracing-go"
+    "github.com/opentracing/opentracing-go/ext"
     "github.com/uber/jaeger-client-go"
     "github.com/uber/jaeger-client-go/config"
     "io"
-    "time"
+    "log"
+    "net/http"
 )
 
+/**
+ * @Author: prince.lee <leeprince@foxmail.com>
+ * @Date:   2022/4/5 下午4:11
+ * @Desc:
+ */
+
 const (
-    serverName = "princeJaeger-lesson02"
+    serverName = "princeJaeger-lesson03-rpc-publisher"
 )
 
 func main() {
-    helloStr := fmt.Sprintf("Hello, world!")
-    println(helloStr)
-    
     // 注意：function opentracing.GlobalTracer() returns a no-op tracer by default.
     // tracer := opentracing.GlobalTracer()
     
     // tracer, closer := initJaeger(serverName)
     tracer, closer := initJaegerLog(serverName)
     opentracing.SetGlobalTracer(tracer)
-    
     defer closer.Close()
     
-    println("tracer.StartSpan>>>>")
-    span := tracer.StartSpan("say-hello")
-    defer span.Finish()
+    http.HandleFunc("/publish", func(w http.ResponseWriter, r *http.Request) {
+        spanCtx, _ := tracer.Extract(opentracing.HTTPHeaders, opentracing.HTTPHeadersCarrier(r.Header))
+        span := tracer.StartSpan("publisher@http.HandleFunc", ext.RPCServerOption(spanCtx))
+        defer span.Finish()
+        span.LogKV("publisher@http.HandleFunc@LogKV001", "println")
+        
+        helloStr := r.FormValue("helloStr")
+        println(helloStr)
+    })
     
-    // 传递上下文 context 代替将 span 作为每个函数的第一个参数【最终方案】
-    ctx := opentracing.ContextWithSpan(context.Background(), span)
-    
-    RPCFormatter(ctx)
-    RPCPublisher(ctx)
-    // 传递上下文 context 代替将 span 作为每个函数的第一个参数 -end
-}
-
-func RPCFormatter(ctx context.Context) {
-    // - 传递上下文 context 代替将 span 作为每个函数的第一个参数
-    span, _ := opentracing.StartSpanFromContext(ctx, "ContextSpanLogKV")
-    defer span.Finish()
-    
-    println("ContextSpanLogKV@span.LogKV>>>>", time.Now().Format("2006-01-02 15:04:05.999999999"))
-    span.LogKV("LogKV:event004", "println")
-    
-    httpcli.Do()
-}
-
-func RPCPublisher(ctx context.Context) {
-
+    log.Fatal(http.ListenAndServe(":8112", nil))
 }
 
 // initJaeger returns an instance of Jaeger Tracer that samples 100% of traces and logs all spans to stdout.
@@ -91,9 +79,18 @@ func initJaegerLog(service string) (opentracing.Tracer, io.Closer) {
     if err != nil {
         panic(fmt.Sprintf("plog.SetOutputFile error:%v", err))
     }
-    tracer, closer, err := cfg.NewTracer(config.Logger(plog.JaegerLogger))
+    tracer, closer, err := cfg.NewTracer(config.Logger(jaegerLoggerPlog))
     if err != nil {
         panic(fmt.Sprintf("ERROR: cannot init Jaeger: %v\n", err))
     }
     return tracer, closer
+}
+
+var jaegerLoggerPlog = &jaegerLogger{}
+type jaegerLogger struct{}
+func (l *jaegerLogger) Error(msg string) {
+	plog.Error(msg)
+}
+func (l *jaegerLogger) Infof(msg string, args ...interface{}) {
+    plog.Infof(msg, args...)
 }

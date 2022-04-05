@@ -23,7 +23,6 @@ func main() {
     
     // tracer, closer := initJaeger(serverName)
     tracer, closer := initJaegerLog(serverName)
-    
     defer closer.Close()
     
     println("tracer.StartSpan>>>>")
@@ -84,9 +83,18 @@ func initJaegerLog(service string) (opentracing.Tracer, io.Closer) {
     if err != nil {
         panic(fmt.Sprintf("plog.SetOutputFile error:%v", err))
     }
-    tracer, closer, err := cfg.NewTracer(config.Logger(plog.JaegerLogger))
+    tracer, closer, err := cfg.NewTracer(config.Logger(jaegerLoggerPlog))
     if err != nil {
         panic(fmt.Sprintf("ERROR: cannot init Jaeger: %v\n", err))
     }
     return tracer, closer
+}
+
+var jaegerLoggerPlog = &jaegerLogger{}
+type jaegerLogger struct{}
+func (l *jaegerLogger) Error(msg string) {
+	plog.Error(msg)
+}
+func (l *jaegerLogger) Infof(msg string, args ...interface{}) {
+    plog.Infof(msg, args...)
 }

@@ -1,8 +1,8 @@
 package main
 
 import (
-    "log"
-    "net/http"
+	"log"
+	"net/http"
 )
 
 /**
@@ -11,11 +11,12 @@ import (
  * @Desc:
  */
 
-func main() {
-	http.HandleFunc("/publish", func(w http.ResponseWriter, r *http.Request) {
-		helloStr := r.FormValue("helloStr")
-		println(helloStr)
-	})
 
-	log.Fatal(http.ListenAndServe(":8082", nil))
+func main() {
+    http.HandleFunc("/publish", func(w http.ResponseWriter, r *http.Request) {
+        helloStr := r.FormValue("helloStr")
+        println(helloStr)
+    })
+    
+    log.Fatal(http.ListenAndServe(":8102", nil))
 }

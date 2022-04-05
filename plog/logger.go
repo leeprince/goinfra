@@ -89,19 +89,3 @@ func WithContext(ctx context.Context) *logrus.Entry {
 	return logger.WithContext(ctx)
 }
 // ---  设置 entry 参数, 并返回 Entry 对象 - end
-
-
-// --- 实现 logger 接口 ---
-
-// 实现 github.com/uber/jaeger-client-go@logger.go 的 Logger 接口
-var JaegerLogger = &jaegerLogger{}
-type jaegerLogger struct{}
-func (l *jaegerLogger) Error(msg string) {
-	Error(msg)
-}
-func (l *jaegerLogger) Infof(msg string, args ...interface{}) {
-	Infof(msg, args...)
-}
-// 实现 github.com/uber/jaeger-client-go@logger.go 的 Logger 接口 -end
-
-// --- 实现 logger 接口 -end ---
