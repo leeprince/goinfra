@@ -103,19 +103,28 @@ func newResource() *resource.Resource {
 func newExporter() (trace.SpanExporter, error) {
     // Your preferred exporter: console, jaeger, zipkin, OTLP, etc.
     
-    // io.Writer
-    // Write telemetry data to os.Stdout
-    /*f := os.Stdout
-      exp, err := newExporter(f)
-      if err != nil {
-          l.Fatal(err)
-      }*/
-    // io.Writer
-    // Write telemetry data to a file.
-    f, err := os.Create("traces.txt")
-    if err != nil {
-        return nil, fmt.Errorf("InitTrace os.Create err:%v", err)
-    }
+    // console
+    // --- io.Writer: os.Stdout
+    f := os.Stdout
+    // --- io.Writer: file
+    /*
+       // Write telemetry data to a file.
+       f, err := os.Create("traces.txt")
+       if err != nil {
+           return nil, fmt.Errorf("InitTrace os.Create err:%v", err)
+       }
+    */
+    // --- io.Writer: plog
+    /*
+       // 获取 plog 已经设置的日志文件及路径
+       dir, fileName := plog.GetLogger().GetOutFileInfo()
+       file := dir + fileName
+       f, err := os.OpenFile(file, os.O_APPEND|os.O_WRONLY, os.ModeAppend)
+       if err != nil {
+           return nil, fmt.Errorf("InitTrace plog.SetOutputFile err:%v", err)
+       }
+    */
+    // console -end
     
     return stdouttrace.New(
         stdouttrace.WithWriter(f),

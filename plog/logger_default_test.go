@@ -23,7 +23,6 @@ func TestDefaultLogger(t *testing.T) {
     Error("prince log Error")
     // Fatal("prince log Fatal") // 记录并结束程序允许
     // Panic("prince log Panic") // 记录并抛出异常
-    
 }
 
 func TestDefaultLoggerWithField(t *testing.T) {

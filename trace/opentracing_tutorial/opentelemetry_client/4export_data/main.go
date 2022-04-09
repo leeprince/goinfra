@@ -17,6 +17,7 @@ import (
     "net/http"
     "os"
     "sync"
+    "time"
 )
 
 /**
@@ -33,7 +34,9 @@ const (
 var tracer trace.Tracer
 
 func main() {
-    ctx := context.Background()
+    ctx, cancel := context.WithCancel(context.Background())
+    defer cancel()
+    
     err := plog.SetOutputFile("./", "traces.log", false)
     if err != nil {
         plog.Fatal("main:plog.SetOutputFile err:", err)
@@ -45,10 +48,17 @@ func main() {
         plog.Fatal(err)
     }
     
-    // Handle shutdown properly so nothing leaks.
-    defer func() { _ = tracerProvider.Shutdown(ctx) }()
+    // Cleanly shutdown and flush telemetry when the application exits.
+    defer func(ctx context.Context) {
+        // Do not make the application hang when it is shutdown.
+        ctx, cancel = context.WithTimeout(ctx, time.Second*5)
+        defer cancel()
+        if err := tracerProvider.Shutdown(ctx); err != nil {
+            plog.Fatal(err)
+        }
+    }(ctx)
     
-    // 二者都可以，推荐 tracerProvider.Tracer
+    // 二者都可以，底层方法一样
     // tracer = otel.Tracer(serverName)
     tracer = tracerProvider.Tracer(serverName)
     
@@ -129,20 +139,21 @@ func childFunctionAttributes(ctx context.Context) {
     // ... and after creation
     span.SetAttributes(attribute.Bool("isTrue", true), attribute.String("childFunctionAttributes-WithAttributes-SetAttributes", "hi!"))
     defer span.End()
-    
 }
 
 func InitTrace(ctx context.Context, serverName, env string) (*sdktrace.TracerProvider, error) {
     // Exporter
-    /*exp, err := newExporter()
-      if err != nil {
-          return nil, fmt.Errorf("InitTrace newExporter err:%v", err)
-      }*/
-    // ---
-    exp, err := newJaegerExporter("http://localhost:14268/api/traces")
+    exp, err := newExporter()
     if err != nil {
         return nil, fmt.Errorf("InitTrace newExporter err:%v", err)
     }
+    // ---
+    /*
+       exp, err := newJaegerExporter("http://localhost:14268/api/traces")
+       if err != nil {
+           return nil, fmt.Errorf("InitTrace newExporter err:%v", err)
+       }
+    */
     // Exporter -end
     
     tp := sdktrace.NewTracerProvider(
@@ -176,20 +187,18 @@ func newExporter() (sdktrace.SpanExporter, error) {
     // Your preferred exporter: console, jaeger, zipkin, OTLP, etc.
     
     // console
-    // io.Writer: os.Stdout
-    // Write telemetry data to os.Stdout
-    /*f := os.Stdout
-      exp, err := newExporter(f)
-      if err != nil {
-          l.Fatal(err)
-      }*/
+    // --- io.Writer: os.Stdout
+    // f := os.Stdout
     // --- io.Writer: file
-    /*// Write telemetry data to a file.
-      f, err := os.Create("traces.txt")
-      if err != nil {
-          return nil, fmt.Errorf("InitTrace os.Create err:%v", err)
-      }*/
-    // --- io.Writer: plog // TODO:  - prince@todo 2022/4/9 下午12:12
+    /*
+       // Write telemetry data to a file.
+       f, err := os.Create("traces.txt")
+       if err != nil {
+           return nil, fmt.Errorf("InitTrace os.Create err:%v", err)
+       }
+    */
+    // --- io.Writer: plog
+    
     // 获取 plog 已经设置的日志文件及路径
     dir, fileName := plog.GetLogger().GetOutFileInfo()
     file := dir + fileName
@@ -197,7 +206,8 @@ func newExporter() (sdktrace.SpanExporter, error) {
     if err != nil {
         return nil, fmt.Errorf("InitTrace plog.SetOutputFile err:%v", err)
     }
-    // console
+    
+    // console -end
     
     return stdouttrace.New(
         stdouttrace.WithWriter(f),

@@ -1,8 +1,6 @@
 package opentracing
 
 import (
-    "context"
-    "fmt"
     "github.com/leeprince/goinfra/plog"
     "go.opentelemetry.io/otel"
     "go.opentelemetry.io/otel/attribute"
@@ -11,6 +9,7 @@ import (
     "go.opentelemetry.io/otel/sdk/resource"
     sdktrace "go.opentelemetry.io/otel/sdk/trace"
     semconv "go.opentelemetry.io/otel/semconv/v1.7.0"
+    "io"
     "os"
 )
 
@@ -21,20 +20,10 @@ import (
  */
 
 // 初始化 Telemetry 客户端
-func InitTelemetryTrace(ctx context.Context, serverName, env string) (*sdktrace.TracerProvider, error) {
-    // Exporter
-    /*exp, err := newExporter()
-      if err != nil {
-          return nil, fmt.Errorf("InitTrace newExporter err:%v", err)
-      }*/
-    exp, err := newJaegerExporter("http://localhost:14268/api/traces")
-    if err != nil {
-        return nil, fmt.Errorf("InitTrace newExporter err:%v", err)
-    }
-    
+func InitTelemetryTrace(serverName, env string, exporter sdktrace.SpanExporter) (*sdktrace.TracerProvider, error) {
     tp := sdktrace.NewTracerProvider(
-        sdktrace.WithBatcher(exp),
-        sdktrace.WithResource(newResource(serverName, env)),
+        sdktrace.WithBatcher(exporter),
+        sdktrace.WithResource(NewResource(serverName, env)),
         // sdktrace.WithSampler(sdktrace.NeverSample()),
         sdktrace.WithSampler(sdktrace.AlwaysSample()),
     )
@@ -45,7 +34,7 @@ func InitTelemetryTrace(ctx context.Context, serverName, env string) (*sdktrace.
 }
 
 // 资源：描述应用的资源
-func newResource(serverName, env string) *resource.Resource {
+func NewResource(serverName, env string) *resource.Resource {
     r, _ := resource.Merge(
         resource.Default(),
         resource.NewWithAttributes(
@@ -58,53 +47,72 @@ func newResource(serverName, env string) *resource.Resource {
     return r
 }
 
-// newExporter returns a console exporter.
-func newExporter() (sdktrace.SpanExporter, error) {
+// --- 导出器
+type writerExporterType int32
+const (
+    WriterExporterStdout writerExporterType = iota // os.Stdout 输出
+    WriterExporterCreate    // 创建 traces.txt 输出。启动后覆盖
+    WriterExporterPlog
+)
+// --- 导出器：io.Writer 作为导出器（exporter）
+func NewWriterExporter(t writerExporterType) (spanExporter sdktrace.SpanExporter) {
     // Your preferred exporter: console, jaeger, zipkin, OTLP, etc.
     
-    // Your preferred exporter: console, jaeger, zipkin, OTLP, etc.
-    
-    // console
-    // io.Writer: os.Stdout
-    // Write telemetry data to os.Stdout
-    /*f := os.Stdout
-      exp, err := newExporter(f)
-      if err != nil {
-          l.Fatal(err)
-      }*/
-    // --- io.Writer: file
-    /*// Write telemetry data to a file.
-      f, err := os.Create("traces.txt")
-      if err != nil {
-          return nil, fmt.Errorf("InitTrace os.Create err:%v", err)
-      }*/
-    // --- io.Writer: plog // TODO:  - prince@todo 2022/4/9 下午12:12
-    // 获取 plog 已经设置的日志文件及路径
-    dir, fileName := plog.GetLogger().GetOutFileInfo()
-    file := dir + fileName
-    f, err := os.OpenFile(file, os.O_APPEND|os.O_WRONLY, os.ModeAppend)
-    if err != nil {
-        return nil, fmt.Errorf("InitTrace plog.SetOutputFile err:%v", err)
+    var (
+        f   io.Writer
+        err error
+    )
+    switch t {
+    case WriterExporterStdout:
+        f = os.Stdout
+    case WriterExporterCreate:
+        f, err = os.Create("traces.txt")
+        if err != nil {
+            plog.Fatal("NewWriterExporter switch t WriterExporterCreate os.Create err:", err)
+        }
+    case WriterExporterPlog:
+        dir, fileName := plog.GetLogger().GetOutFileInfo()
+        if dir == "" || fileName == "" {
+            plog.Fatal("NewWriterExporter switch t WriterExporterPlog dir == '' || fileName == ''")
+        }
+        file := dir + fileName
+        // file 存在则肯定已创建
+        f, err = os.OpenFile(file, os.O_APPEND|os.O_WRONLY, os.ModeAppend)
+        if err != nil {
+            plog.Fatal("NewWriterExporter os.OpenFile err:", err)
+        }
+    default:
+        plog.Fatal("NewWriterExporter switch t default error")
     }
-    // console
     
-    return stdouttrace.New(
+    spanExporter, err = stdouttrace.New(
         stdouttrace.WithWriter(f),
         // Use human-readable output.
         stdouttrace.WithPrettyPrint(),
         // Do not print timestamps for the demo.
         // stdouttrace.WithoutTimestamps(),
     )
+    if err != nil {
+        plog.Fatal("NewWriterExporter stdouttrace.New err:", err)
+    }
+    
+    return
 }
+// --- 导出器：io.Writer 作为导出器（exporter） -end
 
-// newExporter returns a console exporter.
-func newJaegerExporter(url string) (sdktrace.SpanExporter, error) {
+
+// --- 导出器：Jaeger HTTP Thrift collector 作为导出器（exporter）
+func NewJaegerExporter(url string) (sdktrace.SpanExporter, error) {
     // Your preferred exporter: console, jaeger, zipkin, OTLP, etc.
     
-    // Create the Jaeger exporter
+    if url == "" {
+        plog.Fatal("NewJaegerExporter url == ''")
+    }
     return jaeger.New(
         jaeger.WithCollectorEndpoint(
             jaeger.WithEndpoint(url),
         ),
     )
 }
+// --- 导出器：Jaeger HTTP Thrift collector 作为导出器（exporter） -end
+// --- 导出器 -end

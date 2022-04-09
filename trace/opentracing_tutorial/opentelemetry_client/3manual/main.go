@@ -82,13 +82,13 @@ func manualHttpHandler(w http.ResponseWriter, r *http.Request) {
     otel.SetTextMapPropagator(propagation.TraceContext{})
 }
 func parentFunction(ctx context.Context) {
-	ctx, parentSpan := tracer.Start(ctx, "parent")
-	defer parentSpan.End()
-
-	// call the child function and start a nested span in there
-	childFunction(ctx)
-
-	// do more work - when this function ends, parentSpan will complete.
+    ctx, parentSpan := tracer.Start(ctx, "parent")
+    defer parentSpan.End()
+    
+    // call the child function and start a nested span in there
+    childFunction(ctx)
+    
+    // do more work - when this function ends, parentSpan will complete.
     parentFunctionAttributes(ctx)
 }
 
@@ -102,11 +102,11 @@ func parentFunctionAttributes(ctx context.Context) {
 }
 
 func childFunction(ctx context.Context) {
-	// Create a span to track `childFunction()` - this is a nested span whose parent is `parentSpan`
-	ctx, childSpan := tracer.Start(ctx, "child")
-	defer childSpan.End()
-
-	// do work here, when this function returns, childSpan will complete.
+    // Create a span to track `childFunction()` - this is a nested span whose parent is `parentSpan`
+    ctx, childSpan := tracer.Start(ctx, "child")
+    defer childSpan.End()
+    
+    // do work here, when this function returns, childSpan will complete.
     childFunctionAttributes(ctx)
 }
 
@@ -152,19 +152,28 @@ func newResource(serverName string) *resource.Resource {
 func newExporter() (sdktrace.SpanExporter, error) {
     // Your preferred exporter: console, jaeger, zipkin, OTLP, etc.
     
-    // io.Writer
-    // Write telemetry data to os.Stdout
-    /*f := os.Stdout
-      exp, err := newExporter(f)
-      if err != nil {
-          l.Fatal(err)
-      }*/
-    // io.Writer
-    // Write telemetry data to a file.
-    f, err := os.Create("traces.txt")
-    if err != nil {
-        return nil, fmt.Errorf("InitTrace os.Create err:%v", err)
-    }
+    // console
+    // --- io.Writer: os.Stdout
+    f := os.Stdout
+    // --- io.Writer: file
+    /*
+       // Write telemetry data to a file.
+       f, err := os.Create("traces.txt")
+       if err != nil {
+           return nil, fmt.Errorf("InitTrace os.Create err:%v", err)
+       }
+    */
+    // --- io.Writer: plog
+    /*
+       // 获取 plog 已经设置的日志文件及路径
+       dir, fileName := plog.GetLogger().GetOutFileInfo()
+       file := dir + fileName
+       f, err := os.OpenFile(file, os.O_APPEND|os.O_WRONLY, os.ModeAppend)
+       if err != nil {
+           return nil, fmt.Errorf("InitTrace plog.SetOutputFile err:%v", err)
+       }
+    */
+    // console -end
     
     return stdouttrace.New(
         stdouttrace.WithWriter(f),
