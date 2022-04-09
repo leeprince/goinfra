@@ -1,0 +1,407 @@
+{"context":{},"level":"info","msg":"debug logging disabled","time":"2022-04-05 18:30:44.290759"}
+{"context":{},"level":"info","msg":"Initializing logging reporter","time":"2022-04-05 18:30:44.291080"}
+{"context":{},"level":"info","msg":"debug logging disabled","time":"2022-04-05 18:30:44.291177"}
+{"context":{},"level":"info","msg":"Reporting span 0dbb1882ad7f520c:233a861ab2f4e248:0dbb1882ad7f520c:1","time":"2022-04-05 18:30:44.292196"}
+{"context":{},"level":"info","msg":"Reporting span 0dbb1882ad7f520c:358c4c96120f158b:0dbb1882ad7f520c:1","time":"2022-04-05 18:30:44.292779"}
+{"context":{},"level":"error","msg":"RPCTraceFormatter httpcli.Do err:Get \"http://127.0.0.1:8111/format?helloTo=prince\": dial tcp 127.0.0.1:8111: connect: connection refused","time":"2022-04-05 18:30:44.293088"}
+{"context":{},"level":"info","msg":"Reporting span 0dbb1882ad7f520c:2abd4d629480fd41:0dbb1882ad7f520c:1","time":"2022-04-05 18:30:44.293131"}
+{"context":{},"level":"info","msg":"Reporting span 0dbb1882ad7f520c:7e9cecead2aff86f:0dbb1882ad7f520c:1","time":"2022-04-05 18:30:44.294249"}
+{"context":{},"level":"info","msg":"Reporting span 0dbb1882ad7f520c:0dbb1882ad7f520c:0000000000000000:1","time":"2022-04-05 18:30:44.294303"}
+{"context":{},"level":"info","msg":"debug logging disabled","time":"2022-04-05 18:45:52.867381"}
+{"context":{},"level":"info","msg":"Initializing logging reporter","time":"2022-04-05 18:45:52.869010"}
+{"context":{},"level":"info","msg":"debug logging disabled","time":"2022-04-05 18:45:52.869141"}
+{"context":{},"level":"info","msg":"Reporting span 330ee3d5b5e43b7c:3e85cd3e9a399266:330ee3d5b5e43b7c:1","time":"2022-04-05 18:45:52.870151"}
+{"context":{},"level":"info","msg":"Reporting span 330ee3d5b5e43b7c:2c931ef8632d495b:330ee3d5b5e43b7c:1","time":"2022-04-05 18:45:52.870904"}
+{"context":{},"level":"error","msg":"RPCTraceFormatter httpcli.Do err:Get \"http://127.0.0.1:8111/format?helloTo=prince\": dial tcp 127.0.0.1:8111: connect: connection refused","time":"2022-04-05 18:45:52.871175"}
+{"context":{},"level":"info","msg":"Reporting span 330ee3d5b5e43b7c:12bb03a5d458bc50:330ee3d5b5e43b7c:1","time":"2022-04-05 18:45:52.871226"}
+{"context":{},"level":"error","msg":"RPCTracePublisher httpcli.Do err:Get \"http://127.0.0.1:8112/publish?helloStr=hi+prince\": dial tcp 127.0.0.1:8112: connect: connection refused","time":"2022-04-05 18:45:52.871388"}
+{"context":{},"level":"info","msg":"Reporting span 330ee3d5b5e43b7c:62723cf07da49590:330ee3d5b5e43b7c:1","time":"2022-04-05 18:45:52.871425"}
+{"context":{},"level":"info","msg":"Reporting span 330ee3d5b5e43b7c:330ee3d5b5e43b7c:0000000000000000:1","time":"2022-04-05 18:45:52.871447"}
+{"context":{},"level":"info","msg":"debug logging disabled","time":"2022-04-05 19:03:37.540372"}
+{"context":{},"level":"info","msg":"Initializing logging reporter","time":"2022-04-05 19:03:37.541217"}
+{"context":{},"level":"info","msg":"debug logging disabled","time":"2022-04-05 19:03:37.541322"}
+{"context":{},"level":"info","msg":"Reporting span 6f9c4ac69aba6178:7682daeaeb815354:6f9c4ac69aba6178:1","time":"2022-04-05 19:03:37.542538"}
+{"context":{},"level":"info","msg":"Reporting span 6f9c4ac69aba6178:0ca1177d88c9fda2:6f9c4ac69aba6178:1","time":"2022-04-05 19:03:37.543299"}
+{"context":{},"level":"error","msg":"RPCTraceFormatter httpcli.Do err:Get \"http://127.0.0.1:8111/format?helloTo=prince\": dial tcp 127.0.0.1:8111: connect: connection refused","time":"2022-04-05 19:03:37.543511"}
+{"context":{},"level":"info","msg":"Reporting span 6f9c4ac69aba6178:0b5b76ee648009af:6f9c4ac69aba6178:1","time":"2022-04-05 19:03:37.543567"}
+{"context":{},"level":"error","msg":"RPCTracePublisher httpcli.Do err:Get \"http://127.0.0.1:8112/publish?helloStr=hi+prince\": dial tcp 127.0.0.1:8112: connect: connection refused","time":"2022-04-05 19:03:37.543734"}
+{"context":{},"level":"info","msg":"Reporting span 6f9c4ac69aba6178:4ec04bfc96d251bc:6f9c4ac69aba6178:1","time":"2022-04-05 19:03:37.543785"}
+{"context":{},"level":"info","msg":"Reporting span 6f9c4ac69aba6178:6f9c4ac69aba6178:0000000000000000:1","time":"2022-04-05 19:03:37.543813"}
+{"context":{},"level":"info","msg":"debug logging disabled","time":"2022-04-05 19:29:03.862058"}
+{"context":{},"level":"info","msg":"Initializing logging reporter","time":"2022-04-05 19:29:03.862318"}
+{"context":{},"level":"info","msg":"debug logging disabled","time":"2022-04-05 19:29:03.862400"}
+{"context":{},"level":"info","msg":"Reporting span 138dd6eba30aa60e:7f2bd05bb3777bf8:138dd6eba30aa60e:1","time":"2022-04-05 19:29:03.863481"}
+{"context":{},"level":"info","msg":"Reporting span 138dd6eba30aa60e:54176358efa5c018:138dd6eba30aa60e:1","time":"2022-04-05 19:29:03.864156"}
+{"context":{},"level":"info","msg":"Reporting span 138dd6eba30aa60e:0aba517b6d96c17a:138dd6eba30aa60e:1","time":"2022-04-05 19:29:03.864828"}
+{"context":{},"level":"info","msg":"Reporting span 138dd6eba30aa60e:2f4c50341561f9c3:138dd6eba30aa60e:1","time":"2022-04-05 19:29:03.865589"}
+{"context":{},"level":"info","msg":"Reporting span 138dd6eba30aa60e:138dd6eba30aa60e:0000000000000000:1","time":"2022-04-05 19:29:03.865645"}
+{"context":{},"level":"info","msg":"debug logging disabled","time":"2022-04-05 19:31:43.128978"}
+{"context":{},"level":"info","msg":"Initializing logging reporter","time":"2022-04-05 19:31:43.129649"}
+{"context":{},"level":"info","msg":"debug logging disabled","time":"2022-04-05 19:31:43.129724"}
+{"context":{},"level":"error","msg":"RPCFormatter httpcli.Do err:Get \"http://127.0.0.1:8101/format?helloTo=prince\": dial tcp 127.0.0.1:8101: connect: connection refused","time":"2022-04-05 19:31:43.130264"}
+{"context":{},"level":"info","msg":"Reporting span 680f40347250fb28:6f01938d3a8ff322:680f40347250fb28:1","time":"2022-04-05 19:31:43.130329"}
+{"context":{},"level":"info","msg":"Reporting span 680f40347250fb28:64cf673bbc153a48:680f40347250fb28:1","time":"2022-04-05 19:31:43.130776"}
+{"context":{},"level":"info","msg":"Reporting span 680f40347250fb28:14303baaf7696ade:680f40347250fb28:1","time":"2022-04-05 19:31:43.131751"}
+{"context":{},"level":"info","msg":"Reporting span 680f40347250fb28:5ea619d77ecf9017:680f40347250fb28:1","time":"2022-04-05 19:31:43.132354"}
+{"context":{},"level":"info","msg":"Reporting span 680f40347250fb28:680f40347250fb28:0000000000000000:1","time":"2022-04-05 19:31:43.132408"}
+{"context":{},"level":"info","msg":"debug logging disabled","time":"2022-04-05 19:32:28.244441"}
+{"context":{},"level":"info","msg":"Initializing logging reporter","time":"2022-04-05 19:32:28.245089"}
+{"context":{},"level":"info","msg":"debug logging disabled","time":"2022-04-05 19:32:28.245171"}
+{"context":{},"level":"error","msg":"RPCFormatter httpcli.Do err:Get \"http://127.0.0.1:8101/format?helloTo=prince\": dial tcp 127.0.0.1:8101: connect: connection refused","time":"2022-04-05 19:32:28.246011"}
+{"context":{},"level":"info","msg":"Reporting span 434e925ba638d21e:0b6b445e4d4f468a:434e925ba638d21e:1","time":"2022-04-05 19:32:28.246076"}
+{"context":{},"level":"info","msg":"Reporting span 434e925ba638d21e:0d601e1724fd60aa:434e925ba638d21e:1","time":"2022-04-05 19:32:28.246691"}
+{"context":{},"level":"error","msg":"RPCTraceFormatter httpcli.Do err:Get \"http://127.0.0.1:8111/format?helloTo=prince\": dial tcp 127.0.0.1:8111: connect: connection refused","time":"2022-04-05 19:32:28.246955"}
+{"context":{},"level":"info","msg":"Reporting span 434e925ba638d21e:44650deab4569d62:434e925ba638d21e:1","time":"2022-04-05 19:32:28.246986"}
+{"context":{},"level":"info","msg":"Reporting span 434e925ba638d21e:6bd7097d7b184124:434e925ba638d21e:1","time":"2022-04-05 19:32:28.247722"}
+{"context":{},"level":"info","msg":"Reporting span 434e925ba638d21e:434e925ba638d21e:0000000000000000:1","time":"2022-04-05 19:32:28.247755"}
+{"context":{},"level":"info","msg":"debug logging disabled","time":"2022-04-05 19:34:14.939461"}
+{"context":{},"level":"info","msg":"Initializing logging reporter","time":"2022-04-05 19:34:14.939791"}
+{"context":{},"level":"info","msg":"debug logging disabled","time":"2022-04-05 19:34:14.939956"}
+{"context":{},"level":"error","msg":"RPCFormatter httpcli.Do err:Get \"http://127.0.0.1:8101/format?helloTo=prince\": dial tcp 127.0.0.1:8101: connect: connection refused","time":"2022-04-05 19:34:14.940726"}
+{"context":{},"level":"info","msg":"Reporting span 562f06676bb41848:4020f9da5f6e87d5:562f06676bb41848:1","time":"2022-04-05 19:34:14.940842"}
+{"context":{},"level":"info","msg":"Reporting span 562f06676bb41848:7f27f1b035e9df66:562f06676bb41848:1","time":"2022-04-05 19:34:14.941858"}
+{"context":{},"level":"error","msg":"RPCTraceFormatter httpcli.Do err:Get \"http://127.0.0.1:8111/format?helloTo=prince\": dial tcp 127.0.0.1:8111: connect: connection refused","time":"2022-04-05 19:34:14.942563"}
+{"context":{},"level":"info","msg":"Reporting span 562f06676bb41848:4d07bd58b6142071:562f06676bb41848:1","time":"2022-04-05 19:34:14.942712"}
+{"context":{},"level":"info","msg":"Reporting span 562f06676bb41848:6443d4414ceac2b5:562f06676bb41848:1","time":"2022-04-05 19:34:14.943754"}
+{"context":{},"level":"info","msg":"Reporting span 562f06676bb41848:562f06676bb41848:0000000000000000:1","time":"2022-04-05 19:34:14.943801"}
+{"context":{},"level":"info","msg":"debug logging disabled","time":"2022-04-05 19:34:49.355529"}
+{"context":{},"level":"info","msg":"Initializing logging reporter","time":"2022-04-05 19:34:49.355810"}
+{"context":{},"level":"info","msg":"debug logging disabled","time":"2022-04-05 19:34:49.355904"}
+{"context":{},"level":"error","msg":"RPCFormatter httpcli.Do err:Get \"http://127.0.0.1:8101/format?helloTo=prince\": dial tcp 127.0.0.1:8101: connect: connection refused","time":"2022-04-05 19:34:49.356602"}
+{"context":{},"level":"info","msg":"Reporting span 0ffd82b97ca09751:11b93ddae95c28a0:0ffd82b97ca09751:1","time":"2022-04-05 19:34:49.356678"}
+{"context":{},"level":"info","msg":"Reporting span 0ffd82b97ca09751:1f59cea5ed7f7a93:0ffd82b97ca09751:1","time":"2022-04-05 19:34:49.357241"}
+{"context":{},"level":"error","msg":"RPCTraceFormatter httpcli.Do err:Get \"http://127.0.0.1:8111/format?helloTo=prince\": dial tcp 127.0.0.1:8111: connect: connection refused","time":"2022-04-05 19:34:49.357463"}
+{"context":{},"level":"info","msg":"Reporting span 0ffd82b97ca09751:50b8ec4e7cf224f3:0ffd82b97ca09751:1","time":"2022-04-05 19:34:49.357521"}
+{"context":{},"level":"info","msg":"Reporting span 0ffd82b97ca09751:332fefd15956ecf8:0ffd82b97ca09751:1","time":"2022-04-05 19:34:49.358088"}
+{"context":{},"level":"info","msg":"Reporting span 0ffd82b97ca09751:0ffd82b97ca09751:0000000000000000:1","time":"2022-04-05 19:34:49.358125"}
+{"context":{},"level":"info","msg":"debug logging disabled","time":"2022-04-05 19:35:52.891012"}
+{"context":{},"level":"info","msg":"Initializing logging reporter","time":"2022-04-05 19:35:52.891478"}
+{"context":{},"level":"info","msg":"debug logging disabled","time":"2022-04-05 19:35:52.891614"}
+{"context":{},"level":"error","msg":"RPCFormatter httpcli.Do err:Get \"http://127.0.0.1:8101/format?helloTo=prince\": dial tcp 127.0.0.1:8101: connect: connection refused","time":"2022-04-05 19:35:52.892675"}
+{"context":{},"level":"info","msg":"Reporting span 7a96c87ff4c1d4ce:45e446edfb74a62d:7a96c87ff4c1d4ce:1","time":"2022-04-05 19:35:52.892773"}
+{"context":{},"level":"info","msg":"Reporting span 7a96c87ff4c1d4ce:40e0a5d315c482c8:7a96c87ff4c1d4ce:1","time":"2022-04-05 19:35:52.893382"}
+{"context":{},"level":"error","msg":"RPCTraceFormatter httpcli.Do err:Get \"http://127.0.0.1:8111/format?helloTo=prince\": dial tcp 127.0.0.1:8111: connect: connection refused","time":"2022-04-05 19:35:52.893600"}
+{"context":{},"level":"info","msg":"Reporting span 7a96c87ff4c1d4ce:55bc737d3d611440:7a96c87ff4c1d4ce:1","time":"2022-04-05 19:35:52.893642"}
+{"context":{},"level":"info","msg":"Reporting span 7a96c87ff4c1d4ce:2dc6760f70684afc:7a96c87ff4c1d4ce:1","time":"2022-04-05 19:35:52.894253"}
+{"context":{},"level":"info","msg":"Reporting span 7a96c87ff4c1d4ce:7a96c87ff4c1d4ce:0000000000000000:1","time":"2022-04-05 19:35:52.894318"}
+{"context":{},"level":"info","msg":"debug logging disabled","time":"2022-04-05 19:36:17.707025"}
+{"context":{},"level":"info","msg":"Initializing logging reporter","time":"2022-04-05 19:36:17.707295"}
+{"context":{},"level":"info","msg":"debug logging disabled","time":"2022-04-05 19:36:17.707387"}
+{"context":{},"level":"error","msg":"RPCFormatter httpcli.Do err:Get \"http://127.0.0.1:8101/format?helloTo=prince\": dial tcp 127.0.0.1:8101: connect: connection refused","time":"2022-04-05 19:36:17.708069"}
+{"context":{},"level":"info","msg":"Reporting span 2cedc095ae754890:320f04f101735a10:2cedc095ae754890:1","time":"2022-04-05 19:36:17.708131"}
+{"context":{},"level":"info","msg":"Reporting span 2cedc095ae754890:5051fb83bc168fc3:2cedc095ae754890:1","time":"2022-04-05 19:36:17.708666"}
+{"context":{},"level":"error","msg":"RPCTraceFormatter httpcli.Do err:Get \"http://127.0.0.1:8111/format?helloTo=prince\": dial tcp 127.0.0.1:8111: connect: connection refused","time":"2022-04-05 19:36:17.708837"}
+{"context":{},"level":"info","msg":"Reporting span 2cedc095ae754890:651f4679ab1d2c29:2cedc095ae754890:1","time":"2022-04-05 19:36:17.708878"}
+{"context":{},"level":"info","msg":"Reporting span 2cedc095ae754890:2fc451c776c097c7:2cedc095ae754890:1","time":"2022-04-05 19:36:17.709324"}
+{"context":{},"level":"info","msg":"Reporting span 2cedc095ae754890:2cedc095ae754890:0000000000000000:1","time":"2022-04-05 19:36:17.709354"}
+{"context":{},"level":"info","msg":"debug logging disabled","time":"2022-04-05 19:40:16.239691"}
+{"context":{},"level":"info","msg":"Initializing logging reporter","time":"2022-04-05 19:40:16.240440"}
+{"context":{},"level":"info","msg":"debug logging disabled","time":"2022-04-05 19:40:16.240552"}
+{"context":{},"level":"error","msg":"RPCFormatter httpcli.Do err:Get \"http://127.0.0.1:8101/format?helloTo=prince\": dial tcp 127.0.0.1:8101: connect: connection refused","time":"2022-04-05 19:40:16.241284"}
+{"context":{},"level":"info","msg":"Reporting span 4e837ed048f848ad:4975275f9b8b9336:4e837ed048f848ad:1","time":"2022-04-05 19:40:16.241355"}
+{"context":{},"level":"info","msg":"Reporting span 4e837ed048f848ad:492de0657d7f8239:4e837ed048f848ad:1","time":"2022-04-05 19:40:16.242042"}
+{"context":{},"level":"error","msg":"RPCTraceFormatter httpcli.Do err:Get \"http://127.0.0.1:8111/format?helloTo=prince\": dial tcp 127.0.0.1:8111: connect: connection refused","time":"2022-04-05 19:40:16.242303"}
+{"context":{},"level":"info","msg":"Reporting span 4e837ed048f848ad:288552dd8378c26c:4e837ed048f848ad:1","time":"2022-04-05 19:40:16.242339"}
+{"context":{},"level":"info","msg":"Reporting span 4e837ed048f848ad:77df4640e6d94cfa:4e837ed048f848ad:1","time":"2022-04-05 19:40:16.242885"}
+{"context":{},"level":"info","msg":"Reporting span 4e837ed048f848ad:4e837ed048f848ad:0000000000000000:1","time":"2022-04-05 19:40:16.242957"}
+{"context":{},"level":"info","msg":"debug logging disabled","time":"2022-04-05 19:43:13.815648"}
+{"context":{},"level":"info","msg":"Initializing logging reporter","time":"2022-04-05 19:43:13.816451"}
+{"context":{},"level":"info","msg":"debug logging disabled","time":"2022-04-05 19:43:13.816654"}
+{"context":{},"level":"error","msg":"RPCFormatter httpcli.Do err:Get \"http://127.0.0.1:8101/format?helloTo=prince\": dial tcp 127.0.0.1:8101: connect: connection refused","time":"2022-04-05 19:43:13.817868"}
+{"context":{},"level":"info","msg":"Reporting span 79c15a9999870a18:1dfdfeb8803059af:79c15a9999870a18:1","time":"2022-04-05 19:43:13.818038"}
+{"context":{},"level":"info","msg":"Reporting span 79c15a9999870a18:63cdb96897de1344:79c15a9999870a18:1","time":"2022-04-05 19:43:13.819070"}
+{"context":{},"level":"error","msg":"RPCTraceFormatter httpcli.Do err:Get \"http://127.0.0.1:8111/format?helloTo=prince\": dial tcp 127.0.0.1:8111: connect: connection refused","time":"2022-04-05 19:43:13.819351"}
+{"context":{},"level":"info","msg":"Reporting span 79c15a9999870a18:45264eff1fd98d86:79c15a9999870a18:1","time":"2022-04-05 19:43:13.819391"}
+{"context":{},"level":"info","msg":"Reporting span 79c15a9999870a18:26f0d8e99922af89:79c15a9999870a18:1","time":"2022-04-05 19:43:13.819916"}
+{"context":{},"level":"info","msg":"Reporting span 79c15a9999870a18:79c15a9999870a18:0000000000000000:1","time":"2022-04-05 19:43:13.819950"}
+{"context":{},"level":"info","msg":"debug logging disabled","time":"2022-04-05 19:43:31.130314"}
+{"context":{},"level":"info","msg":"Initializing logging reporter","time":"2022-04-05 19:43:31.130592"}
+{"context":{},"level":"info","msg":"debug logging disabled","time":"2022-04-05 19:43:31.130682"}
+{"context":{},"level":"info","msg":"Reporting span 20638be30147468f:78318ed04acd3d8c:20638be30147468f:1","time":"2022-04-05 19:43:31.131763"}
+{"context":{},"level":"error","msg":"RPCPublisher httpcli.Do err:Get \"http://127.0.0.1:8102/publish?helloStr=hi+prince\": dial tcp 127.0.0.1:8102: connect: connection refused","time":"2022-04-05 19:43:31.131977"}
+{"context":{},"level":"info","msg":"Reporting span 20638be30147468f:7491f9eeab354372:20638be30147468f:1","time":"2022-04-05 19:43:31.132032"}
+{"context":{},"level":"error","msg":"RPCTraceFormatter httpcli.Do err:Get \"http://127.0.0.1:8111/format?helloTo=prince\": dial tcp 127.0.0.1:8111: connect: connection refused","time":"2022-04-05 19:43:31.132253"}
+{"context":{},"level":"info","msg":"Reporting span 20638be30147468f:1ce282f79b1e94fe:20638be30147468f:1","time":"2022-04-05 19:43:31.132303"}
+{"context":{},"level":"info","msg":"Reporting span 20638be30147468f:105e6cb2cf496f92:20638be30147468f:1","time":"2022-04-05 19:43:31.132849"}
+{"context":{},"level":"info","msg":"Reporting span 20638be30147468f:20638be30147468f:0000000000000000:1","time":"2022-04-05 19:43:31.132881"}
+{"context":{},"level":"info","msg":"debug logging disabled","time":"2022-04-05 19:43:54.784151"}
+{"context":{},"level":"info","msg":"Initializing logging reporter","time":"2022-04-05 19:43:54.784422"}
+{"context":{},"level":"info","msg":"debug logging disabled","time":"2022-04-05 19:43:54.784515"}
+{"context":{},"level":"info","msg":"Reporting span 4aa861d2c4bc84a2:1711bbc50226a340:4aa861d2c4bc84a2:1","time":"2022-04-05 19:43:54.785515"}
+{"context":{},"level":"error","msg":"RPCPublisher httpcli.Do err:Get \"http://127.0.0.1:8102/publish?helloStr=hi+prince\": dial tcp 127.0.0.1:8102: connect: connection refused","time":"2022-04-05 19:43:54.785748"}
+{"context":{},"level":"info","msg":"Reporting span 4aa861d2c4bc84a2:527c2022dc76deec:4aa861d2c4bc84a2:1","time":"2022-04-05 19:43:54.785784"}
+{"context":{},"level":"error","msg":"RPCTraceFormatter httpcli.Do err:Get \"http://127.0.0.1:8111/format?helloTo=prince\": dial tcp 127.0.0.1:8111: connect: connection refused","time":"2022-04-05 19:43:54.785999"}
+{"context":{},"level":"info","msg":"Reporting span 4aa861d2c4bc84a2:5fefbd9f5994aecc:4aa861d2c4bc84a2:1","time":"2022-04-05 19:43:54.786065"}
+{"context":{},"level":"info","msg":"Reporting span 4aa861d2c4bc84a2:2618f0fc217908a7:4aa861d2c4bc84a2:1","time":"2022-04-05 19:43:54.786640"}
+{"context":{},"level":"info","msg":"Reporting span 4aa861d2c4bc84a2:4aa861d2c4bc84a2:0000000000000000:1","time":"2022-04-05 19:43:54.786673"}
+{"context":{},"level":"info","msg":"debug logging disabled","time":"2022-04-05 19:45:28.682021"}
+{"context":{},"level":"info","msg":"Initializing logging reporter","time":"2022-04-05 19:45:28.682693"}
+{"context":{},"level":"info","msg":"debug logging disabled","time":"2022-04-05 19:45:28.682805"}
+{"context":{},"level":"info","msg":"Reporting span 26e529d4a9250d39:38f24f18b2458f5b:26e529d4a9250d39:1","time":"2022-04-05 19:45:28.683775"}
+{"context":{},"level":"info","msg":"Reporting span 26e529d4a9250d39:61dadad9768f99d3:26e529d4a9250d39:1","time":"2022-04-05 19:45:28.684400"}
+{"context":{},"level":"error","msg":"RPCTraceFormatter httpcli.Do err:Get \"http://127.0.0.1:8111/format?helloTo=prince\": dial tcp 127.0.0.1:8111: connect: connection refused","time":"2022-04-05 19:45:28.684670"}
+{"context":{},"level":"info","msg":"Reporting span 26e529d4a9250d39:007d02e1095d513b:26e529d4a9250d39:1","time":"2022-04-05 19:45:28.684742"}
+{"context":{},"level":"info","msg":"Reporting span 26e529d4a9250d39:5347a4d3dd3bfb76:26e529d4a9250d39:1","time":"2022-04-05 19:45:28.685307"}
+{"context":{},"level":"info","msg":"Reporting span 26e529d4a9250d39:26e529d4a9250d39:0000000000000000:1","time":"2022-04-05 19:45:28.685341"}
+{"context":{},"level":"info","msg":"debug logging disabled","time":"2022-04-05 19:47:30.448123"}
+{"context":{},"level":"info","msg":"Initializing logging reporter","time":"2022-04-05 19:47:30.448744"}
+{"context":{},"level":"info","msg":"debug logging disabled","time":"2022-04-05 19:47:30.448844"}
+{"context":{},"level":"info","msg":"Reporting span 211e84d62488801f:3f9ff4fb5e08ac36:211e84d62488801f:1","time":"2022-04-05 19:47:30.450178"}
+{"context":{},"level":"info","msg":"Reporting span 211e84d62488801f:40726b5843d50e6f:211e84d62488801f:1","time":"2022-04-05 19:47:30.450880"}
+{"context":{},"level":"error","msg":"RPCTraceFormatter httpcli.Do err:Get \"http://127.0.0.1:8111/format?helloTo=prince\": dial tcp 127.0.0.1:8111: connect: connection refused","time":"2022-04-05 19:47:30.451140"}
+{"context":{},"level":"info","msg":"Reporting span 211e84d62488801f:1bd516cea434ca4d:211e84d62488801f:1","time":"2022-04-05 19:47:30.451179"}
+{"context":{},"level":"info","msg":"Reporting span 211e84d62488801f:6c480066f78bccd3:211e84d62488801f:1","time":"2022-04-05 19:47:30.452283"}
+{"context":{},"level":"info","msg":"Reporting span 211e84d62488801f:211e84d62488801f:0000000000000000:1","time":"2022-04-05 19:47:30.452317"}
+{"context":{},"level":"info","msg":"debug logging disabled","time":"2022-04-05 19:48:44.802777"}
+{"context":{},"level":"info","msg":"Initializing logging reporter","time":"2022-04-05 19:48:44.803066"}
+{"context":{},"level":"info","msg":"debug logging disabled","time":"2022-04-05 19:48:44.803184"}
+{"context":{},"level":"error","msg":"RPCFormatter httpcli.Do err:Get \"http://127.0.0.1:8101/format?helloTo=prince\": dial tcp 127.0.0.1:8101: connect: connection refused","time":"2022-04-05 19:48:44.803841"}
+{"context":{},"level":"info","msg":"Reporting span 14917970ff230bc7:2c4efc9dd37bba3d:14917970ff230bc7:1","time":"2022-04-05 19:48:44.803904"}
+{"context":{},"level":"info","msg":"Reporting span 14917970ff230bc7:616604acb89fdfc5:14917970ff230bc7:1","time":"2022-04-05 19:48:44.804444"}
+{"context":{},"level":"error","msg":"RPCTraceFormatter httpcli.Do err:Get \"http://127.0.0.1:8111/format?helloTo=prince\": dial tcp 127.0.0.1:8111: connect: connection refused","time":"2022-04-05 19:48:44.804710"}
+{"context":{},"level":"info","msg":"Reporting span 14917970ff230bc7:5ae59683cf729230:14917970ff230bc7:1","time":"2022-04-05 19:48:44.804781"}
+{"context":{},"level":"info","msg":"Reporting span 14917970ff230bc7:5ce96c99de329966:14917970ff230bc7:1","time":"2022-04-05 19:48:44.805368"}
+{"context":{},"level":"info","msg":"Reporting span 14917970ff230bc7:14917970ff230bc7:0000000000000000:1","time":"2022-04-05 19:48:44.805403"}
+{"context":{},"level":"info","msg":"debug logging disabled","time":"2022-04-05 19:50:14.744762"}
+{"context":{},"level":"info","msg":"Initializing logging reporter","time":"2022-04-05 19:50:14.745064"}
+{"context":{},"level":"info","msg":"debug logging disabled","time":"2022-04-05 19:50:14.745161"}
+{"context":{},"level":"error","msg":"RPCFormatter httpcli.Do err:Get \"http://127.0.0.1:8101/format?helloTo=prince\": dial tcp 127.0.0.1:8101: connect: connection refused","time":"2022-04-05 19:50:14.746195"}
+{"context":{},"level":"info","msg":"Reporting span 3361a6cbd494f84a:4cb082a86cdea564:3361a6cbd494f84a:1","time":"2022-04-05 19:50:14.746265"}
+{"context":{},"level":"info","msg":"Reporting span 3361a6cbd494f84a:101dea42b6c72958:3361a6cbd494f84a:1","time":"2022-04-05 19:50:14.747699"}
+{"context":{},"level":"error","msg":"RPCTraceFormatter httpcli.Do err:Get \"http://127.0.0.1:8111/format?helloTo=prince\": dial tcp 127.0.0.1:8111: connect: connection refused","time":"2022-04-05 19:50:14.748385"}
+{"context":{},"level":"info","msg":"Reporting span 3361a6cbd494f84a:68ebbe157c44b45f:3361a6cbd494f84a:1","time":"2022-04-05 19:50:14.748489"}
+{"context":{},"level":"info","msg":"Reporting span 3361a6cbd494f84a:77b3ff84dd443b08:3361a6cbd494f84a:1","time":"2022-04-05 19:50:14.749365"}
+{"context":{},"level":"info","msg":"Reporting span 3361a6cbd494f84a:3361a6cbd494f84a:0000000000000000:1","time":"2022-04-05 19:50:14.749492"}
+{"context":{},"level":"info","msg":"debug logging disabled","time":"2022-04-05 19:50:55.691995"}
+{"context":{},"level":"info","msg":"Initializing logging reporter","time":"2022-04-05 19:50:55.692615"}
+{"context":{},"level":"info","msg":"debug logging disabled","time":"2022-04-05 19:50:55.692714"}
+{"context":{},"level":"error","msg":"RPCFormatter httpcli.Do err:Get \"http://127.0.0.1:8101/format?helloTo=prince\": dial tcp 127.0.0.1:8101: connect: connection refused","time":"2022-04-05 19:50:55.693339"}
+{"context":{},"level":"info","msg":"Reporting span 412f4d792aa7de31:661c8da66d2080d9:412f4d792aa7de31:1","time":"2022-04-05 19:50:55.693380"}
+{"context":{},"level":"info","msg":"Reporting span 412f4d792aa7de31:1827e9be62fbe860:412f4d792aa7de31:1","time":"2022-04-05 19:50:55.693941"}
+{"context":{},"level":"error","msg":"RPCTraceFormatter httpcli.Do err:Get \"http://127.0.0.1:8111/format?helloTo=prince\": dial tcp 127.0.0.1:8111: connect: connection refused","time":"2022-04-05 19:50:55.694170"}
+{"context":{},"level":"info","msg":"Reporting span 412f4d792aa7de31:08344c4afba1f3ab:412f4d792aa7de31:1","time":"2022-04-05 19:50:55.694222"}
+{"context":{},"level":"info","msg":"Reporting span 412f4d792aa7de31:69a99565eec74f9b:412f4d792aa7de31:1","time":"2022-04-05 19:50:55.694795"}
+{"context":{},"level":"info","msg":"Reporting span 412f4d792aa7de31:412f4d792aa7de31:0000000000000000:1","time":"2022-04-05 19:50:55.694847"}
+{"context":{},"level":"info","msg":"debug logging disabled","time":"2022-04-05 19:52:41.524206"}
+{"context":{},"level":"info","msg":"Initializing logging reporter","time":"2022-04-05 19:52:41.525566"}
+{"context":{},"level":"info","msg":"debug logging disabled","time":"2022-04-05 19:52:41.525810"}
+{"context":{},"level":"info","msg":"Reporting span 731b686930048a56:6a757a265a7bcf3d:731b686930048a56:1","time":"2022-04-05 19:52:41.528863"}
+{"context":{},"level":"info","msg":"Reporting span 731b686930048a56:4fa8fcc9ce059415:731b686930048a56:1","time":"2022-04-05 19:52:41.530495"}
+{"context":{},"level":"error","msg":"RPCTraceFormatter httpcli.Do err:Get \"http://127.0.0.1:8111/format?helloTo=prince\": dial tcp 127.0.0.1:8111: connect: connection refused","time":"2022-04-05 19:52:41.531607"}
+{"context":{},"level":"info","msg":"Reporting span 731b686930048a56:4adf18b73dd455ec:731b686930048a56:1","time":"2022-04-05 19:52:41.531868"}
+{"context":{},"level":"info","msg":"Reporting span 731b686930048a56:125f07c3ba59254f:731b686930048a56:1","time":"2022-04-05 19:52:41.533211"}
+{"context":{},"level":"info","msg":"Reporting span 731b686930048a56:731b686930048a56:0000000000000000:1","time":"2022-04-05 19:52:41.533353"}
+{"context":{},"level":"info","msg":"debug logging disabled","time":"2022-04-05 19:54:05.014149"}
+{"context":{},"level":"info","msg":"Initializing logging reporter","time":"2022-04-05 19:54:05.014401"}
+{"context":{},"level":"info","msg":"debug logging disabled","time":"2022-04-05 19:54:05.014484"}
+{"context":{},"level":"info","msg":"Reporting span 592f3e7f1c21f7cf:1758d7b0c09ea181:592f3e7f1c21f7cf:1","time":"2022-04-05 19:54:05.015839"}
+{"context":{},"level":"info","msg":"Reporting span 592f3e7f1c21f7cf:561ed00e1739ce79:592f3e7f1c21f7cf:1","time":"2022-04-05 19:54:05.016332"}
+{"context":{},"level":"info","msg":"Reporting span 592f3e7f1c21f7cf:55d7c34b2bfabd88:592f3e7f1c21f7cf:1","time":"2022-04-05 19:54:05.016962"}
+{"context":{},"level":"info","msg":"Reporting span 592f3e7f1c21f7cf:45da13f10a67d55f:592f3e7f1c21f7cf:1","time":"2022-04-05 19:54:05.017732"}
+{"context":{},"level":"info","msg":"Reporting span 592f3e7f1c21f7cf:592f3e7f1c21f7cf:0000000000000000:1","time":"2022-04-05 19:54:05.017768"}
+{"context":{},"level":"info","msg":"debug logging disabled","time":"2022-04-05 19:55:15.236991"}
+{"context":{},"level":"info","msg":"Initializing logging reporter","time":"2022-04-05 19:55:15.237586"}
+{"context":{},"level":"info","msg":"debug logging disabled","time":"2022-04-05 19:55:15.237738"}
+{"context":{},"level":"info","msg":"Reporting span 25a616f6bbdce488:509a9888411b50fa:25a616f6bbdce488:1","time":"2022-04-05 19:55:15.240357"}
+{"context":{},"level":"info","msg":"Reporting span 25a616f6bbdce488:2ccfc7426600cab4:25a616f6bbdce488:1","time":"2022-04-05 19:55:15.241629"}
+{"context":{},"level":"error","msg":"RPCTraceFormatter httpcli.Do err:Get \"http://127.0.0.1:8111/format?helloTo=prince\": dial tcp 127.0.0.1:8111: connect: connection refused","time":"2022-04-05 19:55:15.242391"}
+{"context":{},"level":"info","msg":"Reporting span 25a616f6bbdce488:14b49b174ba3b51d:25a616f6bbdce488:1","time":"2022-04-05 19:55:15.242443"}
+{"context":{},"level":"error","msg":"RPCTracePublisher httpcli.Do err:Get \"http://127.0.0.1:8112/publish?helloStr=hi+prince\": dial tcp 127.0.0.1:8112: connect: connection refused","time":"2022-04-05 19:55:15.242646"}
+{"context":{},"level":"info","msg":"Reporting span 25a616f6bbdce488:49460ebc0928e59d:25a616f6bbdce488:1","time":"2022-04-05 19:55:15.242690"}
+{"context":{},"level":"info","msg":"Reporting span 25a616f6bbdce488:25a616f6bbdce488:0000000000000000:1","time":"2022-04-05 19:55:15.242716"}
+{"context":{},"level":"info","msg":"debug logging disabled","time":"2022-04-05 19:55:23.311622"}
+{"context":{},"level":"info","msg":"Initializing logging reporter","time":"2022-04-05 19:55:23.311842"}
+{"context":{},"level":"info","msg":"debug logging disabled","time":"2022-04-05 19:55:23.311932"}
+{"context":{},"level":"info","msg":"Reporting span 2562b8addc47cb34:774a42b23ddedbd7:2562b8addc47cb34:1","time":"2022-04-05 19:55:23.312940"}
+{"context":{},"level":"info","msg":"Reporting span 2562b8addc47cb34:48415633686d0896:2562b8addc47cb34:1","time":"2022-04-05 19:55:23.313336"}
+{"context":{},"level":"error","msg":"RPCTraceFormatter httpcli.Do err:Get \"http://127.0.0.1:8111/format?helloTo=prince\": dial tcp 127.0.0.1:8111: connect: connection refused","time":"2022-04-05 19:55:23.313512"}
+{"context":{},"level":"info","msg":"Reporting span 2562b8addc47cb34:50038ac3fe5ba5c3:2562b8addc47cb34:1","time":"2022-04-05 19:55:23.313557"}
+{"context":{},"level":"error","msg":"RPCTracePublisher httpcli.Do err:Get \"http://127.0.0.1:8112/publish?helloStr=hi+prince\": dial tcp 127.0.0.1:8112: connect: connection refused","time":"2022-04-05 19:55:23.313707"}
+{"context":{},"level":"info","msg":"Reporting span 2562b8addc47cb34:3a514ab218ef370a:2562b8addc47cb34:1","time":"2022-04-05 19:55:23.313737"}
+{"context":{},"level":"info","msg":"Reporting span 2562b8addc47cb34:2562b8addc47cb34:0000000000000000:1","time":"2022-04-05 19:55:23.313755"}
+{"context":{},"level":"info","msg":"debug logging disabled","time":"2022-04-05 19:56:33.037954"}
+{"context":{},"level":"info","msg":"Initializing logging reporter","time":"2022-04-05 19:56:33.038220"}
+{"context":{},"level":"info","msg":"debug logging disabled","time":"2022-04-05 19:56:33.038308"}
+{"context":{},"level":"error","msg":"RPCFormatter httpcli.Do err:Get \"http://127.0.0.1:8101/format?helloTo=prince\": dial tcp 127.0.0.1:8101: connect: connection refused","time":"2022-04-05 19:56:33.038937"}
+{"context":{},"level":"info","msg":"Reporting span 7875632cd17f072a:5919013873cf5bb8:7875632cd17f072a:1","time":"2022-04-05 19:56:33.039003"}
+{"context":{},"level":"info","msg":"Reporting span 7875632cd17f072a:0f65b9a1dc4ebfac:7875632cd17f072a:1","time":"2022-04-05 19:56:33.039485"}
+{"context":{},"level":"error","msg":"RPCTraceFormatter httpcli.Do err:Get \"http://127.0.0.1:8111/format?helloTo=prince\": dial tcp 127.0.0.1:8111: connect: connection refused","time":"2022-04-05 19:56:33.039670"}
+{"context":{},"level":"info","msg":"Reporting span 7875632cd17f072a:1cab6c82429027ea:7875632cd17f072a:1","time":"2022-04-05 19:56:33.039704"}
+{"context":{},"level":"error","msg":"RPCTracePublisher httpcli.Do err:Get \"http://127.0.0.1:8112/publish?helloStr=hi+prince\": dial tcp 127.0.0.1:8112: connect: connection refused","time":"2022-04-05 19:56:33.039861"}
+{"context":{},"level":"info","msg":"Reporting span 7875632cd17f072a:6b890e44182d274e:7875632cd17f072a:1","time":"2022-04-05 19:56:33.039905"}
+{"context":{},"level":"info","msg":"Reporting span 7875632cd17f072a:7875632cd17f072a:0000000000000000:1","time":"2022-04-05 19:56:33.039931"}
+{"context":{},"level":"info","msg":"debug logging disabled","time":"2022-04-05 19:58:00.032718"}
+{"context":{},"level":"info","msg":"Initializing logging reporter","time":"2022-04-05 19:58:00.033003"}
+{"context":{},"level":"info","msg":"debug logging disabled","time":"2022-04-05 19:58:00.033087"}
+{"context":{},"level":"error","msg":"RPCFormatter httpcli.Do err:Get \"http://127.0.0.1:8101/format?helloTo=prince\": dial tcp 127.0.0.1:8101: connect: connection refused","time":"2022-04-05 19:58:00.033727"}
+{"context":{},"level":"info","msg":"Reporting span 729b1e8cda61bc18:162308ae6c38aabc:729b1e8cda61bc18:1","time":"2022-04-05 19:58:00.033792"}
+{"context":{},"level":"info","msg":"Reporting span 729b1e8cda61bc18:3d3dff84a7dfe14d:729b1e8cda61bc18:1","time":"2022-04-05 19:58:00.034405"}
+{"context":{},"level":"error","msg":"RPCTraceFormatter httpcli.Do err:Get \"http://127.0.0.1:8111/format?helloTo=prince\": dial tcp 127.0.0.1:8111: connect: connection refused","time":"2022-04-05 19:58:00.034626"}
+{"context":{},"level":"info","msg":"Reporting span 729b1e8cda61bc18:50ef0fb8b098d2ec:729b1e8cda61bc18:1","time":"2022-04-05 19:58:00.034699"}
+{"context":{},"level":"error","msg":"RPCTracePublisher httpcli.Do err:Get \"http://127.0.0.1:8112/publish?helloStr=hi+prince\": dial tcp 127.0.0.1:8112: connect: connection refused","time":"2022-04-05 19:58:00.034901"}
+{"context":{},"level":"info","msg":"Reporting span 729b1e8cda61bc18:49e85b1369e95739:729b1e8cda61bc18:1","time":"2022-04-05 19:58:00.034942"}
+{"context":{},"level":"info","msg":"Reporting span 729b1e8cda61bc18:729b1e8cda61bc18:0000000000000000:1","time":"2022-04-05 19:58:00.034962"}
+{"context":{},"level":"info","msg":"debug logging disabled","time":"2022-04-05 20:00:08.859760"}
+{"context":{},"level":"info","msg":"Initializing logging reporter","time":"2022-04-05 20:00:08.860030"}
+{"context":{},"level":"info","msg":"debug logging disabled","time":"2022-04-05 20:00:08.860127"}
+{"context":{},"level":"error","msg":"RPCFormatter httpcli.Do err:Get \"http://127.0.0.1:8101/format?helloTo=prince\": dial tcp 127.0.0.1:8101: connect: connection refused","time":"2022-04-05 20:00:08.860787"}
+{"context":{},"level":"info","msg":"Reporting span 1b4c913dc772c1c6:18771d1625966361:1b4c913dc772c1c6:1","time":"2022-04-05 20:00:08.860857"}
+{"context":{},"level":"info","msg":"Reporting span 1b4c913dc772c1c6:00e43cc4d9172e64:1b4c913dc772c1c6:1","time":"2022-04-05 20:00:08.861371"}
+{"context":{},"level":"error","msg":"RPCTraceFormatter httpcli.Do err:Get \"http://127.0.0.1:8111/format?helloTo=prince\": dial tcp 127.0.0.1:8111: connect: connection refused","time":"2022-04-05 20:00:08.861680"}
+{"context":{},"level":"info","msg":"Reporting span 1b4c913dc772c1c6:2a7daff723d74018:1b4c913dc772c1c6:1","time":"2022-04-05 20:00:08.861750"}
+{"context":{},"level":"error","msg":"RPCTracePublisher httpcli.Do err:Get \"http://127.0.0.1:8112/publish?helloStr=hi+prince\": dial tcp 127.0.0.1:8112: connect: connection refused","time":"2022-04-05 20:00:08.861977"}
+{"context":{},"level":"info","msg":"Reporting span 1b4c913dc772c1c6:3c55e0438b0d99ec:1b4c913dc772c1c6:1","time":"2022-04-05 20:00:08.862018"}
+{"context":{},"level":"info","msg":"Reporting span 1b4c913dc772c1c6:1b4c913dc772c1c6:0000000000000000:1","time":"2022-04-05 20:00:08.862045"}
+{"context":{},"level":"info","msg":"debug logging disabled","time":"2022-04-05 20:01:03.295271"}
+{"context":{},"level":"info","msg":"Initializing logging reporter","time":"2022-04-05 20:01:03.295569"}
+{"context":{},"level":"info","msg":"debug logging disabled","time":"2022-04-05 20:01:03.295661"}
+{"context":{},"level":"error","msg":"RPCFormatter httpcli.Do err:Get \"http://127.0.0.1:8101/format?helloTo=prince\": dial tcp 127.0.0.1:8101: connect: connection refused","time":"2022-04-05 20:01:03.296307"}
+{"context":{},"level":"info","msg":"Reporting span 3bfc2ab1ba951b47:10de933ceffc0ca6:3bfc2ab1ba951b47:1","time":"2022-04-05 20:01:03.296377"}
+{"context":{},"level":"info","msg":"Reporting span 3bfc2ab1ba951b47:46e09427574fb368:3bfc2ab1ba951b47:1","time":"2022-04-05 20:01:03.296938"}
+{"context":{},"level":"error","msg":"RPCTraceFormatter httpcli.Do err:Get \"http://127.0.0.1:8111/format?helloTo=prince\": dial tcp 127.0.0.1:8111: connect: connection refused","time":"2022-04-05 20:01:03.297142"}
+{"context":{},"level":"info","msg":"Reporting span 3bfc2ab1ba951b47:236108d0854ac64e:3bfc2ab1ba951b47:1","time":"2022-04-05 20:01:03.297203"}
+{"context":{},"level":"error","msg":"RPCTracePublisher httpcli.Do err:Get \"http://127.0.0.1:8112/publish?helloStr=hi+prince\": dial tcp 127.0.0.1:8112: connect: connection refused","time":"2022-04-05 20:01:03.297373"}
+{"context":{},"level":"info","msg":"Reporting span 3bfc2ab1ba951b47:37d9c92fb32da003:3bfc2ab1ba951b47:1","time":"2022-04-05 20:01:03.297402"}
+{"context":{},"level":"info","msg":"Reporting span 3bfc2ab1ba951b47:3bfc2ab1ba951b47:0000000000000000:1","time":"2022-04-05 20:01:03.297422"}
+{"context":{},"level":"info","msg":"debug logging disabled","time":"2022-04-05 20:03:16.865168"}
+{"context":{},"level":"info","msg":"Initializing logging reporter","time":"2022-04-05 20:03:16.865809"}
+{"context":{},"level":"info","msg":"debug logging disabled","time":"2022-04-05 20:03:16.865919"}
+{"context":{},"level":"error","msg":"RPCFormatter httpcli.Do err:Get \"http://127.0.0.1:8101/format?helloTo=prince\": dial tcp 127.0.0.1:8101: connect: connection refused","time":"2022-04-05 20:03:16.866601"}
+{"context":{},"level":"info","msg":"Reporting span 2c2cdaf3a94dd7df:2e0394e755320fc7:2c2cdaf3a94dd7df:1","time":"2022-04-05 20:03:16.866667"}
+{"context":{},"level":"info","msg":"Reporting span 2c2cdaf3a94dd7df:54ea7b64c9180b2d:2c2cdaf3a94dd7df:1","time":"2022-04-05 20:03:16.867315"}
+{"context":{},"level":"error","msg":"RPCTraceFormatter httpcli.Do err:Get \"http://127.0.0.1:8111/format?helloTo=prince\": dial tcp 127.0.0.1:8111: connect: connection refused","time":"2022-04-05 20:03:16.867550"}
+{"context":{},"level":"info","msg":"Reporting span 2c2cdaf3a94dd7df:2126efb775bb5cf7:2c2cdaf3a94dd7df:1","time":"2022-04-05 20:03:16.867590"}
+{"context":{},"level":"error","msg":"RPCTracePublisher httpcli.Do err:Get \"http://127.0.0.1:8112/publish?helloStr=hi+prince\": dial tcp 127.0.0.1:8112: connect: connection refused","time":"2022-04-05 20:03:16.867794"}
+{"context":{},"level":"info","msg":"Reporting span 2c2cdaf3a94dd7df:205c9f993e6940c6:2c2cdaf3a94dd7df:1","time":"2022-04-05 20:03:16.867842"}
+{"context":{},"level":"info","msg":"Reporting span 2c2cdaf3a94dd7df:2c2cdaf3a94dd7df:0000000000000000:1","time":"2022-04-05 20:03:16.867873"}
+{"context":{},"level":"info","msg":"debug logging disabled","time":"2022-04-05 20:05:47.883359"}
+{"context":{},"level":"info","msg":"Initializing logging reporter","time":"2022-04-05 20:05:47.883650"}
+{"context":{},"level":"info","msg":"debug logging disabled","time":"2022-04-05 20:05:47.883752"}
+{"context":{},"level":"error","msg":"RPCFormatter httpcli.Do err:Get \"http://127.0.0.1:8101/format?helloTo=prince\": dial tcp 127.0.0.1:8101: connect: connection refused","time":"2022-04-05 20:05:47.884427"}
+{"context":{},"level":"info","msg":"Reporting span 5e4c8a97496f91c0:0d77a8aa9508cc3f:5e4c8a97496f91c0:1","time":"2022-04-05 20:05:47.884496"}
+{"context":{},"level":"info","msg":"Reporting span 5e4c8a97496f91c0:0f0a3d95fdea2c76:5e4c8a97496f91c0:1","time":"2022-04-05 20:05:47.885044"}
+{"context":{},"level":"error","msg":"RPCTraceFormatter httpcli.Do err:Get \"http://127.0.0.1:8111/format?helloTo=prince\": dial tcp 127.0.0.1:8111: connect: connection refused","time":"2022-04-05 20:05:47.885275"}
+{"context":{},"level":"info","msg":"Reporting span 5e4c8a97496f91c0:3dbe35bf391a4a9e:5e4c8a97496f91c0:1","time":"2022-04-05 20:05:47.885332"}
+{"context":{},"level":"error","msg":"RPCTracePublisher httpcli.Do err:Get \"http://127.0.0.1:8112/publish?helloStr=hi+prince\": dial tcp 127.0.0.1:8112: connect: connection refused","time":"2022-04-05 20:05:47.885544"}
+{"context":{},"level":"info","msg":"Reporting span 5e4c8a97496f91c0:0fde96496591ee3c:5e4c8a97496f91c0:1","time":"2022-04-05 20:05:47.885593"}
+{"context":{},"level":"info","msg":"Reporting span 5e4c8a97496f91c0:5e4c8a97496f91c0:0000000000000000:1","time":"2022-04-05 20:05:47.885620"}
+{"context":{},"level":"info","msg":"debug logging disabled","time":"2022-04-05 20:07:33.635197"}
+{"context":{},"level":"info","msg":"Initializing logging reporter","time":"2022-04-05 20:07:33.636178"}
+{"context":{},"level":"info","msg":"debug logging disabled","time":"2022-04-05 20:07:33.636268"}
+{"context":{},"level":"info","msg":"Reporting span 3678f6ad53a1727e:1c8cf8d041dbb3a3:3678f6ad53a1727e:1","time":"2022-04-05 20:07:33.637326"}
+{"context":{},"level":"info","msg":"Reporting span 3678f6ad53a1727e:27e0e7462526ee8b:3678f6ad53a1727e:1","time":"2022-04-05 20:07:33.637746"}
+{"context":{},"level":"error","msg":"RPCTraceFormatter httpcli.Do err:Get \"http://127.0.0.1:8111/format?helloTo=prince\": dial tcp 127.0.0.1:8111: connect: connection refused","time":"2022-04-05 20:07:33.637941"}
+{"context":{},"level":"info","msg":"Reporting span 3678f6ad53a1727e:746db6265838c1f4:3678f6ad53a1727e:1","time":"2022-04-05 20:07:33.637975"}
+{"context":{},"level":"info","msg":"Reporting span 3678f6ad53a1727e:62f44da9c8e732b6:3678f6ad53a1727e:1","time":"2022-04-05 20:07:33.638674"}
+{"context":{},"level":"info","msg":"Reporting span 3678f6ad53a1727e:3678f6ad53a1727e:0000000000000000:1","time":"2022-04-05 20:07:33.638725"}
+{"context":{},"level":"info","msg":"debug logging disabled","time":"2022-04-05 20:08:01.015502"}
+{"context":{},"level":"info","msg":"Initializing logging reporter","time":"2022-04-05 20:08:01.015775"}
+{"context":{},"level":"info","msg":"debug logging disabled","time":"2022-04-05 20:08:01.015869"}
+{"context":{},"level":"error","msg":"RPCTraceFormatter httpcli.Do err:Get \"http://127.0.0.1:8111/format?helloTo=prince\": dial tcp 127.0.0.1:8111: connect: connection refused","time":"2022-04-05 20:08:01.017723"}
+{"context":{},"level":"info","msg":"Reporting span 0920cd1c291aad7d:0920cd1c291aad7d:0000000000000000:1","time":"2022-04-05 20:08:01.019156"}
+{"context":{},"level":"info","msg":"debug logging disabled","time":"2022-04-05 20:08:43.311464"}
+{"context":{},"level":"info","msg":"Initializing logging reporter","time":"2022-04-05 20:08:43.311832"}
+{"context":{},"level":"info","msg":"debug logging disabled","time":"2022-04-05 20:08:43.311975"}
+{"context":{},"level":"info","msg":"Reporting span 7ef5928dfe51d007:335c9c8b63c9e34e:7ef5928dfe51d007:1","time":"2022-04-05 20:08:43.314106"}
+{"context":{},"level":"info","msg":"Reporting span 7ef5928dfe51d007:75de8525d0de980f:7ef5928dfe51d007:1","time":"2022-04-05 20:08:43.314640"}
+{"context":{},"level":"error","msg":"RPCTraceFormatter httpcli.Do err:Get \"http://127.0.0.1:8111/format?helloTo=prince\": dial tcp 127.0.0.1:8111: connect: connection refused","time":"2022-04-05 20:08:43.314942"}
+{"context":{},"level":"info","msg":"Reporting span 7ef5928dfe51d007:5a1ee0bc6860ee0b:7ef5928dfe51d007:1","time":"2022-04-05 20:08:43.315013"}
+{"context":{},"level":"info","msg":"Reporting span 7ef5928dfe51d007:14d8e5c8eea801dd:7ef5928dfe51d007:1","time":"2022-04-05 20:08:43.315991"}
+{"context":{},"level":"info","msg":"Reporting span 7ef5928dfe51d007:7ef5928dfe51d007:0000000000000000:1","time":"2022-04-05 20:08:43.316069"}
+{"context":{},"level":"info","msg":"debug logging disabled","time":"2022-04-05 20:09:10.627714"}
+{"context":{},"level":"info","msg":"Initializing logging reporter","time":"2022-04-05 20:09:10.628301"}
+{"context":{},"level":"info","msg":"debug logging disabled","time":"2022-04-05 20:09:10.628407"}
+{"context":{},"level":"error","msg":"RPCTraceFormatter httpcli.Do err:Get \"http://127.0.0.1:8111/format?helloTo=prince\": dial tcp 127.0.0.1:8111: connect: connection refused","time":"2022-04-05 20:09:10.629868"}
+{"context":{},"level":"info","msg":"Reporting span 24b646e87552413e:24b646e87552413e:0000000000000000:1","time":"2022-04-05 20:09:10.630652"}
+{"context":{},"level":"info","msg":"debug logging disabled","time":"2022-04-05 20:09:49.016801"}
+{"context":{},"level":"info","msg":"Initializing logging reporter","time":"2022-04-05 20:09:49.017548"}
+{"context":{},"level":"info","msg":"debug logging disabled","time":"2022-04-05 20:09:49.017661"}
+{"context":{},"level":"info","msg":"Reporting span 743ab122898826f6:3f36767ceed05c1d:743ab122898826f6:1","time":"2022-04-05 20:09:49.019626"}
+{"context":{},"level":"info","msg":"Reporting span 743ab122898826f6:0dd453f943c77268:743ab122898826f6:1","time":"2022-04-05 20:09:49.020741"}
+{"context":{},"level":"error","msg":"RPCTraceFormatter httpcli.Do err:Get \"http://127.0.0.1:8111/format?helloTo=prince\": dial tcp 127.0.0.1:8111: connect: connection refused","time":"2022-04-05 20:09:49.021152"}
+{"context":{},"level":"info","msg":"Reporting span 743ab122898826f6:554b1942de4ac666:743ab122898826f6:1","time":"2022-04-05 20:09:49.021193"}
+{"context":{},"level":"info","msg":"Reporting span 743ab122898826f6:7a340b39e58e1157:743ab122898826f6:1","time":"2022-04-05 20:09:49.022230"}
+{"context":{},"level":"info","msg":"Reporting span 743ab122898826f6:743ab122898826f6:0000000000000000:1","time":"2022-04-05 20:09:49.022273"}
+{"context":{},"level":"info","msg":"debug logging disabled","time":"2022-04-06 13:13:50.385206"}
+{"context":{},"level":"info","msg":"Initializing logging reporter","time":"2022-04-06 13:13:50.385818"}
+{"context":{},"level":"info","msg":"debug logging disabled","time":"2022-04-06 13:13:50.385932"}
+{"context":{},"level":"info","msg":"Reporting span 3bbbee7cb0910533:0f7ef6ade11db4da:3bbbee7cb0910533:1","time":"2022-04-06 13:13:50.402883"}
+{"context":{},"level":"info","msg":"Reporting span 3bbbee7cb0910533:18480384f75783bb:3bbbee7cb0910533:1","time":"2022-04-06 13:13:50.421370"}
+{"context":{},"level":"error","msg":"RPCTraceFormatter httpcli.Do err:Get \"http://127.0.0.1:8111/format?helloTo=prince\": dial tcp 127.0.0.1:8111: connect: connection refused","time":"2022-04-06 13:13:50.421712"}
+{"context":{},"level":"info","msg":"Reporting span 3bbbee7cb0910533:50b6a5d8ae438a2f:3bbbee7cb0910533:1","time":"2022-04-06 13:13:50.421747"}
+{"context":{},"level":"info","msg":"Reporting span 3bbbee7cb0910533:63dac166203c7d19:3bbbee7cb0910533:1","time":"2022-04-06 13:13:50.443761"}
+{"context":{},"level":"error","msg":"RPCTraceFormatter httpcli.Do err:Get \"http://127.0.0.1:8121/format?helloTo=prince\": dial tcp 127.0.0.1:8121: connect: connection refused","time":"2022-04-06 13:13:50.444008"}
+{"context":{},"level":"info","msg":"Reporting span 3bbbee7cb0910533:3c3b90132c457569:3bbbee7cb0910533:1","time":"2022-04-06 13:13:50.444042"}
+{"context":{},"level":"error","msg":"RPCTracePublisher httpcli.Do err:Get \"http://127.0.0.1:8122/publish?helloStr=hi+prince\": dial tcp 127.0.0.1:8122: connect: connection refused","time":"2022-04-06 13:13:50.444210"}
+{"context":{},"level":"info","msg":"Reporting span 3bbbee7cb0910533:4c0f8db02553d940:3bbbee7cb0910533:1","time":"2022-04-06 13:13:50.444267"}
+{"context":{},"level":"info","msg":"Reporting span 3bbbee7cb0910533:3bbbee7cb0910533:0000000000000000:1","time":"2022-04-06 13:13:50.444290"}
+{"context":{},"level":"info","msg":"debug logging disabled","time":"2022-04-06 13:15:03.458454"}
+{"context":{},"level":"info","msg":"Initializing logging reporter","time":"2022-04-06 13:15:03.458979"}
+{"context":{},"level":"info","msg":"debug logging disabled","time":"2022-04-06 13:15:03.459058"}
+{"context":{},"level":"info","msg":"Reporting span 47c0184487bf95dd:7440ab2338cb445b:47c0184487bf95dd:1","time":"2022-04-06 13:15:03.459824"}
+{"context":{},"level":"info","msg":"Reporting span 47c0184487bf95dd:46b5294a5ab72166:47c0184487bf95dd:1","time":"2022-04-06 13:15:03.460272"}
+{"context":{},"level":"info","msg":"Reporting span 47c0184487bf95dd:5baf65745c6133c8:47c0184487bf95dd:1","time":"2022-04-06 13:15:03.461315"}
+{"context":{},"level":"info","msg":"Reporting span 47c0184487bf95dd:2e331d127dcf1fc5:47c0184487bf95dd:1","time":"2022-04-06 13:15:03.462083"}
+{"context":{},"level":"info","msg":"Reporting span 47c0184487bf95dd:47b040f0702e6ee4:47c0184487bf95dd:1","time":"2022-04-06 13:15:03.462671"}
+{"context":{},"level":"info","msg":"Reporting span 47c0184487bf95dd:46a4ab990bf19dc3:47c0184487bf95dd:1","time":"2022-04-06 13:15:03.463466"}
+{"context":{},"level":"info","msg":"Reporting span 47c0184487bf95dd:47c0184487bf95dd:0000000000000000:1","time":"2022-04-06 13:15:03.463495"}
+{"context":{},"level":"info","msg":"debug logging disabled","time":"2022-04-06 13:15:36.770228"}
+{"context":{},"level":"info","msg":"Initializing logging reporter","time":"2022-04-06 13:15:36.770903"}
+{"context":{},"level":"info","msg":"debug logging disabled","time":"2022-04-06 13:15:36.771048"}
+{"context":{},"level":"info","msg":"Reporting span 6b6a4262b90b0b99:64ad8468f716ff5a:6b6a4262b90b0b99:1","time":"2022-04-06 13:15:36.772117"}
+{"context":{},"level":"info","msg":"Reporting span 6b6a4262b90b0b99:34deafd93bfef7df:6b6a4262b90b0b99:1","time":"2022-04-06 13:15:36.773647"}
+{"context":{},"level":"info","msg":"Reporting span 6b6a4262b90b0b99:730ef77d184e335e:6b6a4262b90b0b99:1","time":"2022-04-06 13:15:36.774712"}
+{"context":{},"level":"info","msg":"Reporting span 6b6a4262b90b0b99:12b515fee3396faa:6b6a4262b90b0b99:1","time":"2022-04-06 13:15:36.775787"}
+{"context":{},"level":"info","msg":"Reporting span 6b6a4262b90b0b99:3a66d9e4c6028d37:6b6a4262b90b0b99:1","time":"2022-04-06 13:15:36.776792"}
+{"context":{},"level":"info","msg":"Reporting span 6b6a4262b90b0b99:31d1d8bdf2d5bd40:6b6a4262b90b0b99:1","time":"2022-04-06 13:15:36.777670"}
+{"context":{},"level":"info","msg":"Reporting span 6b6a4262b90b0b99:6b6a4262b90b0b99:0000000000000000:1","time":"2022-04-06 13:15:36.777710"}
+{"context":{},"level":"info","msg":"debug logging disabled","time":"2022-04-06 13:17:44.339948"}
+{"context":{},"level":"info","msg":"Initializing logging reporter","time":"2022-04-06 13:17:44.340601"}
+{"context":{},"level":"info","msg":"debug logging disabled","time":"2022-04-06 13:17:44.340704"}
+{"context":{},"level":"info","msg":"Reporting span 705b6f5afd6da1e2:17e8b58c756451e9:705b6f5afd6da1e2:1","time":"2022-04-06 13:17:44.341733"}
+{"context":{},"level":"info","msg":"Reporting span 705b6f5afd6da1e2:6782d446ff4f4f24:705b6f5afd6da1e2:1","time":"2022-04-06 13:17:44.342273"}
+{"context":{},"level":"info","msg":"Reporting span 705b6f5afd6da1e2:6370d9c280d22d47:705b6f5afd6da1e2:1","time":"2022-04-06 13:17:44.343111"}
+{"context":{},"level":"info","msg":"Reporting span 705b6f5afd6da1e2:5b49598023c6bdab:705b6f5afd6da1e2:1","time":"2022-04-06 13:17:44.343903"}
+{"context":{},"level":"info","msg":"Reporting span 705b6f5afd6da1e2:7416ebde6c3def3a:705b6f5afd6da1e2:1","time":"2022-04-06 13:17:44.344731"}
+{"context":{},"level":"info","msg":"Reporting span 705b6f5afd6da1e2:1e30cd9e02452f80:705b6f5afd6da1e2:1","time":"2022-04-06 13:17:44.345429"}
+{"context":{},"level":"info","msg":"Reporting span 705b6f5afd6da1e2:705b6f5afd6da1e2:0000000000000000:1","time":"2022-04-06 13:17:44.345465"}
+{"context":{},"level":"info","msg":"debug logging disabled","time":"2022-04-09 10:48:06.988924"}
+{"context":{},"level":"info","msg":"Initializing logging reporter","time":"2022-04-09 10:48:06.989206"}
+{"context":{},"level":"info","msg":"debug logging disabled","time":"2022-04-09 10:48:06.989293"}
+{"context":{},"level":"error","msg":"RPCFormatter httpcli.Do err:Get \"http://127.0.0.1:8101/format?helloTo=prince\": dial tcp 127.0.0.1:8101: connect: connection refused","time":"2022-04-09 10:48:06.989977"}
+{"context":{},"level":"info","msg":"Reporting span 4790c20c0ac81c4c:7262493b5fb285df:4790c20c0ac81c4c:1","time":"2022-04-09 10:48:06.990050"}
+{"context":{},"level":"error","msg":"RPCPublisher httpcli.Do err:Get \"http://127.0.0.1:8102/publish?helloStr=hi+prince\": dial tcp 127.0.0.1:8102: connect: connection refused","time":"2022-04-09 10:48:06.990259"}
+{"context":{},"level":"info","msg":"Reporting span 4790c20c0ac81c4c:7138dc806de614e6:4790c20c0ac81c4c:1","time":"2022-04-09 10:48:06.990308"}
+{"context":{},"level":"error","msg":"RPCTraceFormatter httpcli.Do err:Get \"http://127.0.0.1:8111/format?helloTo=prince\": dial tcp 127.0.0.1:8111: connect: connection refused","time":"2022-04-09 10:48:06.990501"}
+{"context":{},"level":"info","msg":"Reporting span 4790c20c0ac81c4c:7dc3ee214c0c0909:4790c20c0ac81c4c:1","time":"2022-04-09 10:48:06.990544"}
+{"context":{},"level":"error","msg":"RPCTracePublisher httpcli.Do err:Get \"http://127.0.0.1:8112/publish?helloStr=hi+prince\": dial tcp 127.0.0.1:8112: connect: connection refused","time":"2022-04-09 10:48:06.990729"}
+{"context":{},"level":"info","msg":"Reporting span 4790c20c0ac81c4c:07e3a6b842dbec9a:4790c20c0ac81c4c:1","time":"2022-04-09 10:48:06.990792"}
+{"context":{},"level":"error","msg":"RPCTraceBaggageFormatter httpcli.Do err:Get \"http://127.0.0.1:8121/format?helloTo=prince\": dial tcp 127.0.0.1:8121: connect: connection refused","time":"2022-04-09 10:48:06.990971"}
+{"context":{},"level":"info","msg":"Reporting span 4790c20c0ac81c4c:6e1ba524628097c0:4790c20c0ac81c4c:1","time":"2022-04-09 10:48:06.991014"}
+{"context":{},"level":"error","msg":"RPCTraceBaggagePublisher httpcli.Do err:Get \"http://127.0.0.1:8122/publish?helloStr=hi+prince\": dial tcp 127.0.0.1:8122: connect: connection refused","time":"2022-04-09 10:48:06.991179"}
+{"context":{},"level":"info","msg":"Reporting span 4790c20c0ac81c4c:2cf841cd036e6089:4790c20c0ac81c4c:1","time":"2022-04-09 10:48:06.991215"}
+{"context":{},"level":"info","msg":"Reporting span 4790c20c0ac81c4c:4790c20c0ac81c4c:0000000000000000:1","time":"2022-04-09 10:48:06.991235"}
+{"context":{},"level":"info","msg":"debug logging disabled","time":"2022-04-09 10:49:20.386903"}
+{"context":{},"level":"info","msg":"debug logging disabled","time":"2022-04-09 10:49:20.387251"}
+{"context":{},"level":"error","msg":"RPCFormatter httpcli.Do err:Get \"http://127.0.0.1:8101/format?helloTo=prince\": dial tcp 127.0.0.1:8101: connect: connection refused","time":"2022-04-09 10:49:20.387881"}
+{"context":{},"level":"error","msg":"RPCPublisher httpcli.Do err:Get \"http://127.0.0.1:8102/publish?helloStr=hi+prince\": dial tcp 127.0.0.1:8102: connect: connection refused","time":"2022-04-09 10:49:20.388126"}
+{"context":{},"level":"error","msg":"RPCTraceFormatter httpcli.Do err:Get \"http://127.0.0.1:8111/format?helloTo=prince\": dial tcp 127.0.0.1:8111: connect: connection refused","time":"2022-04-09 10:49:20.388415"}
+{"context":{},"level":"error","msg":"RPCTracePublisher httpcli.Do err:Get \"http://127.0.0.1:8112/publish?helloStr=hi+prince\": dial tcp 127.0.0.1:8112: connect: connection refused","time":"2022-04-09 10:49:20.388696"}
+{"context":{},"level":"error","msg":"RPCTraceBaggageFormatter httpcli.Do err:Get \"http://127.0.0.1:8121/format?helloTo=prince\": dial tcp 127.0.0.1:8121: connect: connection refused","time":"2022-04-09 10:49:20.388882"}
+{"context":{},"level":"error","msg":"RPCTraceBaggagePublisher httpcli.Do err:Get \"http://127.0.0.1:8122/publish?helloStr=hi+prince\": dial tcp 127.0.0.1:8122: connect: connection refused","time":"2022-04-09 10:49:20.389050"}
+{"context":{},"level":"info","msg":"debug logging disabled","time":"2022-04-09 10:50:13.199767"}
+{"context":{},"level":"info","msg":"Initializing logging reporter","time":"2022-04-09 10:50:13.200042"}
+{"context":{},"level":"info","msg":"debug logging disabled","time":"2022-04-09 10:50:13.200137"}
+{"context":{},"level":"error","msg":"RPCFormatter httpcli.Do err:Get \"http://127.0.0.1:8101/format?helloTo=prince\": dial tcp 127.0.0.1:8101: connect: connection refused","time":"2022-04-09 10:50:13.200775"}
+{"context":{},"level":"info","msg":"Reporting span 61b9978a8a21bef5:4280e78632521546:61b9978a8a21bef5:1","time":"2022-04-09 10:50:13.200836"}
+{"context":{},"level":"error","msg":"RPCPublisher httpcli.Do err:Get \"http://127.0.0.1:8102/publish?helloStr=hi+prince\": dial tcp 127.0.0.1:8102: connect: connection refused","time":"2022-04-09 10:50:13.201018"}
+{"context":{},"level":"info","msg":"Reporting span 61b9978a8a21bef5:56080099773653c3:61b9978a8a21bef5:1","time":"2022-04-09 10:50:13.201064"}
+{"context":{},"level":"error","msg":"RPCTraceFormatter httpcli.Do err:Get \"http://127.0.0.1:8111/format?helloTo=prince\": dial tcp 127.0.0.1:8111: connect: connection refused","time":"2022-04-09 10:50:13.201289"}
+{"context":{},"level":"info","msg":"Reporting span 61b9978a8a21bef5:536ce55c311d0ef0:61b9978a8a21bef5:1","time":"2022-04-09 10:50:13.201355"}
+{"context":{},"level":"error","msg":"RPCTracePublisher httpcli.Do err:Get \"http://127.0.0.1:8112/publish?helloStr=hi+prince\": dial tcp 127.0.0.1:8112: connect: connection refused","time":"2022-04-09 10:50:13.201545"}
+{"context":{},"level":"info","msg":"Reporting span 61b9978a8a21bef5:20f4c43e0ac44aed:61b9978a8a21bef5:1","time":"2022-04-09 10:50:13.201601"}
+{"context":{},"level":"error","msg":"RPCTraceBaggageFormatter httpcli.Do err:Get \"http://127.0.0.1:8121/format?helloTo=prince\": dial tcp 127.0.0.1:8121: connect: connection refused","time":"2022-04-09 10:50:13.201738"}
+{"context":{},"level":"info","msg":"Reporting span 61b9978a8a21bef5:17bfeca8d7d1bca1:61b9978a8a21bef5:1","time":"2022-04-09 10:50:13.201771"}
+{"context":{},"level":"error","msg":"RPCTraceBaggagePublisher httpcli.Do err:Get \"http://127.0.0.1:8122/publish?helloStr=hi+prince\": dial tcp 127.0.0.1:8122: connect: connection refused","time":"2022-04-09 10:50:13.201905"}
+{"context":{},"level":"info","msg":"Reporting span 61b9978a8a21bef5:01ff41f34a201b2c:61b9978a8a21bef5:1","time":"2022-04-09 10:50:13.201945"}
+{"context":{},"level":"info","msg":"Reporting span 61b9978a8a21bef5:61b9978a8a21bef5:0000000000000000:1","time":"2022-04-09 10:50:13.201966"}

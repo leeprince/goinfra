@@ -28,12 +28,15 @@ func main() {
     
     // tracer, closer := initJaeger(serverName)
     tracer, closer := initJaegerLog(serverName)
-    opentracing.SetGlobalTracer(tracer)
     defer closer.Close()
     
     println("tracer.StartSpan>>>>")
     span := tracer.StartSpan("say-hello")
     defer span.Finish()
+    
+    // 使用 span 的 Baggage 功能
+    // after starting the span
+    span.SetBaggageItem("seq", "prince-seq-202204060001")
     
     // 传递上下文 context 代替将 span 作为每个函数的第一个参数【最终方案】
     ctx := opentracing.ContextWithSpan(context.Background(), span)
@@ -47,6 +50,12 @@ func main() {
     RPCTraceFormatter(ctx)
     RPCTracePublisher(ctx)
     // --- 当前服务与远程调用服务组成一个完整调用链追踪 -end
+    
+    // --- 当前服务与远程调用服务组成一个完整调用链追踪，并使用 span 的 Baggage 功能
+    // 对应的课程：https://github.com/leeprince/opentracing-tutorial/tree/master/go/lesson04
+    RPCTraceBaggageFormatter(ctx)
+    RPCTraceBaggagePublisher(ctx)
+    // --- 当前服务与远程调用服务组成一个完整调用链追踪，并使用 span 的 Baggage 功能 -end
     // 传递上下文 context 代替将 span 作为每个函数的第一个参数 -end
 }
 
@@ -66,6 +75,10 @@ func RPCFormatter(ctx context.Context) {
         plog.Error("RPCFormatter http.NewRequest err:", err)
         return
     }
+    
+    // 使用 ext.LogError 设置 Tag=error 标记 span 错误
+    // ext.LogError(span, errors.New("RPCFormatter>>>>>>>>>>>>>>>>>>"))
+    
     bodyByte, err := httpcli.Do(req)
     if err != nil {
         plog.Error("RPCFormatter httpcli.Do err:", err)
@@ -111,8 +124,10 @@ func RPCTraceFormatter(ctx context.Context) {
     urlPath := "http://127.0.0.1:8111/format?" + params.Encode()
     req, err := http.NewRequest(http.MethodGet, urlPath, nil)
     if err != nil {
+        // 使用 ext.LogError 设置 Tag=error 标记 span 错误
         ext.LogError(span, err)
         plog.Error("RPCTraceFormatter http.NewRequest err:", err)
+        return
     }
     
     // 当前服务与远程调用服务组成一个完整调用链追踪
@@ -127,6 +142,7 @@ func RPCTraceFormatter(ctx context.Context) {
     
     bodyByte, err := httpcli.Do(req)
     if err != nil {
+        // 使用 ext.LogError 设置 Tag=error 标记 span 错误
         ext.LogError(span, err)
         plog.Error("RPCTraceFormatter httpcli.Do err:", err)
         return
@@ -147,6 +163,7 @@ func RPCTracePublisher(ctx context.Context) {
     urlPath := "http://127.0.0.1:8112/publish?" + params.Encode()
     req, err := http.NewRequest(http.MethodGet, urlPath, nil)
     if err != nil {
+        // 使用 ext.LogError 设置 Tag=error 标记 span 错误
         ext.LogError(span, err)
         plog.Error("RPCTracePublisher http.NewRequest err:", err)
         return
@@ -164,12 +181,92 @@ func RPCTracePublisher(ctx context.Context) {
     
     bodyByte, err := httpcli.Do(req)
     if err != nil {
+        // 使用 ext.LogError 设置 Tag=error 标记 span 错误
         ext.LogError(span, err)
         plog.Error("RPCTracePublisher httpcli.Do err:", err)
         return
     }
     fmt.Println("bodyString:", string(bodyByte))
 }
+
+func RPCTraceBaggageFormatter(ctx context.Context) {
+    // - 传递上下文 context 代替将 span 作为每个函数的第一个参数
+    span, _ := opentracing.StartSpanFromContext(ctx, "RPCTraceBaggageFormatter")
+    defer span.Finish()
+    println("RPCTraceBaggageFormatter@span.LogKV>>>>", time.Now().Format("2006-01-02 15:04:05.999999999"))
+    span.LogKV("RPCTraceBaggageFormatter@LogKV:event004", "println")
+    
+    params := url.Values{
+        "helloTo": []string{"prince"},
+    }
+    urlPath := "http://127.0.0.1:8121/format?" + params.Encode()
+    req, err := http.NewRequest(http.MethodGet, urlPath, nil)
+    if err != nil {
+        // 使用 ext.LogError 设置 Tag=error 标记 span 错误
+        ext.LogError(span, err)
+        plog.Error("RPCTraceBaggageFormatter http.NewRequest err:", err)
+        return
+    }
+    
+    // 当前服务与远程调用服务组成一个完整调用链追踪
+    ext.SpanKindRPCClient.Set(span)
+    ext.HTTPUrl.Set(span, urlPath)
+    ext.HTTPMethod.Set(span, "GET")
+    span.Tracer().Inject(
+        span.Context(),
+        opentracing.HTTPHeaders,
+        opentracing.HTTPHeadersCarrier(req.Header),
+    )
+    
+    bodyByte, err := httpcli.Do(req)
+    if err != nil {
+        // 使用 ext.LogError 设置 Tag=error 标记 span 错误
+        ext.LogError(span, err)
+        plog.Error("RPCTraceBaggageFormatter httpcli.Do err:", err)
+        return
+    }
+    fmt.Println("bodyString:", string(bodyByte))
+}
+
+func RPCTraceBaggagePublisher(ctx context.Context) {
+    // - 传递上下文 context 代替将 span 作为每个函数的第一个参数
+    span, _ := opentracing.StartSpanFromContext(ctx, "RPCTraceBaggagePublisher")
+    defer span.Finish()
+    println("RPCTraceBaggagePublisher@span.LogKV>>>>", time.Now().Format("2006-01-02 15:04:05.999999999"))
+    span.LogKV("RPCTraceBaggagePublisher@LogKV:event004", "println")
+    
+    params := url.Values{
+        "helloStr": []string{"hi prince"},
+    }
+    urlPath := "http://127.0.0.1:8122/publish?" + params.Encode()
+    req, err := http.NewRequest(http.MethodGet, urlPath, nil)
+    if err != nil {
+        // 使用 ext.LogError 设置 Tag=error 标记 span 错误
+        ext.LogError(span, err)
+        plog.Error("RPCTraceBaggagePublisher http.NewRequest err:", err)
+        return
+    }
+    
+    // 当前服务与远程调用服务组成一个完整调用链追踪
+    ext.SpanKindRPCClient.Set(span)
+    ext.HTTPUrl.Set(span, urlPath)
+    ext.HTTPMethod.Set(span, "GET")
+    span.Tracer().Inject(
+        span.Context(),
+        opentracing.HTTPHeaders,
+        opentracing.HTTPHeadersCarrier(req.Header),
+    )
+    
+    bodyByte, err := httpcli.Do(req)
+    if err != nil {
+        // 使用 ext.LogError 设置 Tag=error 标记 span 错误
+        ext.LogError(span, err)
+        plog.Error("RPCTraceBaggagePublisher httpcli.Do err:", err)
+        return
+    }
+    fmt.Println("bodyString:", string(bodyByte))
+}
+
 
 // initJaeger returns an instance of Jaeger Tracer that samples 100% of traces and logs all spans to stdout.
 func initJaeger(service string) (opentracing.Tracer, io.Closer) {
@@ -187,6 +284,9 @@ func initJaeger(service string) (opentracing.Tracer, io.Closer) {
     if err != nil {
         panic(fmt.Sprintf("ERROR: cannot init Jaeger: %v\n", err))
     }
+    
+    opentracing.SetGlobalTracer(tracer)
+    
     return tracer, closer
 }
 
@@ -210,13 +310,18 @@ func initJaegerLog(service string) (opentracing.Tracer, io.Closer) {
     if err != nil {
         panic(fmt.Sprintf("ERROR: cannot init Jaeger: %v\n", err))
     }
+    
+    // opentracing.StartSpanFromContext 依赖 opentracing 的 Tracer
+    opentracing.SetGlobalTracer(tracer)
+    
     return tracer, closer
 }
 
+// jaegerLogger 基于 github.com/leeprince/goinfra/plog 实现 github.com/uber/jaeger-client-go@logger.go 的 Logger 接口
 var jaegerLoggerPlog = &jaegerLogger{}
 type jaegerLogger struct{}
 func (l *jaegerLogger) Error(msg string) {
-	plog.Error(msg)
+    plog.Error(msg)
 }
 func (l *jaegerLogger) Infof(msg string, args ...interface{}) {
     plog.Infof(msg, args...)

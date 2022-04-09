@@ -15,6 +15,12 @@ import (
 
 type Plog struct {
 	*logrus.Logger
+	OutFileInfo FileInfo
+}
+
+type FileInfo struct {
+	dirPath string
+	filename string
 }
 
 var (
@@ -32,8 +38,8 @@ func SetLogger(l *logrus.Logger) {
 	logger.Logger = l
 }
 
-func GetLogger() Plog {
-	return logger
+func GetLogger() *Plog {
+	return &logger
 }
 
 // --- 设置 logger 参数
@@ -89,3 +95,9 @@ func WithContext(ctx context.Context) *logrus.Entry {
 	return logger.WithContext(ctx)
 }
 // ---  设置 entry 参数, 并返回 Entry 对象 - end
+
+// -- Plog 的方法
+func (p *Plog) GetOutfileInfo() (dirPath, filename string) {
+	return p.OutFileInfo.dirPath, p.OutFileInfo.filename
+}
+// -- Plog 的方法 -end

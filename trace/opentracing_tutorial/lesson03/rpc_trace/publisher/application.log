@@ -1,7 +1,0 @@
-{"context":{},"level":"info","msg":"debug logging disabled","time":"2022-04-05 18:05:28.041826"}
-{"context":{},"level":"info","msg":"Initializing logging reporter","time":"2022-04-05 18:05:28.042149"}
-{"context":{},"level":"info","msg":"debug logging disabled","time":"2022-04-05 18:05:28.042238"}
-{"context":{},"level":"info","msg":"Reporting span 270184657e7ea949:260681d7e37ca59f:134e777f43aff62f:1","time":"2022-04-05 18:05:52.598273"}
-{"context":{},"level":"info","msg":"Reporting span 3c420c3f05ce2c60:406231afe0863cf4:1ae987278bc42379:1","time":"2022-04-05 18:10:14.290135"}
-{"context":{},"level":"info","msg":"Reporting span 2d4b9aee334cb181:7a9694a1f75aee14:36f23286902beac6:1","time":"2022-04-05 18:15:42.892177"}
-{"context":{},"level":"info","msg":"Reporting span 0dbb1882ad7f520c:5e8bcb4995979078:7e9cecead2aff86f:1","time":"2022-04-05 18:30:44.293463"}

@@ -175,6 +175,9 @@ func initJaeger(service string) (opentracing.Tracer, io.Closer) {
     if err != nil {
         panic(fmt.Sprintf("ERROR: cannot init Jaeger: %v\n", err))
     }
+    
+    opentracing.SetGlobalTracer(tracer)
+    
     return tracer, closer
 }
 
@@ -198,6 +201,10 @@ func initJaegerLog(service string) (opentracing.Tracer, io.Closer) {
     if err != nil {
         panic(fmt.Sprintf("ERROR: cannot init Jaeger: %v\n", err))
     }
+    
+    // opentracing.StartSpanFromContext 依赖 opentracing 的 Tracer
+    opentracing.SetGlobalTracer(tracer)
+    
     return tracer, closer
 }
 

@@ -62,6 +62,11 @@ func SetOutputFile(dirPath, filename string, isBothStdout bool) error {
         return err
     }
     
+    logger.OutFileInfo = FileInfo{
+        dirPath:  dirPath,
+        filename: filename,
+    }
+    
     if logger.Out == nil {
         SetOutput(writer)
     }

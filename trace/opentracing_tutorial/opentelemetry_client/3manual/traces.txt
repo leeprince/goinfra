@@ -1,0 +1,622 @@
+{
+	"Name": "childFunctionAttributes-attributesAtCreation",
+	"SpanContext": {
+		"TraceID": "526f6031c367e60643974b98bf71677a",
+		"SpanID": "23da4682e43b7c48",
+		"TraceFlags": "01",
+		"TraceState": "",
+		"Remote": false
+	},
+	"Parent": {
+		"TraceID": "526f6031c367e60643974b98bf71677a",
+		"SpanID": "10b3de6a13ab38c5",
+		"TraceFlags": "01",
+		"TraceState": "",
+		"Remote": false
+	},
+	"SpanKind": 1,
+	"StartTime": "2022-04-07T17:22:16.127586+08:00",
+	"EndTime": "2022-04-07T17:22:16.127587686+08:00",
+	"Attributes": [
+		{
+			"Key": "WithAttributes-childFunctionAttributes-k",
+			"Value": {
+				"Type": "STRING",
+				"Value": "0001"
+			}
+		},
+		{
+			"Key": "isTrue",
+			"Value": {
+				"Type": "BOOL",
+				"Value": true
+			}
+		},
+		{
+			"Key": "childFunctionAttributes-WithAttributes-SetAttributes",
+			"Value": {
+				"Type": "STRING",
+				"Value": "hi!"
+			}
+		}
+	],
+	"Events": null,
+	"Links": null,
+	"Status": {
+		"Code": "Unset",
+		"Description": ""
+	},
+	"DroppedAttributes": 0,
+	"DroppedEvents": 0,
+	"DroppedLinks": 0,
+	"ChildSpanCount": 0,
+	"Resource": [
+		{
+			"Key": "environment",
+			"Value": {
+				"Type": "STRING",
+				"Value": "local"
+			}
+		},
+		{
+			"Key": "service.name",
+			"Value": {
+				"Type": "STRING",
+				"Value": "opentelemetry_client-libraries"
+			}
+		},
+		{
+			"Key": "telemetry.sdk.language",
+			"Value": {
+				"Type": "STRING",
+				"Value": "go"
+			}
+		},
+		{
+			"Key": "telemetry.sdk.name",
+			"Value": {
+				"Type": "STRING",
+				"Value": "opentelemetry"
+			}
+		},
+		{
+			"Key": "telemetry.sdk.version",
+			"Value": {
+				"Type": "STRING",
+				"Value": "1.6.2"
+			}
+		}
+	],
+	"InstrumentationLibrary": {
+		"Name": "opentelemetry_client-libraries",
+		"Version": "",
+		"SchemaURL": ""
+	}
+}
+{
+	"Name": "child",
+	"SpanContext": {
+		"TraceID": "526f6031c367e60643974b98bf71677a",
+		"SpanID": "10b3de6a13ab38c5",
+		"TraceFlags": "01",
+		"TraceState": "",
+		"Remote": false
+	},
+	"Parent": {
+		"TraceID": "526f6031c367e60643974b98bf71677a",
+		"SpanID": "9be7333fea5beb94",
+		"TraceFlags": "01",
+		"TraceState": "",
+		"Remote": false
+	},
+	"SpanKind": 1,
+	"StartTime": "2022-04-07T17:22:16.127558+08:00",
+	"EndTime": "2022-04-07T17:22:16.127602261+08:00",
+	"Attributes": null,
+	"Events": null,
+	"Links": null,
+	"Status": {
+		"Code": "Unset",
+		"Description": ""
+	},
+	"DroppedAttributes": 0,
+	"DroppedEvents": 0,
+	"DroppedLinks": 0,
+	"ChildSpanCount": 1,
+	"Resource": [
+		{
+			"Key": "environment",
+			"Value": {
+				"Type": "STRING",
+				"Value": "local"
+			}
+		},
+		{
+			"Key": "service.name",
+			"Value": {
+				"Type": "STRING",
+				"Value": "opentelemetry_client-libraries"
+			}
+		},
+		{
+			"Key": "telemetry.sdk.language",
+			"Value": {
+				"Type": "STRING",
+				"Value": "go"
+			}
+		},
+		{
+			"Key": "telemetry.sdk.name",
+			"Value": {
+				"Type": "STRING",
+				"Value": "opentelemetry"
+			}
+		},
+		{
+			"Key": "telemetry.sdk.version",
+			"Value": {
+				"Type": "STRING",
+				"Value": "1.6.2"
+			}
+		}
+	],
+	"InstrumentationLibrary": {
+		"Name": "opentelemetry_client-libraries",
+		"Version": "",
+		"SchemaURL": ""
+	}
+}
+{
+	"Name": "parentFunctionAttributes-attributesAtCreation",
+	"SpanContext": {
+		"TraceID": "526f6031c367e60643974b98bf71677a",
+		"SpanID": "e116a89b01f6fc76",
+		"TraceFlags": "01",
+		"TraceState": "",
+		"Remote": false
+	},
+	"Parent": {
+		"TraceID": "526f6031c367e60643974b98bf71677a",
+		"SpanID": "9be7333fea5beb94",
+		"TraceFlags": "01",
+		"TraceState": "",
+		"Remote": false
+	},
+	"SpanKind": 1,
+	"StartTime": "2022-04-07T17:22:16.12761+08:00",
+	"EndTime": "2022-04-07T17:22:16.127610936+08:00",
+	"Attributes": [
+		{
+			"Key": "WithAttributes-parentFunctionAttributes-k",
+			"Value": {
+				"Type": "STRING",
+				"Value": "0001"
+			}
+		},
+		{
+			"Key": "isTrue",
+			"Value": {
+				"Type": "BOOL",
+				"Value": true
+			}
+		},
+		{
+			"Key": "parentFunctionAttributes-WithAttributes-SetAttributes",
+			"Value": {
+				"Type": "STRING",
+				"Value": "hi!"
+			}
+		}
+	],
+	"Events": null,
+	"Links": null,
+	"Status": {
+		"Code": "Unset",
+		"Description": ""
+	},
+	"DroppedAttributes": 0,
+	"DroppedEvents": 0,
+	"DroppedLinks": 0,
+	"ChildSpanCount": 0,
+	"Resource": [
+		{
+			"Key": "environment",
+			"Value": {
+				"Type": "STRING",
+				"Value": "local"
+			}
+		},
+		{
+			"Key": "service.name",
+			"Value": {
+				"Type": "STRING",
+				"Value": "opentelemetry_client-libraries"
+			}
+		},
+		{
+			"Key": "telemetry.sdk.language",
+			"Value": {
+				"Type": "STRING",
+				"Value": "go"
+			}
+		},
+		{
+			"Key": "telemetry.sdk.name",
+			"Value": {
+				"Type": "STRING",
+				"Value": "opentelemetry"
+			}
+		},
+		{
+			"Key": "telemetry.sdk.version",
+			"Value": {
+				"Type": "STRING",
+				"Value": "1.6.2"
+			}
+		}
+	],
+	"InstrumentationLibrary": {
+		"Name": "opentelemetry_client-libraries",
+		"Version": "",
+		"SchemaURL": ""
+	}
+}
+{
+	"Name": "parent",
+	"SpanContext": {
+		"TraceID": "526f6031c367e60643974b98bf71677a",
+		"SpanID": "9be7333fea5beb94",
+		"TraceFlags": "01",
+		"TraceState": "",
+		"Remote": false
+	},
+	"Parent": {
+		"TraceID": "526f6031c367e60643974b98bf71677a",
+		"SpanID": "c7df014f3c355533",
+		"TraceFlags": "01",
+		"TraceState": "",
+		"Remote": false
+	},
+	"SpanKind": 1,
+	"StartTime": "2022-04-07T17:22:16.127557+08:00",
+	"EndTime": "2022-04-07T17:22:16.127611714+08:00",
+	"Attributes": null,
+	"Events": null,
+	"Links": null,
+	"Status": {
+		"Code": "Unset",
+		"Description": ""
+	},
+	"DroppedAttributes": 0,
+	"DroppedEvents": 0,
+	"DroppedLinks": 0,
+	"ChildSpanCount": 2,
+	"Resource": [
+		{
+			"Key": "environment",
+			"Value": {
+				"Type": "STRING",
+				"Value": "local"
+			}
+		},
+		{
+			"Key": "service.name",
+			"Value": {
+				"Type": "STRING",
+				"Value": "opentelemetry_client-libraries"
+			}
+		},
+		{
+			"Key": "telemetry.sdk.language",
+			"Value": {
+				"Type": "STRING",
+				"Value": "go"
+			}
+		},
+		{
+			"Key": "telemetry.sdk.name",
+			"Value": {
+				"Type": "STRING",
+				"Value": "opentelemetry"
+			}
+		},
+		{
+			"Key": "telemetry.sdk.version",
+			"Value": {
+				"Type": "STRING",
+				"Value": "1.6.2"
+			}
+		}
+	],
+	"InstrumentationLibrary": {
+		"Name": "opentelemetry_client-libraries",
+		"Version": "",
+		"SchemaURL": ""
+	}
+}
+{
+	"Name": "httpHandler",
+	"SpanContext": {
+		"TraceID": "526f6031c367e60643974b98bf71677a",
+		"SpanID": "c7df014f3c355533",
+		"TraceFlags": "01",
+		"TraceState": "",
+		"Remote": false
+	},
+	"Parent": {
+		"TraceID": "526f6031c367e60643974b98bf71677a",
+		"SpanID": "83de113939a66282",
+		"TraceFlags": "01",
+		"TraceState": "",
+		"Remote": false
+	},
+	"SpanKind": 1,
+	"StartTime": "2022-04-07T17:22:16.127545+08:00",
+	"EndTime": "2022-04-07T17:22:16.127646112+08:00",
+	"Attributes": [
+		{
+			"Key": "httpHandler-SetAttributes",
+			"Value": {
+				"Type": "STRING",
+				"Value": "a value"
+			}
+		}
+	],
+	"Events": [
+		{
+			"Name": "Acquiring lock",
+			"Attributes": null,
+			"DroppedAttributeCount": 0,
+			"Time": "2022-04-07T17:22:16.127613+08:00"
+		},
+		{
+			"Name": "Got lock, doing work...",
+			"Attributes": null,
+			"DroppedAttributeCount": 0,
+			"Time": "2022-04-07T17:22:16.127613+08:00"
+		},
+		{
+			"Name": "Unlocking",
+			"Attributes": null,
+			"DroppedAttributeCount": 0,
+			"Time": "2022-04-07T17:22:16.127614+08:00"
+		},
+		{
+			"Name": "Cancelled wait due to external signal",
+			"Attributes": [
+				{
+					"Key": "pid",
+					"Value": {
+						"Type": "INT64",
+						"Value": 4328
+					}
+				}
+			],
+			"DroppedAttributeCount": 0,
+			"Time": "2022-04-07T17:22:16.127645+08:00"
+		}
+	],
+	"Links": null,
+	"Status": {
+		"Code": "Unset",
+		"Description": ""
+	},
+	"DroppedAttributes": 0,
+	"DroppedEvents": 0,
+	"DroppedLinks": 0,
+	"ChildSpanCount": 1,
+	"Resource": [
+		{
+			"Key": "environment",
+			"Value": {
+				"Type": "STRING",
+				"Value": "local"
+			}
+		},
+		{
+			"Key": "service.name",
+			"Value": {
+				"Type": "STRING",
+				"Value": "opentelemetry_client-libraries"
+			}
+		},
+		{
+			"Key": "telemetry.sdk.language",
+			"Value": {
+				"Type": "STRING",
+				"Value": "go"
+			}
+		},
+		{
+			"Key": "telemetry.sdk.name",
+			"Value": {
+				"Type": "STRING",
+				"Value": "opentelemetry"
+			}
+		},
+		{
+			"Key": "telemetry.sdk.version",
+			"Value": {
+				"Type": "STRING",
+				"Value": "1.6.2"
+			}
+		}
+	],
+	"InstrumentationLibrary": {
+		"Name": "opentelemetry_client-libraries",
+		"Version": "",
+		"SchemaURL": ""
+	}
+}
+{
+	"Name": "main:NewHandler",
+	"SpanContext": {
+		"TraceID": "526f6031c367e60643974b98bf71677a",
+		"SpanID": "83de113939a66282",
+		"TraceFlags": "01",
+		"TraceState": "",
+		"Remote": false
+	},
+	"Parent": {
+		"TraceID": "00000000000000000000000000000000",
+		"SpanID": "0000000000000000",
+		"TraceFlags": "00",
+		"TraceState": "",
+		"Remote": false
+	},
+	"SpanKind": 2,
+	"StartTime": "2022-04-07T17:22:16.12751+08:00",
+	"EndTime": "2022-04-07T17:22:16.12765855+08:00",
+	"Attributes": [
+		{
+			"Key": "net.transport",
+			"Value": {
+				"Type": "STRING",
+				"Value": "ip_tcp"
+			}
+		},
+		{
+			"Key": "net.peer.ip",
+			"Value": {
+				"Type": "STRING",
+				"Value": "127.0.0.1"
+			}
+		},
+		{
+			"Key": "net.peer.port",
+			"Value": {
+				"Type": "INT64",
+				"Value": 58849
+			}
+		},
+		{
+			"Key": "net.host.ip",
+			"Value": {
+				"Type": "STRING",
+				"Value": "127.0.0.1"
+			}
+		},
+		{
+			"Key": "net.host.port",
+			"Value": {
+				"Type": "INT64",
+				"Value": 8200
+			}
+		},
+		{
+			"Key": "http.method",
+			"Value": {
+				"Type": "STRING",
+				"Value": "GET"
+			}
+		},
+		{
+			"Key": "http.target",
+			"Value": {
+				"Type": "STRING",
+				"Value": "/hello-manual"
+			}
+		},
+		{
+			"Key": "http.server_name",
+			"Value": {
+				"Type": "STRING",
+				"Value": "main:NewHandler"
+			}
+		},
+		{
+			"Key": "http.user_agent",
+			"Value": {
+				"Type": "STRING",
+				"Value": "curl/7.64.1"
+			}
+		},
+		{
+			"Key": "http.scheme",
+			"Value": {
+				"Type": "STRING",
+				"Value": "http"
+			}
+		},
+		{
+			"Key": "http.host",
+			"Value": {
+				"Type": "STRING",
+				"Value": "127.0.0.1:8200"
+			}
+		},
+		{
+			"Key": "http.flavor",
+			"Value": {
+				"Type": "STRING",
+				"Value": "1.1"
+			}
+		},
+		{
+			"Key": "http.wrote_bytes",
+			"Value": {
+				"Type": "INT64",
+				"Value": 46
+			}
+		},
+		{
+			"Key": "http.status_code",
+			"Value": {
+				"Type": "INT64",
+				"Value": 200
+			}
+		}
+	],
+	"Events": null,
+	"Links": null,
+	"Status": {
+		"Code": "Unset",
+		"Description": ""
+	},
+	"DroppedAttributes": 0,
+	"DroppedEvents": 0,
+	"DroppedLinks": 0,
+	"ChildSpanCount": 1,
+	"Resource": [
+		{
+			"Key": "environment",
+			"Value": {
+				"Type": "STRING",
+				"Value": "local"
+			}
+		},
+		{
+			"Key": "service.name",
+			"Value": {
+				"Type": "STRING",
+				"Value": "opentelemetry_client-libraries"
+			}
+		},
+		{
+			"Key": "telemetry.sdk.language",
+			"Value": {
+				"Type": "STRING",
+				"Value": "go"
+			}
+		},
+		{
+			"Key": "telemetry.sdk.name",
+			"Value": {
+				"Type": "STRING",
+				"Value": "opentelemetry"
+			}
+		},
+		{
+			"Key": "telemetry.sdk.version",
+			"Value": {
+				"Type": "STRING",
+				"Value": "1.6.2"
+			}
+		}
+	],
+	"InstrumentationLibrary": {
+		"Name": "go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp",
+		"Version": "semver:0.31.0",
+		"SchemaURL": ""
+	}
+}

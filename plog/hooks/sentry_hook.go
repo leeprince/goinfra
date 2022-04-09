@@ -35,7 +35,6 @@ func (h *SentryHook) Levels() []logrus.Level {
     return h.levels
 }
 
-// 本方法可以优化为直接利用 frames := runtime.CallersFrames(pcs[:depth]) 去固定 plog 包应跳过的追踪栈
 func (h *SentryHook) Fire(entry *logrus.Entry) error {
     sentry_util.CaptureException(errors.New(entry.Message), time.Millisecond * 200)
     return nil

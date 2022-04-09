@@ -1,0 +1,267 @@
+{
+	"Name": "sleep",
+	"SpanContext": {
+		"TraceID": "c31ba479afbd350ed9e9a81bc724fe19",
+		"SpanID": "2397ffdb7780e7b9",
+		"TraceFlags": "01",
+		"TraceState": "",
+		"Remote": false
+	},
+	"Parent": {
+		"TraceID": "c31ba479afbd350ed9e9a81bc724fe19",
+		"SpanID": "26e6f36b00a22e18",
+		"TraceFlags": "01",
+		"TraceState": "",
+		"Remote": false
+	},
+	"SpanKind": 1,
+	"StartTime": "2022-04-07T15:38:37.044346+08:00",
+	"EndTime": "2022-04-07T15:38:38.047500166+08:00",
+	"Attributes": [
+		{
+			"Key": "sleep.duration",
+			"Value": {
+				"Type": "INT64",
+				"Value": 1000000000
+			}
+		}
+	],
+	"Events": null,
+	"Links": null,
+	"Status": {
+		"Code": "Unset",
+		"Description": ""
+	},
+	"DroppedAttributes": 0,
+	"DroppedEvents": 0,
+	"DroppedLinks": 0,
+	"ChildSpanCount": 0,
+	"Resource": [
+		{
+			"Key": "environment",
+			"Value": {
+				"Type": "STRING",
+				"Value": "demo"
+			}
+		},
+		{
+			"Key": "service.name",
+			"Value": {
+				"Type": "STRING",
+				"Value": "fib"
+			}
+		},
+		{
+			"Key": "service.version",
+			"Value": {
+				"Type": "STRING",
+				"Value": "v0.1.0"
+			}
+		},
+		{
+			"Key": "telemetry.sdk.language",
+			"Value": {
+				"Type": "STRING",
+				"Value": "go"
+			}
+		},
+		{
+			"Key": "telemetry.sdk.name",
+			"Value": {
+				"Type": "STRING",
+				"Value": "opentelemetry"
+			}
+		},
+		{
+			"Key": "telemetry.sdk.version",
+			"Value": {
+				"Type": "STRING",
+				"Value": "1.6.2"
+			}
+		}
+	],
+	"InstrumentationLibrary": {
+		"Name": "github.com/full/path/to/mypkg",
+		"Version": "",
+		"SchemaURL": ""
+	}
+}
+{
+	"Name": "hello-instrumented",
+	"SpanContext": {
+		"TraceID": "c31ba479afbd350ed9e9a81bc724fe19",
+		"SpanID": "26e6f36b00a22e18",
+		"TraceFlags": "01",
+		"TraceState": "",
+		"Remote": false
+	},
+	"Parent": {
+		"TraceID": "00000000000000000000000000000000",
+		"SpanID": "0000000000000000",
+		"TraceFlags": "00",
+		"TraceState": "",
+		"Remote": false
+	},
+	"SpanKind": 2,
+	"StartTime": "2022-04-07T15:38:37.044252+08:00",
+	"EndTime": "2022-04-07T15:38:38.047600615+08:00",
+	"Attributes": [
+		{
+			"Key": "net.transport",
+			"Value": {
+				"Type": "STRING",
+				"Value": "ip_tcp"
+			}
+		},
+		{
+			"Key": "net.peer.ip",
+			"Value": {
+				"Type": "STRING",
+				"Value": "127.0.0.1"
+			}
+		},
+		{
+			"Key": "net.peer.port",
+			"Value": {
+				"Type": "INT64",
+				"Value": 58192
+			}
+		},
+		{
+			"Key": "net.host.ip",
+			"Value": {
+				"Type": "STRING",
+				"Value": "127.0.0.1"
+			}
+		},
+		{
+			"Key": "net.host.port",
+			"Value": {
+				"Type": "INT64",
+				"Value": 8200
+			}
+		},
+		{
+			"Key": "http.method",
+			"Value": {
+				"Type": "STRING",
+				"Value": "GET"
+			}
+		},
+		{
+			"Key": "http.target",
+			"Value": {
+				"Type": "STRING",
+				"Value": "/hello-instrumented"
+			}
+		},
+		{
+			"Key": "http.server_name",
+			"Value": {
+				"Type": "STRING",
+				"Value": "hello-instrumented"
+			}
+		},
+		{
+			"Key": "http.user_agent",
+			"Value": {
+				"Type": "STRING",
+				"Value": "curl/7.64.1"
+			}
+		},
+		{
+			"Key": "http.scheme",
+			"Value": {
+				"Type": "STRING",
+				"Value": "http"
+			}
+		},
+		{
+			"Key": "http.host",
+			"Value": {
+				"Type": "STRING",
+				"Value": "127.0.0.1:8200"
+			}
+		},
+		{
+			"Key": "http.flavor",
+			"Value": {
+				"Type": "STRING",
+				"Value": "1.1"
+			}
+		},
+		{
+			"Key": "http.wrote_bytes",
+			"Value": {
+				"Type": "INT64",
+				"Value": 46
+			}
+		},
+		{
+			"Key": "http.status_code",
+			"Value": {
+				"Type": "INT64",
+				"Value": 200
+			}
+		}
+	],
+	"Events": null,
+	"Links": null,
+	"Status": {
+		"Code": "Unset",
+		"Description": ""
+	},
+	"DroppedAttributes": 0,
+	"DroppedEvents": 0,
+	"DroppedLinks": 0,
+	"ChildSpanCount": 1,
+	"Resource": [
+		{
+			"Key": "environment",
+			"Value": {
+				"Type": "STRING",
+				"Value": "demo"
+			}
+		},
+		{
+			"Key": "service.name",
+			"Value": {
+				"Type": "STRING",
+				"Value": "fib"
+			}
+		},
+		{
+			"Key": "service.version",
+			"Value": {
+				"Type": "STRING",
+				"Value": "v0.1.0"
+			}
+		},
+		{
+			"Key": "telemetry.sdk.language",
+			"Value": {
+				"Type": "STRING",
+				"Value": "go"
+			}
+		},
+		{
+			"Key": "telemetry.sdk.name",
+			"Value": {
+				"Type": "STRING",
+				"Value": "opentelemetry"
+			}
+		},
+		{
+			"Key": "telemetry.sdk.version",
+			"Value": {
+				"Type": "STRING",
+				"Value": "1.6.2"
+			}
+		}
+	],
+	"InstrumentationLibrary": {
+		"Name": "go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp",
+		"Version": "semver:0.31.0",
+		"SchemaURL": ""
+	}
+}

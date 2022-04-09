@@ -16,7 +16,7 @@ import (
  */
 
 // 全局变量
-var gorediss map[string]*Goredis
+var goredis map[string]*Goredis
 
 // Redigo 实现 RedisClient 接口
 var _ RedisClient = (*Goredis)(nil)
@@ -57,13 +57,13 @@ func InitGoredis(confs config.RedisConfs) error {
         }
     }
     
-    gorediss = clients
+    goredis = clients
     
     return nil
 }
 
 func GetGoredis(name string) *Goredis {
-    client, ok := gorediss[name]
+    client, ok := goredis[name]
     if !ok {
         return nil
     }
