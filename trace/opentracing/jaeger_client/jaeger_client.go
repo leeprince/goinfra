@@ -1,7 +1,8 @@
-package opentracing
+package jaeger_client
 
 import (
     "fmt"
+    "github.com/leeprince/goinfra/consts"
     "github.com/leeprince/goinfra/env"
     "github.com/leeprince/goinfra/plog"
     "github.com/opentracing/opentracing-go"
@@ -38,7 +39,7 @@ type JaegerOption func(opts *jaegerOptions)
 func InitJaegerTracer(serviceName string, options ...JaegerOption) (opentracing.Tracer, io.Closer) {
     jaegerOptions := &jaegerOptions{
         serverName:   serviceName,
-        env:          "local",
+        env:          consts.EnvLocal,
         isOutputFile: false,
     }
     for _, optionsFunc := range options {

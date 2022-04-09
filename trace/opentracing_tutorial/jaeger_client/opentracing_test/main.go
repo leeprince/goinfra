@@ -3,68 +3,60 @@ package main
 import (
     "context"
     "fmt"
+    "github.com/leeprince/goinfra/consts"
     "github.com/leeprince/goinfra/http/httpcli"
     "github.com/leeprince/goinfra/plog"
-    "github.com/opentracing/opentracing-go"
-    "github.com/opentracing/opentracing-go/ext"
-    "github.com/uber/jaeger-client-go"
-    "github.com/uber/jaeger-client-go/config"
-    "io"
+    "github.com/leeprince/goinfra/trace/opentracing/jaeger_client"
     "net/http"
     "net/url"
     "time"
 )
 
 const (
-    serverName = "princeJaeger-lesson03"
+    serverName = "opentracing_test"
+    env        = consts.EnvLocal
 )
 
 func main() {
     helloStr := fmt.Sprintf("Hello, world!")
     println(helloStr)
     
-    // 注意：function opentracing.GlobalTracer() returns a no-op tracer by default.
-    // tracer := opentracing.GlobalTracer()
-    
-    // tracer, closer := initJaeger(serverName)
-    tracer, closer := initJaegerLog(serverName)
+    _, closer := jaeger_client.InitJaegerTracer(serverName)
     defer closer.Close()
     
     println("tracer.StartSpan>>>>")
-    span := tracer.StartSpan("say-hello")
-    defer span.Finish()
+    ctx := context.Background()
+    spanCtx := jaeger_client.StartSpan(ctx, "say-hello")
+    defer jaeger_client.Finish(spanCtx)
     
     // 使用 span 的 Baggage 功能
     // after starting the span
-    span.SetBaggageItem("seq", "prince-seq-202204060001")
-    
-    // 传递上下文 context 代替将 span 作为每个函数的第一个参数【最终方案】
-    ctx := opentracing.ContextWithSpan(context.Background(), span)
+    jaeger_client.SetBaggageItem(spanCtx, "seq", "prince-seq-202204060001")
     
     // --- 只有当前服务记录了追踪，暂未将当前服务与远程调用服务的调用链追踪连接成一个完整调用链追踪
-    RPCFormatter(ctx)
-    RPCPublisher(ctx)
+    RPCFormatter(spanCtx)
+    RPCPublisher(spanCtx)
     // --- 只有当前服务记录了追踪，暂未将当前服务与远程调用服务的调用链追踪连接成一个完整调用链追踪 -end
     
     // --- 当前服务与远程调用服务组成一个完整调用链追踪
-    RPCTraceFormatter(ctx)
-    RPCTracePublisher(ctx)
+    RPCTraceFormatter(spanCtx)
+    RPCTracePublisher(spanCtx)
     // --- 当前服务与远程调用服务组成一个完整调用链追踪 -end
     
     // --- 当前服务与远程调用服务组成一个完整调用链追踪，并使用 span 的 Baggage 功能
     // 对应的课程：https://github.com/leeprince/opentracing-tutorial/tree/master/go/lesson04
-    RPCTraceBaggageFormatter(ctx)
-    RPCTraceBaggagePublisher(ctx)
+    RPCTraceBaggageFormatter(spanCtx)
+    RPCTraceBaggagePublisher(spanCtx)
     // --- 当前服务与远程调用服务组成一个完整调用链追踪，并使用 span 的 Baggage 功能 -end
     // 传递上下文 context 代替将 span 作为每个函数的第一个参数 -end
 }
 
 func RPCFormatter(ctx context.Context) {
     // - 传递上下文 context 代替将 span 作为每个函数的第一个参数
-    span, _ := opentracing.StartSpanFromContext(ctx, "RPCFormatter")
-    defer span.Finish()
+    spanCtx := jaeger_client.StartSpanFromContext(ctx, "RPCFormatter")
+    defer jaeger_client.Finish(spanCtx)
     println("RPCFormatter@span.LogKV>>>>", time.Now().Format("2006-01-02 15:04:05.999999999"))
-    span.LogKV("RPCFormatter@LogKV:event004", "println")
+    jaeger_client.LogKV(spanCtx, "RPCFormatter@LogKV:event004", "println")
     
     params := url.Values{
         "helloTo": []string{"prince"},
@@ -76,9 +68,6 @@ func RPCFormatter(ctx context.Context) {
         return
     }
     
-    // 使用 ext.LogError 设置 Tag=error 标记 span 错误
-    // ext.LogError(span, errors.New("RPCFormatter>>>>>>>>>>>>>>>>>>"))
-    
     bodyByte, err := httpcli.Do(req)
     if err != nil {
         plog.Error("RPCFormatter httpcli.Do err:", err)
@@ -89,10 +78,10 @@ func RPCFormatter(ctx context.Context) {
 
 func RPCPublisher(ctx context.Context) {
     // - 传递上下文 context 代替将 span 作为每个函数的第一个参数
-    span, _ := opentracing.StartSpanFromContext(ctx, "RPCPublisher")
-    defer span.Finish()
+    spanCtx := jaeger_client.StartSpanFromContext(ctx, "RPCPublisher")
+    defer jaeger_client.Finish(spanCtx)
     println("RPCPublisher@span.LogKV>>>>", time.Now().Format("2006-01-02 15:04:05.999999999"))
-    span.LogKV("RPCPublisher@LogKV:event004", "println")
+    jaeger_client.LogKV(spanCtx, "RPCPublisher@LogKV:event004", "println")
     
     params := url.Values{
         "helloStr": []string{"hi prince"},
@@ -113,10 +102,10 @@ func RPCPublisher(ctx context.Context) {
 
 func RPCTraceFormatter(ctx context.Context) {
     // - 传递上下文 context 代替将 span 作为每个函数的第一个参数
-    span, _ := opentracing.StartSpanFromContext(ctx, "RPCTraceFormatter")
-    defer span.Finish()
+    spanCtx := jaeger_client.StartSpanFromContext(ctx, "RPCTraceFormatter")
+    defer jaeger_client.Finish(spanCtx)
     println("RPCTraceFormatter@span.LogKV>>>>", time.Now().Format("2006-01-02 15:04:05.999999999"))
-    span.LogKV("RPCTraceFormatter@LogKV:event004", "println")
+    jaeger_client.LogKV(spanCtx, "RPCTraceFormatter@LogKV:event004", "println")
     
     params := url.Values{
         "helloTo": []string{"prince"},
@@ -125,25 +114,24 @@ func RPCTraceFormatter(ctx context.Context) {
     req, err := http.NewRequest(http.MethodGet, urlPath, nil)
     if err != nil {
         // 使用 ext.LogError 设置 Tag=error 标记 span 错误
-        ext.LogError(span, err)
+        jaeger_client.LogError(spanCtx, err)
         plog.Error("RPCTraceFormatter http.NewRequest err:", err)
         return
     }
     
     // 当前服务与远程调用服务组成一个完整调用链追踪
-    ext.SpanKindRPCClient.Set(span)
-    ext.HTTPUrl.Set(span, urlPath)
-    ext.HTTPMethod.Set(span, "GET")
-    span.Tracer().Inject(
-        span.Context(),
-        opentracing.HTTPHeaders,
-        opentracing.HTTPHeadersCarrier(req.Header),
-    )
+    err = jaeger_client.HTTPClient(spanCtx, http.MethodGet, urlPath, req.Header)
+    if err != nil {
+        // 使用 ext.LogError 设置 Tag=error 标记 span 错误
+        jaeger_client.LogError(spanCtx, err)
+        plog.Error("RPCTraceFormatter jaeger_client.HTTPClient err:", err)
+        return
+    }
     
     bodyByte, err := httpcli.Do(req)
     if err != nil {
         // 使用 ext.LogError 设置 Tag=error 标记 span 错误
-        ext.LogError(span, err)
+        jaeger_client.LogError(spanCtx, err)
         plog.Error("RPCTraceFormatter httpcli.Do err:", err)
         return
     }
@@ -152,10 +140,10 @@ func RPCTraceFormatter(ctx context.Context) {
 
 func RPCTracePublisher(ctx context.Context) {
     // - 传递上下文 context 代替将 span 作为每个函数的第一个参数
-    span, _ := opentracing.StartSpanFromContext(ctx, "RPCTracePublisher")
-    defer span.Finish()
+    spanCtx := jaeger_client.StartSpanFromContext(ctx, "RPCTracePublisher")
+    defer jaeger_client.Finish(spanCtx)
     println("RPCTracePublisher@span.LogKV>>>>", time.Now().Format("2006-01-02 15:04:05.999999999"))
-    span.LogKV("RPCTracePublisher@LogKV:event004", "println")
+    jaeger_client.LogKV(spanCtx, "RPCTracePublisher@LogKV:event004", "println")
     
     params := url.Values{
         "helloStr": []string{"hi prince"},
@@ -164,25 +152,24 @@ func RPCTracePublisher(ctx context.Context) {
     req, err := http.NewRequest(http.MethodGet, urlPath, nil)
     if err != nil {
         // 使用 ext.LogError 设置 Tag=error 标记 span 错误
-        ext.LogError(span, err)
+        jaeger_client.LogError(spanCtx, err)
         plog.Error("RPCTracePublisher http.NewRequest err:", err)
         return
     }
     
     // 当前服务与远程调用服务组成一个完整调用链追踪
-    ext.SpanKindRPCClient.Set(span)
-    ext.HTTPUrl.Set(span, urlPath)
-    ext.HTTPMethod.Set(span, "GET")
-    span.Tracer().Inject(
-        span.Context(),
-        opentracing.HTTPHeaders,
-        opentracing.HTTPHeadersCarrier(req.Header),
-    )
+    err = jaeger_client.HTTPClient(spanCtx, http.MethodGet, urlPath, req.Header)
+    if err != nil {
+        // 使用 ext.LogError 设置 Tag=error 标记 span 错误
+        jaeger_client.LogError(spanCtx, err)
+        plog.Error("RPCTraceFormatter jaeger_client.HTTPClient err:", err)
+        return
+    }
     
     bodyByte, err := httpcli.Do(req)
     if err != nil {
         // 使用 ext.LogError 设置 Tag=error 标记 span 错误
-        ext.LogError(span, err)
+        jaeger_client.LogError(spanCtx, err)
         plog.Error("RPCTracePublisher httpcli.Do err:", err)
         return
     }
@@ -191,10 +178,10 @@ func RPCTracePublisher(ctx context.Context) {
 
 func RPCTraceBaggageFormatter(ctx context.Context) {
     // - 传递上下文 context 代替将 span 作为每个函数的第一个参数
-    span, _ := opentracing.StartSpanFromContext(ctx, "RPCTraceBaggageFormatter")
-    defer span.Finish()
+    spanCtx := jaeger_client.StartSpanFromContext(ctx, "RPCTraceBaggageFormatter")
+    defer jaeger_client.Finish(spanCtx)
     println("RPCTraceBaggageFormatter@span.LogKV>>>>", time.Now().Format("2006-01-02 15:04:05.999999999"))
-    span.LogKV("RPCTraceBaggageFormatter@LogKV:event004", "println")
+    jaeger_client.LogKV(spanCtx, "RPCTraceBaggageFormatter@LogKV:event004", "println")
     
     params := url.Values{
         "helloTo": []string{"prince"},
@@ -203,25 +190,24 @@ func RPCTraceBaggageFormatter(ctx context.Context) {
     req, err := http.NewRequest(http.MethodGet, urlPath, nil)
     if err != nil {
         // 使用 ext.LogError 设置 Tag=error 标记 span 错误
-        ext.LogError(span, err)
+        jaeger_client.LogError(spanCtx, err)
         plog.Error("RPCTraceBaggageFormatter http.NewRequest err:", err)
         return
     }
     
     // 当前服务与远程调用服务组成一个完整调用链追踪
-    ext.SpanKindRPCClient.Set(span)
-    ext.HTTPUrl.Set(span, urlPath)
-    ext.HTTPMethod.Set(span, "GET")
-    span.Tracer().Inject(
-        span.Context(),
-        opentracing.HTTPHeaders,
-        opentracing.HTTPHeadersCarrier(req.Header),
-    )
+    err = jaeger_client.HTTPClient(spanCtx, http.MethodGet, urlPath, req.Header)
+    if err != nil {
+        // 使用 ext.LogError 设置 Tag=error 标记 span 错误
+        jaeger_client.LogError(spanCtx, err)
+        plog.Error("RPCTraceFormatter jaeger_client.HTTPClient err:", err)
+        return
+    }
     
     bodyByte, err := httpcli.Do(req)
     if err != nil {
         // 使用 ext.LogError 设置 Tag=error 标记 span 错误
-        ext.LogError(span, err)
+        jaeger_client.LogError(spanCtx, err)
         plog.Error("RPCTraceBaggageFormatter httpcli.Do err:", err)
         return
     }
@@ -230,10 +216,10 @@ func RPCTraceBaggageFormatter(ctx context.Context) {
 
 func RPCTraceBaggagePublisher(ctx context.Context) {
     // - 传递上下文 context 代替将 span 作为每个函数的第一个参数
-    span, _ := opentracing.StartSpanFromContext(ctx, "RPCTraceBaggagePublisher")
-    defer span.Finish()
+    spanCtx := jaeger_client.StartSpanFromContext(ctx, "RPCTraceBaggagePublisher")
+    defer jaeger_client.Finish(spanCtx)
     println("RPCTraceBaggagePublisher@span.LogKV>>>>", time.Now().Format("2006-01-02 15:04:05.999999999"))
-    span.LogKV("RPCTraceBaggagePublisher@LogKV:event004", "println")
+    jaeger_client.LogKV(spanCtx, "RPCTraceBaggagePublisher@LogKV:event004", "println")
     
     params := url.Values{
         "helloStr": []string{"hi prince"},
@@ -242,25 +228,24 @@ func RPCTraceBaggagePublisher(ctx context.Context) {
     req, err := http.NewRequest(http.MethodGet, urlPath, nil)
     if err != nil {
         // 使用 ext.LogError 设置 Tag=error 标记 span 错误
-        ext.LogError(span, err)
+        jaeger_client.LogError(spanCtx, err)
         plog.Error("RPCTraceBaggagePublisher http.NewRequest err:", err)
         return
     }
     
     // 当前服务与远程调用服务组成一个完整调用链追踪
-    ext.SpanKindRPCClient.Set(span)
-    ext.HTTPUrl.Set(span, urlPath)
-    ext.HTTPMethod.Set(span, "GET")
-    span.Tracer().Inject(
-        span.Context(),
-        opentracing.HTTPHeaders,
-        opentracing.HTTPHeadersCarrier(req.Header),
-    )
+    err = jaeger_client.HTTPClient(spanCtx, http.MethodGet, urlPath, req.Header)
+    if err != nil {
+        // 使用 ext.LogError 设置 Tag=error 标记 span 错误
+        jaeger_client.LogError(spanCtx, err)
+        plog.Error("RPCTraceFormatter jaeger_client.HTTPClient err:", err)
+        return
+    }
     
     bodyByte, err := httpcli.Do(req)
     if err != nil {
         // 使用 ext.LogError 设置 Tag=error 标记 span 错误
-        ext.LogError(span, err)
+        jaeger_client.LogError(spanCtx, err)
         plog.Error("RPCTraceBaggagePublisher httpcli.Do err:", err)
         return
     }

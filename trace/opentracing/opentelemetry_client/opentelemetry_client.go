@@ -1,4 +1,4 @@
-package opentracing
+package opentelemetry_client
 
 import (
     "github.com/leeprince/goinfra/plog"
