@@ -97,7 +97,7 @@ func WithContext(ctx context.Context) *logrus.Entry {
 // ---  设置 entry 参数, 并返回 Entry 对象 - end
 
 // -- Plog 的方法
-func (p *Plog) GetOutfileInfo() (dirPath, filename string) {
+func (p *Plog) GetOutFileInfo() (dirPath, filename string) {
 	return p.OutFileInfo.dirPath, p.OutFileInfo.filename
 }
 // -- Plog 的方法 -end

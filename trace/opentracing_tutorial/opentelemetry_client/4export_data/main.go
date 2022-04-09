@@ -3,6 +3,7 @@ package main
 import (
     "context"
     "fmt"
+    "github.com/leeprince/goinfra/plog"
     "go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp"
     "go.opentelemetry.io/otel"
     "go.opentelemetry.io/otel/attribute"
@@ -13,7 +14,6 @@ import (
     sdktrace "go.opentelemetry.io/otel/sdk/trace"
     semconv "go.opentelemetry.io/otel/semconv/v1.7.0"
     "go.opentelemetry.io/otel/trace"
-    "log"
     "net/http"
     "os"
     "sync"
@@ -34,10 +34,15 @@ var tracer trace.Tracer
 
 func main() {
     ctx := context.Background()
+    err := plog.SetOutputFile("./", "traces.log", false)
+    if err != nil {
+        plog.Fatal("main:plog.SetOutputFile err:", err)
+    }
+    plog.SetReportCaller(true)
     
     tracerProvider, err := InitTrace(ctx, serverName, env)
     if err != nil {
-        log.Fatal(err)
+        plog.Fatal(err)
     }
     
     // Handle shutdown properly so nothing leaks.
@@ -53,12 +58,14 @@ func main() {
     http.Handle("/hello-export", wrappedHandler)
     
     // And start the HTTP serve.
-    log.Fatal(http.ListenAndServe(":8300", nil))
+    plog.Fatal(http.ListenAndServe(":8300", nil))
 }
 
 // myHttpHandler is an HTTP handler function that is going to be instrumented.
 func manualHttpHandler(w http.ResponseWriter, r *http.Request) {
     ctx, span := tracer.Start(r.Context(), "httpHandler")
+    plog.Debug("4export_data:manualHttpHandler:start")
+    
     // 从上下文中获取当前 span
     // span := trace.SpanFromContext(ctx)
     defer span.End()
@@ -84,6 +91,8 @@ func manualHttpHandler(w http.ResponseWriter, r *http.Request) {
     
     // 传播上下文：Propagators and Context.将全局传播器设置为 tracecontext（默认为无操作）
     otel.SetTextMapPropagator(propagation.TraceContext{})
+    
+    plog.Debug("4export_data:manualHttpHandler:end")
 }
 func parentFunction(ctx context.Context) {
     ctx, parentSpan := tracer.Start(ctx, "parent")
@@ -125,15 +134,15 @@ func childFunctionAttributes(ctx context.Context) {
 
 func InitTrace(ctx context.Context, serverName, env string) (*sdktrace.TracerProvider, error) {
     // Exporter
-    exp, err := newExporter()
+    /*exp, err := newExporter()
+      if err != nil {
+          return nil, fmt.Errorf("InitTrace newExporter err:%v", err)
+      }*/
+    // ---
+    exp, err := newJaegerExporter("http://localhost:14268/api/traces")
     if err != nil {
         return nil, fmt.Errorf("InitTrace newExporter err:%v", err)
     }
-    // ---
-    /*exp, err := newJaegerExporter("http://localhost:14268/api/traces")
-    if err != nil {
-        return nil, fmt.Errorf("InitTrace newExporter err:%v", err)
-    }*/
     // Exporter -end
     
     tp := sdktrace.NewTracerProvider(
@@ -175,17 +184,19 @@ func newExporter() (sdktrace.SpanExporter, error) {
           l.Fatal(err)
       }*/
     // --- io.Writer: file
-    // Write telemetry data to a file.
-    f, err := os.Create("traces.txt")
-    if err != nil {
-        return nil, fmt.Errorf("InitTrace os.Create err:%v", err)
-    }
+    /*// Write telemetry data to a file.
+      f, err := os.Create("traces.txt")
+      if err != nil {
+          return nil, fmt.Errorf("InitTrace os.Create err:%v", err)
+      }*/
     // --- io.Writer: plog // TODO:  - prince@todo 2022/4/9 下午12:12
-    // err := plog.SetOutputFile("./", "traces.log", false)
-    // // writer, err = os.OpenFile(, os.O_CREATE|os.O_WRONLY, os.ModePerm)
-    // if err != nil {
-    //     return nil, fmt.Errorf("InitTrace plog.SetOutputFile err:%v", err)
-    // }
+    // 获取 plog 已经设置的日志文件及路径
+    dir, fileName := plog.GetLogger().GetOutFileInfo()
+    file := dir + fileName
+    f, err := os.OpenFile(file, os.O_APPEND|os.O_WRONLY, os.ModeAppend)
+    if err != nil {
+        return nil, fmt.Errorf("InitTrace plog.SetOutputFile err:%v", err)
+    }
     // console
     
     return stdouttrace.New(

@@ -3,6 +3,7 @@ package opentracing
 import (
     "context"
     "fmt"
+    "github.com/leeprince/goinfra/plog"
     "go.opentelemetry.io/otel"
     "go.opentelemetry.io/otel/attribute"
     "go.opentelemetry.io/otel/exporters/jaeger"
@@ -23,9 +24,9 @@ import (
 func InitTelemetryTrace(ctx context.Context, serverName, env string) (*sdktrace.TracerProvider, error) {
     // Exporter
     /*exp, err := newExporter()
-    if err != nil {
-        return nil, fmt.Errorf("InitTrace newExporter err:%v", err)
-    }*/
+      if err != nil {
+          return nil, fmt.Errorf("InitTrace newExporter err:%v", err)
+      }*/
     exp, err := newJaegerExporter("http://localhost:14268/api/traces")
     if err != nil {
         return nil, fmt.Errorf("InitTrace newExporter err:%v", err)
@@ -33,7 +34,7 @@ func InitTelemetryTrace(ctx context.Context, serverName, env string) (*sdktrace.
     
     tp := sdktrace.NewTracerProvider(
         sdktrace.WithBatcher(exp),
-        sdktrace.WithResource(newResource(ctx, serverName, env)),
+        sdktrace.WithResource(newResource(serverName, env)),
         // sdktrace.WithSampler(sdktrace.NeverSample()),
         sdktrace.WithSampler(sdktrace.AlwaysSample()),
     )
@@ -43,8 +44,8 @@ func InitTelemetryTrace(ctx context.Context, serverName, env string) (*sdktrace.
     return tp, nil
 }
 
-// newResource returns a resource describing this application.
-func newResource(ctx context.Context, serverName, env string) *resource.Resource {
+// 资源：描述应用的资源
+func newResource(serverName, env string) *resource.Resource {
     r, _ := resource.Merge(
         resource.Default(),
         resource.NewWithAttributes(
@@ -61,19 +62,31 @@ func newResource(ctx context.Context, serverName, env string) *resource.Resource
 func newExporter() (sdktrace.SpanExporter, error) {
     // Your preferred exporter: console, jaeger, zipkin, OTLP, etc.
     
-    // io.Writer
+    // Your preferred exporter: console, jaeger, zipkin, OTLP, etc.
+    
+    // console
+    // io.Writer: os.Stdout
     // Write telemetry data to os.Stdout
     /*f := os.Stdout
       exp, err := newExporter(f)
       if err != nil {
           l.Fatal(err)
       }*/
-    // io.Writer
-    // Write telemetry data to a file.
-    f, err := os.Create("traces.txt")
+    // --- io.Writer: file
+    /*// Write telemetry data to a file.
+      f, err := os.Create("traces.txt")
+      if err != nil {
+          return nil, fmt.Errorf("InitTrace os.Create err:%v", err)
+      }*/
+    // --- io.Writer: plog // TODO:  - prince@todo 2022/4/9 下午12:12
+    // 获取 plog 已经设置的日志文件及路径
+    dir, fileName := plog.GetLogger().GetOutFileInfo()
+    file := dir + fileName
+    f, err := os.OpenFile(file, os.O_APPEND|os.O_WRONLY, os.ModeAppend)
     if err != nil {
-        return nil, fmt.Errorf("InitTrace os.Create err:%v", err)
+        return nil, fmt.Errorf("InitTrace plog.SetOutputFile err:%v", err)
     }
+    // console
     
     return stdouttrace.New(
         stdouttrace.WithWriter(f),
