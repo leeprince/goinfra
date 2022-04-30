@@ -12,7 +12,7 @@ import (
 
 func IsProd(env string) (is bool) {
     is = false
-    if env == consts.EnvProd {
+    if env == consts.ENVProd {
         is = true
     }
     return
@@ -20,7 +20,7 @@ func IsProd(env string) (is bool) {
 
 func IsProdOrUat(env string) (is bool) {
     is = false
-    if env == consts.EnvProd || env == consts.EnvUat  {
+    if env == consts.ENVProd || env == consts.ENVUat {
         is = true
     }
     return
@@ -28,7 +28,7 @@ func IsProdOrUat(env string) (is bool) {
 
 func IsLocal(env string) (is bool) {
     is = false
-    if env == consts.EnvLocal {
+    if env == consts.ENVLocal {
         is = true
     }
     return

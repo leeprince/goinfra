@@ -1,8 +1,6 @@
 package httpcli
 
 import (
-    "fmt"
-    "io/ioutil"
     "net/http"
 )
 
@@ -15,7 +13,7 @@ import (
 /**
  * @Author: prince.lee <leeprince@foxmail.com>
  * @Date:   2022/4/5 下午4:18
- * @Desc:
+ * @Desc:   http 客户端
  */
 
 func Do(req *http.Request) (respByte []byte, err error) {
@@ -23,16 +21,5 @@ func Do(req *http.Request) (respByte []byte, err error) {
     if err != nil {
         return
     }
-    defer resp.Body.Close()
-    
-    respByte, err = ioutil.ReadAll(resp.Body)
-    if err != nil {
-        return
-    }
-    
-    if resp.StatusCode  != http.StatusOK {
-        err = fmt.Errorf("StatusCode: %d, Body: %s", resp.StatusCode, respByte)
-        return
-    }
-    return
+    return ToBytes(resp)
 }
