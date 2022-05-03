@@ -25,9 +25,9 @@ import (
 // Package-level tracer.
 // This should be configured in your code setup instead of here.
 
-const serverName = "opentelemetry_client-libraries"
+const serviceName = "opentelemetry_client-libraries"
 
-var tracer = otel.Tracer(serverName)
+var tracer = otel.Tracer(serviceName)
 
 func main() {
     tracerProvider, err := InitTrace()
@@ -91,7 +91,7 @@ func newResource() *resource.Resource {
         resource.Default(),
         resource.NewWithAttributes(
             semconv.SchemaURL,
-            semconv.ServiceNameKey.String(serverName),
+            semconv.ServiceNameKey.String(serviceName),
             semconv.ServiceVersionKey.String("v0.1.0"),
             attribute.String("environment", "demo"),
         ),

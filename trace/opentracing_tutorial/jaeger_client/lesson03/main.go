@@ -16,7 +16,7 @@ import (
 )
 
 const (
-    serverName = "princeJaeger-lesson03"
+    serviceName = "princeJaeger-lesson03"
 )
 
 func main() {
@@ -26,8 +26,8 @@ func main() {
     // 注意：function opentracing.GlobalTracer() returns a no-op tracer by default.
     // tracer := opentracing.GlobalTracer()
     
-    // tracer, closer := initJaeger(serverName)
-    tracer, closer := initJaegerLog(serverName)
+    // tracer, closer := initJaeger(serviceName)
+    tracer, closer := initJaegerLog(serviceName)
     defer closer.Close()
     
     println("tracer.StartSpan>>>>")

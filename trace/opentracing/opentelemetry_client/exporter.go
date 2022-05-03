@@ -68,10 +68,11 @@ func NewIOWriterWExporter(t exporterType) (spanExporter sdktrace.SpanExporter) {
 // --- 导出器：io.Writer 作为导出器（exporter） -end
 
 // --- 导出器：Jaeger HTTP Thrift collector 作为导出器（exporter）
+// url 可为空， 默认 `http://localhost:14268/api/traces`
 func NewJaegerExporter(url string, options ...jaeger.CollectorEndpointOption) sdktrace.SpanExporter {
     // Your preferred exporter: console, jaeger, zipkin, OTLP, etc.
     
-    // 、默认 `http://localhost:14268/api/traces`
+    // 默认 `http://localhost:14268/api/traces`
     if url != "" {
         options = append(options, jaeger.WithEndpoint(url))
     }

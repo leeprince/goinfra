@@ -2,7 +2,8 @@ package main
 
 import (
 	"fmt"
-	"log"
+    "github.com/leeprince/goinfra/plog"
+    "log"
 	"net/http"
 )
 
@@ -16,7 +17,9 @@ func main() {
         helloTo := r.FormValue("helloTo")
         helloStr := fmt.Sprintf("Hello, %s!", helloTo)
         w.Write([]byte(helloStr))
+        
+        plog.Info("HandleFunc /format end")
     })
     
-    log.Fatal(http.ListenAndServe(":8101", nil))
+    log.Fatal(http.ListenAndServe(":8201", nil))
 }

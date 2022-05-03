@@ -24,14 +24,14 @@ import (
  * @Desc:
  */
 
-const serverName = "opentelemetry_client-manual"
+const serviceName = "opentelemetry_client-manual"
 
 var tracer trace.Tracer
 
 func main() {
     ctx := context.Background()
     
-    tracerProvider, err := InitTrace(ctx, serverName)
+    tracerProvider, err := InitTrace(ctx, serviceName)
     if err != nil {
         log.Fatal(err)
     }
@@ -40,8 +40,8 @@ func main() {
     defer func() { _ = tracerProvider.Shutdown(ctx) }()
     
     // 二者都可以，推荐 tracerProvider.Tracer
-    // tracer = otel.Tracer(serverName)
-    tracer = tracerProvider.Tracer(serverName)
+    // tracer = otel.Tracer(serviceName)
+    tracer = tracerProvider.Tracer(serviceName)
     
     // Wrap your httpHandler function.
     handler := http.HandlerFunc(manualHttpHandler)
@@ -119,7 +119,7 @@ func childFunctionAttributes(ctx context.Context) {
     
 }
 
-func InitTrace(ctx context.Context, serverName string) (*sdktrace.TracerProvider, error) {
+func InitTrace(ctx context.Context, serviceName string) (*sdktrace.TracerProvider, error) {
     exp, err := newExporter()
     if err != nil {
         return nil, fmt.Errorf("InitTrace newExporter err:%v", err)
@@ -127,7 +127,7 @@ func InitTrace(ctx context.Context, serverName string) (*sdktrace.TracerProvider
     
     tp := sdktrace.NewTracerProvider(
         sdktrace.WithBatcher(exp),
-        sdktrace.WithResource(newResource(serverName)),
+        sdktrace.WithResource(newResource(serviceName)),
     )
     
     otel.SetTracerProvider(tp)
@@ -136,12 +136,12 @@ func InitTrace(ctx context.Context, serverName string) (*sdktrace.TracerProvider
 }
 
 // newResource returns a resource describing this application.
-func newResource(serverName string) *resource.Resource {
+func newResource(serviceName string) *resource.Resource {
     r, _ := resource.Merge(
         resource.Default(),
         resource.NewWithAttributes(
             semconv.SchemaURL,
-            semconv.ServiceNameKey.String(serverName),
+            semconv.ServiceNameKey.String(serviceName),
             attribute.String("environment", "local"),
         ),
     )

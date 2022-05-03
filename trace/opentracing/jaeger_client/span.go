@@ -11,8 +11,9 @@ import (
  * @Desc:   span 启动与完成
  */
 
-// --- 启动新的 span
-// 启动新的 span，并设置 span 到上下文 context.Context 中
+// --- 开始新的 span
+// 开始新的初始 span，并设置 span 到上下文 context.Context 中
+//      ctx：一般是 context.Background()、context.TODO() 或者其他非分布式调用链的上下文
 func StartSpan(ctx context.Context, operationName string, opts ...opentracing.StartSpanOption) context.Context {
     span := opentracing.GlobalTracer().StartSpan(operationName, opts...)
     
@@ -22,13 +23,13 @@ func StartSpan(ctx context.Context, operationName string, opts ...opentracing.St
     return ctx
 }
 
-// 通过上下文 context.Context 启动新的 span
+// 开始新的子 span，通过上下文 context.Context 开始新的子 span（对应的初始 span 是一样的）
 func StartSpanFromContext(ctx context.Context, operationName string, opts ...opentracing.StartSpanOption) context.Context {
     _, ctx = opentracing.StartSpanFromContext(ctx, operationName, opts...)
     return ctx
 }
 
-// --- 启动新的 span -end
+// --- 开始新的 span -end
 
 // --- 获取 span
 // 通过上下文 context.Context 获取 span

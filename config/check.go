@@ -1,4 +1,4 @@
-package env
+package config
 
 import (
     "github.com/leeprince/goinfra/consts"
@@ -18,12 +18,8 @@ func IsProd(env string) (is bool) {
     return
 }
 
-func IsProdOrUat(env string) (is bool) {
-    is = false
-    if env == consts.ENVProd || env == consts.ENVUat {
-        is = true
-    }
-    return
+func IsProdOrSandbox(env string) (is bool) {
+    return env == consts.ENVProd || env == consts.ENVUat || env == consts.ENVSandbox
 }
 
 func IsLocal(env string) (is bool) {

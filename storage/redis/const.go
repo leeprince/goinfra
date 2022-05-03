@@ -17,7 +17,7 @@ var luaRedisGetAndDelScript = `
 
 const (
     redigoDialConnectTimeout = time.Second * 1
-    redigoDialReadTimeout = time.Second * 1
+    redigoDialReadTimeout = time.Second * 10
     redigoDialWriteTimeout = time.Second * 10
     redigoMaxIdle = 1000
     redigoMaxActive = 100

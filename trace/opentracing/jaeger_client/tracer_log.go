@@ -14,7 +14,7 @@ import (
  */
 
 func Plog(ctx context.Context, level plog.Level, args ...interface{}) {
-    plog.SetCustomerTempLoggerPackage("github.com/leeprince/goinfra/trace/opentracing/jaeger_client")
+    plog.SetCustomerTempLoggerPackage(packageName)
     
     if level == plog.ErrorLevel {
         LogError(ctx, errors.New(fmt.Sprint(args...)))
@@ -23,7 +23,7 @@ func Plog(ctx context.Context, level plog.Level, args ...interface{}) {
 }
 
 func Plogf(ctx context.Context, level plog.Level, format string, args ...interface{}) {
-    plog.SetCustomerTempLoggerPackage("github.com/leeprince/goinfra/trace/opentracing/jaeger_client")
+    plog.SetCustomerTempLoggerPackage(packageName)
     
     if level == plog.ErrorLevel {
         LogError(ctx, errors.New(fmt.Sprintf(format, args...)))

@@ -3,8 +3,8 @@ package main
 import (
     "fmt"
     "github.com/leeprince/goinfra/plog"
+    "github.com/leeprince/goinfra/trace/opentracing/jaeger_client"
     "github.com/opentracing/opentracing-go"
-    "github.com/opentracing/opentracing-go/ext"
     "github.com/uber/jaeger-client-go"
     "github.com/uber/jaeger-client-go/config"
     "io"
@@ -19,22 +19,22 @@ import (
  */
 
 const (
-    serverName = "princeJaeger-lesson03-rpc-trace-publisher"
+    serviceName = "opentracing_test-rpc_trace-publisher"
 )
 
 func main() {
-    // 注意：function opentracing.GlobalTracer() returns a no-op tracer by default.
-    // tracer := opentracing.GlobalTracer()
-    
-    // tracer, closer := initJaeger(serverName)
-    tracer, closer := initJaegerLog(serverName)
-    defer closer.Close()
+    jaeger_client.InitTracer(serviceName)
+    defer jaeger_client.Close()
     
     http.HandleFunc("/publish", func(w http.ResponseWriter, r *http.Request) {
-        spanCtx, _ := tracer.Extract(opentracing.HTTPHeaders, opentracing.HTTPHeadersCarrier(r.Header))
-        span := tracer.StartSpan("publisher@http.HandleFunc", ext.RPCServerOption(spanCtx))
-        defer span.Finish()
-        span.LogKV("publisher@http.HandleFunc@LogKV001", "println")
+        spanCtx, err := jaeger_client.HTTPServer(r.Context(), "publisher@http.HandleFunc", r.Header)
+        if err != nil {
+            plog.Fatal("jaeger_client.HTTPServer err:", err)
+        }
+        defer jaeger_client.Finish(spanCtx)
+        plog.WithFiledLogID(jaeger_client.TraceID(spanCtx)).Info("spanCtx TraceID")
+        
+        jaeger_client.LogKV(spanCtx, "publisher@http.HandleFunc@LogKV001", "println")
         
         helloStr := r.FormValue("helloStr")
         println(helloStr)
@@ -43,7 +43,7 @@ func main() {
     log.Fatal(http.ListenAndServe(":8112", nil))
 }
 
-// initJaeger returns an instance of Jaeger Tracer that samples 100% of traces and logs all spans to stdout.
+// initJaeger returns an instance of Jaeger pTracer that samples 100% of traces and logs all spans to stdout.
 func initJaeger(service string) (opentracing.Tracer, io.Closer) {
     cfg := &config.Configuration{
         ServiceName: service,
@@ -62,7 +62,7 @@ func initJaeger(service string) (opentracing.Tracer, io.Closer) {
     return tracer, closer
 }
 
-// initJaeger returns an instance of Jaeger Tracer that samples 100% of traces and logs all spans to stdout.
+// initJaeger returns an instance of Jaeger pTracer that samples 100% of traces and logs all spans to stdout.
 func initJaegerLog(service string) (opentracing.Tracer, io.Closer) {
     cfg := &config.Configuration{
         ServiceName: service,
@@ -83,16 +83,18 @@ func initJaegerLog(service string) (opentracing.Tracer, io.Closer) {
         panic(fmt.Sprintf("ERROR: cannot init Jaeger: %v\n", err))
     }
     
-    // opentracing.StartSpanFromContext 依赖 opentracing 的 Tracer
+    // opentracing.StartSpanFromContext 依赖 opentracing 的 pTracer
     opentracing.SetGlobalTracer(tracer)
     
     return tracer, closer
 }
 
 var jaegerLoggerPlog = &jaegerLogger{}
+
 type jaegerLogger struct{}
+
 func (l *jaegerLogger) Error(msg string) {
-	plog.Error(msg)
+    plog.Error(msg)
 }
 func (l *jaegerLogger) Infof(msg string, args ...interface{}) {
     plog.Infof(msg, args...)

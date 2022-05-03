@@ -16,13 +16,11 @@ package handler // import "go.opentelemetry.io/otel/example/passthrough/handler"
 
 import (
 	"context"
-	"log"
-	"net/http"
-	"time"
-
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/propagation"
 	"go.opentelemetry.io/otel/trace"
+	"log"
+	"net/http"
 )
 
 // Handler is a minimal implementation of the handler and client from
@@ -53,7 +51,7 @@ func (h *Handler) HandleHTTPReq(r *http.Request) {
 	defer span.End()
 
 	// Pretend to do work
-	time.Sleep(time.Second)
+	// time.Sleep(time.Second)
 
 	h.makeOutgoingRequest(ctx)
 }

@@ -1,11 +1,13 @@
 package main
 
 import (
+    "context"
     "fmt"
-    "github.com/leeprince/goinfra/plog"
-    "github.com/leeprince/goinfra/trace/opentracing/jaeger_client"
+    "github.com/leeprince/goinfra/consts"
+    "github.com/leeprince/goinfra/trace/opentracing/opentelemetry_client"
     "log"
     "net/http"
+    "time"
 )
 
 /**
@@ -15,25 +17,40 @@ import (
  */
 
 const (
-    serviceName = "opentracing_test-rpc_trace-formatter"
+    serviceName = "opentracing_test_app-rpc_trace-formatter"
+    env         = consts.ENVLocal
 )
 
 func main() {
-    jaeger_client.InitTracer(serviceName)
-    defer jaeger_client.Close()
+    ctx := context.Background()
+    opentelemetry_client.InitTrace(
+        serviceName,
+        // opentelemetry_client.WithSpanExporter(opentelemetry_client.NewIOWriterWExporter(opentelemetry_client.IOWriterExporterStdout)),
+        // opentelemetry_client.WithSpanExporter(opentelemetry_client.NewIOWriterWExporter(opentelemetry_client.IOWriterExporterCreate)),
+        // opentelemetry_client.WithSpanExporter(opentelemetry_client.NewIOWriterWExporter(opentelemetry_client.IOWriterExporterPlog)),
+        // opentelemetry_client.WithSpanExporter(opentelemetry_client.NewJaegerExporter("")), // 默认
+        opentelemetry_client.WithENV(env),
+    )
+    defer opentelemetry_client.Shutdown(ctx, time.Second*5)
     
-    http.HandleFunc("/format", func(w http.ResponseWriter, r *http.Request) {
-        spanCtx, err := jaeger_client.HTTPServer(r.Context(), "formatter@http.HandleFunc", r.Header)
-        if err != nil {
-            plog.Fatal("jaeger_client.HTTPServer err:", err)
-        }
-        defer jaeger_client.Finish(spanCtx)
-        jaeger_client.LogKV(spanCtx, "formatter@http.HandleFunc@LogKV001", "println")
-        
-        helloTo := r.FormValue("helloTo")
-        helloStr := fmt.Sprintf("Hello, %s!", helloTo)
-        w.Write([]byte(helloStr))
-    })
+    handler := http.HandlerFunc(formatHandler)
+    // manualHttpHandler 加入 opentelemetry_client.NewHandler 拦截器中（中间件）
+    wrappedHandler := opentelemetry_client.NewHandler(handler, "NewHandler.formatHandler")
+    http.Handle("/format", wrappedHandler)
     
-    log.Fatal(http.ListenAndServe(":8111", nil))
+    log.Fatal(http.ListenAndServe(":8202", nil))
+}
+
+func formatHandler(w http.ResponseWriter, r *http.Request) {
+    spanCtx := opentelemetry_client.StartSpan(r.Context(), "formatHandler")
+    defer opentelemetry_client.Finish(spanCtx)
+    opentelemetry_client.TagString(spanCtx, "formatter@TagString01", "println")
+    seq := opentelemetry_client.BaggageItem(spanCtx, "seq")
+    opentelemetry_client.PlogInfo(spanCtx, "formatHandler@opentelemetry_client.BaggageItem seq:", seq)
+    
+    helloTo := r.FormValue("helloTo")
+    helloStr := fmt.Sprintf("Hello, %s!", helloTo)
+    w.Write([]byte(helloStr))
+    
+    opentelemetry_client.PlogInfo(spanCtx, "formatHandler plog.Info end")
 }

@@ -7,6 +7,7 @@ import (
     "github.com/uber/jaeger-client-go"
     "github.com/uber/jaeger-client-go/config"
     "io"
+    "time"
 )
 
 /**
@@ -23,13 +24,20 @@ type jaegerOption struct {
     // 生产或者沙箱环境不在控制台输出 span 的日志 LogSpans
     env string
     
-    // jaeger 内置的日志输出方式
+    // jaeger 内置的日志输出方式。如：reporterLogSpans（Reporting span） 日志
     // true: 标准输出，输出到 jaeger.StdLogger
     // false（默认，推荐）: false 时先检查 logger；logger != nil 则使用默认的 jaegerLoggerPlog(已实现jaeger.Logger的接口), 否则使用 输入的 logger
     isStdLogger bool
     
+    // jaeger 内置日志是否输出 span 的日志
+    reporterLogSpans bool
+    
     // isStdLogger == true 时才检查 logger
     logger jaeger.Logger
+    
+    // localAgentHostPort 指示 reporter 将 spans 发送到此地址的 jaeger 代理
+    //      默认：fmt.Sprintf("%s:%d", jaeger.DefaultUDPSpanServerHost, jaeger.DefaultUDPSpanServerPort),
+    localAgentHostPort string
 }
 
 type JaegerOptions func(opt *jaegerOption)
@@ -45,9 +53,19 @@ func WithJaegerOptionIsStdLogger(b bool) JaegerOptions {
         opt.isStdLogger = b
     }
 }
+func WithJaegerReporterLogSpans(b bool) JaegerOptions {
+    return func(opt *jaegerOption) {
+        opt.reporterLogSpans = b
+    }
+}
 func WithJaegerOptionLogger(logger jaeger.Logger) JaegerOptions {
     return func(opt *jaegerOption) {
         opt.logger = logger
+    }
+}
+func WithJaegerLocalAgentHostPort(url string) JaegerOptions {
+    return func(opt *jaegerOption) {
+        opt.localAgentHostPort = url
     }
 }
 
@@ -64,15 +82,19 @@ func initTracer(opt *jaegerOption) (opentracing.Tracer, io.Closer, error) {
         },
         Reporter: &config.ReporterConfig{
             LogSpans: true,
+            BufferFlushInterval: time.Second * 1,
         },
     }
     
-    // 是否在控制台输出 span 的日志
-    if pconfig.IsProdOrSandbox(opt.env) {
+    if pconfig.IsProdOrSandbox(opt.env) || opt.reporterLogSpans == false {
         cfg.Reporter.LogSpans = false
     }
     
-    // 追踪日志的输出方式
+    if opt.localAgentHostPort != "" {
+        cfg.Reporter.LocalAgentHostPort = opt.localAgentHostPort
+    }
+    
+    // jaeger 内置的日志输出方式
     var logger jaeger.Logger
     logger = jaeger.StdLogger
     if opt.isStdLogger {
@@ -88,7 +110,7 @@ func initTracer(opt *jaegerOption) (opentracing.Tracer, io.Closer, error) {
 }
 // --- 初始化 Tracer -end
 
-// --- jaeger 记录日志的方式
+// --- jaeger 内置的日志输出方式
 // jaegerLogger 基于 github.com/leeprince/goinfra/plog 实现 github.com/uber/jaeger-client-go@logger.go 的 Logger 接口
 var jaegerLoggerPlog = jaegerLogger{}
 
@@ -101,4 +123,4 @@ func (l jaegerLogger) Infof(msg string, args ...interface{}) {
     plog.Infof(msg, args...)
 }
 
-// --- jaeger 记录日志的方式 -end
+// --- jaeger 内置的日志输出方式 -end

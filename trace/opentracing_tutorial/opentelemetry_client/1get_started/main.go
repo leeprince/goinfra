@@ -14,7 +14,7 @@ import (
     "os/signal"
 )
 
-const serverName = "opentelemetry_client-get_started"
+const serviceName = "opentelemetry_client-get_started"
 
 /**
  * @Author: prince.lee <leeprince@foxmail.com>
@@ -84,7 +84,7 @@ func newResource() *resource.Resource {
         resource.Default(),
         resource.NewWithAttributes(
             semconv.SchemaURL,
-            semconv.ServiceNameKey.String(serverName),
+            semconv.ServiceNameKey.String(serviceName),
             semconv.ServiceVersionKey.String("v0.1.0"),
             attribute.String("environment", "demo"),
         ),

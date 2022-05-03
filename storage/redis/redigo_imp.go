@@ -2,6 +2,7 @@ package redis
 
 import (
     "context"
+    "errors"
     "fmt"
     "github.com/gomodule/redigo/redis"
     "github.com/leeprince/goinfra/config"
@@ -88,7 +89,7 @@ func (c *Redigo) SelectDB(index int) error {
     return nil
 }
 
-func (c *Redigo) SetKey(key string, value interface{}, expiration time.Duration) error {
+func (c *Redigo) Set(key string, value interface{}, expiration time.Duration) error {
     redisPool := c.Get()
     defer redisPool.Close()
     
@@ -169,4 +170,60 @@ func (c *Redigo) GetScanStruct(key string, value interface{}) error {
         return err
     }
     return nil
+}
+
+// Push 和 Pop 默认的方向是相反的，符合入队和出队的：先进先出
+func (c *Redigo) Push(key string, value interface{}, isRight ...bool) error {
+    redisPool := c.Get()
+    defer redisPool.Close()
+    
+    if len(isRight) > 0 && isRight[0] {
+        _, err := redisPool.Do("RPUSH", key, value)
+        return err
+    }
+    
+    _, err := redisPool.Do("LPUSH", key, value)
+    return err
+}
+
+// Push 和 Pop 默认的方向是相反的，符合入队和出队的：先进先出
+func (c *Redigo) Pop(key string, isLeft ...bool) (data []byte, err error) {
+    redisPool := c.Get()
+    defer redisPool.Close()
+    
+    if len(isLeft) > 0 && isLeft[0] {
+        return redis.Bytes(redisPool.Do("LPOP", key))
+    }
+    return redis.Bytes(redisPool.Do("RPOP", key))
+}
+
+// Push 和 BPop 默认的方向是相反的，符合入队和出队的：先进先出
+//  timeout 应小于等于 redis.Pool 设置的超时时间，否则会报 `i/o timeout`
+func (c *Redigo) BPop(key string, timeout time.Duration, isLeft ...bool) (data interface{}, err error) {
+    redisPool := c.Get()
+    defer redisPool.Close()
+    
+    // keyValueSlic: 0:key 1:value
+    var keyValueSlice []interface{}
+    if len(isLeft) > 0 && isLeft[0] {
+        keyValueSlice, err = redis.Values(redisPool.Do("BLPOP", key, timeout.Seconds()))
+    } else {
+        keyValueSlice, err = redis.Values(redisPool.Do("BRPOP", key, timeout.Seconds()))
+    }
+    // fmt.Printf("(c *Redigo) BPop error = %v, keyValueSlice=%v, keyValueSlice Type=%T \n", err, keyValueSlice, keyValueSlice)
+    // fmt.Println(cast.ToString(keyValueSlice[0]), cast.ToString(keyValueSlice[1]))
+    
+    if err == redis.ErrNil {
+        err = nil
+        return
+    }
+    if err != nil {
+        return
+    }
+    if len(keyValueSlice) != 2 {
+        err = errors.New("Redigo@BPop keyValueSlice len not equal to 2")
+        return
+    }
+    data = keyValueSlice[1]
+    return
 }

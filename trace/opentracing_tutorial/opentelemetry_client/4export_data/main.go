@@ -27,8 +27,9 @@ import (
  */
 
 const (
-    serverName = "opentelemetry_client-export_data"
+    serviceName = "opentelemetry_client-export_data"
     env        = "local"
+    port = ":8083"
 )
 
 var tracer trace.Tracer
@@ -37,13 +38,13 @@ func main() {
     ctx, cancel := context.WithCancel(context.Background())
     defer cancel()
     
-    err := plog.SetOutputFile("./", "traces.log", false)
+    err := plog.SetOutputFile("./", "traces.log", true)
     if err != nil {
         plog.Fatal("main:plog.SetOutputFile err:", err)
     }
     plog.SetReportCaller(true)
     
-    tracerProvider, err := InitTrace(ctx, serverName, env)
+    tracerProvider, err := InitTrace(ctx, serviceName, env)
     if err != nil {
         plog.Fatal(err)
     }
@@ -59,8 +60,8 @@ func main() {
     }(ctx)
     
     // 二者都可以，底层方法一样
-    // tracer = otel.Tracer(serverName)
-    tracer = tracerProvider.Tracer(serverName)
+    // tracer = otel.Tracer(serviceName)
+    tracer = tracerProvider.Tracer(serviceName)
     
     // Wrap your httpHandler function.
     handler := http.HandlerFunc(manualHttpHandler)
@@ -68,7 +69,8 @@ func main() {
     http.Handle("/hello-export", wrappedHandler)
     
     // And start the HTTP serve.
-    plog.Fatal(http.ListenAndServe(":8300", nil))
+    plog.Info("port:", port)
+    plog.Fatal(http.ListenAndServe(port, nil))
 }
 
 // myHttpHandler is an HTTP handler function that is going to be instrumented.
@@ -104,6 +106,7 @@ func manualHttpHandler(w http.ResponseWriter, r *http.Request) {
     
     plog.Debug("4export_data:manualHttpHandler:end")
 }
+
 func parentFunction(ctx context.Context) {
     ctx, parentSpan := tracer.Start(ctx, "parent")
     defer parentSpan.End()
@@ -141,24 +144,22 @@ func childFunctionAttributes(ctx context.Context) {
     defer span.End()
 }
 
-func InitTrace(ctx context.Context, serverName, env string) (*sdktrace.TracerProvider, error) {
+func InitTrace(ctx context.Context, serviceName, env string) (*sdktrace.TracerProvider, error) {
     // Exporter
-    exp, err := newExporter()
+    /*exp, err := newExporter()
+    if err != nil {
+        return nil, fmt.Errorf("InitTrace newExporter err:%v", err)
+    }*/
+    // ---
+    exp, err := newJaegerExporter("http://localhost:14268/api/traces")
     if err != nil {
         return nil, fmt.Errorf("InitTrace newExporter err:%v", err)
     }
-    // ---
-    /*
-       exp, err := newJaegerExporter("http://localhost:14268/api/traces")
-       if err != nil {
-           return nil, fmt.Errorf("InitTrace newExporter err:%v", err)
-       }
-    */
     // Exporter -end
     
     tp := sdktrace.NewTracerProvider(
         sdktrace.WithBatcher(exp),
-        sdktrace.WithResource(newResource(ctx, serverName, env)),
+        sdktrace.WithResource(newResource(ctx, serviceName, env)),
         // sdktrace.WithSampler(sdktrace.NeverSample()),
         sdktrace.WithSampler(sdktrace.AlwaysSample()),
     )
@@ -169,12 +170,12 @@ func InitTrace(ctx context.Context, serverName, env string) (*sdktrace.TracerPro
 }
 
 // newResource returns a resource describing this application.
-func newResource(ctx context.Context, serverName, env string) *resource.Resource {
+func newResource(ctx context.Context, serviceName, env string) *resource.Resource {
     r, _ := resource.Merge(
         resource.Default(),
         resource.NewWithAttributes(
             semconv.SchemaURL,
-            semconv.ServiceNameKey.String(serverName),
+            semconv.ServiceNameKey.String(serviceName),
             attribute.String("environment", env),
         ),
     )

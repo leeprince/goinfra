@@ -21,5 +21,5 @@ func Do(req *http.Request) (respByte []byte, err error) {
     if err != nil {
         return
     }
-    return ToBytes(resp)
+    return ResponseToBytes(resp)
 }

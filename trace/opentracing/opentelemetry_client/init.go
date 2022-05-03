@@ -2,37 +2,34 @@ package opentelemetry_client
 
 import (
     "github.com/leeprince/goinfra/consts"
-    sdktrace "go.opentelemetry.io/otel/sdk/trace"
-    "go.opentelemetry.io/otel/trace"
 )
 
 /**
  * @Author: prince.lee <leeprince@foxmail.com>
  * @Date:   2022/4/9 上午10:27
- * @Desc:
+ * @Desc:   初始化
  */
 
 type pTracer struct {
-    tracer trace.Tracer
 }
 
 var ptracer pTracer
 
+const (
+    packageName = "github.com/leeprince/goinfra/trace/opentracing/opentelemetry_client"
+)
+
 // 初始化 Telemetry 客户端
 //  - exporter: exporter.go 中支持：NewIOWriterWExporter、NewJaegerExporter 作为导出器
-func InitTrace(serviceName string, exporter sdktrace.SpanExporter, options ...TracerProviderOptions) {
+func InitTrace(serviceName string, options ...TracerProviderOptions) {
     tracerProviderOption := &tracerProviderOption{
-        serviceName:  serviceName,
+        serviceName: serviceName,
         env:         consts.ENVLocal,
-        exporter: exporter,
+        exporter:    nil, // 默认为 jaeger 导出器
     }
     for _, optionsFunc := range options {
         optionsFunc(tracerProviderOption)
     }
     
-    tracer := initTracer(tracerProviderOption)
-    
-    ptracer = pTracer{
-        tracer: tracer,
-    }
+    initTracer(tracerProviderOption)
 }

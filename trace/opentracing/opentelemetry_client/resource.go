@@ -12,8 +12,8 @@ import (
  * @Desc:   资源：描述应用的资源
  */
 
-func newResource(serviceName, env string) *resource.Resource {
-    r, _ := resource.Merge(
+func newResource(serviceName, env string) (*resource.Resource, error) {
+    return resource.Merge(
         resource.Default(),
         resource.NewWithAttributes(
             semconv.SchemaURL,
@@ -21,6 +21,4 @@ func newResource(serviceName, env string) *resource.Resource {
             attribute.String("environment", env),
         ),
     )
-    
-    return r
 }

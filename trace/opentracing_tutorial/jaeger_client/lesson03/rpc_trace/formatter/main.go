@@ -19,15 +19,15 @@ import (
  */
 
 const (
-	serverName = "princeJaeger-lesson03-rpc-trace-formatter"
+	serviceName = "princeJaeger-lesson03-rpc-trace-formatter"
 )
 
 func main() {
     // 注意：function opentracing.GlobalTracer() returns a no-op tracer by default.
     // tracer := opentracing.GlobalTracer()
     
-    // tracer, closer := initJaeger(serverName)
-    tracer, closer := initJaegerLog(serverName)
+    // tracer, closer := initJaeger(serviceName)
+    tracer, closer := initJaegerLog(serviceName)
     defer closer.Close()
     
     http.HandleFunc("/format", func(w http.ResponseWriter, r *http.Request) {

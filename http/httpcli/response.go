@@ -12,7 +12,7 @@ import (
  * @Desc:   http 响应（*http.Response）处理
  */
 
-func ToBytes(resp *http.Response) (respByte []byte, err error) {
+func ResponseToBytes(resp *http.Response) (respByte []byte, err error) {
     defer resp.Body.Close()
     
     respByte, err = ioutil.ReadAll(resp.Body)

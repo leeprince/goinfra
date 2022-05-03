@@ -11,17 +11,17 @@ import (
  * @Desc:   span 启动与完成
  */
 
-// --- 启动新的 span
-func StartSpan(ctx context.Context, spanName string, opts ...trace.SpanStartOption) context.Context {
-    ctx, _ = tracer().Start(ctx, spanName, opts...)
-    return ctx
-}
-// --- 启动新的 span -end
-
 // --- 获取 span
 // 通过上下文 context.Context 获取 span
 func SpanFromContext(ctx context.Context) trace.Span {
     return trace.SpanFromContext(ctx)
+}
+// --- 启动新的 span -end
+
+// --- 启动新的 span
+func StartSpan(ctx context.Context, spanName string, opts ...trace.SpanStartOption) context.Context {
+    ctx, _ = Tracer().Start(ctx, spanName, opts...)
+    return ctx
 }
 // --- 获取 span -end
 

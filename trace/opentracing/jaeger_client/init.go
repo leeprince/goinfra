@@ -19,12 +19,16 @@ type pTracer struct {
 
 var ptracer pTracer
 
+const (
+    packageName = "github.com/leeprince/goinfra/trace/opentracing/jaeger_client"
+)
+
 // 初始化 Jaeger 客户端，并设置全局分布式链路追踪实例：opentracing.SetGlobalTracer
 func InitTracer(serviceName string, options ...JaegerOptions) {
     jaegerOption := &jaegerOption{
         serviceName: serviceName,
         env:         consts.ENVLocal,
-        isStdLogger: false,
+        isStdLogger: true,
     }
     for _, optionsFunc := range options {
         optionsFunc(jaegerOption)

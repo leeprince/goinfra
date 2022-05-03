@@ -12,22 +12,16 @@ import (
  * @Desc:   span 接口包含的方法
  */
 
-// 设置 Baggage
-func SetBaggageItem(ctx context.Context, restrictedKey, value string) {
-    span := SpanFromContext(ctx)
-    span.SetBaggageItem(restrictedKey, value)
-}
-
-// 获取 Baggage
-func BaggageItem(ctx context.Context, restrictedKey string) string {
-    span := SpanFromContext(ctx)
-    return span.BaggageItem(restrictedKey)
-}
-
-// 记录日志的键值对
+// 设置 span 日志: 必须是键值对(key, value) 的形式记录日志，即 alternatingKeyValues 的参数格式必须是2的倍数
 func LogKV(ctx context.Context, alternatingKeyValues ...interface{}) {
     span := SpanFromContext(ctx)
     span.LogKV(alternatingKeyValues...)
+}
+
+// 设置 span Tag
+func SetTag(ctx context.Context, key string, value interface{}) {
+    span := SpanFromContext(ctx)
+    span.SetTag(key, value)
 }
 
 // 注入：获取 span 的分布式链路追踪实例（span.pTracer()），并注入（Inject）到载体（carrier）中（载体的实际类型取决于 format 的值）

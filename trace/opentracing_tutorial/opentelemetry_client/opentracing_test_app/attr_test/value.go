@@ -12,13 +12,14 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package attr // import "go.opentelemetry.io/otel/attribute"
+package attr_test // import "go.opentelemetry.io/otel/attribute"
 
 /*
 go get golang.org/x/tools/cmd/stringer
 	$ stringer -help
 */
 //go:generate stringer -type=Type
+//go:generate stringer -type=Type -linecomment
 
 // Type describes the type of the data Value holds.
 type Type int

@@ -27,6 +27,18 @@ func NewDefaultLogger() {
 }
 
 // --- 记录日志方法：按等级记录日志。底层每次都获取一个新的 entry
+func Trace(args ...interface{}) {
+	logger.Trace(args...)
+}
+
+func Tracef(format string, args ...interface{}) {
+	logger.Tracef(format, args...)
+}
+
+func Traceln(args ...interface{}) {
+	logger.Traceln(args...)
+}
+
 func Debug(args ...interface{}) {
 	logger.Debug(args...)
 }
@@ -78,4 +90,3 @@ func PanicIfError(err error) {
 	logger.Panic(err)
 }
 // --- 按等级记录日志 - end
-

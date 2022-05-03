@@ -62,7 +62,7 @@ func SetOutputFile(dirPath, filename string, isBothStdout bool) error {
         return err
     }
     
-    logger.OutFileInfo = FileInfo{
+    logger.outFileInfo = FileInfo{
         dirPath:  dirPath,
         filename: filename,
     }
@@ -140,7 +140,7 @@ func SetOutputRotateFile(dirPath, filename string, isBothStdout bool, rotationFi
 }
 
 // AddHookReportCaller
-//  目标：检索第一个非 plog 包调用函数的名称
+//  目标：检索第一个非 plog 包的调用函数信息（文件名、方法、行号）
 func addHookReportCaller(levels ...logrus.Level) {
     AddHook(hooks.NewReportCallerHook(levels...))
 }
@@ -152,8 +152,19 @@ func WithFiledLogID(logID string) *logrus.Entry {
 }
 
 // Sentry 实现日志告警功能
-func AddHookSentry(dsn string, levels ...logrus.Level) {
-    AddHook(hooks.NewSentryHook(dsn, levels...))
+func AddHookSentry(dsn string, levels ...Level) {
+    AddHook(hooks.NewSentryHook(dsn, PLevels(levels)...))
 }
 
+// 支持外部基于该包封装成自己包时，追踪并记录调用日志者的标记
+func SetCustomerTempLoggerPackage(loggerPagekage string, levels ...Level) {
+	// 不记录日志调用者的标记，则不设置
+	if !logger.ReportCaller {
+		return
+	}
+	hooks.NewReportCallerHook(PLevels(levels)...).SetCustomerTempLoggerPackage(loggerPagekage)
+}
 // --- 设置 logger 参数 - end
+
+
+
