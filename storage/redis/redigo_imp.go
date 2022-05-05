@@ -7,13 +7,16 @@ import (
     "github.com/gomodule/redigo/redis"
     "github.com/leeprince/goinfra/config"
     "github.com/leeprince/goinfra/utils"
+    "github.com/spf13/cast"
     "time"
 )
 
 /**
  * @Author: prince.lee <leeprince@foxmail.com>
  * @Date:   2022/2/27 上午12:22
- * @Desc:
+ * @Desc:   redigo
+ *              关于有序结合 member 参数 *Z
+ *                  不支持 Z.Member 为切片、结构体
  */
 
 // 全局变量
@@ -173,6 +176,11 @@ func (c *Redigo) GetScanStruct(key string, value interface{}) error {
 }
 
 // Push 和 Pop 默认的方向是相反的，符合入队和出队的：先进先出
+// 如果 value 为切片，则只是插入一个数组
+// 解决：通过 `redis.Args{}.Add(key).AddFlat(value)...` 的方式插入多个元素
+//  如：value = []string{"v001", "v002"}
+//      redisPool.Do("LPUSH", key, value): 插入后为：`[v001 v002]` 的一个元素
+//      redisPool.Do("LPUSH", redis.Args{}.Add(key).AddFlat(value)...)：插入后为：`v001`,`v002` 的两个元素
 func (c *Redigo) Push(key string, value interface{}, isRight ...bool) error {
     redisPool := c.Get()
     defer redisPool.Close()
@@ -182,7 +190,8 @@ func (c *Redigo) Push(key string, value interface{}, isRight ...bool) error {
         return err
     }
     
-    _, err := redisPool.Do("LPUSH", key, value)
+    // _, err := redisPool.Do("LPUSH", key, value)
+    _, err := redisPool.Do("LPUSH", redis.Args{}.Add(key).AddFlat(value)...)
     return err
 }
 
@@ -226,4 +235,71 @@ func (c *Redigo) BPop(key string, timeout time.Duration, isLeft ...bool) (data i
     }
     data = keyValueSlice[1]
     return
+}
+
+// 不支持 Z.Member 为切片、结构体
+func (c *Redigo) ZAdd(key string, members ...*Z) error {
+    if len(members) == 0 {
+        return errors.New("(c *Redigo) ZAdd len(members) == 0")
+    }
+    
+    redisPool := c.Get()
+    defer redisPool.Close()
+    
+    args := redis.Args{}.Add(key)
+    for _, i2 := range members {
+        args = args.AddFlat(i2.Score)
+        args = args.AddFlat(i2.Member)
+    }
+    _, err := redisPool.Do("ZADD", args...)
+    
+    return err
+}
+
+func (c *Redigo) ZRangeByScore(key string, opt *ZRangeBy) (data []string, err error) {
+    if opt.Max == "" {
+        err = errors.New("opt.Max can not empty")
+        return
+    }
+    if opt.Count == 0 || opt.Count > ZRangeByMaxCount  {
+        opt.Count = ZRangeByMaxCount
+    }
+    
+    redisPool := c.Get()
+    defer redisPool.Close()
+    
+    var sliceInterface []interface{}
+    
+    // 返回分数的格式为：[]string{成员1 分数1 成员2 分数2}
+    if opt.isReturnScore {
+        sliceInterface, err = redis.Values(redisPool.Do("ZRANGEBYSCORE", key, opt.Min, opt.Max, "WITHSCORES", "LIMIT", opt.Offset, opt.Count))
+    } else {
+        sliceInterface, err = redis.Values(redisPool.Do("ZRANGEBYSCORE", key, opt.Min, opt.Max, "LIMIT", opt.Offset, opt.Count))
+    }
+    // fmt.Printf("sliceInterface data type:%T data:%v \n", sliceInterface, sliceInterface)
+    
+    if err == redis.ErrNil {
+        err = nil
+        return
+    }
+    
+    for _, i2 := range sliceInterface {
+        data = append(data, cast.ToString(i2))
+    }
+    
+    // fmt.Printf("data type:%T data:%v \n", data, data)
+    return
+}
+
+func (c *Redigo) ZRem(key string, members ...interface{}) error {
+    if len(members) == 0 {
+        return errors.New("(c *Redigo) ZAdd len(members) == 0")
+    }
+    
+    redisPool := c.Get()
+    defer redisPool.Close()
+    
+    _, err := redisPool.Do("ZREM", redis.Args{}.Add(key).AddFlat(members)...)
+    
+    return err
 }

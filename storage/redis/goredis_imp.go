@@ -7,6 +7,7 @@ import (
     "github.com/go-redis/redis/v8"
     "github.com/leeprince/goinfra/config"
     "github.com/leeprince/goinfra/consts"
+    "github.com/spf13/cast"
     "time"
 )
 
@@ -14,6 +15,9 @@ import (
  * @Author: prince.lee <leeprince@foxmail.com>
  * @Date:   2022/2/26 下午10:31
  * @Desc:   redis
+ *              关于 value 参数为 interface{} 时
+ *                  value 为切片：对于lpush(rpush)会当作列表中的多个元素。c.cli.LPush 的 value 支持传入`...interface{}`
+ *                  value 为结构体或者部分命令传入切片（ZAdd 方法的 Z.Member 为切片）时：需实现 `encoding.BinaryMarshaler` 接口(MarshalBinary 方法), 否则报错`redis: can't marshal []string (implement encoding.BinaryMarshaler)`。建议直接转成 json string 或者 []byte
  */
 
 // 全局变量
@@ -109,10 +113,8 @@ func (c *Goredis) GetScanStruct(key string, value interface{}) error {
     return c.cli.Get(c.ctx, key).Scan(value)
 }
 
-// Push 和 Pop 默认的方向是相反的，符合入队和出队的：先进先出
-//  value参数说明
-//      value 为切片：当作列表中的多个参数
-//      value 为结构体：需结构体实现 `encoding.BinaryMarshaler` 接口(MarshalBinary 方法)。建议直接转成 string 或者 []byte
+// Push 和 Pop 默认的方向是相反的，符合队列的：先进先出
+//  value参数说明: 关于 value 说明参考该文件顶部`关于 value 参数为 interface{} 时`
 func (c *Goredis) Push(key string, value interface{}, isRight ...bool) error {
     if len(isRight) > 0 && isRight[0] {
         return c.cli.RPush(c.ctx, key, value).Err()
@@ -120,7 +122,7 @@ func (c *Goredis) Push(key string, value interface{}, isRight ...bool) error {
     return c.cli.LPush(c.ctx, key, value).Err()
 }
 
-// Push 和 Pop 默认的方向是相反的，符合入队和出队的：先进先出
+// Push 和 Pop 默认的方向是相反的，符合队列的：先进先出
 func (c *Goredis) Pop(key string, isLeft ...bool) (data []byte, err error) {
     if len(isLeft) > 0 && isLeft[0] {
         return c.cli.LPop(c.ctx, key).Bytes()
@@ -128,7 +130,7 @@ func (c *Goredis) Pop(key string, isLeft ...bool) (data []byte, err error) {
     return c.cli.RPop(c.ctx, key).Bytes()
 }
 
-// Push 和 BPop 默认的方向是相反的，符合入队和出队的：先进先出
+// Push 和 BPop 默认的方向是相反的，符合队列的：先进先出
 func (c *Goredis) BPop(key string, timeout time.Duration, isLeft ...bool) (data interface{}, err error) {
     // keyValueSlic: 0:key 1:value
     var keyValueSlice []string
@@ -152,4 +154,64 @@ func (c *Goredis) BPop(key string, timeout time.Duration, isLeft ...bool) (data 
     }
     data = keyValueSlice[1]
     return
+}
+
+// value参数说明: 关于 value 说明参考该文件顶部`关于 value 参数为 interface{} 时`
+func (c *Goredis) ZAdd(key string, members ...*Z) error {
+    if len(members) == 0 {
+        return errors.New("(c *Goredis) ZAdd len(members) == 0")
+    }
+    
+    var redisMembers []*redis.Z
+    for _, i2 := range members {
+        redisMembers = append(redisMembers, &redis.Z{
+            Score:  i2.Score,
+            Member: i2.Member,
+        })
+    }
+    return c.cli.ZAdd(c.ctx, key, redisMembers...).Err()
+}
+
+func (c *Goredis) ZRangeByScore(key string, opt *ZRangeBy) (data []string, err error) {
+    if opt.Max == "" {
+        err = errors.New("opt.Max can not empty")
+        return
+    }
+    if opt.Count == 0 || opt.Count > ZRangeByMaxCount  {
+        opt.Count = ZRangeByMaxCount
+    }
+    ZRangeBy := &redis.ZRangeBy{
+        Min:    opt.Min,
+        Max:    opt.Max,
+        Offset: opt.Offset,
+        Count:  opt.Count,
+    }
+    
+    // 返回分数的格式为：[]string{成员1 分数1 成员2 分数2}。
+    //  []string 返回的顺序与 redigo 兼容。
+    if opt.isReturnScore {
+        var zSlice []redis.Z
+        zSlice, err = c.cli.ZRangeByScoreWithScores(c.ctx, key, ZRangeBy).Result()
+        // fmt.Printf("zSlice type:%T zSlice:%v \n", zSlice, zSlice)
+        if err != nil {
+            return
+        }
+    
+        for _, i2 := range zSlice {
+            data = append(data, cast.ToString(i2.Member), cast.ToString(i2.Score))
+        }
+        return
+    }
+    data, err = c.cli.ZRangeByScore(c.ctx, key, ZRangeBy).Result()
+    // fmt.Printf("data type:%T data:%v \n", data, data)
+    
+    return
+}
+
+func (c *Goredis) ZRem(key string, members ...interface{}) error {
+    if len(members) == 0 {
+        return errors.New("(c *Goredis) ZAdd len(members) == 0")
+    }
+    
+    return c.cli.ZRem(c.ctx, key, members...).Err()
 }

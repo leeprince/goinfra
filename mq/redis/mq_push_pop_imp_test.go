@@ -4,7 +4,7 @@ import (
     "encoding/json"
     "fmt"
     "github.com/leeprince/goinfra/config"
-    goinfraRedis "github.com/leeprince/goinfra/storage/redis"
+    "github.com/leeprince/goinfra/storage/redis"
     "github.com/spf13/cast"
     "testing"
     "time"
@@ -29,12 +29,12 @@ var (
         },
     }
     key = "princeKey01"
-    // value  = "princeValue02"
-    // value  = []string{"v001", "v002"}
-    value = ValueStruct{
-        Name: "prince",
-        Age:  18,
-    }
+    value  = "princeValue02"
+    // value = []string{"v001", "v002"}
+    // value = ValueStruct{
+    //     Name: "prince",
+    //     Age:  18,
+    // }
     expire = time.Second * 3
 )
 
@@ -47,29 +47,36 @@ func (s ValueStruct) MarshalBinary() ([]byte, error) {
     return json.Marshal(s)
 }
 
-func TestPushPop_Publish(t *testing.T) {
+
+func initRedisClient() (redisClient redis.RedisClient) {
     // --- redis 客户端
+    var err error
     
     // Goredis 客户端
-    err := goinfraRedis.InitGoredis(RedisConfs)
+    /*err = redis.InitGoredis(RedisConfs)
     if err != nil {
-        fmt.Printf("[goinfraRedis.InitGoredis] err:%v \n", err)
+        panic(fmt.Sprintf("[redis.InitGoredis] err:%v \n", err))
         return
     }
-    redisClient := goinfraRedis.GetGoredis(RedisName)
+    redisClient = redis.GetGoredis(RedisName)*/
     
     // Redigo 客户端
-    /*err := goinfraRedis.InitRedigo(RedisConfs)
-      if err != nil {
-          fmt.Printf("[goinfraRedis.InitGoredis] err:%v \n", err)
-          return
-      }
-      redisClient := goinfraRedis.GetRedigo(RedisName)*/
+    err = redis.InitRedigo(RedisConfs)
+    if err != nil {
+        panic(fmt.Sprintf("[redis.InitRedigo] err:%v \n", err))
+        return
+    }
+    redisClient = redis.GetRedigo(RedisName)
     
     // --- redis 客户端-end
     
+    return
+}
+
+func TestListMQ_Push(t *testing.T) {
+    
     type fields struct {
-        cli goinfraRedis.RedisClient
+        cli redis.RedisClient
     }
     type args struct {
         key   string
@@ -82,7 +89,6 @@ func TestPushPop_Publish(t *testing.T) {
         wantErr bool
     }{
         {
-            fields: fields{cli: redisClient},
             args: args{
                 key:   key,
                 value: value,
@@ -91,39 +97,17 @@ func TestPushPop_Publish(t *testing.T) {
     }
     for _, tt := range tests {
         t.Run(tt.name, func(t *testing.T) {
-            mq := &PushPop{
-                cli: tt.fields.cli,
-            }
-            if err := mq.Publish(tt.args.key, tt.args.value); (err != nil) != tt.wantErr {
-                t.Errorf("Publish() error = %v, wantErr %v", err, tt.wantErr)
+            mq := NewListMQ(initRedisClient())
+            if err := mq.Push(tt.args.key, tt.args.value); (err != nil) != tt.wantErr {
+                t.Errorf("Push() error = %v, wantErr %v", err, tt.wantErr)
             }
         })
     }
 }
 
-func TestPushPop_Subscribe(t *testing.T) {
-    // --- redis 客户端
-    
-    // Goredis 客户端
-    err := goinfraRedis.InitGoredis(RedisConfs)
-    if err != nil {
-        fmt.Printf("[goinfraRedis.InitGoredis] err:%v \n", err)
-        return
-    }
-    redisClient := goinfraRedis.GetGoredis(RedisName)
-    
-    // Redigo 客户端
-    /*err := goinfraRedis.InitRedigo(RedisConfs)
-      if err != nil {
-          fmt.Printf("[goinfraRedis.InitGoredis] err:%v \n", err)
-          return
-      }
-      redisClient := goinfraRedis.GetRedigo(RedisName)*/
-    
-    // --- redis 客户端-end
-    
+func TestListMQ_Subscribe(t *testing.T) {
     type fields struct {
-        cli goinfraRedis.RedisClient
+        cli redis.RedisClient
     }
     type args struct {
         key     string
@@ -137,7 +121,6 @@ func TestPushPop_Subscribe(t *testing.T) {
         wantErr  bool
     }{
         {
-            fields: fields{cli: redisClient},
             args: args{
                 key:     key,
                 timeout: time.Second * 2,
@@ -146,15 +129,13 @@ func TestPushPop_Subscribe(t *testing.T) {
     }
     for _, tt := range tests {
         t.Run(tt.name, func(t *testing.T) {
-            mq := &PushPop{
-                cli: tt.fields.cli,
-            }
+            mq := NewListMQ(initRedisClient())
             gotData, err := mq.Subscribe(tt.args.key, tt.args.timeout)
             if (err != nil) != tt.wantErr {
                 t.Errorf("Subscribe() error = %v, wantErr %v", err, tt.wantErr)
                 return
             }
-            // data := string(gotData.([]byte))
+            
             data := cast.ToString(gotData)
             fmt.Println("data string:", data)
         })

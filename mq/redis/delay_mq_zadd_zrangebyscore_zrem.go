@@ -1,0 +1,69 @@
+package redis
+
+import (
+    "github.com/leeprince/goinfra/storage/redis"
+    "github.com/spf13/cast"
+    "time"
+)
+
+/**
+ * @Author: prince.lee <leeprince@foxmail.com>
+ * @Date:   2022/5/4 下午2:54
+ * @Desc:   通过 redis `zadd`、`zrangescore`、`zrem` 有序集合命令实现 DelayMQ 接口
+ */
+
+type SortSetDelayMQ struct {
+    cli redis.RedisClient
+}
+
+// ListMQ 实现 DelayMQ 接口
+var _ DelayMQ = (*SortSetDelayMQ)(nil)
+
+func NewSortSetDelayMQ(cli redis.RedisClient) *SortSetDelayMQ {
+    return &SortSetDelayMQ{
+        cli: cli,
+    }
+}
+
+// 支持最小延迟时间为秒
+func (mq *SortSetDelayMQ) Push(key string, value interface{}, delayTime time.Duration) error {
+    if delayTime == 0 {
+        delayTime = DefaulDelayTime
+    }
+    
+    z := &redis.Z{
+        Score:  cast.ToFloat64(time.Now().Add(delayTime).Second()),
+        Member: value,
+    }
+    
+    return mq.cli.ZAdd(key, z)
+}
+
+func (mq *SortSetDelayMQ) Subscribe(key string, waitTime time.Duration) (data []byte, err error) {
+    if waitTime == 0 {
+        waitTime = DefaultWaitTime
+    }
+    
+    for {
+        var stringSliceData []string
+        stringSliceData, err = mq.cli.ZRangeByScore(key, &redis.ZRangeBy{
+            Min:    "0",
+            Max:    cast.ToString(time.Now().Unix()),
+            Offset: 0,
+            Count:  1, // 每次只取出一个成员
+        })
+        if err != nil {
+            return
+        }
+        if len(stringSliceData) == 0 {
+            time.Sleep(waitTime)
+            // fmt.Println("time.Sleep(waitTime):", time.Now().UnixNano() / 1e6)
+            continue
+        }
+        
+        // fmt.Println("stringSliceData:", stringSliceData)
+        data = []byte(stringSliceData[0])
+        err = mq.cli.ZRem(key, data)
+        return
+    }
+}
