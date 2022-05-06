@@ -15,8 +15,9 @@ import (
  * @Author: prince.lee <leeprince@foxmail.com>
  * @Date:   2022/2/27 上午12:22
  * @Desc:   redigo
- *              关于有序结合 member 参数 *Z
- *                  不支持 Z.Member 为切片、结构体
+ *              关于 value interface{} 参数说明
+ *                  默认不支持切片、结构体。需转化为字符串（或 json 字符串），建议转成 json 字符串。
+ *                      特殊情况下：可以参考 Push() 方法中使用： redis.Args{}.Add(key).AddFlat(value)... 支持切片。Push() 方法中支持切片使得可以在列表中插入多个元素
  */
 
 // 全局变量
@@ -176,7 +177,7 @@ func (c *Redigo) GetScanStruct(key string, value interface{}) error {
 }
 
 // Push 和 Pop 默认的方向是相反的，符合入队和出队的：先进先出
-// 如果 value 为切片，则只是插入一个数组
+// 如果 value 为切片，则当作是一个元素（插入一个数组）
 // 解决：通过 `redis.Args{}.Add(key).AddFlat(value)...` 的方式插入多个元素
 //  如：value = []string{"v001", "v002"}
 //      redisPool.Do("LPUSH", key, value): 插入后为：`[v001 v002]` 的一个元素
@@ -186,7 +187,7 @@ func (c *Redigo) Push(key string, value interface{}, isRight ...bool) error {
     defer redisPool.Close()
     
     if len(isRight) > 0 && isRight[0] {
-        _, err := redisPool.Do("RPUSH", key, value)
+        _, err := redisPool.Do("RPUSH", redis.Args{}.Add(key).AddFlat(value)...)
         return err
     }
     

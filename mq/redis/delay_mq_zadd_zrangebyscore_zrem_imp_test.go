@@ -29,7 +29,7 @@ func TestSortSetDelayMQ_Push(t *testing.T) {
         wantErr bool
     }{
         {
-            args:args{
+            args: args{
                 key:       "k",
                 value:     "SortSetDelayMQ-v01",
                 delayTime: time.Second * 5,
@@ -62,7 +62,7 @@ func TestSortSetDelayMQ_Subscribe(t *testing.T) {
         wantErr  bool
     }{
         {
-            args:args{
+            args: args{
                 key:      "k",
                 waitTime: time.Second * 1,
             },
@@ -71,12 +71,12 @@ func TestSortSetDelayMQ_Subscribe(t *testing.T) {
     for _, tt := range tests {
         t.Run(tt.name, func(t *testing.T) {
             mq := NewSortSetDelayMQ(initRedisClient())
-            gotData, err := mq.Subscribe(tt.args.key, tt.args.waitTime)
-            if (err != nil) != tt.wantErr {
-                t.Errorf("Subscribe() error = %v, wantErr %v", err, tt.wantErr)
-                return
+            
+            f := func(data []byte) {
+                fmt.Println("(mq *SortSetDelayMQ) Subscribe data:", string(data))
             }
-            fmt.Println("gotData:", string(gotData))
+            
+            mq.Subscribe(f, tt.args.key, tt.args.waitTime)
         })
     }
 }

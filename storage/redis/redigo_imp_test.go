@@ -29,20 +29,16 @@ var (
     }
 )
 
-var redisClientRedigo *Redigo
-
-func initRedigoClient() {
+func initRedigoClient() *Redigo {
     // Redigo 客户端
     err := InitRedigo(RedisConfs)
     if err != nil {
-        fmt.Printf("[goinfraRedis.InitGoredis] err:%v \n", err)
+        panic(fmt.Sprintf("[goinfraRedis.InitGoredis] err:%v \n", err))
     }
-    redisClientRedigo = GetRedigo(RedisName)
+    return GetRedigo(RedisName)
 }
 
 func TestRedigo_SetNx(t *testing.T) {
-    initRedigoClient()
-    
     type fields struct {
         ctx  context.Context
         Pool redis.Pool
@@ -83,14 +79,13 @@ func TestRedigo_SetNx(t *testing.T) {
     }
     for _, tt := range tests {
         t.Run(tt.name, func(t *testing.T) {
-            got, err := redisClientRedigo.SetNx(tt.args.key, tt.args.value, tt.args.expiration)
+            got, err := initRedigoClient().SetNx(tt.args.key, tt.args.value, tt.args.expiration)
             fmt.Println("got, err:", got, "--", err)
         })
     }
 }
 
 func TestRedigo_GetAndDel(t *testing.T) {
-    initRedigoClient()
     
     type fields struct {
         ctx  context.Context
@@ -131,10 +126,10 @@ func TestRedigo_GetAndDel(t *testing.T) {
     }
     for _, tt := range tests {
         t.Run(tt.name, func(t *testing.T) {
-            GetAndDelErr := redisClientRedigo.GetAndDel(tt.args.key, tt.args.value)
+            GetAndDelErr := initRedigoClient().GetAndDel(tt.args.key, tt.args.value)
             fmt.Println("GetAndDel>>>>>>>>", GetAndDelErr)
             
-            setErr := redisClientRedigo.Set(tt.args.key, tt.args.value, tt.args.expiration)
+            setErr := initRedigoClient().Set(tt.args.key, tt.args.value, tt.args.expiration)
             fmt.Println("SetKey::::::::::::", setErr)
             
         })
@@ -142,7 +137,6 @@ func TestRedigo_GetAndDel(t *testing.T) {
 }
 
 func TestRedigo_Push(t *testing.T) {
-    initRedigoClient()
     
     type fields struct {
         ctx  context.Context
@@ -173,10 +167,20 @@ func TestRedigo_Push(t *testing.T) {
                 isRight: nil,
             },
         },
+        // {
+        //     args: args{
+        //         key: "k",
+        //         value: ValueStruct{ // 不支持结构体。具体参考：`关于 value interface{} 参数说明`:默认不支持切片、结构体。需转化为字符串（或 json 字符串），建议转成 json 字符串。
+        //             Name: "prince",
+        //             Age:  18,
+        //         },
+        //         isRight: nil,
+        //     },
+        // },
     }
     for _, tt := range tests {
         t.Run(tt.name, func(t *testing.T) {
-            if err := redisClientRedigo.Push(tt.args.key, tt.args.value, tt.args.isRight...); (err != nil) != tt.wantErr {
+            if err := initRedigoClient().Push(tt.args.key, tt.args.value, tt.args.isRight...); (err != nil) != tt.wantErr {
                 t.Errorf("Push() error = %v, wantErr %v", err, tt.wantErr)
             }
         })
@@ -184,7 +188,6 @@ func TestRedigo_Push(t *testing.T) {
 }
 
 func TestRedigo_ZAdd(t *testing.T) {
-    initRedigoClient()
     
     type fields struct {
         ctx  context.Context
@@ -214,14 +217,14 @@ func TestRedigo_ZAdd(t *testing.T) {
                     },
                     // &Z{
                     //     Score: 2,
-                    //     Member: []string{ // 不支持 Z.Member 为切片、结构体
+                    //     Member: []string{ // 不支持 Z.Member 为切片、结构体。需转成 json 字符串
                     //         "mm00201",
                     //         "mm00202",
                     //     },
                     // },
                     // &Z{
                     //     Score:  3,
-                    //     Member: struct { // 不支持 Z.Member 为切片、结构体
+                    //     Member: struct { // 不支持 Z.Member 为切片、结构体。。需转成 json 字符串
                     //         Name string
                     //         Age int
                     //     }{
@@ -235,7 +238,7 @@ func TestRedigo_ZAdd(t *testing.T) {
     }
     for _, tt := range tests {
         t.Run(tt.name, func(t *testing.T) {
-            if err := redisClientRedigo.ZAdd(tt.args.key, tt.args.members...); (err != nil) != tt.wantErr {
+            if err := initRedigoClient().ZAdd(tt.args.key, tt.args.members...); (err != nil) != tt.wantErr {
                 t.Errorf("ZAdd() error = %v, wantErr %v", err, tt.wantErr)
             }
         })
@@ -243,7 +246,6 @@ func TestRedigo_ZAdd(t *testing.T) {
 }
 
 func TestRedigo_ZRangeByScore(t *testing.T) {
-    initRedigoClient()
     
     type fields struct {
         ctx  context.Context
@@ -311,7 +313,7 @@ func TestRedigo_ZRangeByScore(t *testing.T) {
     }
     for _, tt := range tests {
         t.Run(tt.name, func(t *testing.T) {
-            gotData, err := redisClientRedigo.ZRangeByScore(tt.args.key, tt.args.opt)
+            gotData, err := initRedigoClient().ZRangeByScore(tt.args.key, tt.args.opt)
             if (err != nil) != tt.wantErr {
                 t.Errorf("ZRangeByScore() error = %v, wantErr %v", err, tt.wantErr)
                 return
@@ -322,7 +324,6 @@ func TestRedigo_ZRangeByScore(t *testing.T) {
 }
 
 func TestRedigo_ZRem(t *testing.T) {
-    initRedigoClient()
     
     type fields struct {
         ctx  context.Context
@@ -350,7 +351,7 @@ func TestRedigo_ZRem(t *testing.T) {
     }
     for _, tt := range tests {
         t.Run(tt.name, func(t *testing.T) {
-            if err := redisClientRedigo.ZRem(tt.args.key, tt.args.members...); (err != nil) != tt.wantErr {
+            if err := initRedigoClient().ZRem(tt.args.key, tt.args.members...); (err != nil) != tt.wantErr {
                 t.Errorf("ZRem() error = %v, wantErr %v", err, tt.wantErr)
             }
         })

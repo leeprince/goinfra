@@ -28,13 +28,13 @@ var (
             PoolSize: 2,
         },
     }
-    key = "princeKey01"
-    value  = "princeValue02"
+    key = "k"
+    // value  = "Value01"
     // value = []string{"v001", "v002"}
-    // value = ValueStruct{
-    //     Name: "prince",
-    //     Age:  18,
-    // }
+    value = ValueStruct{
+        Name: "prince",
+        Age:  18,
+    }
     expire = time.Second * 3
 )
 
@@ -47,26 +47,25 @@ func (s ValueStruct) MarshalBinary() ([]byte, error) {
     return json.Marshal(s)
 }
 
-
 func initRedisClient() (redisClient redis.RedisClient) {
     // --- redis 客户端
     var err error
     
     // Goredis 客户端
-    /*err = redis.InitGoredis(RedisConfs)
+    err = redis.InitGoredis(RedisConfs)
     if err != nil {
         panic(fmt.Sprintf("[redis.InitGoredis] err:%v \n", err))
         return
     }
-    redisClient = redis.GetGoredis(RedisName)*/
+    redisClient = redis.GetGoredis(RedisName)
     
     // Redigo 客户端
-    err = redis.InitRedigo(RedisConfs)
+    /*err = redis.InitRedigo(RedisConfs)
     if err != nil {
         panic(fmt.Sprintf("[redis.InitRedigo] err:%v \n", err))
         return
     }
-    redisClient = redis.GetRedigo(RedisName)
+    redisClient = redis.GetRedigo(RedisName)*/
     
     // --- redis 客户端-end
     
@@ -130,14 +129,12 @@ func TestListMQ_Subscribe(t *testing.T) {
     for _, tt := range tests {
         t.Run(tt.name, func(t *testing.T) {
             mq := NewListMQ(initRedisClient())
-            gotData, err := mq.Subscribe(tt.args.key, tt.args.timeout)
-            if (err != nil) != tt.wantErr {
-                t.Errorf("Subscribe() error = %v, wantErr %v", err, tt.wantErr)
-                return
+            
+            f := func(data interface{}) {
+                fmt.Println("(mq *ListMQ) Subscribe data:", cast.ToString(data))
             }
             
-            data := cast.ToString(gotData)
-            fmt.Println("data string:", data)
+            mq.Subscribe(f, tt.args.key, tt.args.timeout)
         })
     }
 }

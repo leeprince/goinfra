@@ -1,6 +1,7 @@
 package redis
 
 import (
+    "github.com/leeprince/goinfra/plog"
     "github.com/leeprince/goinfra/storage/redis"
     "github.com/spf13/cast"
     "time"
@@ -39,13 +40,15 @@ func (mq *SortSetDelayMQ) Push(key string, value interface{}, delayTime time.Dur
     return mq.cli.ZAdd(key, z)
 }
 
-func (mq *SortSetDelayMQ) Subscribe(key string, waitTime time.Duration) (data []byte, err error) {
+func (mq *SortSetDelayMQ) Subscribe(f delayMQSubscribeFunc, key string, waitTime time.Duration) {
     if waitTime == 0 {
         waitTime = DefaultWaitTime
     }
     
     for {
         var stringSliceData []string
+        var err error
+        
         stringSliceData, err = mq.cli.ZRangeByScore(key, &redis.ZRangeBy{
             Min:    "0",
             Max:    cast.ToString(time.Now().Unix()),
@@ -53,7 +56,10 @@ func (mq *SortSetDelayMQ) Subscribe(key string, waitTime time.Duration) (data []
             Count:  1, // 每次只取出一个成员
         })
         if err != nil {
-            return
+            plog.Error("(mq *SortSetDelayMQ) Subscribe mq.cli.ZRangeByScore err:", err)
+            // 防止 redis 连接断开(重启、网络抖动)后无限循环，浪费 cpu
+            time.Sleep(waitTime)
+            continue
         }
         if len(stringSliceData) == 0 {
             time.Sleep(waitTime)
@@ -62,8 +68,13 @@ func (mq *SortSetDelayMQ) Subscribe(key string, waitTime time.Duration) (data []
         }
         
         // fmt.Println("stringSliceData:", stringSliceData)
-        data = []byte(stringSliceData[0])
+        data := []byte(stringSliceData[0])
         err = mq.cli.ZRem(key, data)
-        return
+        if err != nil {
+            plog.Error("(mq *SortSetDelayMQ) Subscribe mq.cli.ZRem err:", err)
+            continue
+        }
+        
+        go f(data)
     }
 }

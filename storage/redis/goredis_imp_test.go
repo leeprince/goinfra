@@ -2,6 +2,7 @@ package redis
 
 import (
     "context"
+    "encoding/json"
     "fmt"
     "github.com/go-redis/redis/v8"
     "testing"
@@ -14,19 +15,25 @@ import (
  * @Desc:
  */
 
-var redisClientGoredis *Goredis
-
-func initGoredisClient() {
+func initGoredisClient() *Goredis {
     // Goredis 客户端
     err := InitGoredis(RedisConfs)
     if err != nil {
-        fmt.Printf("[goinfraRedis.InitGoredis] err:%v \n", err)
+        panic(fmt.Sprintf("[goinfraRedis.InitGoredis] err:%v \n", err))
     }
-    redisClientGoredis = GetGoredis(RedisName)
+    return GetGoredis(RedisName)
+}
+
+type ValueStruct struct {
+    Name string `json:"name"`
+    Age  int    `json:"age"`
+}
+
+func (s ValueStruct) MarshalBinary() ([]byte, error) {
+    return json.Marshal(s)
 }
 
 func TestGoredis_SetNx(t *testing.T) {
-    initGoredisClient()
     
     type fields struct {
         ctx    context.Context
@@ -68,14 +75,13 @@ func TestGoredis_SetNx(t *testing.T) {
     }
     for _, tt := range tests {
         t.Run(tt.name, func(t *testing.T) {
-            got, err := redisClientGoredis.SetNx(tt.args.key, tt.args.value, tt.args.expiration)
+            got, err := initGoredisClient().SetNx(tt.args.key, tt.args.value, tt.args.expiration)
             fmt.Println("got, err:", got, "--", err)
         })
     }
 }
 
 func TestGoredis_GetAndDel(t *testing.T) {
-    initGoredisClient()
     
     type fields struct {
         ctx    context.Context
@@ -116,10 +122,10 @@ func TestGoredis_GetAndDel(t *testing.T) {
     }
     for _, tt := range tests {
         t.Run(tt.name, func(t *testing.T) {
-            GetAndDelErr := redisClientGoredis.GetAndDel(tt.args.key, tt.args.value)
+            GetAndDelErr := initGoredisClient().GetAndDel(tt.args.key, tt.args.value)
             fmt.Println("GetAndDel>>>>>>>>", GetAndDelErr)
             
-            setErr := redisClientGoredis.Set(tt.args.key, tt.args.value, tt.args.expiration)
+            setErr := initGoredisClient().Set(tt.args.key, tt.args.value, tt.args.expiration)
             fmt.Println("SetKey::::::::::::", setErr)
             
         })
@@ -127,7 +133,6 @@ func TestGoredis_GetAndDel(t *testing.T) {
 }
 
 func TestGoredis_Push(t *testing.T) {
-    initGoredisClient()
     
     type fields struct {
         ctx context.Context
@@ -158,10 +163,20 @@ func TestGoredis_Push(t *testing.T) {
                 isRight: nil,
             },
         },
+        {
+            args: args{
+                key: "k",
+                value: ValueStruct{
+                    Name: "prince",
+                    Age:  18,
+                },
+                isRight: nil,
+            },
+        },
     }
     for _, tt := range tests {
         t.Run(tt.name, func(t *testing.T) {
-            if err := redisClientGoredis.Push(tt.args.key, tt.args.value, tt.args.isRight...); (err != nil) != tt.wantErr {
+            if err := initGoredisClient().Push(tt.args.key, tt.args.value, tt.args.isRight...); (err != nil) != tt.wantErr {
                 t.Errorf("Push() error = %v, wantErr %v", err, tt.wantErr)
             }
         })
@@ -169,7 +184,6 @@ func TestGoredis_Push(t *testing.T) {
 }
 
 func TestGoredis_ZAdd(t *testing.T) {
-    initGoredisClient()
     
     type fields struct {
         ctx context.Context
@@ -220,7 +234,7 @@ func TestGoredis_ZAdd(t *testing.T) {
     }
     for _, tt := range tests {
         t.Run(tt.name, func(t *testing.T) {
-            if err := redisClientGoredis.ZAdd(tt.args.key, tt.args.members...); (err != nil) != tt.wantErr {
+            if err := initGoredisClient().ZAdd(tt.args.key, tt.args.members...); (err != nil) != tt.wantErr {
                 t.Errorf("ZAdd() error = %v, wantErr %v", err, tt.wantErr)
             }
         })
@@ -228,7 +242,6 @@ func TestGoredis_ZAdd(t *testing.T) {
 }
 
 func TestGoredis_ZRangeByScore(t *testing.T) {
-    initGoredisClient()
     
     type fields struct {
         ctx context.Context
@@ -297,7 +310,7 @@ func TestGoredis_ZRangeByScore(t *testing.T) {
     }
     for _, tt := range tests {
         t.Run(tt.name, func(t *testing.T) {
-            gotData, err := redisClientGoredis.ZRangeByScore(tt.args.key, tt.args.opt)
+            gotData, err := initGoredisClient().ZRangeByScore(tt.args.key, tt.args.opt)
             if (err != nil) != tt.wantErr {
                 t.Errorf("ZRangeByScore() error = %v, wantErr %v", err, tt.wantErr)
                 return
@@ -308,7 +321,6 @@ func TestGoredis_ZRangeByScore(t *testing.T) {
 }
 
 func TestGoredis_ZRem(t *testing.T) {
-    initGoredisClient()
     
     type fields struct {
         ctx context.Context
@@ -336,7 +348,7 @@ func TestGoredis_ZRem(t *testing.T) {
     }
     for _, tt := range tests {
         t.Run(tt.name, func(t *testing.T) {
-            if err := redisClientGoredis.ZRem(tt.args.key, tt.args.members...); (err != nil) != tt.wantErr {
+            if err := initGoredisClient().ZRem(tt.args.key, tt.args.members...); (err != nil) != tt.wantErr {
                 t.Errorf("ZRem() error = %v, wantErr %v", err, tt.wantErr)
             }
         })

@@ -8,11 +8,17 @@ import "time"
  * @Desc:   redis 实现延迟消息队列
  */
 
-// 默认延迟的时间：1 秒
-var DefaulDelayTime = time.Second * 10
+var (
+    
+    // 默认延迟的时间：1 秒
+    DefaulDelayTime = time.Second * 10
+    
+    // 默认等待时间：1 秒
+    DefaultWaitTime = time.Second * 10
+)
 
-// 默认等待时间：1 秒
-var DefaultWaitTime = time.Second * 10
+// 延迟消息队列回调方法
+type delayMQSubscribeFunc func(data []byte)
 
 type DelayMQ interface {
     // 生产
@@ -20,5 +26,5 @@ type DelayMQ interface {
     Push(key string, value interface{}, delayTime time.Duration) error
     // 消费
     //  waitTime：等待时间。轮询延迟队列无元素后需等待多少时间后继续轮询。增加等待时间，避免无数据时，浪费 cpu。
-    Subscribe(key string, waitTime time.Duration) (data []byte, err error)
+    Subscribe(f delayMQSubscribeFunc, key string, waitTime time.Duration)
 }
