@@ -5,7 +5,7 @@ import "time"
 /**
  * @Author: prince.lee <leeprince@foxmail.com>
  * @Date:   2022/5/4 下午2:45
- * @Desc:   redis 实现延迟消息队列
+ * @Desc:   redis 实现延迟消息队列：多个发布者，一个消费者
  */
 
 var (
@@ -17,7 +17,7 @@ var (
     DefaultWaitTime = time.Second * 10
 )
 
-// 延迟消息队列回调方法
+// 延迟消息队列消费的回调方法
 type delayMQSubscribeFunc func(data []byte)
 
 type DelayMQ interface {

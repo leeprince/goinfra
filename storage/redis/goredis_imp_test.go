@@ -354,3 +354,79 @@ func TestGoredis_ZRem(t *testing.T) {
         })
     }
 }
+
+func TestGoredis_Publish(t *testing.T) {
+    type fields struct {
+        ctx context.Context
+        cli *redis.Client
+    }
+    type args struct {
+        channel string
+        message interface{}
+    }
+    tests := []struct {
+        name    string
+        fields  fields
+        args    args
+        wantErr bool
+    }{
+        {
+            args: args{
+                channel: "k",
+                message: "vvv002",
+            },
+        },
+    }
+    for _, tt := range tests {
+        t.Run(tt.name, func(t *testing.T) {
+            if err := initGoredisClient().Publish(tt.args.channel, tt.args.message); (err != nil) != tt.wantErr {
+                t.Errorf("Publish() error = %v, wantErr %v", err, tt.wantErr)
+            }
+        })
+    }
+}
+
+func TestGoredis_Subscribe(t *testing.T) {
+    type fields struct {
+        ctx context.Context
+        cli *redis.Client
+    }
+    type args struct {
+        channels []string
+    }
+    tests := []struct {
+        name   string
+        fields fields
+        args   args
+        want   <-chan SubscribeChannelMessage
+    }{
+        {
+            args: args{
+                channels: []string{"k"},
+            },
+        },
+    }
+    for _, tt := range tests {
+        t.Run(tt.name, func(t *testing.T) {
+            /*go func() {
+                got := initGoredisClient().Subscribe(tt.args.channels...)
+                for msg := range got {
+                    fmt.Println("msg.Channel:", msg.Channel)
+                    fmt.Println("msg.Pattern:", msg.Pattern)
+                    fmt.Println("msg.Payload:", msg.Payload)
+                    fmt.Println("msg.PayloadSlice:", msg.PayloadSlice)
+                }
+            }()*/
+            got := initGoredisClient().Subscribe(tt.args.channels...)
+            for msg := range got {
+                fmt.Println("msg.Channel:", msg.Channel)
+                fmt.Println("msg.Pattern:", msg.Pattern)
+                fmt.Println("msg.Payload:", msg.Payload)
+                fmt.Println("msg.PayloadSlice:", msg.PayloadSlice)
+            }
+            select {
+            
+            }
+        })
+    }
+}

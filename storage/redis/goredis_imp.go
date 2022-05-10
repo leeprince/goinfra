@@ -215,3 +215,23 @@ func (c *Goredis) ZRem(key string, members ...interface{}) error {
     
     return c.cli.ZRem(c.ctx, key, members...).Err()
 }
+
+func (c *Goredis) Publish(channel string, message interface{}) error {
+    return c.cli.Publish(c.ctx, channel, message).Err()
+}
+
+func (c *Goredis) Subscribe(channels ...string) <-chan SubscribeChannelMessage {
+    subscribeChannel := c.cli.Subscribe(c.ctx, channels...).Channel()
+    subscribeChannelMessage := make(chan SubscribeChannelMessage, len(channels))
+    for channel := range subscribeChannel {
+        message := SubscribeChannelMessage{
+            Channel:      channel.Channel,
+            Pattern:      channel.Pattern,
+            Payload:      channel.Payload,
+            PayloadSlice: channel.PayloadSlice,
+        }
+        subscribeChannelMessage <- message
+        return subscribeChannelMessage
+    }
+    return subscribeChannelMessage
+}

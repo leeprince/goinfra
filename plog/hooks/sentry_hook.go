@@ -22,7 +22,7 @@ func NewSentryHook(dsn string, levels ...logrus.Level) *SentryHook {
     if levels == nil {
         levels = logrus.AllLevels
     }
-    err := sentry_util.Init(dsn)
+    err := sentry.Init(dsn)
     if err != nil {
         return nil
     }
@@ -36,6 +36,6 @@ func (h *SentryHook) Levels() []logrus.Level {
 }
 
 func (h *SentryHook) Fire(entry *logrus.Entry) error {
-    sentry_util.CaptureException(errors.New(entry.Message), time.Millisecond * 200)
+    sentry.CaptureException(errors.New(entry.Message), time.Millisecond * 200)
     return nil
 }

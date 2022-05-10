@@ -1,4 +1,4 @@
-package sentry_util
+package sentry
 
 import (
     "github.com/getsentry/sentry-go"

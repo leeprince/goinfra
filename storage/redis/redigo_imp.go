@@ -24,7 +24,8 @@ import (
 var redigos map[string]*Redigo
 
 // Redigo 实现 RedisClient 接口
-var _ RedisClient = (*Redigo)(nil)
+// > 注意：不再继续维护实现 redis_interface.go 的接口
+// var _ RedisClient = (*Redigo)(nil)
 
 type Redigo struct {
     ctx context.Context
@@ -78,10 +79,10 @@ func GetRedigo(name string) *Redigo {
     return redigo
 }
 
-func (c *Redigo) WithContext(ctx context.Context) RedisClient {
+/*func (c *Redigo) WithContext(ctx context.Context) RedisClient {
     c.ctx = ctx
     return c
-}
+}*/
 
 func (c *Redigo) SelectDB(index int) error {
     redisPool := c.Get()

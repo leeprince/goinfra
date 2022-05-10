@@ -29,6 +29,14 @@ const (
     ZRangeByMaxCount = 10000
 )
 
+// 订阅频道获取到的通道数据
+type SubscribeChannelMessage struct {
+	Channel      string
+	Pattern      string
+	Payload      string
+	PayloadSlice []string
+}
+
 type RedisClient interface {
     // 上下文：设置上下文
     WithContext(ctx context.Context) RedisClient
@@ -58,4 +66,8 @@ type RedisClient interface {
     ZRangeByScore(key string, opt *ZRangeBy) (data []string, err error)
     // 有序集合：移除有序集合中的一个或多个成员
     ZRem(key string, members ...interface{}) error
+    // 将信息发送到指定的频道
+    Publish(channel string, message interface{}) error
+    // 订阅给定的一个或多个频道的信息
+    Subscribe(channels ...string) <-chan SubscribeChannelMessage
 }

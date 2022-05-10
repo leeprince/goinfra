@@ -17,7 +17,7 @@ type SortSetDelayMQ struct {
     cli redis.RedisClient
 }
 
-// ListMQ 实现 DelayMQ 接口
+// SortSetDelayMQ 实现 DelayMQ 接口
 var _ DelayMQ = (*SortSetDelayMQ)(nil)
 
 func NewSortSetDelayMQ(cli redis.RedisClient) *SortSetDelayMQ {

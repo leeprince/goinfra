@@ -7,10 +7,10 @@ import (
 /**
  * @Author: prince.lee <leeprince@foxmail.com>
  * @Date:   2022/5/1 上午11:13
- * @Desc:   redis 实现消息队列
+ * @Desc:   redis 实现普通消息队列：多个发布者，一个消费者
  */
 
-// 消息队列回调方法
+// 消息队列消费的回调方法
 type listMQSubscribeFunc func(data interface{})
 
 type MQ interface {
