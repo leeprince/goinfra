@@ -177,7 +177,7 @@ func (c *Goredis) ZRangeByScore(key string, opt *ZRangeBy) (data []string, err e
         err = errors.New("opt.Max can not empty")
         return
     }
-    if opt.Count == 0 || opt.Count > ZRangeByMaxCount  {
+    if opt.Count == 0 || opt.Count > ZRangeByMaxCount {
         opt.Count = ZRangeByMaxCount
     }
     ZRangeBy := &redis.ZRangeBy{
@@ -196,7 +196,7 @@ func (c *Goredis) ZRangeByScore(key string, opt *ZRangeBy) (data []string, err e
         if err != nil {
             return
         }
-    
+        
         for _, i2 := range zSlice {
             data = append(data, cast.ToString(i2.Member), cast.ToString(i2.Score))
         }
@@ -220,18 +220,28 @@ func (c *Goredis) Publish(channel string, message interface{}) error {
     return c.cli.Publish(c.ctx, channel, message).Err()
 }
 
-func (c *Goredis) Subscribe(channels ...string) <-chan SubscribeChannelMessage {
+func (c *Goredis) Subscribe(channels ...string) *SubscribeMessage {
     subscribeChannel := c.cli.Subscribe(c.ctx, channels...).Channel()
-    subscribeChannelMessage := make(chan SubscribeChannelMessage, len(channels))
-    for channel := range subscribeChannel {
-        message := SubscribeChannelMessage{
+    
+    // for 与 select...case... 都能接收通道（channel）的数据
+    // for 通道（channel）只有一个参数, 并且需要返回时外面也需要 return
+    /*for channel := range subscribeChannel {
+        return &SubscribeMessage{
             Channel:      channel.Channel,
             Pattern:      channel.Pattern,
             Payload:      channel.Payload,
             PayloadSlice: channel.PayloadSlice,
         }
-        subscribeChannelMessage <- message
-        return subscribeChannelMessage
     }
-    return subscribeChannelMessage
+    return nil*/
+    
+    select {
+    case msg := <-subscribeChannel:
+        return &SubscribeMessage{
+            Channel:      msg.Channel,
+            Pattern:      msg.Pattern,
+            Payload:      msg.Payload,
+            PayloadSlice: msg.PayloadSlice,
+        }
+    }
 }

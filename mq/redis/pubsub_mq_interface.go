@@ -14,7 +14,7 @@ import "github.com/leeprince/goinfra/storage/redis"
 
 
 // 发布订阅者模型订阅的回调方法
-type pubishSubscribeMQSubscribeFunc func(<-chan redis.SubscribeChannelMessage)
+type pubishSubscribeMQSubscribeFunc func(data *redis.SubscribeMessage)
 
 type PubSubMQ interface {
     // 发布

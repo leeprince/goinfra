@@ -4,6 +4,7 @@ import (
     "fmt"
     "github.com/leeprince/goinfra/storage/redis"
     "testing"
+    "time"
 )
 
 /**
@@ -11,6 +12,44 @@ import (
  * @Date:   2022/5/10 下午6:07
  * @Desc:
  */
+
+func TestPubishSubscribeMQ_Push(t *testing.T) {
+    type fields struct {
+        cli redis.RedisClient
+    }
+    type args struct {
+        channel string
+        message interface{}
+    }
+    tests := []struct {
+        name    string
+        fields  fields
+        args    args
+        wantErr bool
+    }{
+        {
+            args: args{
+                channel: "k",
+                message: "vvvv-001",
+            },
+        },
+        {
+            args: args{
+                channel: "k",
+                message: "vvvv-002",
+            },
+        },
+    }
+    for _, tt := range tests {
+        t.Run(tt.name, func(t *testing.T) {
+            mq := NewPubishSubscribeMQ(initRedisClient())
+            
+            if err := mq.Push(tt.args.channel, tt.args.message); (err != nil) != tt.wantErr {
+                t.Errorf("Push() error = %v, wantErr %v", err, tt.wantErr)
+            }
+        })
+    }
+}
 
 func TestPubishSubscribeMQ_Subscribe(t *testing.T) {
     type fields struct {
@@ -25,23 +64,26 @@ func TestPubishSubscribeMQ_Subscribe(t *testing.T) {
         fields fields
         args   args
     }{
-        // TODO: Add test cases.
+        {
+            args: args{
+                channels: []string{"k"},
+            },
+        },
     }
     for _, tt := range tests {
         t.Run(tt.name, func(t *testing.T) {
             mq := NewPubishSubscribeMQ(initRedisClient())
             
-            callbackFunc := func(data <- chan redis.SubscribeChannelMessage) {
-                // for 与 select...case... 同样能接收通道（channel）的数据
-                select {
-                case msg := <-data:
-                    fmt.Println("msg.Channel:", msg.Channel)
-                    fmt.Println("msg.Pattern:", msg.Pattern)
-                    fmt.Println("msg.Payload:", msg.Payload)
-                    fmt.Println("msg.PayloadSlice:", msg.PayloadSlice)
-                }
+            callbackFunc := func(data *redis.SubscribeMessage) {
+                fmt.Println(">>>>>>>>>>>>>> time:", time.Now().UnixNano() / 1e6)
+                
+                fmt.Println("data.Channel:", data.Channel)
+                fmt.Println("data.Pattern:", data.Pattern)
+                fmt.Println("data.Payload:", data.Payload)
+                fmt.Println("data.PayloadSlice:", data.PayloadSlice)
             }
             mq.Subscribe(callbackFunc, "k")
+            
         })
     }
 }

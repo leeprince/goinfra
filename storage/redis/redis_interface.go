@@ -29,8 +29,8 @@ const (
     ZRangeByMaxCount = 10000
 )
 
-// 订阅频道获取到的通道数据
-type SubscribeChannelMessage struct {
+// 订阅频道获取到的数据
+type SubscribeMessage struct {
 	Channel      string
 	Pattern      string
 	Payload      string
@@ -69,5 +69,5 @@ type RedisClient interface {
     // 将信息发送到指定的频道
     Publish(channel string, message interface{}) error
     // 订阅给定的一个或多个频道的信息
-    Subscribe(channels ...string) <-chan SubscribeChannelMessage
+    Subscribe(channels ...string) *SubscribeMessage
 }

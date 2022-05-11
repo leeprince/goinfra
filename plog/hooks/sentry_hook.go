@@ -3,7 +3,7 @@ package hooks
 import (
     "errors"
     "github.com/sirupsen/logrus"
-    "github.com/leeprince/goinfra/alert/sentry_util"
+    "github.com/leeprince/goinfra/alert/sentry"
     "time"
 )
 

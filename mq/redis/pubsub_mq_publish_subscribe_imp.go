@@ -28,9 +28,11 @@ func (mq *PubishSubscribeMQ) Push(channel string, message interface{}) error {
 }
 
 func (mq *PubishSubscribeMQ) Subscribe(f pubishSubscribeMQSubscribeFunc, channels ...string) {
+    // 启动一个守护进程去订阅消息
     for {
         msgChan := mq.cli.Subscribe(channels...)
-        
-        f(msgChan)
+    
+        // 非堵塞进程处理消息
+        go f(msgChan)
     }
 }

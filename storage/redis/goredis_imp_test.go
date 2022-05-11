@@ -373,6 +373,12 @@ func TestGoredis_Publish(t *testing.T) {
         {
             args: args{
                 channel: "k",
+                message: "vvv001",
+            },
+        },
+        {
+            args: args{
+                channel: "k",
                 message: "vvv002",
             },
         },
@@ -398,7 +404,7 @@ func TestGoredis_Subscribe(t *testing.T) {
         name   string
         fields fields
         args   args
-        want   <-chan SubscribeChannelMessage
+        want   <-chan SubscribeMessage
     }{
         {
             args: args{
@@ -408,24 +414,23 @@ func TestGoredis_Subscribe(t *testing.T) {
     }
     for _, tt := range tests {
         t.Run(tt.name, func(t *testing.T) {
-            /*go func() {
-                got := initGoredisClient().Subscribe(tt.args.channels...)
-                for msg := range got {
-                    fmt.Println("msg.Channel:", msg.Channel)
-                    fmt.Println("msg.Pattern:", msg.Pattern)
-                    fmt.Println("msg.Payload:", msg.Payload)
-                    fmt.Println("msg.PayloadSlice:", msg.PayloadSlice)
-                }
-            }()*/
-            got := initGoredisClient().Subscribe(tt.args.channels...)
-            for msg := range got {
-                fmt.Println("msg.Channel:", msg.Channel)
-                fmt.Println("msg.Pattern:", msg.Pattern)
-                fmt.Println("msg.Payload:", msg.Payload)
-                fmt.Println("msg.PayloadSlice:", msg.PayloadSlice)
-            }
-            select {
+            // 注意初始化 redis 客户端必须放在 守护进程 外面，否则每次都重新初始导致消息丢失
+            cli := initGoredisClient()
             
+            callbackFunc := func(data *SubscribeMessage) {
+                fmt.Println(">>>>>>>>>>>>>> time:", time.Now().UnixNano()/1e6)
+                
+                fmt.Println("data.Channel:", data.Channel)
+                fmt.Println("data.Pattern:", data.Pattern)
+                fmt.Println("data.Payload:", data.Payload)
+                fmt.Println("data.PayloadSlice:", data.PayloadSlice)
+            }
+            
+            // 启动一个守护进程去订阅消息
+            for {
+                got := cli.Subscribe(tt.args.channels...)
+                
+                go callbackFunc(got)
             }
         })
     }
