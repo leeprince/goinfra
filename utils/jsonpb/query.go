@@ -1,0 +1,26 @@
+/*
+ * @Date: 2020-12-18 11:50:23
+ * @LastEditors: aiden.deng (Zhenpeng Deng)
+ * @LastEditTime: 2020-12-18 11:50:36
+ */
+package gcjsonpb
+
+import (
+	"reflect"
+
+	"github.com/grpc-ecosystem/grpc-gateway/runtime"
+)
+
+var (
+	convFromType = map[reflect.Kind]reflect.Value{
+		reflect.String:  reflect.ValueOf(runtime.String),
+		reflect.Bool:    reflect.ValueOf(runtime.Bool),
+		reflect.Float64: reflect.ValueOf(runtime.Float64),
+		reflect.Float32: reflect.ValueOf(runtime.Float32),
+		reflect.Int64:   reflect.ValueOf(runtime.Int64),
+		reflect.Int32:   reflect.ValueOf(runtime.Int32),
+		reflect.Uint64:  reflect.ValueOf(runtime.Uint64),
+		reflect.Uint32:  reflect.ValueOf(runtime.Uint32),
+		reflect.Slice:   reflect.ValueOf(runtime.Bytes),
+	}
+)
