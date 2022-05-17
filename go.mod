@@ -6,14 +6,18 @@ require (
 	github.com/HdrHistogram/hdrhistogram-go v1.1.2 // indirect
 	github.com/getsentry/sentry-go v0.13.0
 	github.com/go-redis/redis/v8 v8.11.5
+	github.com/golang/protobuf v1.5.2
 	github.com/gomodule/redigo v1.8.8
+	github.com/grpc-ecosystem/grpc-gateway v1.16.0
 	github.com/jonboulle/clockwork v0.2.2 // indirect
 	github.com/json-iterator/go v1.1.12
 	github.com/lestrrat-go/file-rotatelogs v2.4.0+incompatible
 	github.com/lestrrat-go/strftime v1.0.5 // indirect
 	github.com/opentracing/opentracing-go v1.2.0
+	github.com/pkg/errors v0.8.1
 	github.com/sirupsen/logrus v1.8.1
 	github.com/spf13/cast v1.3.0
+	github.com/streadway/amqp v1.0.0
 	github.com/uber/jaeger-client-go v2.30.0+incompatible
 	github.com/uber/jaeger-lib v2.4.1+incompatible // indirect
 	go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp v0.31.0
@@ -24,4 +28,5 @@ require (
 	go.opentelemetry.io/otel/trace v1.6.3
 	go.uber.org/atomic v1.9.0 // indirect
 	golang.org/x/net v0.0.0-20211015210444-4f30a5c0130f // indirect
+	google.golang.org/protobuf v1.26.0
 )

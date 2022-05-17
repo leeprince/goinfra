@@ -1,6 +1,10 @@
 package rabbitmq
 
-import "time"
+import (
+    "github.com/leeprince/goinfra/consts"
+    "github.com/leeprince/goinfra/utils"
+    "github.com/streadway/amqp"
+)
 
 /**
  * @Author: prince.lee <leeprince@foxmail.com>
@@ -8,38 +12,72 @@ import "time"
  * @Desc:   发布消息
  */
 
-type publishParams struct {
-    exchange   string
-    routingKey string
-    mandatory  bool
-    immediate  bool
-    properties properties
-    body       []byte
+// --- publishParamOpt
+type publishParamOpt func(publishParams *publishParams)
+
+func WithPublishExchange(exchange string) publishParamOpt {
+    return func(publishParams *publishParams) {
+        publishParams.exchange = exchange
+    }
+}
+func WithPublishRouteKey(routingKey string) publishParamOpt {
+    return func(publishParams *publishParams) {
+        publishParams.routingKey = routingKey
+    }
+}
+func WithPublishProperties(body []byte, opts ...propertiesOpt) publishParamOpt {
+    return func(publishParams *publishParams) {
+        properties := &properties{
+            contentType:  consts.ContextTypeTextPlain,
+            headers:      nil,
+            deliveryMode: amqp.Persistent, // 消息临时化：amqp.Transient;消息持久化:amqp.Persistent
+            priority:     0,
+            body:         body,
+        }
+    
+        for _, opt := range opts {
+            opt(properties)
+        }
+        
+        publishParams.properties = properties
+    }
+}
+// --- publishParamOpt -end
+
+// --- WithPublishProperties propertiesOpt
+type propertiesOpt func(properties *properties)
+
+// WithPublishProperties
+func WithPropertiesContentType(contentType string) propertiesOpt {
+    return func(properties *properties) {
+        properties.contentType = contentType
+    }
 }
 
-type publishParamsOpt func(publishParams *publishParams)
-
-type properties struct {
-    ContentType     string                 // MIME content type
-    ContentEncoding string                 // MIME content encoding
-    Headers         map[string]interface{} // Application or header exchange table。// amqp.Table - prince@comm 2022/5/14 上午11:09
-    DeliveryMode    uint8                  // queue implementation use - Transient (1) or Persistent (2)
-    Priority        uint8                  // queue implementation use - 0 to 9
-    CorrelationId   string                 // application use - correlation identifier
-    ReplyTo         string                 // application use - address to to reply to (ex: RPC)
-    Expiration      string                 // implementation use - message expiration spec
-    MessageId       string                 // application use - message identifier
-    Timestamp       time.Time              // application use - message timestamp
-    Type            string                 // application use - message type name
-    UserId          string                 // application use - creating user id
-    AppId           string                 // application use - creating application
-    reserved1       string                 // was cluster-id - process for buffer consumption
+// WithPublishProperties
+func WithPropertiesHeaders(headers map[string]interface{}) propertiesOpt {
+    return func(properties *properties) {
+        properties.headers = headers
+    }
 }
 
-func (cli *RabbitMQClient) Publish(opts ...publishParamsOpt) (err error) {
-    cli.connChan.Publish()
+// WithPublishProperties
+// 消息临时化：amqp.Transient=1;消息持久化:amqp.Persistent=2
+func WithPropertiesDeliveryMode(deliveryMode uint8) propertiesOpt {
+    return func(properties *properties) {
+        if utils.InUint8(deliveryMode, []uint8{amqp.Transient, amqp.Persistent}) {
+            deliveryMode = amqp.Persistent
+        }
+        properties.deliveryMode = deliveryMode
+    }
 }
 
-func (cli *RabbitMQClient) PublishOne(queueName string) (err error) {
-    cli.connChan.Publish()
+// WithPublishProperties
+func WithPropertiesPriority(priority uint8) propertiesOpt {
+    return func(properties *properties) {
+        properties.priority = priority
+    }
 }
+
+// --- WithPublishProperties propertiesOpt -end
+

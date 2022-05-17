@@ -1,90 +1,115 @@
 package rabbitmq
 
-import "github.com/streadway/amqp"
+import (
+    "errors"
+    "time"
+)
 
 /**
  * @Author: prince.lee <leeprince@foxmail.com>
  * @Date:   2022/5/12 上午10:42
- * @Desc:   初始化
+ * @Desc:   初始化客户端的选项
  */
 
-type RabbitMQClient struct {
-    conf     *rabbitMQConf
-    conn     *amqp.Connection
-    connChan *amqp.Channel
-}
-
-type rabbitMQConf struct {
-    url   string
-    vhost string
-}
-
-type confOption func(conf *rabbitMQConf)
-
-func NewRabbitMQClient(opts ...confOption) (cli *RabbitMQClient, err error) {
-    // TODO: 声明跟队列的字段 - prince@todo 2022/5/14 上午12:31
-    cli = new(RabbitMQClient)
-    
-    cli.initConf(opts...)
-    
-    if err = cli.initConn(); err != nil {
-        return
-    }
-    if err = cli.initChannel(); err != nil {
-        return
-    }
-    
-    return
-}
-
-// 初始化连接
-func (cli *RabbitMQClient) initConn() error {
-    amqpConfig := amqp.Config{
-        // 不为空时，会覆盖 url 解析出来的 vhost
-        Vhost: cli.conf.vhost,
-    }
-    conn, dialErr := amqp.DialConfig(cli.conf.url, amqpConfig)
-    if dialErr != nil {
-        return dialErr
-    }
-    
-    cli.conn = conn
-    
-    return nil
-}
-
-// 初始化连接通道
-func (cli *RabbitMQClient) initChannel() error {
-    channel, err := cli.conn.Channel()
-    if err != nil {
-        return err
-    }
-    
-    cli.connChan = channel
-    
-    return nil
-}
-
-// 初始化配置
-func (cli *RabbitMQClient) initConf(opts ...confOption) {
-    conf := &rabbitMQConf{
-        url:   defaultURL,
-        vhost: defaultVhost,
-    }
-    for _, opt := range opts {
-        opt(conf)
-    }
-    cli.conf = conf
-}
+// --- confOption
+type confOption func(conf *rabbitMQConf) (err error)
 
 func WithUrl(url string) confOption {
-    return func(conf *rabbitMQConf) {
+    return func(conf *rabbitMQConf) (err error) {
         conf.url = url
+        return
     }
 }
 
 func WithVhost(vhost string) confOption {
-    return func(conf *rabbitMQConf) {
+    return func(conf *rabbitMQConf) (err error) {
         conf.vhost = vhost
+        return
     }
 }
+
+func WithErrRetryTime(t time.Duration) confOption {
+    return func(conf *rabbitMQConf) (err error) {
+        conf.errRetryTime = t
+        return
+    }
+}
+
+func WithCancelQueueDeclare(cancel bool) confOption {
+    return func(conf *rabbitMQConf) (err error) {
+        conf.cancelQueueDeclare = cancel
+        return
+    }
+}
+
+func WithQos(prefetchCount, prefetchSize int, global bool) confOption {
+    return func(conf *rabbitMQConf) (err error) {
+        conf.qos = qos{
+            prefetchCount: prefetchCount,
+            prefetchSize:  prefetchSize,
+            global:        global,
+        }
+        return
+    }
+}
+
+func WithQueueDeclare(queueName string, opts ...queueDeclareOption) confOption {
+    return func(conf *rabbitMQConf) (err error) {
+        if queueName == "" {
+            err = errors.New("WithQueueDeclare name is empty")
+            return
+        }
+        
+        queueDeclare := &queueDeclare{
+            queueName:  queueName,
+            durable:    true, // 队列是否持久化
+            exclusive:  false,
+            autoDelete: false,
+            noWait:     false,
+        }
+    
+        for _, opt := range opts {
+            opt(queueDeclare)
+        }
+        
+        conf.queueDeclare = queueDeclare
+        return
+    }
+}
+
+// --- confOption -end
+
+// --- WithQueueDeclare queueDeclareOption
+type queueDeclareOption func(queueDeclare *queueDeclare)
+
+// WithQueueDeclare
+func WithQueueDeclareDurable(durable bool) queueDeclareOption {
+    return func(queueDeclare *queueDeclare) {
+        queueDeclare.durable = durable
+        return
+    }
+}
+
+// WithQueueDeclare
+func WithQueueDeclareExclusive(exclusive bool) queueDeclareOption {
+    return func(queueDeclare *queueDeclare) {
+        queueDeclare.exclusive = exclusive
+    }
+}
+
+// WithQueueDeclare
+func WithQueueDeclareAutoDelete(autoDelete bool) queueDeclareOption {
+    return func(queueDeclare *queueDeclare) {
+        queueDeclare.autoDelete = autoDelete
+        return
+    }
+}
+
+// WithQueueDeclare
+func WithQueueDeclareNoWait(noWait bool) queueDeclareOption {
+    return func(queueDeclare *queueDeclare) {
+        queueDeclare.noWait = noWait
+        return
+    }
+}
+// --- WithQueueDeclare queueDeclareOption -end

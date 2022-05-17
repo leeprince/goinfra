@@ -11,7 +11,7 @@
 //
 // Deprecated: Use the "google.golang.org/protobuf/encoding/protojson"
 // package instead.
-package gcjsonpb
+package jsonpb
 
 import (
 	"github.com/golang/protobuf/proto"

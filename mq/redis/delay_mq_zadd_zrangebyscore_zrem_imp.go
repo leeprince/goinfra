@@ -40,7 +40,7 @@ func (mq *SortSetDelayMQ) Push(key string, value interface{}, delayTime time.Dur
     return mq.cli.ZAdd(key, z)
 }
 
-func (mq *SortSetDelayMQ) Subscribe(f delayMQSubscribeFunc, key string, waitTime time.Duration) {
+func (mq *SortSetDelayMQ) Subscribe(f DelayMQSubscribeHandle, key string, waitTime time.Duration) {
     if waitTime == 0 {
         waitTime = DefaultWaitTime
     }

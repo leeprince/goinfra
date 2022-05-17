@@ -11,14 +11,12 @@ import "github.com/leeprince/goinfra/storage/redis"
  *              》注意，因为 redis 发布订阅没有缓存，一定要先使订阅者订阅到频道后，再有发布操作，否则发布后的消息没被订阅会丢失。
  */
 
-
-
 // 发布订阅者模型订阅的回调方法
-type pubishSubscribeMQSubscribeFunc func(data *redis.SubscribeMessage)
+type PubishSubscribeMQSubscribeHandle func(data *redis.SubscribeMessage)
 
 type PubSubMQ interface {
     // 发布
     Push(channel string, message interface{}) error
     // 订阅
-    Subscribe(f pubishSubscribeMQSubscribeFunc, channels ...string)
+    Subscribe(f PubishSubscribeMQSubscribeHandle, channels ...string)
 }

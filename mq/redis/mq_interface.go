@@ -11,12 +11,12 @@ import (
  */
 
 // 消息队列消费的回调方法
-type listMQSubscribeFunc func(data interface{})
+type ListMQSubscribeHandle func(data interface{})
 
 type MQ interface {
     // 生产
     Push(key string, value interface{}) error
     // 消费
     //  timeout：超时时间。超时继续轮询
-    Subscribe(f listMQSubscribeFunc, key string, timeout time.Duration)
+    Subscribe(f ListMQSubscribeHandle, key string, timeout time.Duration)
 }

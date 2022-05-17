@@ -66,8 +66,8 @@ func TestSetOutputFile(t *testing.T) {
     
     fmt.Println("--- ... 01")
     NewDefaultLogger()
-    err = SetOutputFile("./log/", "application.log", false)
-    // err = SetOutputFile("./log/l/", "application.log", false)
+    err = SetOutputFile("./logs/", "application.log", false)
+    // err = SetOutputFile("./logs/l/", "application.log", false)
     if err != nil {
         fmt.Println("SetOutputFile err:", err)
         return
@@ -75,6 +75,20 @@ func TestSetOutputFile(t *testing.T) {
     Debug("prince log Debug 01")
     Info("prince log Info 01")
     WithField("WithField01", "WithFieldValue01 中国，我爱你 01").Debug("prince log Debug WithField")
+}
+
+
+func TestSetOutputRotateFile(t *testing.T) {
+    NewDefaultLogger()
+    WithField("WithField01", "WithFieldValue01 中国，我爱你 0000").Debug("prince log Debug WithField")
+    
+    err := SetOutputRotateFile("./logs/", "application.log", true, nil)
+    if err != nil {
+        fmt.Println("SetOutputFile err:", err)
+        return
+    }
+    fmt.Println("--- ...")
+    WithField("WithField01", "WithFieldValue01 中国，我爱你 0001").Debug("prince log Debug WithField")
 }
 
 func TestSetReportCallerLogger(t *testing.T) {

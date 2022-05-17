@@ -30,7 +30,7 @@ func NewListMQ(cli redis.RedisClient) *ListMQ {
 func (mq *ListMQ) Push(key string, value interface{}) error {
     return mq.cli.Push(key, value)
 }
-func (mq *ListMQ) Subscribe(f listMQSubscribeFunc, key string, timeout time.Duration) {
+func (mq *ListMQ) Subscribe(f ListMQSubscribeHandle, key string, timeout time.Duration) {
     for {
         var data interface{}
         var err error

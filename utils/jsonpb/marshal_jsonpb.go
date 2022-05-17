@@ -1,4 +1,4 @@
-package gcjsonpb
+package jsonpb
 
 import (
 	"bytes"

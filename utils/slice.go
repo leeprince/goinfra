@@ -24,6 +24,15 @@ func InInt(s int, ss []int) bool {
     return false
 }
 
+func InUint8(s uint8, ss []uint8) bool {
+    for _, i2 := range ss {
+        if i2 == s {
+            return true
+        }
+    }
+    return false
+}
+
 func InInt32(s int32, ss []int32) bool {
     for _, i2 := range ss {
         if i2 == s {

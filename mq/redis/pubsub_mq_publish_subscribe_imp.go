@@ -27,7 +27,7 @@ func (mq *PubishSubscribeMQ) Push(channel string, message interface{}) error {
     return mq.cli.Publish(channel, message)
 }
 
-func (mq *PubishSubscribeMQ) Subscribe(f pubishSubscribeMQSubscribeFunc, channels ...string) {
+func (mq *PubishSubscribeMQ) Subscribe(f PubishSubscribeMQSubscribeHandle, channels ...string) {
     // 启动一个守护进程去订阅消息
     for {
         msgChan := mq.cli.Subscribe(channels...)

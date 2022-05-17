@@ -2,7 +2,6 @@ package sentry
 
 import (
     "github.com/getsentry/sentry-go"
-    "github.com/leeprince/goinfra/consts"
     "time"
 )
 
@@ -46,7 +45,7 @@ func Init(dsn string) error {
 func CaptureMessage(msg string, flushTime time.Duration) *sentry.EventID {
     defer func() {
         if flushTime == 0 {
-            flushTime = consts.SentryDefaultFlushTime
+            flushTime = SentryDefaultFlushTime
         }
         sentry.Flush(flushTime)
     }()
@@ -57,7 +56,7 @@ func CaptureMessage(msg string, flushTime time.Duration) *sentry.EventID {
 func CaptureException(exception error, flushTime time.Duration) *sentry.EventID {
     defer func() {
         if flushTime == 0 {
-            flushTime = consts.SentryDefaultFlushTime
+            flushTime = SentryDefaultFlushTime
         }
         sentry.Flush(flushTime)
     }()

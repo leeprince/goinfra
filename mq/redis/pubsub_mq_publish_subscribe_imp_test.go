@@ -56,7 +56,7 @@ func TestPubishSubscribeMQ_Subscribe(t *testing.T) {
         cli redis.RedisClient
     }
     type args struct {
-        f        pubishSubscribeMQSubscribeFunc
+        f        PubishSubscribeMQSubscribeHandle
         channels []string
     }
     tests := []struct {
