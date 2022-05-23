@@ -22,7 +22,7 @@ const (
     exchangeName   = "prince.ex"
     queueName      = "prince.queueName"
     delayQueueName = "prince.queueName.delay"
-    routeKey       = "prince.key"
+    RoutingKey       = "prince.key"
     queueType      = "direct"
     delayInterval  = 300
     prefech        = 10
@@ -33,7 +33,7 @@ const (
 //     exchangeName   = "open_bank.ex.query_merchant_register"
 //     queueName      = "open_bank.queueName.query_merchant_register"
 //     delayQueueName = "open_bank.delay_queue.query_merchant_register"
-//     routeKey       = "open_bank.key.query_merchant_register"
+//     RoutingKey       = "open_bank.key.query_merchant_register"
 //     queueType      = "direct"
 //     delayInterval  = 300
 //     prefech        = 10
@@ -52,7 +52,7 @@ func TestRabbitMqConn_Publish(t *testing.T) {
     
     ctime := cast.ToString(time.Now().UnixNano() / 1e6)
     msg := "prince:msg:TestRabbitMqConn_Publish:" + ctime
-    err = this.Publish(routeKey, msg)
+    err = this.Publish(RoutingKey, msg)
     if err != nil {
         plog.Error("PublishDelay err", err)
         return
@@ -117,7 +117,7 @@ func TestRabbitMqConn_Consume(t *testing.T) {
         
         fmt.Println("msg --- end")
     }
-    this.Consume(handle, queueName, prefech, routeKey)
+    this.Consume(handle, queueName, prefech, RoutingKey)
 }
 
 func TestRabbitMqConn_Consume_Delay(t *testing.T) {
@@ -206,5 +206,5 @@ func TestRabbitMqConn_Consume_Delay(t *testing.T) {
         
         fmt.Println("msg --- end")
     }
-    this.Consume(handle, queueName, prefech, routeKey)
+    this.Consume(handle, queueName, prefech, RoutingKey)
 }

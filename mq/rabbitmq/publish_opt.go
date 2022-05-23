@@ -15,17 +15,17 @@ import (
 // --- publishParamOpt
 type publishParamOpt func(publishParams *publishParams)
 
-func WithPublishExchange(exchange string) publishParamOpt {
+func WithPublishParamMandatory(immediate bool) publishParamOpt {
     return func(publishParams *publishParams) {
-        publishParams.exchange = exchange
+        publishParams.immediate = immediate
     }
 }
-func WithPublishRouteKey(routingKey string) publishParamOpt {
+func WithPublishParamImmediate(immediate bool) publishParamOpt {
     return func(publishParams *publishParams) {
-        publishParams.routingKey = routingKey
+        publishParams.immediate = immediate
     }
 }
-func WithPublishProperties(body []byte, opts ...propertiesOpt) publishParamOpt {
+func WithPublishParamProperties(body []byte, opts ...propertiesOpt) publishParamOpt {
     return func(publishParams *publishParams) {
         properties := &properties{
             contentType:  consts.ContextTypeTextPlain,
@@ -34,7 +34,7 @@ func WithPublishProperties(body []byte, opts ...propertiesOpt) publishParamOpt {
             priority:     0,
             body:         body,
         }
-    
+        
         for _, opt := range opts {
             opt(properties)
         }
@@ -42,42 +42,42 @@ func WithPublishProperties(body []byte, opts ...propertiesOpt) publishParamOpt {
         publishParams.properties = properties
     }
 }
+
 // --- publishParamOpt -end
 
-// --- WithPublishProperties propertiesOpt
+// --- WithPublishParamProperties propertiesOpt
 type propertiesOpt func(properties *properties)
 
-// WithPublishProperties
+// WithPublishParamProperties
 func WithPropertiesContentType(contentType string) propertiesOpt {
     return func(properties *properties) {
         properties.contentType = contentType
     }
 }
 
-// WithPublishProperties
+// WithPublishParamProperties
 func WithPropertiesHeaders(headers map[string]interface{}) propertiesOpt {
     return func(properties *properties) {
         properties.headers = headers
     }
 }
 
-// WithPublishProperties
+// WithPublishParamProperties
 // 消息临时化：amqp.Transient=1;消息持久化:amqp.Persistent=2
 func WithPropertiesDeliveryMode(deliveryMode uint8) propertiesOpt {
     return func(properties *properties) {
-        if utils.InUint8(deliveryMode, []uint8{amqp.Transient, amqp.Persistent}) {
-            deliveryMode = amqp.Persistent
+        if utils.InUint8(deliveryMode, []uint8{PropertiesDeliveryModeTransient, PropertiesDeliveryModePersistent}) {
+            deliveryMode = PropertiesDeliveryModePersistent
         }
         properties.deliveryMode = deliveryMode
     }
 }
 
-// WithPublishProperties
+// WithPublishParamProperties
 func WithPropertiesPriority(priority uint8) propertiesOpt {
     return func(properties *properties) {
         properties.priority = priority
     }
 }
 
-// --- WithPublishProperties propertiesOpt -end
-
+// --- WithPublishParamProperties propertiesOpt -end

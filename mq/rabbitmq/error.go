@@ -13,7 +13,7 @@ import (
 
 func failOnError(err error, msg string) {
     if err != nil {
-        plog.Infof("failOnError. msg:%s > err:%s", msg, err)
+        plog.Errorf("failOnError. msg:%s > err:%s", msg, err)
         return
     }
     plog.Infof("failOnError. msg:%s > but not err", msg)

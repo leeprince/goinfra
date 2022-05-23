@@ -3,6 +3,7 @@ package rabbitmq
 import (
     "errors"
     "fmt"
+    "github.com/leeprince/goinfra/plog"
     "github.com/streadway/amqp"
     "time"
 )
@@ -17,10 +18,14 @@ type consumeParam struct {
     queueName   string
     consumerTag string
     noLocal     bool
-    autoAck     bool
-    exclusive   bool
-    noWait      bool
-    arguments   map[string]interface{}
+    // 是否自动回复
+    autoAck   bool
+    // 该消费者是否独占该队列
+    // exclusive=true时，服务器将确保这是此队列中的唯一使用者。
+    // exclusive=false时，服务器将在多个消费者之间公平地分发传递。
+    exclusive bool
+    noWait    bool
+    arguments map[string]interface{}
 }
 
 type ConsumeHandle func(data amqp.Delivery)
@@ -36,19 +41,21 @@ func (cli *RabbitMQClient) Consume(handle ConsumeHandle, opts ...consumeParamOpt
         noWait:      false,
         arguments:   nil,
     }
-    if cli.conf.queueDeclare.queueName != "" {
-        params.queueName = cli.conf.queueDeclare.queueName
-    }
-    for _, opt := range opts {
-        opt(params)
-    }
-    
-    if params.queueName == "" {
-        err = errors.New("params.queueName is empty")
-        return
-    }
-    
+
     for {
+        // 考虑重试后对于RabbitMQ会自动创建一个随机命名的队列名的情况，所以将判断在循环中
+        if cli.queue.Name != "" {
+            params.queueName = cli.queue.Name
+        }
+        for _, opt := range opts {
+            opt(params)
+        }
+        
+        if params.queueName == "" {
+            err = errors.New("params.queueName is empty")
+            return
+        }
+        
         // 只读通道（channel）
         var delivery <-chan amqp.Delivery
         delivery, err = cli.connChan.Consume(
@@ -67,6 +74,11 @@ func (cli *RabbitMQClient) Consume(handle ConsumeHandle, opts ...consumeParamOpt
             time.Sleep(cli.conf.errRetryTime)
             
             // 尝试重新建立 RabbitMQ 客户端
+            //  - 解决队列名在监听过程中被删除时，会自动创建队列名并恢复监听
+            //  - 解决RabbitMQ服务器在监听过程中重启，重启后会自动创建队列名并恢复监听
+            //  - 注意：
+            //      - cli.connChan.Consume()在返回错误的同时也会往写空数据到通道中，所以需要判断<-delivery是否不可用需要重试的情况
+            //      - 对于RabbitMQ会自动创建一个随机命名的队列名，需要使用声明队列后的amqp.Queue.Name 当作新的队列名
             err = cli.retryNewRabbitMQClient()
             failOnError(err, "cli.connChan.Consume err > cli.retryNewRabbitMQClient err")
             
@@ -79,16 +91,16 @@ func (cli *RabbitMQClient) Consume(handle ConsumeHandle, opts ...consumeParamOpt
         for {
             select {
             case data := <-delivery:
-                // fmt.Printf("------------------time:%d, data := <-delivery:%+v \n", time.Now().UnixNano()/1e6, data)
+                fmt.Printf("------------------time:%d, data := <-delivery:%+v \n", time.Now().UnixNano()/1e6, data)
                 
-                // 判断是否发现错误
-                if data.Acknowledger == nil {
+                // 判断 <-delivery 的数据是否可用
+                if data.Acknowledger == nil && string(data.Body) == "" {
+                    plog.Info("<-delivery: data.Acknowledger == nil && string(data.Body) == ''")
                     err = cli.Consume(handle, opts...)
-                    failOnError(err, "<-deliver. cli.Consume(handle, opts...)")
+                    failOnError(err, "<-delivery: data.Acknowledger == nil && string(data.Body) == '' > cli.Consume(handle, opts...) err")
                     return
                 }
                 go handle(data)
-                
             }
         }
         

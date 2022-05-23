@@ -12,40 +12,33 @@ import (
  */
 
 type publishParams struct {
-    exchange   string
-    routingKey string
     mandatory  bool
     immediate  bool
     properties *properties
 }
 
 type properties struct {
+    // MIME
     contentType  string                 // MIME content type
-    headers      map[string]interface{} // Application or header exchange table。// amqp.Table - prince@comm 2022/5/14 上午11:09
+    // 自定义头部信息
+    headers      map[string]interface{} // Application or header exchangeName table。// amqp.Table - prince@comm 2022/5/14 上午11:09
+    // 消息投递模式。消息临时化：amqp.Transient - 消息持久化:amqp.Persistent
     deliveryMode uint8                  // queueName implementation use - Transient (1) or Persistent (2)
+    // 优先级
     priority     uint8                  // queueName implementation use - 0 to 9
-    
+    // 消息体
     body []byte
 }
 
 func (cli *RabbitMQClient) Publish(opts ...publishParamOpt) (err error) {
     params := &publishParams{
-        exchange:   "",
-        routingKey: "",
         mandatory:  false,
         immediate:  false,
         properties: &properties{},
     }
-    if cli.conf.queueDeclare.queueName != "" {
-        params.routingKey = cli.conf.queueDeclare.queueName
-    }
+
     for _, opt := range opts {
         opt(params)
-    }
-    
-    if params.routingKey == "" {
-        err = errors.New("params.routingKey is empty")
-        return
     }
     
     if string(params.properties.body) == "" {
@@ -53,9 +46,19 @@ func (cli *RabbitMQClient) Publish(opts ...publishParamOpt) (err error) {
         return
     }
     
+    var exchangeName string
+    if cli.conf.exchangeDeclare != nil && cli.conf.exchangeDeclare.exchangeName != "" {
+        exchangeName = cli.conf.exchangeDeclare.exchangeName
+    }
+    
+    routingKey := cli.queue.Name
+    if cli.conf.routingKey != "" {
+        routingKey = cli.conf.routingKey
+    }
+    
     err = cli.connChan.Publish(
-        params.exchange,
-        params.routingKey,
+        exchangeName,
+        routingKey,
         params.mandatory,
         params.immediate,
         amqp.Publishing{

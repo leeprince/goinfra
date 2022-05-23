@@ -97,7 +97,7 @@ func WithExchangeInternal() RabbitMqOption {
 }
 
 // 消费普通队列
-func (this *RabbitMqConn) Consume(handle MsgHandleFunc, queueName string, prefech int, routeKeys ...string) {
+func (this *RabbitMqConn) Consume(handle MsgHandleFunc, queueName string, prefech int, RoutingKeys ...string) {
 fallback:
     for {
         if this.conn.IsClosed() {
@@ -120,7 +120,7 @@ fallback:
             nil,                    // arguments
         )
         if err != nil {
-            failOnError(err, "Failed to declare an exchange")
+            failOnError(err, "Failed to declare an exchangeName")
             continue
         }
         
@@ -148,9 +148,9 @@ fallback:
                 false,                // no-wait
                 amqp.Table{
                     // 当消息过期时把消息发送到死信交换机。默认把当前交换机当作死信交换机
-                    "x-dead-letter-exchange": this.conf.exchangeName,
-                    // 当消息过期时把消息发送到死信路由键。默认把 routeKeys[0]当作死信路由键
-                    "x-dead-letter-routing-key": routeKeys[0],
+                    "x-dead-letter-exchangeName": this.conf.exchangeName,
+                    // 当消息过期时把消息发送到死信路由键。默认把 RoutingKeys[0]当作死信路由键
+                    "x-dead-letter-routing-key": RoutingKeys[0],
                 }, // arguments
             )
             if err != nil {
@@ -172,12 +172,12 @@ fallback:
             continue
         }
         
-        for _, route := range routeKeys {
+        for _, route := range RoutingKeys {
             // 将交换机通过路由键绑定指定队列名称
             err = ch.QueueBind(
                 queue.Name,             // queueName name
                 route,                  // routing key
-                this.conf.exchangeName, // exchange
+                this.conf.exchangeName, // exchangeName
                 false,
                 nil)
             if err != nil {
@@ -218,7 +218,7 @@ fallback:
     }
 }
 
-func (this *RabbitMqConn) Publish(routeKey string, msg interface{}) error {
+func (this *RabbitMqConn) Publish(RoutingKey string, msg interface{}) error {
     msgByte, err := marshaler.Marshal(msg)
     if err != nil {
         return err
@@ -230,8 +230,8 @@ func (this *RabbitMqConn) Publish(routeKey string, msg interface{}) error {
     }
     
     err = this.publishCh.Publish(
-        this.conf.exchangeName, // exchange
-        routeKey,               // routing key
+        this.conf.exchangeName, // exchangeName
+        RoutingKey,               // routing key
         false,                  // mandatory
         false,                  // immediate
         amqp.Publishing{
@@ -258,11 +258,11 @@ func (this *RabbitMqConn) PublishDelay(msg interface{}, seconds int64) error {
         return err
     }
     
-    // 关于：Default exchange：The default exchange is implicitly bound to every queueName, with a routing key equal to the queueName name. It is not possible to explicitly bind to, or unbind from the default exchange. It also cannot be deleted.
+    // 关于：Default exchangeName：The default exchangeName is implicitly bound to every queueName, with a routing key equal to the queueName name. It is not possible to explicitly bind to, or unbind from the default exchangeName. It also cannot be deleted.
     // 	- 默认交换机会绑定路由键等于队列名称的队列
     // 	- 默认路由键等于队列名称
     err = this.publishDelayCh.Publish(
-        "",                   // 延迟队列投递到默认的交换机（Default exchange）。不应投递到延迟队列绑定到的死信交换机中，因为可能把非延迟的队列当死信队列了，导致无法实现延迟效果
+        "",                   // 延迟队列投递到默认的交换机（Default exchangeName）。不应投递到延迟队列绑定到的死信交换机中，因为可能把非延迟的队列当死信队列了，导致无法实现延迟效果
         this.conf.delayQueue, // 默认路由键等于队列名称。routing key == this.conf.delayQueue
         false,                // mandatory
         false,                // immediate

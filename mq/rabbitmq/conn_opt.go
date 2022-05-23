@@ -1,7 +1,6 @@
 package rabbitmq
 
 import (
-    "errors"
     "time"
 )
 
@@ -53,35 +52,96 @@ func WithQos(prefetchCount, prefetchSize int, global bool) confOption {
     }
 }
 
-func WithQueueDeclare(queueName string, opts ...queueDeclareOption) confOption {
+func WithExchangeDeclare(exchangeName, exchangeType string, opts ...exchangeDeclareOption) confOption {
     return func(conf *rabbitMQConf) (err error) {
-        if queueName == "" {
-            err = errors.New("WithQueueDeclare name is empty")
-            return
+        exchangeDeclare := &exchangeDeclare{
+            exchangeName: exchangeName,
+            exchangeType: exchangeType,
+            passive:      false,
+            durable:      true,
+            autoDelete:   false,
+            internal:     false,
+            noWait:       false,
+            arguments:    nil,
         }
         
+        for _, opt := range opts {
+            opt(exchangeDeclare)
+        }
+        
+        conf.exchangeDeclare = exchangeDeclare
+        return
+    }
+}
+
+func WithQueueDeclare(queueName string, opts ...queueDeclareOption) confOption {
+    return func(conf *rabbitMQConf) (err error) {
         queueDeclare := &queueDeclare{
             queueName:  queueName,
-            durable:    true, // 队列是否持久化
+            durable:    true, // 队列是否持久化.默认持久化
             exclusive:  false,
             autoDelete: false,
             noWait:     false,
+            arguments:  nil,
         }
-    
+        
         for _, opt := range opts {
             opt(queueDeclare)
         }
         
         conf.queueDeclare = queueDeclare
+        
+        return
+    }
+}
+
+func WithRoutingKey(routingKey string) confOption {
+    return func(conf *rabbitMQConf) (err error) {
+        conf.routingKey = routingKey
         return
     }
 }
 
 // --- confOption -end
 
+// --- WithExchangeDeclare exchangeDeclareOption
+type exchangeDeclareOption func(exchangeDeclare *exchangeDeclare)
+
+func WithExchangeDeclarePassive(passive bool) exchangeDeclareOption {
+    return func(exchangeDeclare *exchangeDeclare) {
+        exchangeDeclare.passive = passive
+    }
+}
+func WithExchangeDeclareDurable(durable bool) exchangeDeclareOption {
+    return func(exchangeDeclare *exchangeDeclare) {
+        exchangeDeclare.durable = durable
+    }
+}
+func WithExchangeDeclareAutoDelete(autoDelete bool) exchangeDeclareOption {
+    return func(exchangeDeclare *exchangeDeclare) {
+        exchangeDeclare.autoDelete = autoDelete
+    }
+}
+func WithExchangeDeclareInternal(internal bool) exchangeDeclareOption {
+    return func(exchangeDeclare *exchangeDeclare) {
+        exchangeDeclare.internal = internal
+    }
+}
+func WithExchangeDeclareNoWait(noWait bool) exchangeDeclareOption {
+    return func(exchangeDeclare *exchangeDeclare) {
+        exchangeDeclare.noWait = noWait
+    }
+}
+func WithExchangeDeclareArguments(arguments map[string]interface{}) exchangeDeclareOption {
+    return func(exchangeDeclare *exchangeDeclare) {
+        exchangeDeclare.arguments = arguments
+    }
+}
+
+// --- WithExchangeDeclare exchangeDeclareOption -end
+
 // --- WithQueueDeclare queueDeclareOption
 type queueDeclareOption func(queueDeclare *queueDeclare)
-
 // WithQueueDeclare
 func WithQueueDeclareDurable(durable bool) queueDeclareOption {
     return func(queueDeclare *queueDeclare) {
@@ -89,14 +149,12 @@ func WithQueueDeclareDurable(durable bool) queueDeclareOption {
         return
     }
 }
-
 // WithQueueDeclare
 func WithQueueDeclareExclusive(exclusive bool) queueDeclareOption {
     return func(queueDeclare *queueDeclare) {
         queueDeclare.exclusive = exclusive
     }
 }
-
 // WithQueueDeclare
 func WithQueueDeclareAutoDelete(autoDelete bool) queueDeclareOption {
     return func(queueDeclare *queueDeclare) {
@@ -104,11 +162,17 @@ func WithQueueDeclareAutoDelete(autoDelete bool) queueDeclareOption {
         return
     }
 }
-
 // WithQueueDeclare
 func WithQueueDeclareNoWait(noWait bool) queueDeclareOption {
     return func(queueDeclare *queueDeclare) {
         queueDeclare.noWait = noWait
+        return
+    }
+}
+// WithQueueDeclare
+func WithQueueDeclareArguments(arguments map[string]interface{}) queueDeclareOption {
+    return func(queueDeclare *queueDeclare) {
+        queueDeclare.arguments = arguments
         return
     }
 }
