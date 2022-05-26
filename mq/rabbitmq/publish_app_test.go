@@ -226,7 +226,7 @@ func TestRabbitMQClient_PublishDirect(t *testing.T) {
         wantErr bool
     }{
         {
-            args:args{
+            args: args{
                 body: []byte(fmt.Sprintf("TestRabbitMQClient_PublishDirect-%s", cast.ToString(time.Now().UnixNano()))),
             },
         },
@@ -275,7 +275,7 @@ func TestRabbitMQClient_PublishDirect01(t *testing.T) {
         wantErr bool
     }{
         {
-            args:args{
+            args: args{
                 body: []byte(fmt.Sprintf("TestRabbitMQClient_PublishDirect-%s", cast.ToString(time.Now().UnixNano()))),
             },
         },
@@ -319,7 +319,7 @@ func TestRabbitMQClient_PublishTopic(t *testing.T) {
         mt       sync.Mutex
     }
     type args struct {
-        body []byte
+        body  []byte
         topic string
     }
     tests := []struct {
@@ -329,26 +329,26 @@ func TestRabbitMQClient_PublishTopic(t *testing.T) {
         wantErr bool
     }{
         {
-            args:args{
-                body: []byte(fmt.Sprintf("TestRabbitMQClient_PublishTopic-%s-%s", routingKeyTopic, cast.ToString(time.Now().UnixNano()))),
+            args: args{
+                body:  []byte(fmt.Sprintf("TestRabbitMQClient_PublishTopic-%s-%s", routingKeyTopic, cast.ToString(time.Now().UnixNano()))),
                 topic: routingKeyTopic,
             },
         },
         {
-            args:args{
-                body: []byte(fmt.Sprintf("TestRabbitMQClient_PublishTopic-%s-%s", routingKeyTopic01, cast.ToString(time.Now().UnixNano()))),
+            args: args{
+                body:  []byte(fmt.Sprintf("TestRabbitMQClient_PublishTopic-%s-%s", routingKeyTopic01, cast.ToString(time.Now().UnixNano()))),
                 topic: routingKeyTopic01,
             },
         },
         {
-            args:args{
-                body: []byte(fmt.Sprintf("TestRabbitMQClient_PublishTopic-%s-%s", routingKeyTopic02, cast.ToString(time.Now().UnixNano()))),
+            args: args{
+                body:  []byte(fmt.Sprintf("TestRabbitMQClient_PublishTopic-%s-%s", routingKeyTopic02, cast.ToString(time.Now().UnixNano()))),
                 topic: routingKeyTopic02,
             },
         },
         {
-            args:args{
-                body: []byte(fmt.Sprintf("TestRabbitMQClient_PublishTopic-%s-%s", routingKeyTopic03, cast.ToString(time.Now().UnixNano()))),
+            args: args{
+                body:  []byte(fmt.Sprintf("TestRabbitMQClient_PublishTopic-%s-%s", routingKeyTopic03, cast.ToString(time.Now().UnixNano()))),
                 topic: routingKeyTopic03,
             },
         },
@@ -376,6 +376,71 @@ func TestRabbitMQClient_PublishTopic(t *testing.T) {
             if err := cli.PublishTopic(
                 tt.args.body,
             ); (err != nil) != tt.wantErr {
+                t.Errorf("PublishDirect() error = %v, wantErr %v", err, tt.wantErr)
+            }
+        })
+    }
+}
+
+// 发布`死信交换`实现延迟队列
+func TestRabbitMQClient_PublishDeadLettered(t *testing.T) {
+    type fields struct {
+        conf     *rabbitMQConf
+        conn     *amqp.Connection
+        connChan *amqp.Channel
+        queue    amqp.Queue
+        mt       sync.Mutex
+    }
+    type args struct {
+        body  []byte
+        topic string
+    }
+    tests := []struct {
+        name    string
+        fields  fields
+        args    args
+        wantErr bool
+    }{
+        {
+            args: args{
+                body:  []byte(fmt.Sprintf("TestRabbitMQClient_PublishTopic-%s-%s", routingKeyTopic, cast.ToString(time.Now().UnixNano()))),
+                topic: routingKeyTopic,
+            },
+        },
+    }
+    for _, tt := range tests {
+        t.Run(tt.name, func(t *testing.T) {
+            cli, err := NewRabbitMQClient(
+                WithUrl(myUrl),
+                WithExchangeDeclare(
+                    exchangeNameDeadLetteredTopic,
+                    exchangeTypeTopic,
+                    WithExchangeDeclareDurable(true),
+                ),
+                WithQueueDeclare(
+                    queueNameDeadLetteredTopic,
+                    WithQueueDeclareDurable(true),
+                    WithQueueDeclareArguments(
+                        WithQueueDeclareArgumentsXDeadLetterExchange(exchangeNameTopic),
+                        WithQueueDeclareArgumentsXDeadLetterRoutingKey(routingKeyTopic),
+                        // WithQueueDeclareArgumentsXMessageTTL(time.Second*120),
+                    ),
+                ),
+                WithRoutingKey(tt.args.topic),
+            )
+            if err != nil {
+                fmt.Println("NewRabbitMQClient err:", err)
+                return
+            }
+            fmt.Println("Boby:", string(tt.args.body))
+            if err := cli.Publish(
+                // WithPublishParamExpiration(0),
+                WithPublishParamExpiration(time.Second*10),
+                // WithPublishParamExpiration(time.Second*600),
+                WithPublishParamProperties(
+                    tt.args.body,
+                ),
+            );(err != nil) != tt.wantErr {
                 t.Errorf("PublishDirect() error = %v, wantErr %v", err, tt.wantErr)
             }
         })

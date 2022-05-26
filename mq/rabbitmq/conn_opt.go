@@ -170,10 +170,41 @@ func WithQueueDeclareNoWait(noWait bool) queueDeclareOption {
     }
 }
 // WithQueueDeclare
-func WithQueueDeclareArguments(arguments map[string]interface{}) queueDeclareOption {
+func WithQueueDeclareArguments(opts ...QueueDeclareArgumentsOpt) queueDeclareOption {
     return func(queueDeclare *queueDeclare) {
+        arguments := make(map[string]interface{})
+        for _, opt := range opts {
+            opt(arguments)
+        }
         queueDeclare.arguments = arguments
         return
     }
 }
+
+// WithQueueDeclare WithQueueDeclareArguments
+// map/slice 为引用类型，无需指针
+type QueueDeclareArguments map[string]interface{}
+
+type QueueDeclareArgumentsOpt func(args QueueDeclareArguments)
+
+func WithQueueDeclareArgumentsXDeadLetterExchange(exchangeName string) QueueDeclareArgumentsOpt {
+    return func(args QueueDeclareArguments) {
+        args[XDeadLetterExchange] = exchangeName
+    }
+}
+
+func WithQueueDeclareArgumentsXDeadLetterRoutingKey(routingKey string) QueueDeclareArgumentsOpt {
+    return func(args QueueDeclareArguments) {
+        args[XDeadLetterRoutingKey] = routingKey
+    }
+}
+
+func WithQueueDeclareArgumentsXMessageTTL(t time.Duration) QueueDeclareArgumentsOpt {
+    return func(args QueueDeclareArguments) {
+        if t > 0 {
+            args[XMessageTTL] = int(t / 1e6)
+        }
+    }
+}
+
 // --- WithQueueDeclare queueDeclareOption -end

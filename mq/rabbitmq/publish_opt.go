@@ -4,6 +4,8 @@ import (
     "github.com/leeprince/goinfra/consts"
     "github.com/leeprince/goinfra/utils"
     "github.com/streadway/amqp"
+    "strconv"
+    "time"
 )
 
 /**
@@ -23,6 +25,15 @@ func WithPublishParamMandatory(immediate bool) publishParamOpt {
 func WithPublishParamImmediate(immediate bool) publishParamOpt {
     return func(publishParams *publishParams) {
         publishParams.immediate = immediate
+    }
+}
+
+// 设置为0会立即重新投递到死信队列
+func WithPublishParamExpiration(t time.Duration) publishParamOpt {
+    return func(publishParams *publishParams) {
+        if t > 0 {
+            publishParams.expiration = strconv.Itoa(int(t / 1e6))
+        }
     }
 }
 func WithPublishParamProperties(body []byte, opts ...propertiesOpt) publishParamOpt {

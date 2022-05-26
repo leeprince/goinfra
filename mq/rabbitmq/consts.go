@@ -49,3 +49,10 @@ const (
     PropertiesDeliveryModeTransient  = 1 // 消息临时化：amqp.Transient=1
     PropertiesDeliveryModePersistent = 2 // 消息持久化:amqp.Persistent=2
 )
+
+// 死信交换声明
+const (
+    XDeadLetterExchange   = "x-dead-letter-exchange"
+    XDeadLetterRoutingKey = "x-dead-letter-routing-key"
+    XMessageTTL           = "x-message-ttl"
+)
