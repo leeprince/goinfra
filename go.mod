@@ -13,8 +13,9 @@ require (
 	github.com/json-iterator/go v1.1.12
 	github.com/lestrrat-go/file-rotatelogs v2.4.0+incompatible
 	github.com/lestrrat-go/strftime v1.0.5 // indirect
+	github.com/nacos-group/nacos-sdk-go v1.1.1
 	github.com/opentracing/opentracing-go v1.2.0
-	github.com/pkg/errors v0.8.1
+	github.com/pkg/errors v0.9.1
 	github.com/sirupsen/logrus v1.8.1
 	github.com/spf13/cast v1.3.0
 	github.com/streadway/amqp v1.0.0
@@ -29,4 +30,5 @@ require (
 	go.uber.org/atomic v1.9.0 // indirect
 	golang.org/x/net v0.0.0-20211015210444-4f30a5c0130f // indirect
 	google.golang.org/protobuf v1.26.0
+	gopkg.in/yaml.v3 v3.0.1 // indirect
 )

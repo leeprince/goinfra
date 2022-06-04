@@ -3,12 +3,8 @@ package config
 /**
  * @Author: prince.lee <leeprince@foxmail.com>
  * @Date:   2022/2/26 下午10:33
- * @Desc:
+ * @Desc:   定义配置
  */
-
-type Config struct {
-    RedisConfs RedisConfs
-}
 
 // redis 配置
 type RedisConfs map[string]RedisConf
@@ -20,4 +16,8 @@ type RedisConf struct {
     Password string // 密码
     DB       int    // 库:0~15
     PoolSize int    // 连接池数量
+}
+
+type NacosConf struct {
+    
 }

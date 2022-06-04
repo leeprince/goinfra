@@ -1,12 +1,15 @@
 # redis 库与接口
+---
 
 
 
-##　github.com/go-redis/redis/v8 【推荐】
+#　一、github.com/go-redis/redis/v8 【推荐】
+## （一）实现 `goredis_imp.go`
 
+# 二、github.com/gomodule/redigo/redis
+> 注意：redigo_imp.go 不再继续维护实现 redis_interface.go 的接口，推荐统一使用 `github.com/go-redis/redis/v8` 库
 
-## github.com/gomodule/redigo/redis
-> 注意：redigo_imp.go 不再继续维护实现 redis_interface.go 的接口
+## （一）实现 `redigo_imp.go`
 
 注意：
 `github.com/gomodule/redigo/redis` 如果你不传入 timeout 的值，那么默认0值的话，这两个set deadline的逻辑就跳过了。。。
