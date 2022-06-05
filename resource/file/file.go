@@ -1,6 +1,7 @@
 package file
 
 import (
+	"errors"
 	"github.com/leeprince/goinfra/consts"
 	"io/ioutil"
 	"os"
@@ -12,6 +13,10 @@ import (
  * @Date:   2022/2/14 11:28
  * @Desc:
  */
+
+var (
+    FileNoExistErr = errors.New("file not exist")
+)
 
 // 检查文件是否存在
 func CheckFileExist(filePath string) (os.FileInfo, bool) {

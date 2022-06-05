@@ -15,6 +15,13 @@ var luaRedisGetAndDelScript = `
     return redis.call("DEL", KEYS[1])
 `
 
+
+const (
+    RedisClientDefautlPoolSize = 10 // 连接池数量
+    RedisClientMinDB           = 0  // 库:0~15
+    RedisClientMaxDB           = 15 // 库:0~15
+)
+
 const (
     redigoDialConnectTimeout = time.Second * 1
     redigoDialReadTimeout = time.Second * 10

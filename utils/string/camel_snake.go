@@ -1,7 +1,6 @@
-package utils
+package string
 
 import (
-    "github.com/leeprince/goinfra/consts"
     "regexp"
     "strings"
     "unicode"
@@ -13,6 +12,11 @@ import (
  * @Desc:   驼峰命名法 & 蛇形命名法
  */
 
+const (
+    UnderlineRune = '_'
+    UnderlineStr  = "_"
+)
+
 // 驼峰命名法：小驼峰
 func ToLowerCamel(s string) string {
     var underlineRune []rune
@@ -22,17 +26,17 @@ func ToLowerCamel(s string) string {
             continue
         }
         if !unicode.IsLetter(strRune) {
-            underlineRune = append(underlineRune, consts.UnderlineRune)
+            underlineRune = append(underlineRune, UnderlineRune)
             continue
         }
         if unicode.IsUpper(strRune) {
-            underlineRune = append(underlineRune, consts.UnderlineRune, strRune)
+            underlineRune = append(underlineRune, UnderlineRune, strRune)
             continue
         }
         underlineRune = append(underlineRune, strRune)
     }
     
-    underlineStrSlice := strings.Split(string(underlineRune), consts.UnderlineStr)
+    underlineStrSlice := strings.Split(string(underlineRune), UnderlineStr)
     var wordLowerCamel []string
     for i, word := range underlineStrSlice {
         if i == 0 {
@@ -62,11 +66,11 @@ func ToSnake(s string) string {
             continue
         }
         if !unicode.IsLetter(strRune) {
-            underlineRune = append(underlineRune, consts.UnderlineRune)
+            underlineRune = append(underlineRune, UnderlineRune)
             continue
         }
         if unicode.IsUpper(strRune) {
-            underlineRune = append(underlineRune, consts.UnderlineRune, unicode.ToLower(strRune))
+            underlineRune = append(underlineRune, UnderlineRune, unicode.ToLower(strRune))
             continue
         }
         underlineRune = append(underlineRune, strRune)
@@ -74,5 +78,5 @@ func ToSnake(s string) string {
     underlineStr := string(underlineRune)
     
     re := regexp.MustCompile("(_+)")
-    return re.ReplaceAllString(underlineStr, consts.UnderlineStr)
+    return re.ReplaceAllString(underlineStr, UnderlineStr)
 }

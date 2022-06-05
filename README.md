@@ -2,42 +2,87 @@
 ---
 
 # 一、日志
-## （一） plog
+> plog
 
 
 # 二、存储
-## （一）Mysql
-
+> storage
+## （一）Mysql // TODO:  - prince@todo 2022/6/6 上午1:12
 ## （二）Reids
-
-
+## （二）Elasticsearch // TODO:  - prince@todo 2022/6/6 上午1:14
 
 # 三、分布式锁
+> lock
 ## （一）redis 实现
 
+# 四、HTTP 服务
+> http
+## （一）http 客户端
 
-# 四、资源
+# 五、告警中心
+> alert
+## sentry
+
+# 六、动态配置管理
+> manage_config
+## Nacos
+
+# 七、服务管理
+> manage_service
+## （一）Etcd // TODO:  - prince@todo 2022/6/6 上午12:34
+## （二）Nacos
+
+# 八、常量定义
+> consts
+## （一）环境
+## （二）Mime
+
+# 九、消息队列
+> mq
+## （一）Redis
+## （二）RabbimMQ
+
+# 十、分布式链路追踪
+> trace
+## （一）opentracing
+
+
+# 十一、任务 // TODO:  - prince@todo 2022/6/6 上午1:12
+> task
+### 重试任务
+### 定时任务 // TODO:  - prince@todo 2022/6/6 上午1:13
+### 推送任务
+### 并发任务 // TODO:  - prince@todo 2022/6/6 上午1:14
+
+# 十二、websocket // TODO:  - prince@todo 2022/6/6 上午1:13
+> websocket
+
+# 十三、资源
+> resource
 ## （一）文件
 ## （二）excel
 ## （三）images
 ## （四）zip
 ## （五）pdf
 
-// TODO: 完成文档 - prince@todo 2022/6/5 上午12:10
 
-# 任务
-### 重试任务
+# 十四、工具类（业务无关）
+> utils
+>   - `utils` ：通用的且与项目业务无关的类的组合；可供其他项目使用。如：字符串工具类,文件工具类等。`tools` ：当前项目中通用的业务类的组合；仅能当前项目使用。如：用户校验工具类,支付工具类等
+## （一）CI
+> 持续集成 CI(Continuous Integration)
+> 持续交付 CD (Continuous Delivery)
+## （二）jsonpb
+## （三）proto
+## （四）tablestruct
+## （五）切片
+## （六）时间
+## （七）uuid（唯一ID）
+## （八）字符串
+### 1. 驼峰命名法 & 蛇形命名法
 
+# 十五、安全 // TODO:  - prince@todo 2022/6/6 上午1:11
+> security 
 
-# 工具
-## 驼峰命名(小驼峰 & 大驼峰)
-
-## 蛇形命名
-
-
-# todo list
-1. rabbitmq
-2. nacos
-3. task
-4. elk
-5. makefile 文件 > make 命令
+# 十六、配置
+> config 

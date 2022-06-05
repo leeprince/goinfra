@@ -6,7 +6,6 @@ import (
     "fmt"
     "github.com/go-redis/redis/v8"
     "github.com/leeprince/goinfra/config"
-    "github.com/leeprince/goinfra/consts"
     "github.com/spf13/cast"
     "time"
 )
@@ -38,10 +37,10 @@ func InitGoredis(confs config.RedisConfs) error {
     clients := make(map[string]*Goredis, len(confs))
     for name, conf := range confs {
         if conf.PoolSize <= 0 {
-            conf.PoolSize = consts.RedisClientDefautlPoolSize
+            conf.PoolSize = RedisClientDefautlPoolSize
         }
-        if conf.DB < consts.RedisClientMinDB || conf.DB > consts.RedisClientMaxDB {
-            conf.DB = consts.RedisClientMinDB
+        if conf.DB < RedisClientMinDB || conf.DB > RedisClientMaxDB {
+            conf.DB = RedisClientMinDB
         }
         client := redis.NewClient(&redis.Options{
             Network:  conf.Network,
