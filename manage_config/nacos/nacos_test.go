@@ -2,7 +2,6 @@ package nacos
 
 import (
     "fmt"
-    "github.com/leeprince/goinfra/config"
     "gopkg.in/yaml.v3"
     "testing"
 )
@@ -12,6 +11,14 @@ import (
  * @Date:   2022/6/4 下午5:14
  * @Desc:
  */
+
+type DynamicTest struct {
+    AppName      string `yaml:"appName"`
+    ENV          string `yaml:"env"`
+    Version      string `yaml:"version"`
+    SignType     string `yaml:"signType"`
+    RandomNumber int    `yaml:"randomNumber"`
+}
 
 func TestNacosClient_ListenConfig(t *testing.T) {
     c, err := NewNacosClient(
@@ -24,7 +31,7 @@ func TestNacosClient_ListenConfig(t *testing.T) {
         fmt.Println("NewNacosClient err:", err)
         return
     }
-    myConfig := config.DynamicTest{}
+    myConfig := DynamicTest{}
     dynamicConfigHandle := func(conf []byte) {
         err := yaml.Unmarshal(conf, &myConfig)
         if err != nil {

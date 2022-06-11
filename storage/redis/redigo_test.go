@@ -4,7 +4,7 @@ import (
     "context"
     "fmt"
     "github.com/gomodule/redigo/redis"
-    "github.com/leeprince/goinfra/config"
+    goinfraRedis "github.com/leeprince/goinfra/storage/redis"
     "testing"
     "time"
 )
@@ -17,8 +17,8 @@ import (
 
 var (
     RedisName  = "local"
-    RedisConfs = config.RedisConfs{
-        RedisName: config.RedisConf{
+    redisConfs = goinfraRedis.RedisConfs{
+        RedisName: goinfraRedis.RedisConf{
             Network:  "tcp",
             Addr:     "127.0.0.1:6379",
             Username: "",
@@ -31,7 +31,7 @@ var (
 
 func initRedigoClient() *Redigo {
     // Redigo 客户端
-    err := InitRedigo(RedisConfs)
+    err := InitRedigo(redisConfs)
     if err != nil {
         panic(fmt.Sprintf("[goinfraRedis.InitGoredis] err:%v \n", err))
     }

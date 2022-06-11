@@ -7,9 +7,9 @@
 
 # 二、存储
 > storage
-## （一）Mysql // TODO:  - prince@todo 2022/6/6 上午1:12
+## （一）Mysql
 ## （二）Reids
-## （二）Elasticsearch // TODO:  - prince@todo 2022/6/6 上午1:14
+## （二）Elasticsearch // TODO:  - prince@todo 2022/6/6 下午10:30
 
 # 三、分布式锁
 > lock
@@ -84,5 +84,4 @@
 # 十五、安全 // TODO:  - prince@todo 2022/6/6 上午1:11
 > security 
 
-# 十六、配置
-> config 
+// TODO: 需要配置并且是可选参数不多，应通过结构体定义为参数，方便使用 - prince@todo 2022/6/7 上午1:52

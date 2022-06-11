@@ -11,6 +11,17 @@ import (
  * @Desc:   redis 接口：具体实现依赖：github.com/go-redis/redis/v8、github.com/gomodule/redigo/redis
  */
 
+// redis 配置
+type RedisConfs map[string]RedisConf
+type RedisConf struct {
+    Network  string // 网络协议：tcp、unix
+    Addr     string // 地址：127.0.0.1:6379
+    Username string // 用户名
+    Password string // 密码
+    DB       int    // 库:0~15
+    PoolSize int    // 连接池数量
+}
+
 // 有序集合的成员
 type Z struct {
 	Score  float64

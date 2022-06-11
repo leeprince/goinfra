@@ -2,7 +2,6 @@ package file
 
 import (
 	"errors"
-	"github.com/leeprince/goinfra/consts"
 	"io/ioutil"
 	"os"
 	"path/filepath"
@@ -59,7 +58,7 @@ func WriteFile(dirPath, filename string, data []byte, isAppend bool) (ok bool, e
 func ReadFile(filePath, file string) (data []byte, err error) {
 	fileSrc := filepath.Join(filePath, file)
 	if _, ok := CheckFileExist(fileSrc); !ok {
-		return nil, consts.FileNoExistErr
+		return nil, FileNoExistErr
 	}
 	data, err = ioutil.ReadFile(fileSrc)
 	return

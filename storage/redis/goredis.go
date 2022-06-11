@@ -5,7 +5,6 @@ import (
     "errors"
     "fmt"
     "github.com/go-redis/redis/v8"
-    "github.com/leeprince/goinfra/config"
     "github.com/spf13/cast"
     "time"
 )
@@ -32,7 +31,7 @@ type Goredis struct {
 }
 
 // 初始化
-func InitGoredis(confs config.RedisConfs) error {
+func InitGoredis(confs RedisConfs) error {
     ctx := context.Background()
     clients := make(map[string]*Goredis, len(confs))
     for name, conf := range confs {

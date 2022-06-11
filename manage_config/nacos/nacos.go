@@ -1,6 +1,7 @@
 package nacos
 
 import (
+    "errors"
     "fmt"
     "github.com/nacos-group/nacos-sdk-go/clients"
     "github.com/nacos-group/nacos-sdk-go/clients/config_client"
@@ -33,6 +34,11 @@ func NewNacosClient(opts ...NacosClienParamsOpt) (cli *NacosClient, err error) {
     }
     for _, opt := range opts {
         opt(&nacosClienParams)
+    }
+    
+    err = checkNacosClienParams(nacosClienParams)
+    if err != nil {
+        return
     }
     
     clientConfig := *constant.NewClientConfig(
@@ -93,4 +99,26 @@ func (c *NacosClient) ListenConfig(handle dynamicConfigHandle) (err error) {
         },
     })
     return
+}
+
+func checkNacosClienParams(nacosClienParams NacosClienParams) error {
+    if nacosClienParams.namespaceId == "" {
+        return errors.New("namespaceId must not empty")
+    }
+    if nacosClienParams.dataId == "" {
+        return errors.New("dataId must not empty")
+    }
+    if nacosClienParams.group == "" {
+        return errors.New("group must not empty")
+    }
+    if nacosClienParams.group == "" {
+        return errors.New("group must not empty")
+    }
+    if nacosClienParams.ipAddr == "" {
+        return errors.New("ipAddr must not empty")
+    }
+    if nacosClienParams.port <= 0 {
+        return errors.New("port must not empty")
+    }
+    return nil
 }

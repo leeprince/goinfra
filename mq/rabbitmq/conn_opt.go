@@ -10,6 +10,72 @@ import (
  * @Desc:   初始化客户端的选项
  */
 
+type rabbitMQConf struct {
+    // RabbitMQ 连接 url. 格式：amqp协议(固定amqp)//用户名(默认guest):密码(默认guest)@主机(默认localhost):端口(默认5672)。完整示例：amqp://guest:guest@127.0.0.1:5672/
+    url string
+    // 虚拟主机。默认/
+    vhost string
+    
+    // 强制取消声明交换机
+    cancelexchangeDeclare bool
+    // 声明交换机
+    exchangeDeclare *exchangeDeclare
+    
+    // 强制取消声明队列
+    cancelQueueDeclare bool
+    // 声明队列
+    queueDeclare *queueDeclare
+    
+    // 绑定交换机与队列的键
+    routingKey string
+    
+    // 公平调度机制
+    qos qos
+    // 发生错误时，重试的等待时间
+    errRetryTime time.Duration
+}
+
+// 声明交换机
+type exchangeDeclare struct {
+    exchangeName string
+    exchangeType string
+    passive      bool
+    durable      bool
+    autoDelete   bool
+    internal     bool
+    noWait       bool
+    arguments    map[string]interface{}
+}
+
+// 声明队列
+type queueDeclare struct {
+    // 队列名
+    queueName string
+    
+    // 队列是否持久化(RabbitMQ管理后台feature=D)
+    durable bool
+    
+    // 是否当前连接通道独占该队列(RabbitMQ管理后台feature=Excl)
+    // 如果想拥有私人队列只为一个消费者服务，可以设置 exclusive 参数为 true
+    // 如果需要临时队列, 则结合exclusive和autoDelete都设置为true(RabbitMQ管理后台feature=AD,Excl)
+    exclusive bool
+    
+    // 是否自动删除(RabbitMQ管理后台feature=AD).autoDelete=true在消费者取消订阅时，会自动删除。
+    autoDelete bool
+    
+    // 是否不等待
+    noWait bool
+    
+    // map 参数
+    arguments map[string]interface{}
+}
+
+type qos struct {
+    prefetchCount int
+    prefetchSize  int
+    global        bool
+}
+
 // --- confOption
 type confOption func(conf *rabbitMQConf) (err error)
 

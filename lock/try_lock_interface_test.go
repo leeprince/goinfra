@@ -3,7 +3,6 @@ package lock
 import (
     "context"
     "fmt"
-    "github.com/leeprince/goinfra/config"
     goinfraRedis "github.com/leeprince/goinfra/storage/redis"
     "testing"
     "time"
@@ -17,8 +16,8 @@ import (
 
 var (
     RedisName = "local"
-    RedisConfs = config.RedisConfs{
-        RedisName: config.RedisConf{
+    RedisConfs = goinfraRedis.RedisConfs{
+        RedisName: goinfraRedis.RedisConf{
             Network:  "tcp",
             Addr:     "127.0.0.1:6379",
             Username: "",

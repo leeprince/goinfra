@@ -3,7 +3,6 @@ package redis
 import (
     "encoding/json"
     "fmt"
-    "github.com/leeprince/goinfra/config"
     "github.com/leeprince/goinfra/storage/redis"
     "github.com/spf13/cast"
     "testing"
@@ -18,8 +17,8 @@ import (
 
 var (
     RedisName  = "local"
-    RedisConfs = config.RedisConfs{
-        RedisName: config.RedisConf{
+    RedisConfs = redis.RedisConfs{
+        RedisName: redis.RedisConf{
             Network:  "tcp",
             Addr:     "127.0.0.1:6379",
             Username: "",

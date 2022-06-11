@@ -5,7 +5,6 @@ import (
     "errors"
     "fmt"
     "github.com/gomodule/redigo/redis"
-    "github.com/leeprince/goinfra/config"
     "github.com/leeprince/goinfra/utils"
     "github.com/spf13/cast"
     "time"
@@ -32,7 +31,7 @@ type Redigo struct {
     redis.Pool
 }
 
-func InitRedigo(confs config.RedisConfs) error {
+func InitRedigo(confs RedisConfs) error {
     ctx := context.Background()
     
     redigos = make(map[string]*Redigo, len(confs))
