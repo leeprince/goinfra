@@ -1,4 +1,4 @@
-package utils
+package ptime
 
 import "time"
 
@@ -13,3 +13,5 @@ import "time"
 func UseMillisecondUnit(dur time.Duration) bool {
     return dur < time.Second || dur%time.Second != 0
 }
+
+

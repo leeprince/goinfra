@@ -7,7 +7,7 @@ package rabbitmq
  */
 
 // 简单队列（一次向一个消费者发送消息）
-func (cli *RabbitMQClient) PublishSimple(body []byte, opts ...propertiesOpt) (err error) {
+func (cli *RabbitMQClient) PublishSimple(body []byte, opts ...PropertiesOpt) (err error) {
     err = cli.Publish(
         WithPublishParamProperties(
             body,
@@ -18,7 +18,7 @@ func (cli *RabbitMQClient) PublishSimple(body []byte, opts ...propertiesOpt) (er
 }
 
 // 工作队列（竞争消费者模式）
-func (cli *RabbitMQClient) PublishWork(body []byte, opts ...propertiesOpt) (err error) {
+func (cli *RabbitMQClient) PublishWork(body []byte, opts ...PropertiesOpt) (err error) {
     opts = append(
         opts,
         WithPropertiesDeliveryMode(PropertiesDeliveryModePersistent),
@@ -33,7 +33,7 @@ func (cli *RabbitMQClient) PublishWork(body []byte, opts ...propertiesOpt) (err 
 }
 
 // 发布和订阅队列（一次向多个消费者发送消息）
-func (cli *RabbitMQClient) PublishFanout(body []byte, opts ...propertiesOpt) (err error) {
+func (cli *RabbitMQClient) PublishFanout(body []byte, opts ...PropertiesOpt) (err error) {
     opts = append(
         opts,
         WithPropertiesDeliveryMode(PropertiesDeliveryModeTransient),
@@ -48,7 +48,7 @@ func (cli *RabbitMQClient) PublishFanout(body []byte, opts ...propertiesOpt) (er
 }
 
 // 路由队列（有选择地接收消息）
-func (cli *RabbitMQClient) PublishDirect(body []byte, opts ...propertiesOpt) (err error) {
+func (cli *RabbitMQClient) PublishDirect(body []byte, opts ...PropertiesOpt) (err error) {
     err = cli.Publish(
         WithPublishParamProperties(
             body,
@@ -59,7 +59,7 @@ func (cli *RabbitMQClient) PublishDirect(body []byte, opts ...propertiesOpt) (er
 }
 
 // 路由队列（有选择地接收消息）
-func (cli *RabbitMQClient) PublishTopic(body []byte, opts ...propertiesOpt) (err error) {
+func (cli *RabbitMQClient) PublishTopic(body []byte, opts ...PropertiesOpt) (err error) {
     err = cli.Publish(
         WithPublishParamProperties(
             body,

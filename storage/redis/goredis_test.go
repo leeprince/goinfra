@@ -17,7 +17,7 @@ import (
 
 func initGoredisClient() *Goredis {
     // Goredis 客户端
-    err := InitGoredis(RedisConfs)
+    err := InitGoredis(redisConfs)
     if err != nil {
         panic(fmt.Sprintf("[goinfraRedis.InitGoredis] err:%v \n", err))
     }

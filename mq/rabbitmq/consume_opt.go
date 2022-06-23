@@ -6,43 +6,43 @@ package rabbitmq
  * @Desc:
  */
 
-// --- consumeParamOpt
-type consumeParamOpt func(consumeParam *consumeParam)
+// --- ConsumeParamOpt
+type ConsumeParamOpt func(consumeParam *consumeParam)
 
-func WithConsumeParamOptQueueName(queueName string) consumeParamOpt {
+func WithConsumeParamOptQueueName(queueName string) ConsumeParamOpt {
     return func(consumeParam *consumeParam) {
         consumeParam.queueName = queueName
     }
 }
-func WithConsumeParamOptConsumerTag(consumerTag string) consumeParamOpt {
+func WithConsumeParamOptConsumerTag(consumerTag string) ConsumeParamOpt {
     return func(consumeParam *consumeParam) {
         consumeParam.consumerTag = consumerTag
     }
 }
-func WithConsumeParamOptNoLocal(noLocal bool) consumeParamOpt {
+func WithConsumeParamOptNoLocal(noLocal bool) ConsumeParamOpt {
     return func(consumeParam *consumeParam) {
         consumeParam.noLocal = noLocal
     }
 }
-func WithConsumeParamOptAutoAck(autoAck bool) consumeParamOpt {
+func WithConsumeParamOptAutoAck(autoAck bool) ConsumeParamOpt {
     return func(consumeParam *consumeParam) {
         consumeParam.autoAck = autoAck
     }
 }
-func WithConsumeParamOptExclusive(exclusive bool) consumeParamOpt {
+func WithConsumeParamOptExclusive(exclusive bool) ConsumeParamOpt {
     return func(consumeParam *consumeParam) {
         consumeParam.exclusive = exclusive
     }
 }
-func WithConsumeParamOptNoWait(noWait bool) consumeParamOpt {
+func WithConsumeParamOptNoWait(noWait bool) ConsumeParamOpt {
     return func(consumeParam *consumeParam) {
         consumeParam.noWait = noWait
     }
 }
-func WithConsumeParamOptArguments(arguments map[string]interface{}) consumeParamOpt {
+func WithConsumeParamOptArguments(arguments map[string]interface{}) ConsumeParamOpt {
     return func(consumeParam *consumeParam) {
         consumeParam.arguments = arguments
     }
 }
 
-// --- consumeParamOpt -end
+// --- ConsumeParamOpt -end

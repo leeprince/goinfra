@@ -38,10 +38,10 @@ const (
 
 // 交换机类型相关
 const (
-    exchangeTypeFanout  = "fanout"  // 发布和订阅
-    exchangeTypeDirect  = "direct"  // 路由队列
-    exchangeTypeTopic   = "topic"   // 主题队列
-    exchangeTypeHeaders = "headers" // RPC队列
+    ExchangeTypeFanout  = "fanout"  // 发布和订阅
+    ExchangeTypeDirect  = "direct"  // 路由队列
+    ExchangeTypeTopic   = "topic"   // 主题队列
+    ExchangeTypeHeaders = "headers" // RPC队列
 )
 
 // 发布消息的投递模式

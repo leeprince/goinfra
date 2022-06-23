@@ -21,7 +21,7 @@ type RabbitMQClient struct {
     mt       sync.Mutex
 }
 
-func NewRabbitMQClient(opts ...confOption) (cli *RabbitMQClient, err error) {
+func NewRabbitMQClient(opts ...ConfOption) (cli *RabbitMQClient, err error) {
     cli = new(RabbitMQClient)
     cli.mt = sync.Mutex{}
     
@@ -51,7 +51,7 @@ func NewRabbitMQClient(opts ...confOption) (cli *RabbitMQClient, err error) {
 }
 
 // 初始化配置
-func (cli *RabbitMQClient) initConf(opts ...confOption) (err error) {
+func (cli *RabbitMQClient) initConf(opts ...ConfOption) (err error) {
     conf := &rabbitMQConf{
         url:                   defaultURL,
         vhost:                 defaultVhost,

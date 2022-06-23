@@ -76,38 +76,38 @@ type qos struct {
     global        bool
 }
 
-// --- confOption
-type confOption func(conf *rabbitMQConf) (err error)
+// --- ConfOption
+type ConfOption func(conf *rabbitMQConf) (err error)
 
-func WithUrl(url string) confOption {
+func WithUrl(url string) ConfOption {
     return func(conf *rabbitMQConf) (err error) {
         conf.url = url
         return
     }
 }
 
-func WithVhost(vhost string) confOption {
+func WithVhost(vhost string) ConfOption {
     return func(conf *rabbitMQConf) (err error) {
         conf.vhost = vhost
         return
     }
 }
 
-func WithErrRetryTime(t time.Duration) confOption {
+func WithErrRetryTime(t time.Duration) ConfOption {
     return func(conf *rabbitMQConf) (err error) {
         conf.errRetryTime = t
         return
     }
 }
 
-func WithCancelQueueDeclare(cancel bool) confOption {
+func WithCancelQueueDeclare(cancel bool) ConfOption {
     return func(conf *rabbitMQConf) (err error) {
         conf.cancelQueueDeclare = cancel
         return
     }
 }
 
-func WithQos(prefetchCount, prefetchSize int, global bool) confOption {
+func WithQos(prefetchCount, prefetchSize int, global bool) ConfOption {
     return func(conf *rabbitMQConf) (err error) {
         conf.qos = qos{
             prefetchCount: prefetchCount,
@@ -118,7 +118,7 @@ func WithQos(prefetchCount, prefetchSize int, global bool) confOption {
     }
 }
 
-func WithExchangeDeclare(exchangeName, exchangeType string, opts ...exchangeDeclareOption) confOption {
+func WithExchangeDeclare(exchangeName, exchangeType string, opts ...ExchangeDeclareOption) ConfOption {
     return func(conf *rabbitMQConf) (err error) {
         exchangeDeclare := &exchangeDeclare{
             exchangeName: exchangeName,
@@ -140,7 +140,7 @@ func WithExchangeDeclare(exchangeName, exchangeType string, opts ...exchangeDecl
     }
 }
 
-func WithQueueDeclare(queueName string, opts ...queueDeclareOption) confOption {
+func WithQueueDeclare(queueName string, opts ...QueueDeclareOption) ConfOption {
     return func(conf *rabbitMQConf) (err error) {
         queueDeclare := &queueDeclare{
             queueName:  queueName,
@@ -161,82 +161,82 @@ func WithQueueDeclare(queueName string, opts ...queueDeclareOption) confOption {
     }
 }
 
-func WithRoutingKey(routingKey string) confOption {
+func WithRoutingKey(routingKey string) ConfOption {
     return func(conf *rabbitMQConf) (err error) {
         conf.routingKey = routingKey
         return
     }
 }
 
-// --- confOption -end
+// --- ConfOption -end
 
-// --- WithExchangeDeclare exchangeDeclareOption
-type exchangeDeclareOption func(exchangeDeclare *exchangeDeclare)
+// --- WithExchangeDeclare ExchangeDeclareOption
+type ExchangeDeclareOption func(exchangeDeclare *exchangeDeclare)
 
-func WithExchangeDeclarePassive(passive bool) exchangeDeclareOption {
+func WithExchangeDeclarePassive(passive bool) ExchangeDeclareOption {
     return func(exchangeDeclare *exchangeDeclare) {
         exchangeDeclare.passive = passive
     }
 }
-func WithExchangeDeclareDurable(durable bool) exchangeDeclareOption {
+func WithExchangeDeclareDurable(durable bool) ExchangeDeclareOption {
     return func(exchangeDeclare *exchangeDeclare) {
         exchangeDeclare.durable = durable
     }
 }
-func WithExchangeDeclareAutoDelete(autoDelete bool) exchangeDeclareOption {
+func WithExchangeDeclareAutoDelete(autoDelete bool) ExchangeDeclareOption {
     return func(exchangeDeclare *exchangeDeclare) {
         exchangeDeclare.autoDelete = autoDelete
     }
 }
-func WithExchangeDeclareInternal(internal bool) exchangeDeclareOption {
+func WithExchangeDeclareInternal(internal bool) ExchangeDeclareOption {
     return func(exchangeDeclare *exchangeDeclare) {
         exchangeDeclare.internal = internal
     }
 }
-func WithExchangeDeclareNoWait(noWait bool) exchangeDeclareOption {
+func WithExchangeDeclareNoWait(noWait bool) ExchangeDeclareOption {
     return func(exchangeDeclare *exchangeDeclare) {
         exchangeDeclare.noWait = noWait
     }
 }
-func WithExchangeDeclareArguments(arguments map[string]interface{}) exchangeDeclareOption {
+func WithExchangeDeclareArguments(arguments map[string]interface{}) ExchangeDeclareOption {
     return func(exchangeDeclare *exchangeDeclare) {
         exchangeDeclare.arguments = arguments
     }
 }
 
-// --- WithExchangeDeclare exchangeDeclareOption -end
+// --- WithExchangeDeclare ExchangeDeclareOption -end
 
-// --- WithQueueDeclare queueDeclareOption
-type queueDeclareOption func(queueDeclare *queueDeclare)
+// --- WithQueueDeclare QueueDeclareOption
+type QueueDeclareOption func(queueDeclare *queueDeclare)
 // WithQueueDeclare
-func WithQueueDeclareDurable(durable bool) queueDeclareOption {
+func WithQueueDeclareDurable(durable bool) QueueDeclareOption {
     return func(queueDeclare *queueDeclare) {
         queueDeclare.durable = durable
         return
     }
 }
 // WithQueueDeclare
-func WithQueueDeclareExclusive(exclusive bool) queueDeclareOption {
+func WithQueueDeclareExclusive(exclusive bool) QueueDeclareOption {
     return func(queueDeclare *queueDeclare) {
         queueDeclare.exclusive = exclusive
     }
 }
 // WithQueueDeclare
-func WithQueueDeclareAutoDelete(autoDelete bool) queueDeclareOption {
+func WithQueueDeclareAutoDelete(autoDelete bool) QueueDeclareOption {
     return func(queueDeclare *queueDeclare) {
         queueDeclare.autoDelete = autoDelete
         return
     }
 }
 // WithQueueDeclare
-func WithQueueDeclareNoWait(noWait bool) queueDeclareOption {
+func WithQueueDeclareNoWait(noWait bool) QueueDeclareOption {
     return func(queueDeclare *queueDeclare) {
         queueDeclare.noWait = noWait
         return
     }
 }
 // WithQueueDeclare
-func WithQueueDeclareArguments(opts ...QueueDeclareArgumentsOpt) queueDeclareOption {
+func WithQueueDeclareArguments(opts ...QueueDeclareArgumentsOpt) QueueDeclareOption {
     return func(queueDeclare *queueDeclare) {
         arguments := make(map[string]interface{})
         for _, opt := range opts {
@@ -273,4 +273,4 @@ func WithQueueDeclareArgumentsXMessageTTL(t time.Duration) QueueDeclareArguments
     }
 }
 
-// --- WithQueueDeclare queueDeclareOption -end
+// --- WithQueueDeclare QueueDeclareOption -end

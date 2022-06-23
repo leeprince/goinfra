@@ -136,7 +136,7 @@ func TestRabbitMQClient_PublishFanout(t *testing.T) {
                 WithUrl(myUrl),
                 WithExchangeDeclare(
                     exchangeNameFanout,
-                    exchangeTypeFanout,
+                    ExchangeTypeFanout,
                     WithExchangeDeclareDurable(false),
                 ),
                 WithQueueDeclare(
@@ -186,7 +186,7 @@ func TestRabbitMQClient_PublishFanout01(t *testing.T) {
                 WithUrl(myUrl),
                 WithExchangeDeclare(
                     exchangeNameFanout,
-                    exchangeTypeFanout,
+                    ExchangeTypeFanout,
                     WithExchangeDeclareDurable(false),
                 ),
                 WithQueueDeclare(
@@ -237,7 +237,7 @@ func TestRabbitMQClient_PublishDirect(t *testing.T) {
                 WithUrl(myUrl),
                 WithExchangeDeclare(
                     exchangeNameDirect,
-                    exchangeTypeDirect,
+                    ExchangeTypeDirect,
                     WithExchangeDeclareDurable(true),
                 ),
                 WithQueueDeclare(
@@ -286,7 +286,7 @@ func TestRabbitMQClient_PublishDirect01(t *testing.T) {
                 WithUrl(myUrl),
                 WithExchangeDeclare(
                     exchangeNameDirect,
-                    exchangeTypeDirect,
+                    ExchangeTypeDirect,
                     WithExchangeDeclareDurable(true),
                 ),
                 WithQueueDeclare(
@@ -359,7 +359,7 @@ func TestRabbitMQClient_PublishTopic(t *testing.T) {
                 WithUrl(myUrl),
                 WithExchangeDeclare(
                     exchangeNameTopic,
-                    exchangeTypeTopic,
+                    ExchangeTypeTopic,
                     WithExchangeDeclareDurable(true),
                 ),
                 WithQueueDeclare(
@@ -414,7 +414,7 @@ func TestRabbitMQClient_PublishDeadLettered(t *testing.T) {
                 WithUrl(myUrl),
                 WithExchangeDeclare(
                     exchangeNameDeadLetteredTopic,
-                    exchangeTypeTopic,
+                    ExchangeTypeTopic,
                     WithExchangeDeclareDurable(true),
                 ),
                 WithQueueDeclare(

@@ -279,7 +279,7 @@ func TestRabbitMQClient_ConsumeFanout(t *testing.T) {
         WithUrl(myUrl),
         WithExchangeDeclare(
             exchangeNameFanout,
-            exchangeTypeFanout,
+            ExchangeTypeFanout,
             WithExchangeDeclareDurable(false),
         ),
         WithQueueDeclare(
@@ -330,7 +330,7 @@ func TestRabbitMQClient_ConsumeFanout01(t *testing.T) {
         WithUrl(myUrl),
         WithExchangeDeclare(
             exchangeNameFanout,
-            exchangeTypeFanout,
+            ExchangeTypeFanout,
             WithExchangeDeclareDurable(false),
         ),
         WithQueueDeclare(
@@ -381,7 +381,7 @@ func TestRabbitMQClient_ConsumeDirect(t *testing.T) {
         WithUrl(myUrl),
         WithExchangeDeclare(
             exchangeNameDirect,
-            exchangeTypeDirect,
+            ExchangeTypeDirect,
             WithExchangeDeclareDurable(true),
         ),
         WithQueueDeclare(
@@ -433,7 +433,7 @@ func TestRabbitMQClient_ConsumeDirect01(t *testing.T) {
         WithUrl(myUrl),
         WithExchangeDeclare(
             exchangeNameDirect,
-            exchangeTypeDirect,
+            ExchangeTypeDirect,
             WithExchangeDeclareDurable(true),
         ),
         WithQueueDeclare(
@@ -486,7 +486,7 @@ func TestRabbitMQClient_ConsumeTopic(t *testing.T) {
         WithUrl(myUrl),
         WithExchangeDeclare(
             exchangeNameTopic,
-            exchangeTypeTopic,
+            ExchangeTypeTopic,
             WithExchangeDeclareDurable(true),
         ),
         WithQueueDeclare(
@@ -543,7 +543,7 @@ func TestRabbitMQClient_ConsumeTopic00(t *testing.T) {
         WithUrl(myUrl),
         WithExchangeDeclare(
             exchangeNameTopic,
-            exchangeTypeTopic,
+            ExchangeTypeTopic,
             WithExchangeDeclareDurable(true),
         ),
         WithQueueDeclare(
@@ -600,7 +600,7 @@ func TestRabbitMQClient_ConsumeTopic01(t *testing.T) {
         WithUrl(myUrl),
         WithExchangeDeclare(
             exchangeNameTopic,
-            exchangeTypeTopic,
+            ExchangeTypeTopic,
             WithExchangeDeclareDurable(true),
         ),
         WithQueueDeclare(
@@ -654,7 +654,7 @@ func TestRabbitMQClient_ConsumeTopic02(t *testing.T) {
         WithUrl(myUrl),
         WithExchangeDeclare(
             exchangeNameTopic,
-            exchangeTypeTopic,
+            ExchangeTypeTopic,
             WithExchangeDeclareDurable(true),
         ),
         WithQueueDeclare(
@@ -708,7 +708,7 @@ func TestRabbitMQClient_ConsumeDeadLettered(t *testing.T) {
         WithUrl(myUrl),
         WithExchangeDeclare(
             exchangeNameTopic,
-            exchangeTypeTopic,
+            ExchangeTypeTopic,
             WithExchangeDeclareDurable(true),
         ),
         WithQueueDeclare(

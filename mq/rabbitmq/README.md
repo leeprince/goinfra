@@ -155,7 +155,7 @@ consume_app_test.go@TestRabbitMQClient_ConsumeSimple、@TestRabbitMQClient_Consu
     - 对于任何给定的队列，DLX 可以由客户端使用声明队列的参数定义，或者在服务器中使用策略定义。在策略和参数都指定 DLX 的情况下，参数中指定的那个会否决策略中指定的那个。
     - 建议使用策略进行配置，因为它允许不涉及应用程序重新部署的 DLX 重新配置。    
 
-- 通过`死信交换(dead-lettered)` 实现延迟队列或者定时任务(分布式，高可用)。步骤如下：
+- 通过`死信交换(dead-lettered)` 实现延迟队列(分布式，高可用)。步骤如下：
     > 思路：声明延迟交换机和队列，并给队列设置`死信交换(dead-lettered)`
     >    该延迟队列生存时间`x-message-ttl`或者消息到期后，自动重新投递到设置的`死信交换(dead-lettered)`中。
     >    而应用程序不监听延迟队列，而是监听设置的`死信交换(dead-lettered)`相关的交换机+路由键routingKey对应队列
@@ -164,7 +164,7 @@ consume_app_test.go@TestRabbitMQClient_ConsumeSimple、@TestRabbitMQClient_Consu
         - 并声明`死信交换(dead-lettered)`的交换机
         - 声明`死信交换(dead-lettered)`的路由键routingKey
         - 设置队列生存时间`x-message-ttl`
-    - 监听：应用程序监听`死信交换(dead-lettered)`对应的队列。不要监听`延迟队列`
+    - 监听：应用程序监听`死信交换(dead-lettered)`对应的队列（不要监听`延迟队列`）
     - 发布：发布延迟队列的消息时设置设置消息到期时间`expiration`，消息务必持久化
     > 注意：
         - 当未设置`队列ttl`时，以`消息ttl`为准
@@ -175,6 +175,12 @@ consume_app_test.go@TestRabbitMQClient_ConsumeSimple、@TestRabbitMQClient_Consu
     - 测试方法：
         - 发布延迟队列：publish_app_test.go@TestRabbitMQClient_ConsumeDeadLettered
         - 监听延迟队列设置的`死信交换(dead-lettered)`：consume_app_test.go@TestRabbitMQClient_ConsumeDeadLettered
+
+- 通过`死信交换(dead-lettered)` 实现延迟队列(分布式，高可用)去实现分布式定时任务，适合短时间间隔的定时任务
+    - 监听：应用程序监听`死信交换(dead-lettered)`对应的队列（不要监听`延迟队列`），根据实际情况处理成功或者失败或者不管成功失败都重新发布到`延迟队列`中
+    - 发布：两种做法，具体根据业务场景
+        - 立即发布后再定时：直接发布消息到`死信交换(dead-lettered)`对应的队列，让其立即消费，由监听应用程序决定是否需要继续定时，根据业务情况
+        - 开始定时：开始发布`延迟队列`，应用程序会延迟监听`死信交换(dead-lettered)`对应的队列的消息，由监听应用程序决定是否需要继续定时，根据业务情况
     
 ## rabbitmqadmin 命令
 - 获取所有队列名列表

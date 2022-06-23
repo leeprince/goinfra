@@ -31,7 +31,7 @@ type consumeParam struct {
 type ConsumeHandle func(data amqp.Delivery)
 
 // 发生错误时，自动重试
-func (cli *RabbitMQClient) Consume(handle ConsumeHandle, opts ...consumeParamOpt) (err error) {
+func (cli *RabbitMQClient) Consume(handle ConsumeHandle, opts ...ConsumeParamOpt) (err error) {
     params := &consumeParam{
         queueName:   "",
         consumerTag: "",
@@ -91,7 +91,7 @@ func (cli *RabbitMQClient) Consume(handle ConsumeHandle, opts ...consumeParamOpt
         for {
             select {
             case data := <-delivery:
-                fmt.Printf("------------------time:%d, data := <-delivery:%+v \n", time.Now().UnixNano()/1e6, data)
+                // fmt.Printf("------------------time:%d, data := <-delivery:%+v \n", time.Now().UnixNano()/1e6, data)
                 
                 // 判断 <-delivery 的数据是否可用
                 if data.Acknowledger == nil && string(data.Body) == "" {

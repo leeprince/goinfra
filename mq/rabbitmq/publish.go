@@ -31,7 +31,7 @@ type properties struct {
     body []byte
 }
 
-func (cli *RabbitMQClient) Publish(opts ...publishParamOpt) (err error) {
+func (cli *RabbitMQClient) Publish(opts ...PublishParamOpt) (err error) {
     params := &publishParams{
         mandatory:  false,
         immediate:  false,
