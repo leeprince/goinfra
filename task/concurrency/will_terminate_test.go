@@ -22,8 +22,8 @@ import (
 //      1.并发更新同一个变量：
 //          1)append：在协程环境下可能出现错误,当A和B两个协程运行append的时候同时发现s[1]这个位置是空的，他们就都会把自己的值放在这个位置，这样他们两个的值就会覆盖，造成数据丢失，导致竞态资源问题。
 //              - 解决：
-//                  a.加互斥锁更新【推荐】
-//                  b.使用通道更新：注意一个问题：读通道之后，可能会出现立即结束所有循环计算的协程的情况，那么会导致 taskNum 还没计算完最后一个数字就响应了，导致计算的总数少。解决：所有计算的协程结束后添加个很小的等待时间 `time.Sleep(time.Nanosecond)`
+//                  a.加互斥锁更新【推荐：简单、稳定、高效率；】
+//                  b.使用通道更新【优点：灵活】：注意一个问题：读通道之后，可能会出现立即结束所有循环计算的协程的情况，那么会导致 taskNum 还没计算完最后一个数字就响应了，导致计算的总数少。解决：所有计算的协程结束后添加个很小的等待时间 `time.Sleep(time.Nanosecond)`
 //          2)循环（循环条件与循环代码的变量是不共享的）的循环代码中存在多个协程并发更新同一个变量
 //              - 解决：
 //                  a.加互斥锁更新【推荐】
@@ -36,7 +36,7 @@ import (
 //                      b)绑定参数：直接将循环条件的变量绑定到使用协程的闭包函数的参数中进行访问
 func TestConcurrency1(t *testing.T) {
     // --- 出现竞态资源问题:1.并发更新同一个变量：1)append的情况 ----------
-    mtime := ptime.Start("TestConcurrency1")
+    mtime := ptime.NewTimeCost("TestConcurrency1")
     iMax := 100000
     
     wg := sync.WaitGroup{}
@@ -54,6 +54,7 @@ func TestConcurrency1(t *testing.T) {
     
     // 出现竞态资源问题:1.并发更新同一个变量：1)append的情况
     //      解决：a.加互斥锁更新
+    mtime.Duration("TestConcurrency1 减去之前打印时间")
     wg = sync.WaitGroup{}
     mutex := sync.Mutex{}
     s1 := make([]int, 0)
@@ -72,6 +73,7 @@ func TestConcurrency1(t *testing.T) {
     
     // 出现竞态资源问题:1.并发更新同一个变量：1)append的情况
     //      解决：b.使用通道更新
+    mtime.Duration("TestConcurrency1 减去之前打印时间")
     wg = sync.WaitGroup{}
     ch := make(chan int)
     s2 := make([]int, 0)
@@ -84,14 +86,15 @@ func TestConcurrency1(t *testing.T) {
         }(i)
         
     }
-    // 读出通道方式一
+    // 读出通道方式一【推荐】
     go func() {
         for {
+            // i, ok := <-ch
             i := <-ch
             s2 = append(s2, i)
         }
     }()
-    // 读出通道方式二
+    // 读出通道方式二 // 此处只有一个通道等待，推荐使用方式一
     // 消费
     // go func() {
     //     for {
@@ -102,16 +105,17 @@ func TestConcurrency1(t *testing.T) {
     //     }
     // }()
     wg.Wait()
-    mtime.Stop("TestConcurrency1 s2")
+    mtime.Duration("TestConcurrency1 s2")
     fmt.Printf("》》》s2 s 出现竞态资源问题:1.并发更新同一个变量：1)append的情况 》解决：b.使用通道更新： %v\n", len(s2))
     // --- 出现竞态资源问题:1.并发更新同一个变量：1)append的情况 -end ----------
 }
 
 func TestConcurrency2(t *testing.T) {
     // --- 出现竞态资源问题:1.并发更新同一个变量：1)循环的情况 ----------
-    iMax := 1000
+    iMax := 10000
     wg := sync.WaitGroup{}
     
+    mtime := ptime.NewTimeCost("TestConcurrency1")
     var taskNum int
     task1 := func() {
         for i := iMax; i > 0; i-- {
@@ -136,10 +140,12 @@ func TestConcurrency2(t *testing.T) {
         wg.Done()
     }()
     wg.Wait()
+    mtime.Duration("-")
     fmt.Println(">>> 出现竞态资源问题:1.并发更新同一个变量：1)循环的情况: taskNum", taskNum)
     
     // 出现竞态资源问题:1.并发更新同一个变量：1)循环的情况
     //    解决：a.加互斥锁更新
+    mtime.Duration("TestConcurrency2 减去之前打印时间")
     wg = sync.WaitGroup{}
     lk := sync.Mutex{}
     taskNum = 0
@@ -170,10 +176,12 @@ func TestConcurrency2(t *testing.T) {
         wg.Done()
     }()
     wg.Wait()
+    mtime.Duration("-")
     fmt.Println(">>> 出现竞态资源问题:1.并发更新同一个变量：1)循环的情况 》 解决：a.加互斥锁更新 taskNum", taskNum)
     
     // 出现竞态资源问题:1.并发更新同一个变量：1)循环的情况
     //    解决：b.使用通道更新
+    mtime.Duration("TestConcurrency2 减去之前打印时间")
     wg = sync.WaitGroup{}
     numCh := make(chan int)
     taskNum = 0
@@ -201,18 +209,27 @@ func TestConcurrency2(t *testing.T) {
     }()
     
     // 读通道
-    //  注意一个问题：读通道之后，可能会出现立即结束所有循环计算的协程的情况，那么会导致 taskNum 还没计算完最后一个数字就响应了，导致计算的总数少。解决：所有计算的协程结束后添加个很小的等待时间 `time.Sleep(time.Nanosecond)`
+    //  注意一个问题：读通道之后，可能会出现立即结束所有循环计算的协程的情况，那么会导致 taskNum 还没计算完最后一个数字就响应了，导致计算的总数少。
+    //      解决：
+    //          - 如果等待协程结束后，需要立即读出该竞态资源变量，则需要在等待协程结束后添加个很小很小的等待时间 `time.Sleep(time.Nanosecond)`
+    //          - 如果等待协程结束后，不需要立即读出该竞态资源变量，而是经过其他程序计算再读取，则完全可以忽略这个问题，即不需要添加这个很小很小的等待时间
     // 消费
     go func() {
         for {
-            i := <-numCh
-            taskNum += i
+            // i, ok := <-numCh
+            <-numCh
+            taskNum += 1
         }
     }()
     wg.Wait()
-    time.Sleep(time.Nanosecond)
+    fmt.Println("taskNum：", taskNum)
+    time.Sleep(time.Nanosecond) // 很小很小的等待时间
+    fmt.Println("taskNum：", taskNum)
     
+    // 用于统计时间及
+    mtime.Duration("-")
     fmt.Println(">>> 出现竞态资源问题:1.并发更新同一个变量：1)循环的情况 》 解决：b.使用通道更新 taskNum", taskNum)
+    
     // --- 出现竞态资源问题:1.并发更新同一个变量：1)循环的情况 -end ----------
 }
 func TestConcurrency3(t *testing.T) {
@@ -445,7 +462,7 @@ func TestNewWillTerminate(t *testing.T) {
                 }
                 
                 // 测试另外一个协程发生错误时，是否仍需要等待当前协程执行完毕?
-                // time.Sleep(time.Second * 2)
+                time.Sleep(time.Second * 2)
                 // fmt.Println(">>> task1")
                 // return nil
                 return errors.New(">>> task1 测试另外一个协程发生错误时，是否仍需要等待当前协程执行完毕?")
@@ -454,6 +471,7 @@ func TestNewWillTerminate(t *testing.T) {
                 for i := 200000; i > 0; i-- {
                     lk.Lock()
                     taskNum++
+                    // time.Sleep(time.Second * 2) // 测试超时，并且发生错误时任务终止的情况是否影响结果
                     lk.Unlock()
                 }
                 

@@ -17,7 +17,7 @@ type TimeCost struct {
     runing bool
 }
 
-func Start(msg string) *TimeCost {
+func NewTimeCost(msg string) *TimeCost {
     now := time.Now()
     timeCost := &TimeCost{start: now, middle: now, runing: true}
     
@@ -25,6 +25,7 @@ func Start(msg string) *TimeCost {
     return timeCost
 }
 
+// 统计从middle开始到当前时间
 func (s *TimeCost) Duration(msg string) int64 {
     if !s.runing {
         plog.Info(msg +" > Duration err:!s.runing")
@@ -35,10 +36,11 @@ func (s *TimeCost) Duration(msg string) int64 {
     duration := tmp.UnixNano() - s.middle.UnixNano()
     s.middle = tmp
     
-    plog.Info(msg + " > cost time:", duration)
+    plog.Info(msg + " > cost time(ns):", duration)
     return duration
 }
 
+// 统计从NewTimeCost开始到当前时间
 func (s *TimeCost) Stop(msg string) int64 {
     if !s.runing {
         plog.Info(msg + " > Stop err:!s.runing")
@@ -51,6 +53,6 @@ func (s *TimeCost) Stop(msg string) int64 {
     duration := tmp.UnixNano() - s.start.UnixNano()
     s.end = tmp
     
-    plog.Info(msg+" > end cost time:", duration)
+    plog.Info(msg+" > end cost time(ns):", duration)
     return duration
 }

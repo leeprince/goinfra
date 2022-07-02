@@ -86,9 +86,9 @@
 ## （八）字符串
 ### 1. 驼峰命名法 & 蛇形命名法
 
-# 十五、安全 // TODO:  - prince@todo 2022/6/6 上午1:11
-> security 
 
+# 十五、安全
+> security
 
 # 状态码管理
 > code
@@ -96,8 +96,7 @@
 # 键值对管理
 > kv
 
-
-
 # todo priority
-# 键值对管理
 # 安全
+# utils 排序
+# ES

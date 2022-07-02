@@ -30,6 +30,7 @@ require (
 	go.uber.org/atomic v1.9.0 // indirect
 	golang.org/x/net v0.0.0-20211015210444-4f30a5c0130f // indirect
 	golang.org/x/sync v0.0.0-20201020160332-67f06af15bc9
+	golang.org/x/text v0.3.7
 	google.golang.org/protobuf v1.26.0
 	gopkg.in/yaml.v3 v3.0.1
 	gorm.io/driver/mysql v1.3.4
