@@ -15,13 +15,13 @@ import (
  */
 
 // 全局变量
-var mysqlClients map[string]*MysqlClient
+var mysqlClients map[string]MysqlClient
 
 type MysqlClient struct {
     db  *gorm.DB
 }
 
-type MysqlConfs map[string]*MysqlConf
+type MysqlConfs map[string]MysqlConf
 type MysqlConf struct {
     Dsn             string           `yaml:"dsn" json:"dsn"`         // eg: "user:password@/dbname?charset=utf8&parseTime=True&loc=Local"
     IsDebug         bool             `yaml:"isDebug" json:"isDebug"` // 调试启动调试模式
@@ -32,7 +32,7 @@ type MysqlConf struct {
 }
 
 func InitMysqlClient(confs MysqlConfs) (err error) {
-    mysqlClients = make(map[string]*MysqlClient, len(confs))
+    mysqlClients = make(map[string]MysqlClient, len(confs))
     
     for name, conf := range confs {
         if err = checkMysqlConf(conf); err != nil {
@@ -55,7 +55,7 @@ func InitMysqlClient(confs MysqlConfs) (err error) {
             return errors.Wrap(err, "setSqlConf error")
         }
         
-        mysqlClients[name] = &MysqlClient{
+        mysqlClients[name] = MysqlClient{
             db:  db,
         }
     }
@@ -63,14 +63,14 @@ func InitMysqlClient(confs MysqlConfs) (err error) {
     return
 }
 
-func checkMysqlConf(conf *MysqlConf) error {
+func checkMysqlConf(conf MysqlConf) error {
     if conf.Dsn == "" {
         return errors.New("dsn must not empty")
     }
     return nil
 }
 
-func setSqlConf(db *gorm.DB, conf *MysqlConf) error {
+func setSqlConf(db *gorm.DB, conf MysqlConf) error {
     sqlDB, err := db.DB()
     if err != nil {
         return err

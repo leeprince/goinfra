@@ -52,7 +52,7 @@ func TestInitMysqlClient(t *testing.T) {
         {
             args: args{
                 confs: MysqlConfs{
-                    tmpMysql: &MysqlConf{
+                    tmpMysql: MysqlConf{
                         Dsn:     "root:leeprince@tcp(127.0.0.1:3306)/tmp?charset=utf8&parseTime=true&loc=Local&interpolateParams=True",
                         IsDebug: true,
                         Logger:  DBLogger,

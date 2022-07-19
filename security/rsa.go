@@ -21,7 +21,7 @@ import (
  */
 
 // RSA加密:公钥加密
-//  key: 公钥
+//  key: 公钥。格式：1.除了开头和结尾外，按64位长度一行的格式 2.每行开头和结尾不能有空格
 //  encryptOpts.isToHex: 默认是转十六进制
 func RSAEncrypt(src, publicKey string, opts ...OptionFunc) (string, error) {
     // 解密pem格式的公钥
@@ -88,7 +88,7 @@ func compatibleEncryptPKCS1v15(srcByte []byte, pubKey *rsa.PublicKey) (crypted [
 
 // RSA解密:私钥解密
 //  crypt: 默认是十六进制字符串
-//  key: 私钥
+//  key: 私钥。格式：1.除了开头和结尾外，按64位长度一行的格式 2.每行开头和结尾不能有空格
 //  encryptOpts.isToHex: 默认是转十六进制
 func RSADecrypt(crypt, privateKey string, opts ...OptionFunc) (string, error) {
     opt := initOption(opts...)

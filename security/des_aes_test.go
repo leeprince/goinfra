@@ -21,6 +21,10 @@ const (
     DESAESKey16Str = "DESAESK2DESAESK2"
     DESAESKey24Str = "DESAESK3DESAESK3DESAESK3"
     DESAESKey32Str = "DESAESK4DESAESK4DESAESK4DESAESK4"
+    
+    AESIv = "1000000000011111"
+    AESIvv = "abcdef0000000000"
+    AESIvvv = "abcdefghi0000000"
 )
 
 func TestDESEncryptDecrypt(t *testing.T) {
@@ -144,8 +148,8 @@ func TestAESEncryptDecrypt(t *testing.T) {
     type args struct {
         text           string
         key            string
-        optsDESEncrypt []security.OptionFunc
-        optsDecrypt    []security.OptionFunc
+        optsAESEncrypt []security.OptionFunc
+        optsAESDecrypt []security.OptionFunc
     }
     tests := []struct {
         name    string
@@ -157,125 +161,161 @@ func TestAESEncryptDecrypt(t *testing.T) {
             args: args{
                 text:           DESAESSrcStr1,
                 key:            DESAESKey16Str,
-                optsDESEncrypt: []security.OptionFunc{},
-                optsDecrypt:    []security.OptionFunc{},
+                optsAESEncrypt: []security.OptionFunc{},
+                optsAESDecrypt: []security.OptionFunc{},
             },
         },
         {
             args: args{
                 text:           DESAESSrcStr1,
                 key:            DESAESKey16Str,
-                optsDESEncrypt: []security.OptionFunc{},
-                optsDecrypt:    []security.OptionFunc{},
+                optsAESEncrypt: []security.OptionFunc{},
+                optsAESDecrypt: []security.OptionFunc{},
+            },
+        },
+        {
+            name: "Decrypt_not_AESIv",
+            args: args{
+                text:           DESAESSrcStr1,
+                key:            DESAESKey16Str,
+                optsAESEncrypt: []security.OptionFunc{security.WithAESIV(AESIv)},
+                optsAESDecrypt: []security.OptionFunc{},
+            },
+        },
+        {
+            name: "",
+            args: args{
+                text:           DESAESSrcStr1,
+                key:            DESAESKey16Str,
+                optsAESEncrypt: []security.OptionFunc{security.WithAESIV(AESIv)},
+                optsAESDecrypt: []security.OptionFunc{security.WithAESIV(AESIv)},
+            },
+        },
+        {
+            name: "AESIvv",
+            args: args{
+                text:           DESAESSrcStr1,
+                key:            DESAESKey16Str,
+                optsAESEncrypt: []security.OptionFunc{security.WithAESIV(AESIvv)},
+                optsAESDecrypt: []security.OptionFunc{security.WithAESIV(AESIvv)},
+            },
+        },
+        {
+            name: "AESIvvv",
+            args: args{
+                text:           DESAESSrcStr1,
+                key:            DESAESKey16Str,
+                optsAESEncrypt: []security.OptionFunc{security.WithAESIV(AESIvvv)},
+                optsAESDecrypt: []security.OptionFunc{security.WithAESIV(AESIvvv)},
             },
         },
         {
             args: args{
                 text:           DESAESSrcStr2,
                 key:            DESAESKey16Str,
-                optsDESEncrypt: []security.OptionFunc{},
-                optsDecrypt:    []security.OptionFunc{},
+                optsAESEncrypt: []security.OptionFunc{},
+                optsAESDecrypt: []security.OptionFunc{},
             },
         },
         {
             args: args{
                 text:           DESAESSrcStr3,
                 key:            DESAESKey16Str,
-                optsDESEncrypt: []security.OptionFunc{},
-                optsDecrypt:    []security.OptionFunc{},
+                optsAESEncrypt: []security.OptionFunc{},
+                optsAESDecrypt: []security.OptionFunc{},
             },
         },
         {
             args: args{
                 text:           DESAESSrcStr1,
                 key:            DESAESKey24Str,
-                optsDESEncrypt: []security.OptionFunc{},
-                optsDecrypt:    []security.OptionFunc{},
+                optsAESEncrypt: []security.OptionFunc{},
+                optsAESDecrypt: []security.OptionFunc{},
             },
         },
         {
             args: args{
                 text:           DESAESSrcStr2,
                 key:            DESAESKey24Str,
-                optsDESEncrypt: []security.OptionFunc{},
-                optsDecrypt:    []security.OptionFunc{},
+                optsAESEncrypt: []security.OptionFunc{},
+                optsAESDecrypt: []security.OptionFunc{},
             },
         },
         {
             args: args{
                 text:           DESAESSrcStr3,
                 key:            DESAESKey24Str,
-                optsDESEncrypt: []security.OptionFunc{},
-                optsDecrypt:    []security.OptionFunc{},
+                optsAESEncrypt: []security.OptionFunc{},
+                optsAESDecrypt: []security.OptionFunc{},
             },
         },
         {
             args: args{
                 text:           DESAESSrcStr1,
                 key:            DESAESKey32Str,
-                optsDESEncrypt: []security.OptionFunc{},
-                optsDecrypt:    []security.OptionFunc{},
+                optsAESEncrypt: []security.OptionFunc{},
+                optsAESDecrypt: []security.OptionFunc{},
             },
         },
         {
             args: args{
                 text:           DESAESSrcStr2,
                 key:            DESAESKey32Str,
-                optsDESEncrypt: []security.OptionFunc{},
-                optsDecrypt:    []security.OptionFunc{},
+                optsAESEncrypt: []security.OptionFunc{},
+                optsAESDecrypt: []security.OptionFunc{},
             },
         },
         {
             args: args{
                 text:           DESAESSrcStr3,
                 key:            DESAESKey32Str,
-                optsDESEncrypt: []security.OptionFunc{},
-                optsDecrypt:    []security.OptionFunc{},
+                optsAESEncrypt: []security.OptionFunc{},
+                optsAESDecrypt: []security.OptionFunc{},
             },
         },
         {
             args: args{
                 text:           DESAESSrcStr3,
                 key:            DESAESKey32Str,
-                optsDESEncrypt: []security.OptionFunc{},
-                optsDecrypt:    []security.OptionFunc{},
+                optsAESEncrypt: []security.OptionFunc{},
+                optsAESDecrypt: []security.OptionFunc{},
             },
         },
         {
             args: args{
                 text:           DESAESSrcStr4,
                 key:            DESAESKey16Str,
-                optsDESEncrypt: []security.OptionFunc{},
-                optsDecrypt:    []security.OptionFunc{},
+                optsAESEncrypt: []security.OptionFunc{},
+                optsAESDecrypt: []security.OptionFunc{},
             },
         },
         {
             args: args{
                 text:           DESAESSrcStr4,
                 key:            DESAESKey24Str,
-                optsDESEncrypt: []security.OptionFunc{},
-                optsDecrypt:    []security.OptionFunc{},
+                optsAESEncrypt: []security.OptionFunc{},
+                optsAESDecrypt: []security.OptionFunc{},
             },
         },
         {
             args: args{
                 text:           DESAESSrcStr4,
                 key:            DESAESKey32Str,
-                optsDESEncrypt: []security.OptionFunc{},
-                optsDecrypt:    []security.OptionFunc{},
+                optsAESEncrypt: []security.OptionFunc{},
+                optsAESDecrypt: []security.OptionFunc{},
             },
         },
     }
     for _, tt := range tests {
         t.Run(tt.name, func(t *testing.T) {
-            desEncrypt, err := security.AESEncrypt(tt.args.text, tt.args.key, tt.args.optsDESEncrypt...)
+            desEncrypt, err := security.AESEncrypt(tt.args.text, tt.args.key, tt.args.optsAESEncrypt...)
             fmt.Println("DESEncrypt:", desEncrypt, err)
             if err != nil {
                 fmt.Println()
                 fmt.Println("----")
                 return
             }
-            desDecrypt, err := security.AESDecrypt(desEncrypt, tt.args.key, tt.args.optsDecrypt...)
+            desDecrypt, err := security.AESDecrypt(desEncrypt, tt.args.key, tt.args.optsAESDecrypt...)
             fmt.Println("DESDecrypt:", desDecrypt, err)
         })
     }

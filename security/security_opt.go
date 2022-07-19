@@ -32,8 +32,8 @@ const (
     AESBlockModeTypeOFB
 )
 
-var (
-    aesDefaultIV = []byte("0000000000000000")
+const (
+    aesDefaultIV = "0000000000000000"
 )
 
 type OutInputType int32
@@ -47,7 +47,7 @@ type Option struct {
     outputType       OutInputType     // 加密输出的字符串类型：base64/十六字符串。默认：base64
     inputType        OutInputType     // 解密输入的字符串类型：base64/十六字符串。默认：base64
     hmacHashType     HMACHashType     // HAMAc基于的`Hash函数`类型
-    aesIV            []byte           // AES iv
+    aesIV            string           // AES iv
     aesBlockModeType AESBlockModeType // AES的加密模式
     bcryptCost       int              // bcrypt 的工作因子
 }
@@ -110,7 +110,7 @@ func WithHMACHashType(v HMACHashType) OptionFunc {
     }
 }
 
-func WithAESIV(v []byte) OptionFunc {
+func WithAESIV(v string) OptionFunc {
     return func(opt *Option) {
         opt.aesIV = v
     }
