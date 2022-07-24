@@ -74,7 +74,7 @@
 # 十四、工具类（业务无关）
 > utils
 >   - `utils` ：通用的且与项目业务无关的类的组合；可供其他项目使用。如：字符串工具类,文件工具类等。`tools` ：当前项目中通用的业务类的组合；仅能当前项目使用。如：用户校验工具类,支付工具类等
-## （一）CI
+## （一）CICD
 > 持续集成 CI(Continuous Integration)
 > 持续交付 CD (Continuous Delivery)
 ## （二）jsonpb

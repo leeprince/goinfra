@@ -112,7 +112,7 @@ func TestWithFiledLogID(t *testing.T) {
     Debug("prince log Debug SetReportCaller 01")
     WithField("WithField01", "WithFieldValue01").Debug("prince log Debug WithField")
     
-    logID := utils.UniqidID()
+    logID := utils.UniqID()
     WithFiledLogID(logID).Debug("prince log Debug")
     Debug("prince log Debug")
     WithFiledLogID(logID).WithField("WithField01", "WithFieldValue01").Debug("prince log Debug WithField")

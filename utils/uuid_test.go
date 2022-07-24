@@ -11,7 +11,7 @@ import (
  * @Desc:
  */
 
-func TestUniqidID(t *testing.T) {
-    got := UniqidID()
+func TestUniqID(t *testing.T) {
+    got := UniqID()
     fmt.Println(got)
 }
