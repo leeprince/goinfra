@@ -156,6 +156,10 @@ func TestToUpperCamel(t *testing.T) {
         want string
     }{
         {
+            args: args{s: "id"},
+            want: "Id",
+        },
+        {
             args: args{s: "my_name"},
             want: "MyName",
         },
@@ -205,6 +209,7 @@ func TestToUpperCamel(t *testing.T) {
             if got := ToUpperCamel(tt.args.s); got != tt.want {
                 t.Errorf("ToUpperCamel() = %v, want %v", got, tt.want)
             }
+            fmt.Println(tt.args.s, ">>>>>>>", tt.want)
         })
     }
 }
