@@ -146,42 +146,76 @@ consume_app_test.go@TestRabbitMQClient_ConsumeSimple、@TestRabbitMQClient_Consu
 ## 死信交换(dead-lettered)
 > 官方说明：https://www.rabbitmq.com/dlx.html
 
-- 来自队列的消息可以是“(dead-lettered)死信”，也就是说发生以下任何事件时，会重新发布到设置的死信队列：
+- 来自队列的消息可以是“(dead-lettered)死信”，也就是说发生以下任何事件时，会重新发布到设置的**死信队列**：
     - basic.reject()或 消费者 basic.nack() 将 requeue 参数设置为 false 。
     - 由于消息设置的 TTL 而过期
-    - 消息被丢弃，因为它的队列超过了 长度限制
+    - 消息被丢弃，因为它的队列超过了长度限制
     > 请注意，队列到期不会死信其中的消息，会重新发布到设置的死信队列
 - 死信交换 (DLX) 是正常的交换。它们可以是任何常用类型，并像往常一样声明。
     - 对于任何给定的队列，DLX 可以由客户端使用声明队列的参数定义，或者在服务器中使用策略定义。在策略和参数都指定 DLX 的情况下，参数中指定的那个会否决策略中指定的那个。
     - 建议使用策略进行配置，因为它允许不涉及应用程序重新部署的 DLX 重新配置。    
 
-- 通过`死信交换(dead-lettered)` 实现延迟队列(分布式，高可用)。步骤如下：
-    > 思路：声明延迟交换机和队列，并给队列设置`死信交换(dead-lettered)`
-    >    该延迟队列生存时间`x-message-ttl`或者消息到期后，自动重新投递到设置的`死信交换(dead-lettered)`中。
-    >    而应用程序不监听延迟队列，而是监听设置的`死信交换(dead-lettered)`相关的交换机+路由键routingKey对应队列
-    - 声明延迟队列交换机，交换机务必持久化
-    - 声明延迟队列队列，队列务必持久化
-        - 并声明`死信交换(dead-lettered)`的交换机
-        - 声明`死信交换(dead-lettered)`的路由键routingKey
-        - 设置队列生存时间`x-message-ttl`
-    - 监听：应用程序监听`死信交换(dead-lettered)`对应的队列（不要监听`延迟队列`）
-    - 发布：发布延迟队列的消息时设置设置消息到期时间`expiration`，消息务必持久化
-    > 注意：
-        - 当未设置`队列ttl`时，以`消息ttl`为准
-        - 当设置`队列ttl`时，以`队列ttl`和`消息ttl`最小时间为准。
-    - 监听到`死信交换(dead-lettered)`重新投递过来的消息，结果正常处理业务逻辑，满足了延迟队列的需求。
-        - 如果业务逻辑处理失败，可根据实际情况进行应答。或者上面步骤重新投递到延迟队列达到实现定时任务的效果
-    
-    - 测试方法：
-        - 发布延迟队列：publish_app_test.go@TestRabbitMQClient_ConsumeDeadLettered
-        - 监听延迟队列设置的`死信交换(dead-lettered)`：consume_app_test.go@TestRabbitMQClient_ConsumeDeadLettered
+### 通过`死信交换(dead-lettered)` 实现延迟队列(分布式，高可用)
+> 思路： Rabbitmq本身是没有延迟队列的，只能通过Rabbitmq本身队列的特性来实现，想要Rabbitmq实现延迟队列，需要声明延迟交换机和队列并给队列设置`死信交换(dead-lettered)`，再结合存活时间TTL（Time To Live）去实现。
+>    该延迟队列生存时间`x-message-ttl`或者消息到期后，自动重新投递到设置的`死信交换(dead-lettered)`对应的队列（以下简称：死信队列）中。
+>    而应用程序不监听延迟队列，而是监听设置的`死信交换(dead-lettered)`相关的交换机+路由键routingKey对应队列，即死信队列
 
-- 通过`死信交换(dead-lettered)` 实现延迟队列(分布式，高可用)去实现分布式定时任务，适合短时间间隔的定时任务
-    - 监听：应用程序监听`死信交换(dead-lettered)`对应的队列（不要监听`延迟队列`），根据实际情况处理成功或者失败或者不管成功失败都重新发布到`延迟队列`中
-    - 发布：两种做法，具体根据业务场景
-        - 立即发布后再定时：直接发布消息到`死信交换(dead-lettered)`对应的队列，让其立即消费，由监听应用程序决定是否需要继续定时，根据业务情况
-        - 开始定时：开始发布`延迟队列`，应用程序会延迟监听`死信交换(dead-lettered)`对应的队列的消息，由监听应用程序决定是否需要继续定时，根据业务情况
-    
+> 具体操作步骤：
+- 声明
+  - 声明**延迟队列交换机**，交换机务必持久化
+  - 声明**延迟队列队列**，队列务必持久化
+      - 并声明`死信交换(dead-lettered)`的交换机`x-dead-letter-exchange`
+      - 声明`死信交换(dead-lettered)`的路由键routingKey`x-dead-letter-routing-key`
+      - 设置队列生存时间`x-message-ttl`
+- 监听（消费者）
+  - 应用程序监听`死信交换(dead-lettered)`对应的队列，即死信队列（不要监听`延迟队列`）
+  - 监听到`死信交换(dead-lettered)`重新投递过来的消息，结果正常处理业务逻辑，满足了延迟队列的需求。
+    - 如果业务逻辑处理失败，可根据实际情况进行应答。或者上面步骤重新投递到延迟队列达到实现定时任务的效果（通过不断地发布延迟队列实现定时任务的目的）
+- 发布（生产者）
+  - 发布延迟队列的消息时设置设置**消息到期时间`expiration`**，消息务必持久化
+    >   注意：
+          - 当未设置`队列ttl`时，以`消息ttl`为准
+          - 当设置`队列ttl`时，以`队列ttl`和`消息ttl`最小时间为准。
+
+> 测试方法：
+- 发布延迟队列：publish_app_test.go@TestRabbitMQClient_PublishDeadLettered
+- 监听延迟队列设置的`死信交换(dead-lettered)`：consume_app_test.go@TestRabbitMQClient_ConsumeDeadLettered
+
+> 适合场景： 
+> 通过`死信交换(dead-lettered)` 实现延迟队列(分布式，高可用)去实现分布式定时任务，适合短时间间隔的定时任务
+- 监听：应用程序监听`死信交换(dead-lettered)`对应的队列（不要监听`延迟队列`），根据实际情况处理成功或者失败或者不管成功失败都重新发布到`延迟队列`中
+- 发布：两种做法，具体根据业务场景
+    - 立即发布后再定时：直接发布消息到`死信交换(dead-lettered)`对应的队列，让其立即消费，由监听应用程序决定是否需要继续定时，根据业务情况
+    - 开始定时：开始发布`延迟队列`，应用程序会延迟监听`死信交换(dead-lettered)`对应的队列的消息，由监听应用程序决定是否需要继续定时，根据业务情况
+
+> 缺点：
+- 队列顺序消费：
+通过死信，我们确实可以动态的控制消息的消费时间，但是消息在队列里面，如果队列里面存在多个信息任务，前一个未到消费时间，后一个已经到了消费时间，这就好导致了，即使后面任务信息消费时间到了，却没法被消费的问题。
+解决方法，对队列进行优先级排序，但是这本身也需要引入其他机制来保证排序的正确性。所以通过`死信交换(dead-lettered)` 实现延迟队列,适合短时间间隔的定时任务
+- rabbitmq 服务器开销过大
+
+## 通过Rabbitmq插件实现动态定时任务
+> 在RabbitMQ3.5.7及以后的版本提供了一个插件（rabbitmq-delayed-message-exchange）来实现延迟队列功能（Linux和Windows都可用）。同时插件依赖Erlang/OPT18.0及以上。  
+> 插件源码地址：https://github.com/rabbitmq/rabbitmq-delayed-message-exchange  
+> 插件下载地址：https://bintray.com/rabbitmq/community-plugins/rabbitmq_delayed_message_exchange
+
+**步骤**
+1. 启用插件
+   1. 将插件放到MQ插件目录下,然后cmd命令解压，
+    ```
+    # 启用插件管理
+    ./rabbitmq-plugins enable rabbitmq_management
+    # 启用延迟队列插件
+    rabbitmq-plugins enable rabbitmq_delayed_message_exchange
+    ```
+   2. 然后重启mq服务
+   3. 然后再 rabbitmq 管理后台中》创建交换机（Exchanges）>Type下(与其他交换机类型同级，如：direct/fanout/topic)会存在`x-delay-message`的交换机类型
+2. 创建队列：创建延时交换机（使用`x-delayed-message`交换机类型）、延时队列、以及路由键RoutingKey，并设置延迟的类型`x-delayed-type`
+3. 生产者：设置延迟时间`x-delay`(单位毫秒),发送消息到延迟队列
+    > 设置的延迟时间就是这个消息多久之后被消费，不需要在乎**队列顺序的问题**
+4. 消费者：监控延迟队列取出消息消费即可
+
+
 ## rabbitmqadmin 命令
 - 获取所有队列名列表
     ```
