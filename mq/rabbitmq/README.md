@@ -234,22 +234,24 @@ consume_app_test.go@TestRabbitMQClient_ConsumeSimple、@TestRabbitMQClient_Consu
 
 ## 常见报错
 - `PRECONDITION_FAILED - unknown delivery tag 1` 或者 `Exception (504) Reason: "channel/connection is not open"`
-    - 原因：消息被两次确认。在自动回复或者手动第一次回复后，链接通道会被关闭，再次回复会报 `Exception (504) Reason: "channel/connection is not open"`
-    - 解决：1. 消费的消息设置自动确认时，不应手动确认（.Reject/.Ack/.Nack）; 2. 消费的消息不设置自动确认，并且手动确认
-    - 说明：consume.go 可以自动重试解决此问题，但程序中应避免此问题出现。
+  - 原因：消息被两次确认。在自动回复或者手动第一次回复后，链接通道会被关闭，再次回复会报 `Exception (504) Reason: "channel/connection is not open"`
+  - 解决：1. 消费的消息设置自动确认时，不应手动确认（.Reject/.Ack/.Nack）; 2. 消费的消息不设置自动确认，并且手动确认
+  - 说明：consume.go 可以自动重试解决此问题，但程序中应避免此问题出现。
 - `Exception (406) Reason: "PRECONDITION_FAILED - inequivalent arg 'durable' for exchange 'prince.exchangeName.pubsub' in vhost '/': received 'false' but current is 'true'"
-    - 原因：RabbitMQ不允许您重新定义现有交换机/队列具有不同的参数，并将向任何程序返回错误，阻止重新定义现有交换机/队列具有不同的参数。
-    - 解决：参考**使用说明**
+  - 原因：RabbitMQ不允许您重新定义现有交换机/队列具有不同的参数，并将向任何程序返回错误，阻止重新定义现有交换机/队列具有不同的参数。
+  - 解决：参考**使用说明**
 - `cannot obtain exclusive access to locked queue 'amq.gen-1qTl0uXtEpQfGHo08enrGQ' in vhost '/'. It could be originally declared on another connection or the exclusive property value does not match that of the original declaration.`
-    - 原因：不允许删除独占队列（无法访问vhost‘/’中的锁定的独占队列‘amq.gen-1qTl0uXtEpQfGHo08enrGQ’。它可能在另一个连接上已声明独占，或者独占属性值与原始声明的值不匹配。）
-    - 解决：声明队列时设置为独占队列（长期有效）或者消费时设置队列为独占（临时）都属于独占队列，独占队列只允许当前连接通道操作。
+  - 原因：不允许删除独占队列（无法访问vhost‘/’中的锁定的独占队列‘amq.gen-1qTl0uXtEpQfGHo08enrGQ’。它可能在另一个连接上已声明独占，或者独占属性值与原始声明的值不匹配。）
+  - 解决：声明队列时设置为独占队列（长期有效）或者消费时设置队列为独占（临时）都属于独占队列，独占队列只允许当前连接通道操作。
 - `Exception (405) Reason: "RESOURCE_LOCKED - cannot obtain exclusive access to locked queue 'prince.queueName.Direct' in vhost '/'. It could be originally declared on another connection or the exclusive property value does not match that of the original declaration."`
-    - 原因：跟重新定义现有交换机/队列具有不同的参数产生的报错类此，但是实际的问题是：不允许访问（获取）锁定队列的独占访问权限
-    - 解决：1. 使用空队列名，让RabbitMQ自动创建随机队列名。2. 设置其他队列名
+  - 原因：跟重新定义现有交换机/队列具有不同的参数产生的报错类此，但是实际的问题是：不允许访问（获取）锁定队列的独占访问权限
+  - 解决：1. 使用空队列名，让RabbitMQ自动创建随机队列名。2. 设置其他队列名
 - `Exception (403) Reason: \"ACCESS_REFUSED - queue 'prince.queueName.work' in vhost '/' in exclusive use\"","time":"2022-05-24 00:17:21.346855"}`
-    - 原因：该队列属于独占队列
-    - 解决：声明队列时设置为独占队列（长期有效）或者消费时设置队列为独占（临时）都属于独占队列，独占队列只允许当前连接通道操作。
-    
+  - 原因：该队列属于独占队列
+  - 解决：声明队列时设置为独占队列（长期有效）或者消费时设置队列为独占（临时）都属于独占队列，独占队列只允许当前连接通道操作。
+- `(406, 'PRECONDITION_FAILED - unknown delivery tag 1')`
+  - 原因：`delivery tag`参数不匹配
+  - 解决：填入正确的`delivery tag`参数
 ## 部署
 https://hub.docker.com/_/rabbitmq
 
