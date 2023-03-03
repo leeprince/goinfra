@@ -173,22 +173,25 @@ consume_app_test.go@TestRabbitMQClient_ConsumeSimple、@TestRabbitMQClient_Consu
 
 ### 通过`死信交换(dead-lettered)` 实现延迟队列(分布式，高可用)
 > 思路： Rabbitmq本身是没有延迟队列的，只能通过Rabbitmq本身队列的特性来实现，想要Rabbitmq实现延迟队列，需要声明延迟交换机和队列并给队列设置`死信交换(dead-lettered)`，再结合存活时间TTL（Time To Live）去实现。
->    该延迟队列生存时间`x-message-ttl`或者消息到期后，自动重新投递到设置的`死信交换(dead-lettered)`对应的队列（以下简称：死信队列）中。
->    而应用程序不监听延迟队列，而是监听设置的`死信交换(dead-lettered)`相关的交换机+路由键routingKey对应队列，即死信队列
+>    该延迟队列的队列生存时间`x-message-ttl`或者消息有效期`expiration`到期后，RabbitMQ自动重新投递到设置的`死信交换(dead-lettered)`对应的死信交换机及死信路由键，RabbitMQ也会根据死信交换机及死信路由键最终将消息投递到死信队列中
+
+> 注：延迟队列用于实现延迟/定时的作用，不做监听；延迟队列设置的`死信交换`对应的队列用于实现业务逻辑处理的，需要监听， 监听的是延迟队列设置的`死信交换(dead-lettered)`的交换机+路由键routingKey对应的队列，即死信队列！
 
 > 具体操作步骤：
 - 声明
   - 声明**延迟队列交换机**，交换机务必持久化
   - 声明**延迟队列队列**，队列务必持久化
-      - 并声明`死信交换(dead-lettered)`的交换机`x-dead-letter-exchange`
-      - 声明`死信交换(dead-lettered)`的路由键routingKey`x-dead-letter-routing-key`
+      - 并设置`死信交换(dead-lettered)`的交换机`x-dead-letter-exchange`
+      - 并设置`死信交换(dead-lettered)`的路由键routingKey`x-dead-letter-routing-key`
       - 设置队列生存时间`x-message-ttl`
+  - 绑定**延迟路由键routingKey**和**延迟队列队列**的关系
+  - 声明`死信交换(dead-lettered)`的交换机,和绑定`死信交换(dead-lettered)`的路由键routingKey和死信队列的关系
 - 监听（消费者）
   - 应用程序监听`死信交换(dead-lettered)`对应的队列，即死信队列（不要监听`延迟队列`）
   - 监听到`死信交换(dead-lettered)`重新投递过来的消息，结果正常处理业务逻辑，满足了延迟队列的需求。
     - 如果业务逻辑处理失败，可根据实际情况进行应答。或者上面步骤重新投递到延迟队列达到实现定时任务的效果（通过不断地发布延迟队列实现定时任务的目的）
 - 发布（生产者）
-  - 发布延迟队列的消息时设置设置**消息到期时间`expiration`**，消息务必持久化
+  - 发布延迟队列的消息时设置**消息到期时间`expiration`**，消息务必持久化
     >   注意：
           - 当未设置`队列ttl`时，以`消息ttl`为准
           - 当设置`队列ttl`时，以`队列ttl`和`消息ttl`最小时间为准。
@@ -209,6 +212,10 @@ consume_app_test.go@TestRabbitMQClient_ConsumeSimple、@TestRabbitMQClient_Consu
 通过死信，我们确实可以动态的控制消息的消费时间，但是消息在队列里面，如果队列里面存在多个信息任务，前一个未到消费时间，后一个已经到了消费时间，这就好导致了，即使后面任务信息消费时间到了，却没法被消费的问题。
 解决方法，对队列进行优先级排序，但是这本身也需要引入其他机制来保证排序的正确性。所以通过`死信交换(dead-lettered)` 实现延迟队列,适合短时间间隔的定时任务
 - rabbitmq 服务器开销过大
+
+> rabbitmq使用过程drawio.png
+
+![rabbitmq使用过程drawio](./doc/rabbitmq使用过程drawio.png)
 
 ## 通过Rabbitmq插件实现动态定时任务
 > 在RabbitMQ3.5.7及以后的版本提供了一个插件（rabbitmq-delayed-message-exchange）来实现延迟队列功能（Linux和Windows都可用）。同时插件依赖Erlang/OPT18.0及以上。  
