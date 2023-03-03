@@ -215,7 +215,7 @@ consume_app_test.go@TestRabbitMQClient_ConsumeSimple、@TestRabbitMQClient_Consu
 
 > rabbitmq使用过程drawio.png
 
-![rabbitmq使用过程drawio](./doc/rabbitmq使用过程drawio.png)
+![rabbitmq使用.png](./doc/rabbitmq使用.png)
 
 ## 通过Rabbitmq插件实现动态定时任务
 > 在RabbitMQ3.5.7及以后的版本提供了一个插件（rabbitmq-delayed-message-exchange）来实现延迟队列功能（Linux和Windows都可用）。同时插件依赖Erlang/OPT18.0及以上。  
