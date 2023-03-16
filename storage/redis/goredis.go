@@ -252,7 +252,9 @@ func (r *Goredis) GetSetIncrLua(key string, expiration time.Duration) (int64, er
 	// lua 索引从1开始
 	value, err := r.cli.Eval(r.ctx, `
 	local i = redis.call("INCR", KEYS[1])
-	redis.call("EXPIRE", KEYS[1], ARGV[1])
+	if i == 1 then
+		redis.call("EXPIRE", KEYS[1], ARGV[1])
+	end
 	return i`,
 		[]string{key}, expirationSecond).Int64()
 	if err != nil {
@@ -266,13 +268,28 @@ func (r *Goredis) GetSetIncrLua(key string, expiration time.Duration) (int64, er
 func (r *Goredis) GetSetIncrTxPipeline(key string, expiration time.Duration) (int64, error) {
 	// 支持原子性的pipeline
 	pipeliner := r.cli.TxPipeline()
-	incrNum := pipeliner.Incr(r.ctx, key).Val()
+
+	// pipeliner.Exec()执行完之后可以通过incrCmd获取到返回的值
+	incrCmd := pipeliner.Incr(r.ctx, key)
 
 	// 支持纳秒
 	pipeliner.Expire(r.ctx, key, expiration)
+
+	// cmders, err := pipeliner.Exec()
+	//fmt.Println(cmders)
+	//// 按pipeliner执行的顺序放入数组中，即：Incr =》 Expire
+	//for _, cmder := range cmders {
+	//	if cmder.Err() != nil {
+	//		return 0, err
+	//	}
+	//	fmt.Println(cmder.Name())
+	//	fmt.Println(cmder.Args())
+	//}
+
 	_, err := pipeliner.Exec(r.ctx)
 	if err != nil {
 		return 0, err
 	}
-	return incrNum, nil
+
+	return incrCmd.Val(), nil
 }
