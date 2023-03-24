@@ -17,6 +17,7 @@ import (
  */
 
 /*
+cosClient:resource/cos/cos.go
 base64File:是不包含文件格式描述的，如："data:image/png;base64,"
 filePath: 文件路径，起始符和结束符有存在目录分割符
 fileName: 无目录分割符
