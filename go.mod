@@ -22,6 +22,7 @@ require (
 	github.com/sirupsen/logrus v1.8.1
 	github.com/spf13/cast v1.3.0
 	github.com/streadway/amqp v1.0.0
+	github.com/tencentyun/cos-go-sdk-v5 v0.7.41 // indirect
 	github.com/tjfoc/gmsm v1.4.1
 	github.com/uber/jaeger-client-go v2.30.0+incompatible
 	github.com/uber/jaeger-lib v2.4.1+incompatible // indirect
