@@ -2,7 +2,7 @@ package _math
 
 import "strings"
 
-// RomanToInt
+// 罗马数字转整数
 /*
 罗马数字包含以下七种字符: I， V， X， L，C，D 和 M。
 
@@ -68,17 +68,18 @@ M             1000
 来源：力扣（LeetCode）
 著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。
 */
+
 func RomanToInt() {
 	s := "XLIX"
-	romanToIntPractice1(s) // 练习1
+	romanToIntV1(s) // 练习1
 
-	romanToIntBeat(s) // 最优
+	romanToInt(s) // 最优
 }
 
 /*
 当前索引+下一个索引查看是否在映射关系中
 */
-func romanToIntPractice1(s string) int {
+func romanToIntV1(s string) int {
 	var romanMap = map[string]int{
 		"I": 1,
 		"V": 5,
@@ -134,7 +135,7 @@ func romanToIntPractice1(s string) int {
 /*
 比较下一个字符对应的数值，确实应该相加还是相减
 */
-func romanToIntBeat(s string) int {
+func romanToInt(s string) int {
 	var romanMap = map[byte]int{
 		'I': 1,
 		'V': 5,

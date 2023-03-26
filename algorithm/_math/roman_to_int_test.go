@@ -8,7 +8,7 @@ import "testing"
  * @Desc:
  */
 
-func Test_romanToIntPractice(t *testing.T) {
+func Test_romanToIntV1(t *testing.T) {
 	type args struct {
 		s string
 	}
@@ -41,15 +41,15 @@ func Test_romanToIntPractice(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if gotResp := romanToIntPractice1(tt.args.s); gotResp != tt.wantResp {
-				t.Errorf("romanToIntPractice1() = %v, want %v", gotResp, tt.wantResp)
+			if gotResp := romanToIntV1(tt.args.s); gotResp != tt.wantResp {
+				t.Errorf("romanToIntV1() = %v, want %v", gotResp, tt.wantResp)
 			}
 		})
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if gotResp := romanToIntBeat(tt.args.s); gotResp != tt.wantResp {
-				t.Errorf("romanToIntPractice1() = %v, want %v", gotResp, tt.wantResp)
+			if gotResp := romanToInt(tt.args.s); gotResp != tt.wantResp {
+				t.Errorf("romanToInt() = %v, want %v", gotResp, tt.wantResp)
 			}
 		})
 	}
