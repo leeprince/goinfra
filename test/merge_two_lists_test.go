@@ -1,0 +1,208 @@
+package test
+
+import (
+	"github.com/leeprince/goinfra/algorithm/doublepointer"
+	"github.com/smartystreets/goconvey/convey"
+	"reflect"
+	"testing"
+)
+
+/**
+ * @Author: prince.lee <leeprince@foxmail.com>
+ * @Date:   2023/4/6 00:30
+ * @Desc:
+ */
+
+func TestMergeTwoListsV1(t *testing.T) {
+	type args struct {
+		list1 *doublepointer.ListNode
+		list2 *doublepointer.ListNode
+	}
+	tests := []struct {
+		name string
+		args args
+		want *doublepointer.ListNode
+	}{
+		{
+			name: "",
+			args: args{
+				list1: &doublepointer.ListNode{
+					Val: 1,
+					Next: &doublepointer.ListNode{
+						Val:  2,
+						Next: nil,
+					},
+				},
+				list2: nil,
+			},
+			want: &doublepointer.ListNode{
+				Val: 1,
+				Next: &doublepointer.ListNode{
+					Val:  2,
+					Next: nil,
+				},
+			},
+		},
+		{
+			name: "",
+			args: args{
+				list1: &doublepointer.ListNode{
+					Val:  1,
+					Next: nil,
+				},
+				list2: &doublepointer.ListNode{
+					Val: 1,
+					Next: &doublepointer.ListNode{
+						Val:  2,
+						Next: nil,
+					},
+				},
+			},
+			want: &doublepointer.ListNode{
+				Val: 1,
+				Next: &doublepointer.ListNode{
+					Val: 1,
+					Next: &doublepointer.ListNode{
+						Val:  2,
+						Next: nil,
+					},
+				},
+			},
+		},
+		{
+			name: "",
+			args: args{
+				list1: &doublepointer.ListNode{
+					Val: 1,
+					Next: &doublepointer.ListNode{
+						Val: 3,
+						Next: &doublepointer.ListNode{
+							Val: 5,
+							Next: &doublepointer.ListNode{
+								Val:  7,
+								Next: nil,
+							},
+						},
+					},
+				},
+				list2: &doublepointer.ListNode{
+					Val: 2,
+					Next: &doublepointer.ListNode{
+						Val: 4,
+						Next: &doublepointer.ListNode{
+							Val: 6,
+							Next: &doublepointer.ListNode{
+								Val:  8,
+								Next: nil,
+							},
+						},
+					},
+				},
+			},
+			want: &doublepointer.ListNode{
+				Val: 1,
+				Next: &doublepointer.ListNode{
+					Val: 2,
+					Next: &doublepointer.ListNode{
+						Val: 3,
+						Next: &doublepointer.ListNode{
+							Val: 4,
+							Next: &doublepointer.ListNode{
+								Val: 5,
+								Next: &doublepointer.ListNode{
+									Val: 6,
+									Next: &doublepointer.ListNode{
+										Val: 7,
+										Next: &doublepointer.ListNode{
+											Val:  8,
+											Next: nil,
+										},
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+		},
+	}
+	for _, tt := range tests {
+		// reflect.DeepEqual 和 遍历链表都可以判断结果与期望值是否一致
+		// 判断结果与期望值是否一致方法一【推荐：简单、原生】
+		t.Run(tt.name, func(t *testing.T) {
+			if got := doublepointer.MergeTwoListsV1(tt.args.list1, tt.args.list2); !reflect.DeepEqual(got, tt.want) {
+				t.Errorf(">1: MergeTwoListsV1() = %v, want %v", got, tt.want)
+			}
+		})
+		// // 判断结果与期望值是否一致方法二
+		// t.Run(tt.name, func(t *testing.T) {
+		// 	got := doublepointer.MergeTwoListsV1(tt.args.list1, tt.args.list2)
+		// 	// got := MergeTwoListsV2(tt.args.list1, tt.args.list2)
+		// 	want := tt.want
+		// 	for got != nil && want != nil {
+		// 		if got.Val != want.Val {
+		// 			t.Errorf(">2: MergeTwoListsV1() = %v, want %v", got, want)
+		// 		}
+		// 		got = got.Next
+		// 		want = want.Next
+		// 	}
+		// })
+	}
+}
+
+func TestMergeTwoListsV11(t *testing.T) {
+	list1 := &doublepointer.ListNode{
+		Val: 1,
+		Next: &doublepointer.ListNode{
+			Val: 3,
+			Next: &doublepointer.ListNode{
+				Val: 5,
+				Next: &doublepointer.ListNode{
+					Val:  7,
+					Next: nil,
+				},
+			},
+		},
+	}
+	list2 := &doublepointer.ListNode{
+		Val: 2,
+		Next: &doublepointer.ListNode{
+			Val: 4,
+			Next: &doublepointer.ListNode{
+				Val: 6,
+				Next: &doublepointer.ListNode{
+					Val:  8,
+					Next: nil,
+				},
+			},
+		},
+	}
+	want := &doublepointer.ListNode{
+		Val: 1,
+		Next: &doublepointer.ListNode{
+			Val: 2,
+			Next: &doublepointer.ListNode{
+				Val: 3,
+				Next: &doublepointer.ListNode{
+					Val: 4,
+					Next: &doublepointer.ListNode{
+						Val: 5,
+						Next: &doublepointer.ListNode{
+							Val: 6,
+							Next: &doublepointer.ListNode{
+								Val: 7,
+								Next: &doublepointer.ListNode{
+									Val:  8,
+									Next: nil,
+								},
+							},
+						},
+					},
+				},
+			},
+		},
+	}
+	convey.Convey("合并两个有序链表", t, func() {
+		convey.So(doublepointer.MergeTwoListsV1(list1, list2), convey.ShouldResemble, want)
+	})
+}
