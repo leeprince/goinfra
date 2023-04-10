@@ -12,7 +12,7 @@ import (
  * @Desc:
  */
 
-func Test_quickSortV1(t *testing.T) {
+func TestQuickSortV1(t *testing.T) {
 	type args struct {
 		arr []int64
 	}
@@ -66,14 +66,14 @@ func Test_quickSortV1(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := quickSortV1(tt.args.arr); !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("quickSortV1() = %v, want %v", got, tt.want)
+			if got := QuickSortV1(tt.args.arr); !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("QuickSortV1() = %v, want %v", got, tt.want)
 			}
 		})
 	}
 }
 
-func Test_quickSortV11(t *testing.T) {
+func TestQuickSortV11(t *testing.T) {
 	type args struct {
 		arr []int64
 	}
@@ -120,20 +120,20 @@ func Test_quickSortV11(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got := quickSortV1(tt.args.arr)
+			got := QuickSortV1(tt.args.arr)
 			if !sort.SliceIsSorted(got, func(i, j int) bool {
 				if i < j {
 					return true
 				}
 				return false
 			}) {
-				t.Errorf("quickSortV1() = %v, tt.args.arr %v", got, tt.args.arr)
+				t.Errorf("QuickSortV1() = %v, tt.args.arr %v", got, tt.args.arr)
 			}
 		})
 	}
 }
 
-func Test_quickSortV2(t *testing.T) {
+func TestQuickSortV2(t *testing.T) {
 	type args struct {
 		arr []int64
 	}
@@ -208,8 +208,8 @@ func Test_quickSortV2(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := quickSortV2(tt.args.arr); !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("quickSortV2() = %v, want %v", got, tt.want)
+			if got := QuickSortV2(tt.args.arr); !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("QuickSortV2() = %v, want %v", got, tt.want)
 			}
 		})
 	}

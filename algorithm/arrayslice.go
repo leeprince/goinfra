@@ -5,7 +5,7 @@ import "github.com/leeprince/goinfra/algorithm/arrayslice"
 /**
  * @Author: prince.lee <leeprince@foxmail.com>
  * @Date:   2023/3/9 01:38
- * @Desc:   数组
+ * @Desc:   数组/切片
  */
 
 func ArraySlice() {
@@ -14,7 +14,7 @@ func ArraySlice() {
 	arrayslice.HeapSort()   // 堆排序：构建大根堆，堆顶与堆尾替换，替换后数组-1并重新在堆顶构建大根堆
 	arrayslice.InsertSort() // 插入排序：从1个元素开始，从右边待排序序列的最左边元素开始在左边的有序序列中找到合适位置插入，且插入后的所有元素右移1位
 	// ---
-	arrayslice.BinarySearch() // 二分法查找 // TODO:  - prince@todo 2023/3/27 02:23
+	arrayslice.BinarySearch() // 二分法查找：每次取中间位置M对应的值与查找值比较，查找值小于中间值，则目标值可能在左边[left,M-1],否则可能在右边[M+1, right]
 	// ---
 	arrayslice.RemoveDuplicates() // 删除排序数组中的重复项：快慢双指针
 	arrayslice.MaxProfit()        // 买卖股票的最佳时机 II：回溯算法/动态规划/贪心算法

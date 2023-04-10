@@ -11,7 +11,7 @@ import (
  * @Desc:
  */
 
-func Test_insertSortV1(t *testing.T) {
+func TestInsertSortV1(t *testing.T) {
 	type args struct {
 		arr []int
 	}
@@ -86,14 +86,14 @@ func Test_insertSortV1(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := insertSortV1(tt.args.arr); !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("insertSortV1() = %v, want %v", got, tt.want)
+			if got := InsertSortV1(tt.args.arr); !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("InsertSortV1() = %v, want %v", got, tt.want)
 			}
 		})
 	}
 }
 
-func Test_insertSortV2(t *testing.T) {
+func TestInsertSortV2(t *testing.T) {
 	type args struct {
 		arr []int
 	}
@@ -168,8 +168,8 @@ func Test_insertSortV2(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := insertSortV2(tt.args.arr); !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("insertSortV1() = %v, want %v", got, tt.want)
+			if got := InsertSortV2(tt.args.arr); !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("InsertSortV1() = %v, want %v", got, tt.want)
 			}
 		})
 	}

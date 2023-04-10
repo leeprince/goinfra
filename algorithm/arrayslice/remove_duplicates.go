@@ -17,7 +17,7 @@ package arrayslice
 int[] nums = [...]; // 输入数组
 int[] expectedNums = [...]; // 长度正确的期望答案
 
-int k = removeDuplicatesV1(nums); // 调用
+int k = RemoveDuplicatesV1(nums); // 调用
 
 assert k == expectedNums.length;
 for (int i = 0; i < k; i++) {
@@ -70,7 +70,7 @@ func RemoveDuplicates() (respInt int) {
 			1) 返回的新数组长度，通过慢指针统计
 			2) 仅处理不一样的情况，否则继续循环
 	*/
-	respInt = removeDuplicatesV1(slice)
+	respInt = RemoveDuplicatesV1(slice)
 
 	/*
 		解题思路：快慢双指针
@@ -79,13 +79,13 @@ func RemoveDuplicates() (respInt int) {
 		3. 快慢指针指向的值一样时：快指针右移1位；慢指针不动
 		4. 快慢指针指向的值不一样时：慢指针的值等于快指针的值，快指针指向的值无需处理；快指针右移1位；慢指针右移1位
 	*/
-	respInt = removeDuplicates(slice)
+	respInt = RemoveDuplicatesV2(slice)
 
 	return
 
 }
 
-func removeDuplicatesV1(nums []int) int {
+func RemoveDuplicatesV1(nums []int) int {
 	if len(nums) <= 1 {
 		return len(nums)
 	}
@@ -105,7 +105,7 @@ func removeDuplicatesV1(nums []int) int {
 	return respInt
 }
 
-func removeDuplicates(nums []int) int {
+func RemoveDuplicatesV2(nums []int) int {
 	if len(nums) <= 1 {
 		return len(nums)
 	}

@@ -11,7 +11,7 @@ import (
  * @Desc:
  */
 
-func Test_bubbleSortV1(t *testing.T) {
+func TestBubbleSortV1(t *testing.T) {
 	type args struct {
 		arr []int64
 	}
@@ -65,8 +65,8 @@ func Test_bubbleSortV1(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := bubbleSortV1(tt.args.arr); !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("bubbleSortV1() = %v, want %v", got, tt.want)
+			if got := BubbleSortV1(tt.args.arr); !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("BubbleSortV1() = %v, want %v", got, tt.want)
 			}
 		})
 	}

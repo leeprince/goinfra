@@ -14,16 +14,16 @@ func InsertSort() {
 	arr := []int{5, 3, 1, 4, 2}
 
 	// 代码有点多,且每次需要从前面开始遍历
-	insertSortV1(arr)
+	InsertSortV1(arr)
 
 	// 优化：减少代码行,且减少遍历小于当前元素的前面序列
-	insertSortV2(arr)
+	InsertSortV2(arr)
 
 	// 优化：遍历前面已排序的序列时，进行对半查找效率更高，不过会变为不稳定排序
-	insertSortV3(arr)
+	InsertSortV3(arr)
 }
 
-func insertSortV1(arr []int) []int {
+func InsertSortV1(arr []int) []int {
 	for i := 1; i < len(arr); i++ {
 		for j := 0; j < i; j++ {
 			// 是否需要向右移动
@@ -41,7 +41,7 @@ func insertSortV1(arr []int) []int {
 	return arr
 }
 
-func insertSortV2(arr []int) []int {
+func InsertSortV2(arr []int) []int {
 	for i := 1; i < len(arr); i++ {
 		for j := i - 1; j >= 0; j-- {
 			// 右边大于左边就开始向右移动，直到等于或者小于时结束循环
@@ -54,7 +54,7 @@ func insertSortV2(arr []int) []int {
 	return arr
 }
 
-func insertSortV3(arr []int) []int {
+func InsertSortV3(arr []int) []int {
 	for i := 1; i < len(arr); i++ {
 		// 对半查找，要么匹配到其中一个，要么在两个值中间去左边位置+1，且后面所有元素右移
 		// TODO:  - prince@todo 2023/3/27 02:02

@@ -1,6 +1,9 @@
 package arrayslice
 
-import "testing"
+import (
+	"github.com/smartystreets/goconvey/convey"
+	"testing"
+)
 
 /**
  * @Author: prince.lee <leeprince@foxmail.com>
@@ -8,7 +11,7 @@ import "testing"
  * @Desc:
  */
 
-func Test_binarySearchV1(t *testing.T) {
+func TestBinarySearchV1(t *testing.T) {
 	type args struct {
 		arr []int
 		v   int
@@ -69,9 +72,38 @@ func Test_binarySearchV1(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := binarySearchV1(tt.args.arr, tt.args.v); got != tt.want {
-				t.Errorf("binarySearchV1() = %v, want %v", got, tt.want)
+			if got := BinarySearchV1(tt.args.arr, tt.args.v); got != tt.want {
+				t.Errorf("BinarySearchV1() = %v, want %v", got, tt.want)
 			}
 		})
 	}
+}
+
+func TestBinarySearchV11(t *testing.T) {
+	convey.Convey("测试二分法查找", t, func() {
+		convey.So(BinarySearchV1([]int{
+			1, 3, 5, 7, 9,
+		}, 3), convey.ShouldEqual, 1)
+	})
+	convey.Convey("测试二分法查找-多个So", t, func() {
+		convey.So(BinarySearchV1([]int{
+			1, 3, 5, 7, 9,
+		}, 3), convey.ShouldEqual, 1)
+
+		convey.So(BinarySearchV1([]int{
+			1, 3, 5, 7, 9,
+		}, 3), convey.ShouldEqual, 1)
+	})
+	convey.Convey("测试二分法查找-嵌套", t, func() {
+		convey.Convey("测试二分法查找-嵌套1", func() {
+			convey.So(BinarySearchV1([]int{
+				1, 3, 5, 7, 9,
+			}, 3), convey.ShouldEqual, 1)
+		})
+		convey.Convey("测试二分法查找-嵌套2", func() {
+			convey.So(BinarySearchV1([]int{
+				1, 3, 5, 7, 9,
+			}, 3), convey.ShouldEqual, 1)
+		})
+	})
 }

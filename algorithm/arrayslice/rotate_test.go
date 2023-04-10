@@ -37,10 +37,10 @@ func Test_rotateV1(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			rotateV1(tt.args.nums, tt.args.k)
+			RotateV1(tt.args.nums, tt.args.k)
 			for i := 0; i < len(tt.args.nums); i++ {
 				if tt.wantResp[i] != tt.args.nums[i] {
-					t.Errorf("rotateV1() = %v, want %v", tt.args.nums, tt.wantResp)
+					t.Errorf("RotateV1() = %v, want %v", tt.args.nums, tt.wantResp)
 					return
 				}
 			}
@@ -77,10 +77,10 @@ func Test_rotateV2(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			rotateV2(tt.args.nums, tt.args.k)
+			RotateV2(tt.args.nums, tt.args.k)
 			for i := 0; i < len(tt.args.nums); i++ {
 				if tt.wantResp[i] != tt.args.nums[i] {
-					t.Errorf("rotateV2() = %v, want %v", tt.args.nums, tt.wantResp)
+					t.Errorf("RotateV2() = %v, want %v", tt.args.nums, tt.wantResp)
 					return
 				}
 			}

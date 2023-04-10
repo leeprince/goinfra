@@ -5,7 +5,7 @@ import "github.com/leeprince/goinfra/algorithm/_math"
 /**
  * @Author: prince.lee <leeprince@foxmail.com>
  * @Date:   2023/2/23 13:50
- * @Desc:   数学模块
+ * @Desc:   数学
  */
 
 func Math() {

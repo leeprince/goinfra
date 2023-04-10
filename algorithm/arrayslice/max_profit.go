@@ -71,7 +71,7 @@ func MaxProfit() (resp int) {
 		3. 输出值
 			达到回溯点时：全局总收益=max(全局总收益,最后一天操作后总收益)
 	*/
-	resp = maxProfitV1(prices)
+	resp = MaxProfitV1(prices)
 
 	/*
 		动态规划：
@@ -91,7 +91,7 @@ func MaxProfit() (resp int) {
 		4. 输出值：
 			最后一天卖出的总收益>=最后一天买入的总收益，所以输出 p[len(prices)][0]
 	*/
-	resp = maxProfitV2(prices)
+	resp = MaxProfitV2(prices)
 
 	/*
 		动态规划优化空间：
@@ -107,7 +107,7 @@ func MaxProfit() (resp int) {
 
 		注意到上面的状态转移方程中，每一天的状态只与前一天的状态有关，而与更早的状态都无关，因此我们不必存储这些无关的状态，只需要将 dp[i−1][0]\textit{dp}[i-1][0]dp[i−1][0] 和 dp[i−1][1]\textit{dp}[i-1][1]dp[i−1][1] 存放在两个变量中
 	*/
-	resp = maxProfitV3(prices)
+	resp = MaxProfitV3(prices)
 
 	/*
 		贪心算法：
@@ -125,14 +125,14 @@ func MaxProfit() (resp int) {
 		4. 输出值
 			profit
 	*/
-	resp = maxProfit(prices)
+	resp = MaxProfitV4(prices)
 
 	return
 }
 
 var maxProfitV1Resp int
 
-func maxProfitV1(prices []int) (resp int) {
+func MaxProfitV1(prices []int) (resp int) {
 	// 传入参数特殊情况处理
 	if len(prices) <= 1 {
 		return 0
@@ -169,7 +169,7 @@ func maxProfitV1Backtracking(prices []int, index int, isBuy bool, profit int) {
 	}
 }
 
-func maxProfitV2(prices []int) (resp int) {
+func MaxProfitV2(prices []int) (resp int) {
 	// 传入参数特殊情况处理，无需处理
 	// if len(prices) <= 1 {
 	// 	return 0
@@ -191,7 +191,7 @@ func maxProfitV2(prices []int) (resp int) {
 	return profit[len(prices)-1][0]
 }
 
-func maxProfitV3(prices []int) (resp int) {
+func MaxProfitV3(prices []int) (resp int) {
 	// 传入参数特殊情况处理，无需处理
 	// if len(prices) <= 1 {
 	// 	return 0
@@ -208,7 +208,7 @@ func maxProfitV3(prices []int) (resp int) {
 	return p0
 }
 
-func maxProfit(prices []int) (resp int) {
+func MaxProfitV4(prices []int) (resp int) {
 	for i := 0; i < len(prices)-1; i++ {
 		if prices[i+1] > prices[i] {
 			resp += prices[i+1] - prices[i]

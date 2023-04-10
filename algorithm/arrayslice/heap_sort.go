@@ -23,10 +23,10 @@ import "github.com/leeprince/goinfra/algorithm/pkg"
 
 func HeapSort() {
 	arr := []int{5, 3, 2, 1, 4}
-	heapSortV1(arr)
+	HeapSortV1(arr)
 }
 
-func heapSortV1(arr []int) []int {
+func HeapSortV1(arr []int) []int {
 	l := len(arr)
 	// 获取节点，在从下往上每个节点上构建大根堆，最终得到完整的大根堆
 	for i := l / 2; i >= 0; i-- {

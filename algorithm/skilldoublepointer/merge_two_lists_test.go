@@ -1,4 +1,4 @@
-package doublepointer
+package skilldoublepointer
 
 import (
 	"reflect"
@@ -11,7 +11,7 @@ import (
  * @Desc:
  */
 
-func Test_mergeTwoLists(t *testing.T) {
+func TestMergeTwoListsV1(t *testing.T) {
 	type args struct {
 		list1 *ListNode
 		list2 *ListNode
@@ -37,7 +37,7 @@ func Test_mergeTwoLists(t *testing.T) {
 				Val: 1,
 				Next: &ListNode{
 					Val:  2,
-					Next: &ListNode{},
+					Next: nil,
 				},
 			},
 		},
@@ -125,10 +125,25 @@ func Test_mergeTwoLists(t *testing.T) {
 		},
 	}
 	for _, tt := range tests {
+		// reflect.DeepEqual 和 遍历链表都可以判断结果与期望值是否一致
+		// 判断结果与期望值是否一致方法一【推荐：简单、原生】
 		t.Run(tt.name, func(t *testing.T) {
-			if got := mergeTwoLists(tt.args.list1, tt.args.list2); !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("mergeTwoLists() = %v, want %v", got, tt.want)
+			if got := MergeTwoListsV1(tt.args.list1, tt.args.list2); !reflect.DeepEqual(got, tt.want) {
+				t.Errorf(">1: MergeTwoListsV1() = %v, want %v", got, tt.want)
 			}
 		})
+		// // 判断结果与期望值是否一致方法二
+		// t.Run(tt.name, func(t *testing.T) {
+		// 	got := MergeTwoListsV1(tt.args.list1, tt.args.list2)
+		// 	// got := MergeTwoListsV2(tt.args.list1, tt.args.list2)
+		// 	want := tt.want
+		// 	for got != nil && want != nil {
+		// 		if got.Val != want.Val {
+		// 			t.Errorf(">2: MergeTwoListsV1() = %v, want %v", got, want)
+		// 		}
+		// 		got = got.Next
+		// 		want = want.Next
+		// 	}
+		// })
 	}
 }

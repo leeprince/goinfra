@@ -69,7 +69,7 @@ func Rotate() {
 
 		使用额外数组：空间复杂度O(n)
 	*/
-	rotateV1(nums, k)
+	RotateV1(nums, k)
 
 	/*
 		翻转代替旋转
@@ -85,10 +85,10 @@ func Rotate() {
 
 		空间复杂度O(1)
 	*/
-	rotateV2(nums, k)
+	RotateV2(nums, k)
 }
 
-func rotateV1(nums []int, k int) {
+func RotateV1(nums []int, k int) {
 	move := k % len(nums)
 	if move == 0 {
 		return
@@ -106,7 +106,7 @@ func rotateV1(nums []int, k int) {
 	// }
 }
 
-func rotateV2(nums []int, k int) {
+func RotateV2(nums []int, k int) {
 	l := len(nums)
 	move := k % l
 	if move == 0 {

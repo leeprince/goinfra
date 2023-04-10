@@ -12,11 +12,11 @@ package arrayslice
 
 func BubbleSort() {
 	req := []int64{5, 2, 1, 3, 4}
-	bubbleSortV1(req)
+	BubbleSortV1(req)
 }
 
 // 升序
-func bubbleSortV1(arr []int64) []int64 {
+func BubbleSortV1(arr []int64) []int64 {
 	for i := 0; i < len(arr)-1; i++ {
 		for j := 1; j < len(arr)-i; j++ {
 			if arr[j-1] > arr[j] {

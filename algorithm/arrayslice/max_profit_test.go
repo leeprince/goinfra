@@ -8,7 +8,7 @@ import "testing"
  * @Desc:
  */
 
-func Test_maxProfitV1(t *testing.T) {
+func TestMaxProfitV1(t *testing.T) {
 	type args struct {
 		prices []int
 	}
@@ -49,14 +49,14 @@ func Test_maxProfitV1(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			// 因为输出使用全局变量，所以maxProfitV1方法中应该初始化一次
-			if gotResp := maxProfitV1(tt.args.prices); gotResp != tt.wantResp {
-				t.Errorf("maxProfitV1() = %v, want %v", gotResp, tt.wantResp)
+			if gotResp := MaxProfitV1(tt.args.prices); gotResp != tt.wantResp {
+				t.Errorf("MaxProfitV1() = %v, want %v", gotResp, tt.wantResp)
 			}
 		})
 	}
 }
 
-func Test_maxProfitV2(t *testing.T) {
+func TestMaxProfitV2(t *testing.T) {
 	type args struct {
 		prices []int
 	}
@@ -96,14 +96,14 @@ func Test_maxProfitV2(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if gotResp := maxProfitV2(tt.args.prices); gotResp != tt.wantResp {
-				t.Errorf("maxProfitV2() = %v, want %v", gotResp, tt.wantResp)
+			if gotResp := MaxProfitV2(tt.args.prices); gotResp != tt.wantResp {
+				t.Errorf("MaxProfitV2() = %v, want %v", gotResp, tt.wantResp)
 			}
 		})
 	}
 }
 
-func Test_maxProfitV3(t *testing.T) {
+func TestMaxProfitV3(t *testing.T) {
 	type args struct {
 		prices []int
 	}
@@ -143,14 +143,14 @@ func Test_maxProfitV3(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if gotResp := maxProfitV3(tt.args.prices); gotResp != tt.wantResp {
-				t.Errorf("maxProfitV3() = %v, want %v", gotResp, tt.wantResp)
+			if gotResp := MaxProfitV3(tt.args.prices); gotResp != tt.wantResp {
+				t.Errorf("MaxProfitV3() = %v, want %v", gotResp, tt.wantResp)
 			}
 		})
 	}
 }
 
-func Test_maxProfit(t *testing.T) {
+func TestMaxProfitV4(t *testing.T) {
 	type args struct {
 		prices []int
 	}
@@ -190,8 +190,8 @@ func Test_maxProfit(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if gotResp := maxProfit(tt.args.prices); gotResp != tt.wantResp {
-				t.Errorf("maxProfit() = %v, want %v", gotResp, tt.wantResp)
+			if gotResp := MaxProfitV4(tt.args.prices); gotResp != tt.wantResp {
+				t.Errorf("MaxProfitV4() = %v, want %v", gotResp, tt.wantResp)
 			}
 		})
 	}

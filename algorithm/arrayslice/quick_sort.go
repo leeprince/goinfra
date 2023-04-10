@@ -14,14 +14,14 @@ func QuickSort() {
 	req := []int64{5, 2, 1, 3, 4}
 
 	// 需要创建较多切片
-	quickSortV1(req)
+	QuickSortV1(req)
 
 	// 无需创建较多切片：结合左右指针
-	quickSortV2(req)
+	QuickSortV2(req)
 }
 
 // 升序
-func quickSortV1(arr []int64) []int64 {
+func QuickSortV1(arr []int64) []int64 {
 	if len(arr) <= 1 {
 		return arr
 	}
@@ -39,15 +39,15 @@ func quickSortV1(arr []int64) []int64 {
 		}
 	}
 
-	left = quickSortV1(left)
-	right = quickSortV1(right)
+	left = QuickSortV1(left)
+	right = QuickSortV1(right)
 
 	resp = append(left, midd)
 	resp = append(resp, right...)
 	return resp
 }
 
-func quickSortV2(arr []int64) []int64 {
+func QuickSortV2(arr []int64) []int64 {
 	quickSortV21(arr, 0, len(arr)-1)
 	return arr
 }

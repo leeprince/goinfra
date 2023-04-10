@@ -11,7 +11,7 @@ import (
  * @Desc:
  */
 
-func Test_heapSortV1(t *testing.T) {
+func TestHeapSortV1(t *testing.T) {
 	type args struct {
 		arr []int
 	}
@@ -86,8 +86,8 @@ func Test_heapSortV1(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := heapSortV1(tt.args.arr); !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("heapSortV1() = %v, want %v", got, tt.want)
+			if got := HeapSortV1(tt.args.arr); !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("HeapSortV1() = %v, want %v", got, tt.want)
 			}
 		})
 	}
