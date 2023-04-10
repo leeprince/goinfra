@@ -38,11 +38,6 @@ package skilldoublepointer
 https://leetcode.cn/problems/merge-two-sorted-lists/
 */
 
-type ListNode struct {
-	Val  int
-	Next *ListNode
-}
-
 func MergeTwoLists() {
 	MergeTwoListsV1(&ListNode{}, &ListNode{})
 }
@@ -60,6 +55,8 @@ func MergeTwoListsV1(list1 *ListNode, list2 *ListNode) *ListNode {
 	p2 := list2
 
 	for p1 != nil && p2 != nil {
+		// 比较 p1 和 p2 两个指针
+        // 将值较小的的节点接到 p 指针
 		if p1.Val < p2.Val {
 			p.Next = p1
 			p1 = p1.Next
@@ -67,6 +64,7 @@ func MergeTwoListsV1(list1 *ListNode, list2 *ListNode) *ListNode {
 			p.Next = p2
 			p2 = p2.Next
 		}
+		// p 指针不断前进
 		p = p.Next
 	}
 	if p1 != nil {
