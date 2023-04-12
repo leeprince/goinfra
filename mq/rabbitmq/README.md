@@ -290,3 +290,8 @@ https://hub.docker.com/_/rabbitmq
 - 15674：STOMP-over-WebSockets客户端（仅在启用了Web STOMP插件的情况下）
 - 15675：MQTT-over-WebSockets客户端（仅当启用了Web MQTT插件时）
 - 15692：Prometheus指标（仅在启用Prometheus插件的情况下）
+
+## rabbitmq_management 中的 HTTP API
+[rabbitmq_management 中的HTTP API](https://rawcdn.githack.com/rabbitmq/rabbitmq-server/v3.11.13/deps/rabbitmq_management/priv/www/api/index.html)
+
+RabbitMQ是一种开源的消息代理，它支持多种消息协议，包括HTTP。你可以使用HTTP API来发布和消费消息。你可以使用任何HTTP客户端来与RabbitMQ进行交互，例如curl或者Python的requests库。你需要在RabbitMQ中创建一个队列，然后使用HTTP API将消息发布到该队列中。你可以使用HTTP API从队列中获取消息。
