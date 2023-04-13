@@ -11,4 +11,5 @@ require (
 	go.opentelemetry.io/otel/trace v1.6.3
 )
 
-replace github.com/leeprince/goinfra => /Users/leeprince/www/go/goinfra
+//replace github.com/leeprince/goinfra => /Users/leeprince/www/go/goinfra
+replace github.com/leeprince/goinfra => F:/www/goinfra
