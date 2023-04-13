@@ -48,6 +48,7 @@ type HttpClient struct {
 	checkRedirect func(req *http.Request, via []*http.Request) error // 检查重定向的方法
 }
 
+// TODO: 优化为传递必传参数 prince@todo 2023/4/12 16:56
 func NewHttpClient() *HttpClient {
 	hc := &HttpClient{
 		Timeout:       HttpDefaultTimeout,
