@@ -8,8 +8,8 @@ package nacos
 
 type NacosClientParams struct {
 	// --- vo.NacosClientParam.ClientConfig
-	namespaceId string
-	dataId      string
+	namespaceID string
+	dataID      string
 	group       string
 	timeoutMs   uint64
 	logDir      string
@@ -22,24 +22,6 @@ type NacosClientParams struct {
 }
 
 type NacosClienParamsOpt func(params *NacosClientParams)
-
-func WithNamespaceId(v string) NacosClienParamsOpt {
-	return func(params *NacosClientParams) {
-		params.namespaceId = v
-	}
-}
-
-func WithDataId(v string) NacosClienParamsOpt {
-	return func(params *NacosClientParams) {
-		params.dataId = v
-	}
-}
-
-func WithGoup(v string) NacosClienParamsOpt {
-	return func(params *NacosClientParams) {
-		params.group = v
-	}
-}
 
 func WithTimeoutMs(v uint64) NacosClienParamsOpt {
 	return func(params *NacosClientParams) {

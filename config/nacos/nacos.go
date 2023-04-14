@@ -20,19 +20,19 @@ type NacosClient struct {
 	nacosClientParams *NacosClientParams
 }
 
-func MustNewNacosClient(opts ...NacosClienParamsOpt) (cli *NacosClient) {
-	client, err := NewNacosClient(opts...)
+func MustNewNacosClient(namespaceId, group, dataID string, opts ...NacosClienParamsOpt) (cli *NacosClient) {
+	client, err := NewNacosClient(namespaceId, group, dataID, opts...)
 	if err != nil {
 		panic(err)
 	}
 	return client
 }
 
-func NewNacosClient(opts ...NacosClienParamsOpt) (cli *NacosClient, err error) {
+func NewNacosClient(namespaceId, group, dataID string, opts ...NacosClienParamsOpt) (cli *NacosClient, err error) {
 	nacosClienParams := NacosClientParams{
-		namespaceId: "",
-		dataId:      "",
-		group:       "",
+		namespaceID: namespaceId,
+		group:       group,
+		dataID:      dataID,
 		timeoutMs:   5000,
 		logDir:      "./log",
 		cacheDir:    "./cache",
@@ -50,7 +50,7 @@ func NewNacosClient(opts ...NacosClienParamsOpt) (cli *NacosClient, err error) {
 	}
 
 	clientConfig := *constant.NewClientConfig(
-		constant.WithNamespaceId(nacosClienParams.namespaceId), // When namespace is public, fill in the blank string here.
+		constant.WithNamespaceId(nacosClienParams.namespaceID), // When namespace is public, fill in the blank string here.
 		constant.WithNotLoadCacheAtStart(true),
 		constant.WithTimeoutMs(nacosClienParams.timeoutMs),
 		constant.WithLogDir(nacosClienParams.logDir),
@@ -89,7 +89,7 @@ type dynamicConfigHandle func(conf []byte)
 func (c *NacosClient) ListenConfig(handle dynamicConfigHandle) (err error) {
 	// 先同步获取配置
 	conf, errn := c.configClient.GetConfig(vo.ConfigParam{
-		DataId: c.nacosClientParams.dataId,
+		DataId: c.nacosClientParams.dataID,
 		Group:  c.nacosClientParams.group,
 	})
 	if errn != nil {
@@ -99,11 +99,11 @@ func (c *NacosClient) ListenConfig(handle dynamicConfigHandle) (err error) {
 
 	// 监听配置变更：监听配置变更，动态更新配置
 	err = c.configClient.ListenConfig(vo.ConfigParam{
-		DataId: c.nacosClientParams.dataId,
+		DataId: c.nacosClientParams.dataID,
 		Group:  c.nacosClientParams.group,
 		OnChange: func(namespace, group, dataId, data string) {
 			plog.Info(">>> 监听到配置变更，动态更新配置")
-			plog.Info("group:" + group + ", dataId:" + dataId + ", data:" + data)
+			plog.Info("group:" + group + ", dataID:" + dataId + ", data:" + data)
 			handle([]byte(data))
 			plog.Info("<<< 监听到配置变更，动态更新配置")
 		},
@@ -112,11 +112,11 @@ func (c *NacosClient) ListenConfig(handle dynamicConfigHandle) (err error) {
 }
 
 func checkNacosClienParams(nacosClienParams NacosClientParams) error {
-	if nacosClienParams.namespaceId == "" {
-		return errors.New("namespaceId must not empty")
+	if nacosClienParams.namespaceID == "" {
+		return errors.New("namespaceID must not empty")
 	}
-	if nacosClienParams.dataId == "" {
-		return errors.New("dataId must not empty")
+	if nacosClienParams.dataID == "" {
+		return errors.New("dataID must not empty")
 	}
 	if nacosClienParams.group == "" {
 		return errors.New("group must not empty")
