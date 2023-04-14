@@ -9,4 +9,4 @@ require (
 )
 
 // 替换为本地包
-replace "github.com/leeprince/goinfra" => "../../../../"
+replace github.com/leeprince/goinfra => ../../../../

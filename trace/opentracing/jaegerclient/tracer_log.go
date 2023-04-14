@@ -1,4 +1,4 @@
-package opentelemetry_client
+package jaegerclient
 
 import (
 	"context"

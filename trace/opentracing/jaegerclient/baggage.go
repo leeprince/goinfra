@@ -1,4 +1,4 @@
-package jaeger_client
+package jaegerclient
 
 import "context"
 
@@ -11,12 +11,12 @@ import "context"
 // 设置 Baggage
 //  Baggage 也会在 Jaeger UI 中的 Logs 中展示(event=baggage)
 func SetBaggageItem(ctx context.Context, restrictedKey, value string) {
-    span := SpanFromContext(ctx)
-    span.SetBaggageItem(restrictedKey, value)
+	span := SpanFromContext(ctx)
+	span.SetBaggageItem(restrictedKey, value)
 }
 
 // 获取 Baggage
 func BaggageItem(ctx context.Context, restrictedKey string) string {
-    span := SpanFromContext(ctx)
-    return span.BaggageItem(restrictedKey)
+	span := SpanFromContext(ctx)
+	return span.BaggageItem(restrictedKey)
 }

@@ -231,9 +231,11 @@ func TestMain(m *testing.M)
 一个简单的 TestMain 的实现：
 ```
 func TestMain(m *testing.M) {
-    // call flag.Parse() here if TestMain uses flags
+   // call flag.Parse() here if TestMain uses flags
    // 如果 TestMain 使用了 flags，这里应该加上 flag.Parse()
-    os.Exit(m.Run())
+   
+   // m.Run 是调用包下面各个Test函数的入口
+   os.Exit(m.Run())
 }
 ```
 

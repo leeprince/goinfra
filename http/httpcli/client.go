@@ -7,7 +7,7 @@ import (
 	jsoniter "github.com/json-iterator/go"
 	"github.com/leeprince/goinfra/perror"
 	"github.com/leeprince/goinfra/plog"
-	"github.com/leeprince/goinfra/trace/opentracing/jaeger_client"
+	"github.com/leeprince/goinfra/trace/opentracing/jaegerclient"
 	"github.com/leeprince/goinfra/utils"
 	"github.com/leeprince/goinfra/utils/pstring"
 	"github.com/pkg/errors"
@@ -16,7 +16,6 @@ import (
 	"net"
 	"net/http"
 	"net/url"
-	"strings"
 	"time"
 )
 
@@ -46,7 +45,7 @@ type HttpClient struct {
 	requestBody   interface{}
 	skipVerify    bool // 是否跳过安全校验
 	notLogging    bool // 不打印日志标记
-	isHttpTrace   bool // 是否注入调用链跟踪标记到请求头中
+	isHttpTrace   bool // 是否注入调用链跟踪标记到请求头中 能开启的必要条件是：s.isHttpTrace && jaeger_client.SpanFromContext(ctx) != nil，也就是需要初始化jaeger获得span的context后才能正常开启链路追踪
 	proxyURL      *url.URL
 	checkRedirect func(req *http.Request, via []*http.Request) error // 检查重定向的方法
 }
@@ -117,8 +116,15 @@ func (s *HttpClient) WithSkipVerify(skipVerify bool) *HttpClient {
 	return s
 }
 
-func (s *HttpClient) WithIsHttpTrace(isHttpTrace bool) *HttpClient {
+// 链路追踪。这是WithIsHttpTrace后可以省略 WithContext()
+func (s *HttpClient) WithIsHttpTrace(isHttpTrace bool, ctx context.Context) *HttpClient {
 	s.isHttpTrace = isHttpTrace
+	s.ctx = ctx
+	if isHttpTrace {
+		if jaegerclient.SpanFromContext(ctx) == nil {
+			s.isHttpTrace = false
+		}
+	}
 	return s
 }
 
@@ -151,19 +157,19 @@ func (s *HttpClient) do() ([]byte, *http.Response, error) {
 
 	// 链路追踪
 	if s.isHttpTrace {
-		// 新增埋点
-		routerSuffix := "-"
-		pos := strings.LastIndex(s.url, "/")
-		if pos+1 < len(s.url) {
-			routerSuffix = s.url[pos+1:] //以接口路由的最后一级节点名作为span的操作名称
-		}
-		operationName := "http-" + routerSuffix
-		pos = strings.Index(operationName, "?")
-		if pos != -1 {
-			operationName = operationName[:pos]
-		}
-		s.ctx = jaeger_client.StartSpan(s.ctx, operationName)
-		defer jaeger_client.Finish(s.ctx)
+		//// 新增埋点
+		//routerSuffix := "-"
+		//pos := strings.LastIndex(s.url, "/")
+		//if pos+1 < len(s.url) {
+		//	routerSuffix = s.url[pos+1:] //以接口路由的最后一级节点名作为span的操作名称
+		//}
+		//operationName := "http-" + routerSuffix
+		//pos = strings.Index(operationName, "?")
+		//if pos != -1 {
+		//	operationName = operationName[:pos]
+		//}
+		//s.ctx = jaeger_client.StartSpan(s.ctx, operationName)
+		//defer jaeger_client.Finish(s.ctx)
 	}
 
 	var (
@@ -205,16 +211,17 @@ func (s *HttpClient) do() ([]byte, *http.Response, error) {
 		req.Header.Set("Content-Type", "application/json")
 	}
 
-	// 链路追踪
+	req = req.WithContext(s.ctx)
+
+	// 链路追踪。
 	fields["http.req.isHttpTrace"] = s.isHttpTrace
 	if s.isHttpTrace {
-		jaeger_client.LogKV(s.ctx, "url", s.url)
-		jaeger_client.LogKV(s.ctx, "method", method)
-		// span.LogKV("req", req) //不打印
-		jaeger_client.LogKV(s.ctx, "log_id", s.logID)
-		req = req.WithContext(s.ctx)
+		jaegerclient.LogKV(s.ctx, "url", s.url)
+		jaegerclient.LogKV(s.ctx, "method", method)
+		jaegerclient.LogKV(s.ctx, "log_id", s.logID)
+		jaegerclient.LogKV(s.ctx, "body", req.Body)
 		// 注入 tracer 信息到 req.header 中。`req.header`是指针，所以`req.header`的修改会影响到`fields["http.req.header"] = req.header`
-		err = jaeger_client.InjectTraceHTTPClient(req.Context(), s.url, method, req.Header)
+		err = jaegerclient.InjectTraceHTTPClient(s.ctx, s.url, method, req.Header)
 		if err != nil {
 			// 链路追踪错误，不中断，仅记录日志
 			plog.LogID(s.logID).WithError(err).Error("HttpClient.do InjectTraceHTTPClient")
@@ -297,10 +304,11 @@ func (s *HttpClient) do() ([]byte, *http.Response, error) {
 	return body, resp, nil
 }
 
-func Do(req *http.Request) (respByte []byte, err error) {
-	resp, err := http.DefaultClient.Do(req)
+func Do(req *http.Request) (respByte []byte, resp *http.Response, err error) {
+	resp, err = http.DefaultClient.Do(req)
 	if err != nil {
 		return
 	}
-	return ResponseToBytes(resp)
+	respByte, err = ResponseToBytes(resp)
+	return
 }
