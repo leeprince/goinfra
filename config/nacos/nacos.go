@@ -87,7 +87,7 @@ func NewNacosClient(opts ...NacosClienParamsOpt) (cli *NacosClient, err error) {
 type dynamicConfigHandle func(conf []byte)
 
 func (c *NacosClient) ListenConfig(handle dynamicConfigHandle) (err error) {
-	// 先获取配置
+	// 先同步获取配置
 	conf, errn := c.configClient.GetConfig(vo.ConfigParam{
 		DataId: c.nacosClientParams.dataId,
 		Group:  c.nacosClientParams.group,
@@ -97,7 +97,7 @@ func (c *NacosClient) ListenConfig(handle dynamicConfigHandle) (err error) {
 	}
 	handle([]byte(conf))
 
-	// 动态获取配置：监听配置变更，更新配置
+	// 监听配置变更：监听配置变更，动态更新配置
 	err = c.configClient.ListenConfig(vo.ConfigParam{
 		DataId: c.nacosClientParams.dataId,
 		Group:  c.nacosClientParams.group,
