@@ -29,43 +29,45 @@ func MustNewNacosClient(namespaceId, group, dataID string, opts ...NacosClienPar
 }
 
 func NewNacosClient(namespaceId, group, dataID string, opts ...NacosClienParamsOpt) (cli *NacosClient, err error) {
-	nacosClienParams := NacosClientParams{
+	params := NacosClientParams{
 		namespaceID: namespaceId,
-		group:       group,
 		dataID:      dataID,
+		group:       group,
 		timeoutMs:   5000,
 		logDir:      "./log",
 		cacheDir:    "./cache",
-		logLevel:    "error",
+		logLevel:    "info",
 		ipAddr:      "127.0.0.1",
 		port:        8848,
+		scheme:      "",
+		contextPath: "",
 	}
 	for _, opt := range opts {
-		opt(&nacosClienParams)
+		opt(&params)
 	}
 
-	err = checkNacosClienParams(nacosClienParams)
+	err = checkNacosClienParams(params)
 	if err != nil {
 		return
 	}
 
+	// 初始化Nacos客户端
 	clientConfig := *constant.NewClientConfig(
-		constant.WithNamespaceId(nacosClienParams.namespaceID), // When namespace is public, fill in the blank string here.
+		constant.WithNamespaceId(params.namespaceID), // When namespace is public, fill in the blank string here.
 		constant.WithNotLoadCacheAtStart(true),
-		constant.WithTimeoutMs(nacosClienParams.timeoutMs),
-		constant.WithLogDir(nacosClienParams.logDir),
-		constant.WithCacheDir(nacosClienParams.cacheDir),
-		constant.WithLogLevel(nacosClienParams.logLevel),
+		constant.WithTimeoutMs(params.timeoutMs),
+		constant.WithLogDir(params.logDir),
+		constant.WithCacheDir(params.cacheDir),
+		constant.WithLogLevel(params.logLevel),
 	)
 	serverConfigs := []constant.ServerConfig{
 		{
-			IpAddr:      nacosClienParams.ipAddr,
-			Port:        nacosClienParams.port,
-			ContextPath: "/nacos",
-			Scheme:      "http",
+			IpAddr:      params.ipAddr,
+			Port:        params.port,
+			ContextPath: params.contextPath,
+			Scheme:      params.scheme,
 		},
 	}
-	// 初始化Nacos客户端
 	configClient, errn := clients.NewConfigClient(
 		vo.NacosClientParam{
 			ClientConfig:  &clientConfig,
@@ -79,7 +81,7 @@ func NewNacosClient(namespaceId, group, dataID string, opts ...NacosClienParamsO
 
 	cli = &NacosClient{
 		configClient:      configClient,
-		nacosClientParams: &nacosClienParams,
+		nacosClientParams: &params,
 	}
 	return
 }
@@ -120,15 +122,6 @@ func checkNacosClienParams(nacosClienParams NacosClientParams) error {
 	}
 	if nacosClienParams.group == "" {
 		return errors.New("group must not empty")
-	}
-	if nacosClienParams.group == "" {
-		return errors.New("group must not empty")
-	}
-	if nacosClienParams.ipAddr == "" {
-		return errors.New("ipAddr must not empty")
-	}
-	if nacosClienParams.port <= 0 {
-		return errors.New("port must not empty")
 	}
 	return nil
 }

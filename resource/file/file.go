@@ -3,8 +3,10 @@ package file
 import (
 	"errors"
 	"io/ioutil"
+	"log"
 	"os"
 	"path/filepath"
+	"runtime"
 )
 
 /**
@@ -14,8 +16,20 @@ import (
  */
 
 var (
-    FileNoExistErr = errors.New("file not exist")
+	FileNoExistErr = errors.New("file not exist")
 )
+
+var osType string
+var osFilePath string
+
+func init() {
+	osType = runtime.GOOS
+	if os.IsPathSeparator('\\') { //前边的判断是否是系统的分隔符
+		osFilePath = "\\"
+	} else {
+		osFilePath = "/"
+	}
+}
 
 // 检查文件是否存在
 func CheckFileExist(filePath string) (os.FileInfo, bool) {
@@ -37,7 +51,7 @@ func WriteFile(dirPath, filename string, data []byte, isAppend bool) (ok bool, e
 		}
 	}
 
-	flag := os.O_CREATE| os.O_WRONLY
+	flag := os.O_CREATE | os.O_WRONLY
 	if isAppend {
 		flag = flag | os.O_APPEND
 	}
@@ -64,3 +78,17 @@ func ReadFile(filePath, file string) (data []byte, err error) {
 	return
 }
 
+func MkdirIfNecessary(createDir string) (err error) {
+	return os.MkdirAll(createDir, os.ModePerm)
+}
+
+func GetCurrentPath() string {
+	dir, err := os.Getwd() //当前的目录
+	if err != nil {
+		dir, err = filepath.Abs(filepath.Dir(os.Args[0]))
+		if err != nil {
+			log.Println("can not get current path")
+		}
+	}
+	return dir
+}

@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"gopkg.in/yaml.v3"
 	"testing"
+	"time"
 )
 
 /**
@@ -13,6 +14,7 @@ import (
  */
 
 type DynamicTest struct {
+	IsMock       bool   `yaml:"is_mock"`
 	AppName      string `yaml:"appName"`
 	ENV          string `yaml:"env"`
 	Version      string `yaml:"version"`
@@ -20,13 +22,19 @@ type DynamicTest struct {
 	RandomNumber int    `yaml:"randomNumber"`
 }
 
+var myConfig DynamicTest
+
 func TestNacosClient_ListenConfig(t *testing.T) {
-	c, err := NewNacosClient("8371bb89-804e-4549-9855-0b581df2fcf6", "dev", "config:goinfra")
+	c, err := NewNacosClient("8371bb89-804e-4549-9855-0b581df2fcf6",
+		"dev",
+		"config:goinfra",
+		WithLogDir("./logs"),
+	)
+
 	if err != nil {
 		fmt.Println("NewNacosClient err:", err)
 		return
 	}
-	myConfig := DynamicTest{}
 	dynamicConfigHandle := func(conf []byte) {
 		err := yaml.Unmarshal(conf, &myConfig)
 		if err != nil {
@@ -40,6 +48,14 @@ func TestNacosClient_ListenConfig(t *testing.T) {
 		fmt.Println("c.ListenConfig err:", err)
 		return
 	}
+
+	// 调试，定时打印
+	go func() {
+		for {
+			time.Sleep(time.Second * 10)
+			fmt.Println(">>>>>>>>>>", myConfig)
+		}
+	}()
 
 	select {}
 }

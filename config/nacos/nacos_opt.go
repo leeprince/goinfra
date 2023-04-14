@@ -17,8 +17,10 @@ type NacosClientParams struct {
 	logLevel    string // debug,info,warn,error, default value is info
 
 	// --- vo.NacosClientParam.ServerConfigs
-	ipAddr string
-	port   uint64
+	ipAddr      string // 127.0.0.1
+	port        uint64 // 8848
+	scheme      string // constant.DEFAULT_SERVER_SCHEME
+	contextPath string // constant.DEFAULT_CONTEXT_PATH
 }
 
 type NacosClienParamsOpt func(params *NacosClientParams)
@@ -31,7 +33,7 @@ func WithTimeoutMs(v uint64) NacosClienParamsOpt {
 
 func WithLogDir(v string) NacosClienParamsOpt {
 	return func(params *NacosClientParams) {
-		params.group = v
+		params.logDir = v
 	}
 }
 
@@ -56,5 +58,17 @@ func WithIpAddr(v string) NacosClienParamsOpt {
 func WithPort(v uint64) NacosClienParamsOpt {
 	return func(params *NacosClientParams) {
 		params.port = v
+	}
+}
+
+func WithScheme(v string) NacosClienParamsOpt {
+	return func(params *NacosClientParams) {
+		params.scheme = v
+	}
+}
+
+func WithContextPath(v string) NacosClienParamsOpt {
+	return func(params *NacosClientParams) {
+		params.contextPath = v
 	}
 }
