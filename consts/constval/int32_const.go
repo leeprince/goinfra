@@ -1,4 +1,4 @@
-package constdef
+package constval
 
 type Int32Const interface {
 	Name() string

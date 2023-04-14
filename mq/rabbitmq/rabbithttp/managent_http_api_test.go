@@ -47,10 +47,10 @@ func TestRabbitMQHTTPAPIGetQueueMessage(t *testing.T) {
 	}
 
 	// Basic Auth 认证方式的两种写法
-	// req.SetBasicAuth底层代码还是设置到Header中(r.Header.Set("Authorization", "Basic "+basicAuth(username, password)))
+	// req.SetBasicAuth底层代码还是设置到Header中(r.header.Set("Authorization", "Basic "+basicAuth(username, password)))
 	// `Basic xxxxxxxxxxxxxxxxxxx=`中的`xxxxxxxxxxxxxxxxxxx=`是由`Basic Auth`认证时输入的"rabbit-username"和"rabbit-password"生成出来的。具体算法为：base64.StdEncoding.EncodeToString([]byte("rabbit-username+":"+"rabbitpassword"))
 	req.SetBasicAuth("rabbit", "pppppxxxxxxxx")
-	//req.Header.Add("Authorization", "Basic xxxxxxxxxxxxxxxxxxx=")
+	//req.header.Add("Authorization", "Basic xxxxxxxxxxxxxxxxxxx=")
 
 	req.Header.Add("Content-Type", "application/json")
 	req.Header.Add("Accept", "*/*")

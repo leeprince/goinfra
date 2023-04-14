@@ -4,9 +4,12 @@ import (
 	"bytes"
 	"context"
 	"crypto/tls"
+	jsoniter "github.com/json-iterator/go"
+	"github.com/leeprince/goinfra/perror"
 	"github.com/leeprince/goinfra/plog"
+	"github.com/leeprince/goinfra/trace/opentracing/jaeger_client"
 	"github.com/leeprince/goinfra/utils"
-	"github.com/opentracing/opentracing-go"
+	"github.com/leeprince/goinfra/utils/pstring"
 	"github.com/pkg/errors"
 	"github.com/sirupsen/logrus"
 	"io/ioutil"
@@ -34,15 +37,15 @@ const HttpDefaultTimeout = time.Second * 8
 var defaultHeader = map[string]string{"Content-Type": "application/json"}
 
 type HttpClient struct {
-	Timeout       time.Duration
-	Method        string // http包中的字符串。如：http.MethodGet
-	URL           string
-	LogID         string
-	Header        map[string]string
-	Body          interface{}
-	Ctx           context.Context
-	SkipVerify    bool // 是否跳过安全校验
-	NotLogging    bool // 不打印日志标记
+	ctx           context.Context
+	logID         string
+	timeout       time.Duration
+	method        string // http包中的字符串。如：http.MethodGet
+	url           string
+	header        map[string]string
+	requestBody   interface{}
+	skipVerify    bool // 是否跳过安全校验
+	notLogging    bool // 不打印日志标记
 	isHttpTrace   bool // 是否注入调用链跟踪标记到请求头中
 	proxyURL      *url.URL
 	checkRedirect func(req *http.Request, via []*http.Request) error // 检查重定向的方法
@@ -51,15 +54,15 @@ type HttpClient struct {
 // TODO: 优化为传递必传参数 prince@todo 2023/4/12 16:56
 func NewHttpClient() *HttpClient {
 	hc := &HttpClient{
-		Timeout:       HttpDefaultTimeout,
-		Method:        "",
-		URL:           "",
-		LogID:         utils.UniqID(),
-		Header:        nil,
-		Body:          nil,
-		Ctx:           context.Background(),
-		SkipVerify:    false,
-		NotLogging:    false,
+		timeout:       HttpDefaultTimeout,
+		method:        "",
+		url:           "",
+		logID:         utils.UniqID(),
+		header:        nil,
+		requestBody:   nil,
+		ctx:           context.Background(),
+		skipVerify:    false,
+		notLogging:    false,
 		isHttpTrace:   true,
 		proxyURL:      nil,
 		checkRedirect: nil,
@@ -69,48 +72,48 @@ func NewHttpClient() *HttpClient {
 }
 
 func (s *HttpClient) WithURL(url string) *HttpClient {
-	s.URL = url
+	s.url = url
 	return s
 }
 
 func (s *HttpClient) WithLogID(logID string) *HttpClient {
-	s.LogID = logID
+	s.logID = logID
 	return s
 }
 
 func (s *HttpClient) WithContext(ctx context.Context) *HttpClient {
-	s.Ctx = ctx
+	s.ctx = ctx
 	return s
 }
 
 func (s *HttpClient) WithMethod(method string) *HttpClient {
-	s.Method = method
+	s.method = method
 	return s
 }
 
 func (s *HttpClient) WithTimeout(timeout time.Duration) *HttpClient {
-	s.Timeout = timeout
+	s.timeout = timeout
 	return s
 }
 
 func (s *HttpClient) WithHeader(header map[string]string) *HttpClient {
-	s.Header = header
+	s.header = header
 	return s
 }
 
 func (s *HttpClient) WithBody(body interface{}) *HttpClient {
-	s.Body = body
+	s.requestBody = body
 	return s
 }
 
 //不打印日志
 func (s *HttpClient) WithNotLogging(notLogging bool) *HttpClient {
-	s.NotLogging = notLogging
+	s.notLogging = notLogging
 	return s
 }
 
 func (s *HttpClient) WithSkipVerify(skipVerify bool) *HttpClient {
-	s.SkipVerify = skipVerify
+	s.skipVerify = skipVerify
 	return s
 }
 
@@ -138,30 +141,29 @@ func (s *HttpClient) DoRequest(ctx context.Context, logID string, url string, me
 }
 
 func (s *HttpClient) do() ([]byte, *http.Response, error) {
-	if s.URL == "" {
+	if s.url == "" {
 		return nil, nil, errors.New("无效的URL")
 	}
 
-	if s.Header == nil {
-		s.Header = defaultHeader
+	if s.header == nil {
+		s.header = defaultHeader
 	}
 
-	var span opentracing.Span
 	// 链路追踪
 	if s.isHttpTrace {
 		// 新增埋点
 		routerSuffix := "-"
-		pos := strings.LastIndex(s.URL, "/")
-		if pos+1 < len(s.URL) {
-			routerSuffix = s.URL[pos+1:] //以接口路由的最后一级节点名作为span的操作名称
+		pos := strings.LastIndex(s.url, "/")
+		if pos+1 < len(s.url) {
+			routerSuffix = s.url[pos+1:] //以接口路由的最后一级节点名作为span的操作名称
 		}
 		operationName := "http-" + routerSuffix
 		pos = strings.Index(operationName, "?")
 		if pos != -1 {
 			operationName = operationName[:pos]
 		}
-		span = tracer.Start(&s.Ctx, operationName)
-		defer span.Finish()
+		s.ctx = jaeger_client.StartSpan(s.ctx, operationName)
+		defer jaeger_client.Finish(s.ctx)
 	}
 
 	var (
@@ -170,29 +172,29 @@ func (s *HttpClient) do() ([]byte, *http.Response, error) {
 		err      error
 	)
 
-	if s.Body != nil {
-		if reqBytes, ok = s.Body.([]byte); !ok {
-			reqBytes, err = util.Json.Marshal(s.Body)
+	if s.requestBody != nil {
+		if reqBytes, ok = s.requestBody.([]byte); !ok {
+			reqBytes, err = jsoniter.Marshal(s.requestBody)
 			if err != nil {
 				return nil, nil, err
 			}
 		}
 	}
 
-	method := s.Method
+	method := s.method
 	fields := logrus.Fields{}
-	fields["http.req.url"] = s.URL
+	fields["http.req.url"] = s.url
 	fields["http.req.method"] = method
 
-	fields["http.req.body"] = byteutil.Bytes2String(reqBytes)
+	fields["http.req.body"] = pstring.Bytes2String(reqBytes)
 
-	req, err := http.NewRequest(method, s.URL, bytes.NewReader(reqBytes))
+	req, err := http.NewRequest(method, s.url, bytes.NewReader(reqBytes))
 	if err != nil {
 		return nil, nil, err
 	}
 
 	hasContentType := false
-	for k, v := range s.Header {
+	for k, v := range s.header {
 		req.Header.Set(k, v)
 		if k == "Content-Type" {
 			hasContentType = true
@@ -206,13 +208,17 @@ func (s *HttpClient) do() ([]byte, *http.Response, error) {
 	// 链路追踪
 	fields["http.req.isHttpTrace"] = s.isHttpTrace
 	if s.isHttpTrace {
-		span.LogKV("url", s.URL)
-		span.LogKV("method", method)
+		jaeger_client.LogKV(s.ctx, "url", s.url)
+		jaeger_client.LogKV(s.ctx, "method", method)
 		// span.LogKV("req", req) //不打印
-		span.LogKV("log_id", s.LogID)
-		req = req.WithContext(s.Ctx)
-		// 注入 tracer 信息到 req.Header 中。`req.Header`是指针，所以`req.Header`的修改会影响到`fields["http.req.header"] = req.Header`
-		tracer.InjectHTTPHeader(req.Context(), req.Header)
+		jaeger_client.LogKV(s.ctx, "log_id", s.logID)
+		req = req.WithContext(s.ctx)
+		// 注入 tracer 信息到 req.header 中。`req.header`是指针，所以`req.header`的修改会影响到`fields["http.req.header"] = req.header`
+		err = jaeger_client.InjectTraceHTTPClient(req.Context(), s.url, method, req.Header)
+		if err != nil {
+			// 链路追踪错误，不中断，仅记录日志
+			plog.LogID(s.logID).WithError(err).Error("HttpClient.do InjectTraceHTTPClient")
+		}
 	}
 	fields["http.req.header"] = req.Header
 
@@ -223,13 +229,13 @@ func (s *HttpClient) do() ([]byte, *http.Response, error) {
 	transport := &http.Transport{
 		Proxy: http.ProxyURL(s.proxyURL),
 		DialContext: (&net.Dialer{
-			Timeout: s.Timeout,
+			Timeout: s.timeout,
 		}).DialContext,
 		TLSHandshakeTimeout: 0,
 		IdleConnTimeout:     0,
 		ProxyConnectHeader:  nil,
 		TLSClientConfig: &tls.Config{
-			InsecureSkipVerify: s.SkipVerify,
+			InsecureSkipVerify: s.skipVerify,
 		},
 	}
 
@@ -239,16 +245,16 @@ func (s *HttpClient) do() ([]byte, *http.Response, error) {
 		Timeout:       0,
 	}
 
-	if !s.NotLogging {
-		plog.WithFields(fields).Info(s.LogID, "发起Http请求")
+	if !s.notLogging {
+		plog.LogID(s.logID).WithFields(fields).Info("发起Http请求")
 	}
 
 	resp, err := client.Do(req)
 	if err != nil {
-		if !s.NotLogging {
-			plog.WithError(err).
-				WithField("url", s.URL).
-				Error(s.LogID, "发起Http请求失败")
+		if !s.notLogging {
+			plog.LogID(s.logID).WithError(err).
+				WithField("url", s.url).
+				Error("发起Http请求失败")
 		}
 		return nil, nil, err
 	}
@@ -256,35 +262,35 @@ func (s *HttpClient) do() ([]byte, *http.Response, error) {
 	body, err := ioutil.ReadAll(resp.Body)
 	_ = resp.Body.Close()
 	if err != nil {
-		if !s.NotLogging {
-			plog.WithError(err).
-				WithField("url", s.URL).
-				Error(s.LogID, "读取http响应结果失败")
+		if !s.notLogging {
+			plog.LogID(s.logID).WithError(err).
+				WithField("url", s.url).
+				Error("读取http响应结果失败")
 		}
-		return nil, nil, common.FilterErr(err)
+		return nil, nil, perror.ReplaceIPErr(err)
 	}
 
 	if resp.StatusCode != http.StatusOK {
-		if !s.NotLogging {
-			plog.WithError(err).
+		if !s.notLogging {
+			plog.LogID(s.logID).WithError(err).
 				WithFields(fields).
 				WithField("Resp.StatusCode", resp.StatusCode).
 				WithField("Resp.Status", resp.Status).
-				Error(s.LogID, "Http 响应码异常")
+				Error("Http 响应码异常")
 		}
 		return nil, nil, errors.Errorf("上游服务报错,http status code:%d", resp.StatusCode)
 	}
 
-	if !s.NotLogging {
+	if !s.notLogging {
 		respBodyLog := body
 		if len(body) > 1024 {
 			respBodyLog = body[:1023]
 		}
-		if !s.NotLogging {
-			plog.WithField("http.req.url", s.URL).
+		if !s.notLogging {
+			plog.LogID(s.logID).WithField("http.req.url", s.url).
 				WithField("http.resp.status_code", resp.StatusCode).
-				WithField("http.resp.body", byteutil.Bytes2String(respBodyLog)).
-				Info(s.LogID, "接收http响应")
+				WithField("http.resp.body", pstring.Bytes2String(respBodyLog)).
+				Info("接收http响应")
 		}
 	}
 

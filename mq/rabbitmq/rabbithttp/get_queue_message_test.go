@@ -19,19 +19,18 @@ type TestQueueMessage struct {
 }
 
 func TestRabbitHttp_GetQueueMessage(t *testing.T) {
-	r := &RabbitHttp{
-		ctx:      context.Background(),
-		logID:    "prince-logID-01",
-		host:     "http://10.21.40.11:15672",
-		username: "rabbit",
-		password: "aTjHMj7opZ3d5Kw6",
-		vhost:    "/",
-	}
+	mqClient := NewRabbitHttp(context.Background(),
+		"prince-logID-001",
+		"http://10.21.40.11:15672",
+		"/",
+		"rabbit",
+		"aTjHMj7opZ3d5Kw6",
+	)
 
 	queueName := "prince_test_queue"
 	count := 3
 
-	gotMessage, err := r.GetQueueMessage(queueName, count, ACKMODE_ACK_REQUEUE_TRUE)
+	gotMessage, err := mqClient.GetQueueMessage(queueName, count, ACKMODE_ACK_REQUEUE_TRUE)
 	fmt.Println(err)
 	fmt.Println(gotMessage)
 

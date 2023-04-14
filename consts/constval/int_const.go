@@ -3,7 +3,7 @@
  * @LastEditors: aiden.deng (Zhenpeng Deng)
  * @LastEditTime: 2020-12-15 16:44:18
  */
-package constdef
+package constval
 
 type IntConst interface {
 	Name() string

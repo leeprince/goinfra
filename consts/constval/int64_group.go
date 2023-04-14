@@ -1,4 +1,4 @@
-package constdef
+package constval
 
 import "fmt"
 

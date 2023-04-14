@@ -5,9 +5,11 @@ import (
 	"encoding/base64"
 	"encoding/json"
 	"errors"
+	"fmt"
 	"github.com/leeprince/goinfra/http/httpcli"
 	"github.com/leeprince/goinfra/plog"
 	"net/http"
+	"net/url"
 	"strconv"
 )
 
@@ -45,7 +47,8 @@ func NewRabbitHttp(ctx context.Context, logID, host, vhost, username, password s
 		username:   username,
 		password:   password,
 		vhost:      vhost,
-		httpClient: httpcli.NewHttpClient().WithLogID(logID).WithIsHttpTrace(false),
+		httpClient: httpcli.NewHttpClient().WithLogID(logID).WithIsHttpTrace(true),
+		//httpClient: httpcli.NewHttpClient().WithLogID(logID).WithIsHttpTrace(false),
 	}
 }
 
@@ -58,7 +61,8 @@ func (r *RabbitHttp) header() map[string]string {
 }
 
 func (r *RabbitHttp) GetQueueMessage(queueName string, count int, ackmode Ackmode) (messages []string, err error) {
-	url := r.host + "/api/queues/%2F/prince_test_queue/get"
+	// vhost部分需要使用url编码。vhost=/ url编码为:%2F
+	requestUrl := fmt.Sprintf("%s/api/queues/%s/%s/get", r.host, url.QueryEscape(r.vhost), queueName)
 
 	header := r.header()
 
@@ -72,7 +76,7 @@ func (r *RabbitHttp) GetQueueMessage(queueName string, count int, ackmode Ackmod
 	}
 
 	httpClient := r.httpClient.
-		WithURL(url).
+		WithURL(requestUrl).
 		WithMethod(http.MethodPost).
 		WithHeader(header).
 		WithBody(body)

@@ -141,7 +141,7 @@ func (w *jsonWriter) marshalMessage(m protoreflect.Message, indent, typeURL stri
 			}
 			turl, err := json.Marshal(typeURL)
 			if err != nil {
-				return fmt.Errorf("failed to marshal type URL %q to JSON: %v", typeURL, err)
+				return fmt.Errorf("failed to marshal type host %q to JSON: %v", typeURL, err)
 			}
 			js["@type"] = (*json.RawMessage)(&turl)
 			if b, err = json.Marshal(js); err != nil {

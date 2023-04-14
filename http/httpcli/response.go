@@ -1,9 +1,9 @@
 package httpcli
 
 import (
-    "fmt"
-    "io/ioutil"
-    "net/http"
+	"fmt"
+	"io/ioutil"
+	"net/http"
 )
 
 /**
@@ -13,16 +13,16 @@ import (
  */
 
 func ResponseToBytes(resp *http.Response) (respByte []byte, err error) {
-    defer resp.Body.Close()
-    
-    respByte, err = ioutil.ReadAll(resp.Body)
-    if err != nil {
-        return
-    }
-    
-    if resp.StatusCode  != http.StatusOK {
-        err = fmt.Errorf("StatusCode: %d, Body: %s", resp.StatusCode, respByte)
-        return
-    }
-    return
+	defer resp.Body.Close()
+
+	respByte, err = ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return
+	}
+
+	if resp.StatusCode != http.StatusOK {
+		err = fmt.Errorf("StatusCode: %d, requestBody: %s", resp.StatusCode, respByte)
+		return
+	}
+	return
 }

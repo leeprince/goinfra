@@ -20,7 +20,7 @@ import (
 	"google.golang.org/protobuf/runtime/protoimpl"
 )
 
-// AnyResolver takes a type URL, present in an Any message,
+// AnyResolver takes a type host, present in an Any message,
 // and resolves it into an instance of the associated message.
 type AnyResolver interface {
 	Resolve(typeURL string) (proto.Message, error)
