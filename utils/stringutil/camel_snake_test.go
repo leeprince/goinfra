@@ -1,4 +1,4 @@
-package pstring
+package stringutil
 
 import (
 	"fmt"

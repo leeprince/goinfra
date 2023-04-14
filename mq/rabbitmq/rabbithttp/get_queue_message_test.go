@@ -24,7 +24,7 @@ func TestRabbitHttp_GetQueueMessage(t *testing.T) {
 		"http://10.21.40.11:15672",
 		"/",
 		"rabbit",
-		"aTjHMj7opZ3d5Kw6",
+		"xxxxxxxxx",
 	)
 
 	queueName := "prince_test_queue"

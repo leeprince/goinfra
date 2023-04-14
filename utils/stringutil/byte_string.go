@@ -1,4 +1,4 @@
-package pstring
+package stringutil
 
 /**
  * @Author: prince.lee <leeprince@foxmail.com>

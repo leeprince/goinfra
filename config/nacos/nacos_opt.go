@@ -6,73 +6,73 @@ package nacos
  * @Desc:
  */
 
-type NacosClienParams struct {
-    // --- vo.NacosClientParam.ClientConfig
-    namespaceId string
-    dataId      string
-    group       string
-    timeoutMs   uint64
-    logDir      string
-    cacheDir    string
-    logLevel    string // debug,info,warn,error, default value is info
-    
-    // --- vo.NacosClientParam.ServerConfigs
-    ipAddr string
-    port   uint64
+type NacosClientParams struct {
+	// --- vo.NacosClientParam.ClientConfig
+	namespaceId string
+	dataId      string
+	group       string
+	timeoutMs   uint64
+	logDir      string
+	cacheDir    string
+	logLevel    string // debug,info,warn,error, default value is info
+
+	// --- vo.NacosClientParam.ServerConfigs
+	ipAddr string
+	port   uint64
 }
 
-type NacosClienParamsOpt func(params *NacosClienParams)
+type NacosClienParamsOpt func(params *NacosClientParams)
 
 func WithNamespaceId(v string) NacosClienParamsOpt {
-    return func(params *NacosClienParams) {
-        params.namespaceId = v
-    }
+	return func(params *NacosClientParams) {
+		params.namespaceId = v
+	}
 }
 
 func WithDataId(v string) NacosClienParamsOpt {
-    return func(params *NacosClienParams) {
-        params.dataId = v
-    }
+	return func(params *NacosClientParams) {
+		params.dataId = v
+	}
 }
 
 func WithGoup(v string) NacosClienParamsOpt {
-    return func(params *NacosClienParams) {
-        params.group = v
-    }
+	return func(params *NacosClientParams) {
+		params.group = v
+	}
 }
 
 func WithTimeoutMs(v uint64) NacosClienParamsOpt {
-    return func(params *NacosClienParams) {
-        params.timeoutMs = v
-    }
+	return func(params *NacosClientParams) {
+		params.timeoutMs = v
+	}
 }
 
 func WithLogDir(v string) NacosClienParamsOpt {
-    return func(params *NacosClienParams) {
-        params.group = v
-    }
+	return func(params *NacosClientParams) {
+		params.group = v
+	}
 }
 
 func WithCacheDir(v string) NacosClienParamsOpt {
-    return func(params *NacosClienParams) {
-        params.cacheDir = v
-    }
+	return func(params *NacosClientParams) {
+		params.cacheDir = v
+	}
 }
 
 func WithLogLevel(v string) NacosClienParamsOpt {
-    return func(params *NacosClienParams) {
-        params.logLevel = v
-    }
+	return func(params *NacosClientParams) {
+		params.logLevel = v
+	}
 }
 
 func WithIpAddr(v string) NacosClienParamsOpt {
-    return func(params *NacosClienParams) {
-        params.ipAddr = v
-    }
+	return func(params *NacosClientParams) {
+		params.ipAddr = v
+	}
 }
 
 func WithPort(v uint64) NacosClienParamsOpt {
-    return func(params *NacosClienParams) {
-        params.port = v
-    }
+	return func(params *NacosClientParams) {
+		params.port = v
+	}
 }

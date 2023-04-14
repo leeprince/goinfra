@@ -9,7 +9,6 @@ import (
 	"github.com/leeprince/goinfra/plog"
 	"github.com/leeprince/goinfra/trace/opentracing/jaegerclient"
 	"github.com/leeprince/goinfra/utils"
-	"github.com/leeprince/goinfra/utils/pstring"
 	"github.com/pkg/errors"
 	"github.com/sirupsen/logrus"
 	"io/ioutil"
@@ -192,7 +191,7 @@ func (s *HttpClient) do() ([]byte, *http.Response, error) {
 	fields["http.req.url"] = s.url
 	fields["http.req.method"] = method
 
-	fields["http.req.body"] = pstring.Bytes2String(reqBytes)
+	fields["http.req.body"] = stringutil.Bytes2String(reqBytes)
 
 	req, err := http.NewRequest(method, s.url, bytes.NewReader(reqBytes))
 	if err != nil {
@@ -296,7 +295,7 @@ func (s *HttpClient) do() ([]byte, *http.Response, error) {
 		if !s.notLogging {
 			plog.LogID(s.logID).WithField("http.req.url", s.url).
 				WithField("http.resp.status_code", resp.StatusCode).
-				WithField("http.resp.body", pstring.Bytes2String(respBodyLog)).
+				WithField("http.resp.body", stringutil.Bytes2String(respBodyLog)).
 				Info("接收http响应")
 		}
 	}
