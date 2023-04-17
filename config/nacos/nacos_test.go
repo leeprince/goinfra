@@ -33,16 +33,9 @@ func TestMain(m *testing.M) {
 }
 
 func TestNacosClient_ListenConfig(t *testing.T) {
-	//c, err := NewNacosClient("8371bb89-804e-4549-9855-0b581df2fcf6",
-	//	"dev",
-	//	"config:goinfra",
-	//	WithLogDir("./logs"),
-	//  WithIpAddr("https://apigw-local-test.goldentec.com"),
-	//	WithPort(443),
-	//)
-	c, err := NewNacosClient("4025127b-2100-4f8e-b777-d9320a3bddfc",
-		"goldenCloud",
-		"e-invoice-auth-ctl",
+	c, err := NewNacosClient("8371bb89-804e-4549-9855-0b581df2fcf6",
+		"dev",
+		"config:goinfra",
 		WithLogDir("./logs"),
 		WithIpAddr("https://apigw-local-test.goldentec.com"),
 		WithPort(443),
@@ -79,16 +72,9 @@ func TestNacosClient_ListenConfig(t *testing.T) {
 
 // 当远程配置变更时通知接口层。项目中配置变更处于基础服务层，所以采用注册的方式把配置变更时需要通知的函数注册进来
 func TestNacosClient_ListenConfigAndNoticeInterfaceEvent(t *testing.T) {
-	//c, err := NewNacosClient("8371bb89-804e-4549-9855-0b581df2fcf6",
-	//	"dev",
-	//	"config:goinfra",
-	//	WithLogDir("./logs"),
-	//  WithIpAddr("https://apigw-local-test.goldentec.com"),
-	//	WithPort(443),
-	//)
-	c, err := NewNacosClient("4025127b-2100-4f8e-b777-d9320a3bddfc",
-		"goldenCloud",
-		"e-invoice-auth-ctl",
+	c, err := NewNacosClient("8371bb89-804e-4549-9855-0b581df2fcf6",
+		"dev",
+		"config:goinfra",
 		WithLogDir("./logs"),
 		WithIpAddr("https://apigw-local-test.goldentec.com"),
 		WithPort(443),
