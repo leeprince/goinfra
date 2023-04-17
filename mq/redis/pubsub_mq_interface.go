@@ -15,8 +15,8 @@ import "github.com/leeprince/goinfra/storage/redis"
 type PubishSubscribeMQSubscribeHandle func(data *redis.SubscribeMessage)
 
 type PubSubMQ interface {
-    // 发布
-    Push(channel string, message interface{}) error
-    // 订阅
-    Subscribe(f PubishSubscribeMQSubscribeHandle, channels ...string)
+	// 发布
+	Push(channel string, message interface{}) error
+	// 订阅
+	Subscribe(f PubishSubscribeMQSubscribeHandle, channels ...string)
 }

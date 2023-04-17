@@ -1,10 +1,10 @@
 package redis
 
 import (
-    "fmt"
-    "github.com/leeprince/goinfra/storage/redis"
-    "testing"
-    "time"
+	"fmt"
+	"github.com/leeprince/goinfra/storage/redis"
+	"testing"
+	"time"
 )
 
 /**
@@ -14,69 +14,69 @@ import (
  */
 
 func TestSortSetDelayMQ_Push(t *testing.T) {
-    type fields struct {
-        cli redis.RedisClient
-    }
-    type args struct {
-        key       string
-        value     interface{}
-        delayTime time.Duration
-    }
-    tests := []struct {
-        name    string
-        fields  fields
-        args    args
-        wantErr bool
-    }{
-        {
-            args: args{
-                key:       "k",
-                value:     "SortSetDelayMQ-v01",
-                delayTime: time.Second * 5,
-            },
-        },
-    }
-    for _, tt := range tests {
-        t.Run(tt.name, func(t *testing.T) {
-            mq := NewSortSetDelayMQ(initRedisClient())
-            if err := mq.Push(tt.args.key, tt.args.value, tt.args.delayTime); (err != nil) != tt.wantErr {
-                t.Errorf("Push() error = %v, wantErr %v", err, tt.wantErr)
-            }
-        })
-    }
+	type fields struct {
+		cli redis.RedisClient
+	}
+	type args struct {
+		key       string
+		value     interface{}
+		delayTime time.Duration
+	}
+	tests := []struct {
+		name    string
+		fields  fields
+		args    args
+		wantErr bool
+	}{
+		{
+			args: args{
+				key:       "k",
+				value:     "SortSetDelayMQ-v01",
+				delayTime: time.Second * 5,
+			},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			mq := NewSortSetDelayMQ(initRedisClient())
+			if err := mq.Push(tt.args.key, tt.args.value, tt.args.delayTime); (err != nil) != tt.wantErr {
+				t.Errorf("Push() error = %v, wantErr %v", err, tt.wantErr)
+			}
+		})
+	}
 }
 
 func TestSortSetDelayMQ_Subscribe(t *testing.T) {
-    type fields struct {
-        cli redis.RedisClient
-    }
-    type args struct {
-        key      string
-        waitTime time.Duration
-    }
-    tests := []struct {
-        name     string
-        fields   fields
-        args     args
-        wantData []byte
-        wantErr  bool
-    }{
-        {
-            args: args{
-                key:      "k",
-                waitTime: time.Second * 1,
-            },
-        },
-    }
-    for _, tt := range tests {
-        t.Run(tt.name, func(t *testing.T) {
-            mq := NewSortSetDelayMQ(initRedisClient())
-            
-            f := func(data []byte) {
-                fmt.Println("(mq *SortSetDelayMQ) Subscribe data:", string(data))
-            }
-            
-            mq.Subscribe(f, tt.args.key, tt.args.waitTime)
-        })
-    }
+	type fields struct {
+		cli redis.RedisClient
+	}
+	type args struct {
+		key      string
+		waitTime time.Duration
+	}
+	tests := []struct {
+		name     string
+		fields   fields
+		args     args
+		wantData []byte
+		wantErr  bool
+	}{
+		{
+			args: args{
+				key:      "k",
+				waitTime: time.Second * 1,
+			},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			mq := NewSortSetDelayMQ(initRedisClient())
+
+			f := func(data []byte) {
+				fmt.Println("(mq *SortSetDelayMQ) Subscribe data:", string(data))
+			}
+
+			mq.Subscribe(f, tt.args.key, tt.args.waitTime)
+		})
+	}
 }

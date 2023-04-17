@@ -1,7 +1,7 @@
 package redis
 
 import (
-    "time"
+	"time"
 )
 
 /**
@@ -14,9 +14,9 @@ import (
 type ListMQSubscribeHandle func(data interface{})
 
 type MQ interface {
-    // 生产
-    Push(key string, value interface{}) error
-    // 消费
-    //  timeout：超时时间。超时继续轮询
-    Subscribe(f ListMQSubscribeHandle, key string, timeout time.Duration)
+	// 生产
+	Push(key string, value interface{}) error
+	// 消费
+	//  timeout：超时时间。超时继续轮询
+	Subscribe(f ListMQSubscribeHandle, key string, timeout time.Duration)
 }

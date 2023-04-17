@@ -1,7 +1,7 @@
 package redis
 
 import (
-    "github.com/leeprince/goinfra/storage/redis"
+	"github.com/leeprince/goinfra/storage/redis"
 )
 
 /**
@@ -11,28 +11,28 @@ import (
  */
 
 type PubishSubscribeMQ struct {
-    cli redis.RedisClient
+	cli redis.RedisClient
 }
 
 // PubishSubscribeMQ 实现 PubSubMQ 接口
 var _ PubSubMQ = (*PubishSubscribeMQ)(nil)
 
 func NewPubishSubscribeMQ(cli redis.RedisClient) *PubishSubscribeMQ {
-    return &PubishSubscribeMQ{
-        cli: cli,
-    }
+	return &PubishSubscribeMQ{
+		cli: cli,
+	}
 }
 
 func (mq *PubishSubscribeMQ) Push(channel string, message interface{}) error {
-    return mq.cli.Publish(channel, message)
+	return mq.cli.Publish(channel, message)
 }
 
 func (mq *PubishSubscribeMQ) Subscribe(f PubishSubscribeMQSubscribeHandle, channels ...string) {
-    // 启动一个守护进程去订阅消息
-    for {
-        msgChan := mq.cli.Subscribe(channels...)
-    
-        // 非堵塞进程处理消息
-        go f(msgChan)
-    }
+	// 启动一个守护进程去订阅消息
+	for {
+		msgChan := mq.cli.Subscribe(channels...)
+
+		// 非堵塞进程处理消息
+		go f(msgChan)
+	}
 }

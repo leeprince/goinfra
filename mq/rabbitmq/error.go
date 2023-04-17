@@ -1,8 +1,8 @@
 package rabbitmq
 
 import (
-    "fmt"
-    "github.com/leeprince/goinfra/plog"
+	"fmt"
+	"github.com/leeprince/goinfra/plog"
 )
 
 /**
@@ -12,16 +12,16 @@ import (
  */
 
 func failOnError(err error, msg string) {
-    if err != nil {
-        plog.Errorf("failOnError. msg:%s > err:%s", msg, err)
-        return
-    }
-    plog.Infof("failOnError. msg:%s > but not err", msg)
+	if err != nil {
+		plog.Errorf("failOnError. msg:%s > err:%s", msg, err)
+		return
+	}
+	plog.Infof("failOnError. msg:%s > but not err", msg)
 }
 
 func panicOnError(err error, msg string) {
-    if err != nil {
-        println(fmt.Sprintf("msg:%s, err:%s", msg, err.Error()))
-        plog.Fatalf("%s: %v", msg, err)
-    }
+	if err != nil {
+		println(fmt.Sprintf("msg:%s, err:%s", msg, err.Error()))
+		plog.Fatalf("%s: %v", msg, err)
+	}
 }
