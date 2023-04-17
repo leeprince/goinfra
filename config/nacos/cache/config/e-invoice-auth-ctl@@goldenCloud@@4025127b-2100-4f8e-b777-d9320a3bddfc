@@ -1,1 +1,55 @@
+version: v2.1
 is_mock: false
+mock_data:
+    getloginstatemcokchannel: GP900001
+    getloginstatecode: 0
+    getloginstatedatacookie: yfx_c_g_u_id_10000080=_ck22060211164012460631727712806; yfx_f_l_v_t_10000080=f_t_1654139800248__r_t_1654767989978__v_t_1654767989978__r_c_1; yfx_mr_10000080=%3A%3Amarket_type_free_search%3A%3A%3A%3Abaidu%3A%3A%3A%3A%3A%3A%3A%3Awww.baidu.com%3A%3A%3A%3Apmf_from_free_search; yfx_key_10000080=; x_host_key=181f175fc36-a119904de02de31d2358465be8b2dba970f7b651; SSOTicket=4c86af6a-547e-468c-8f94-ffe1f029c44a; user=2efc758969794aeca499e595cb6054be@; dzfp-ssotoken=eb7ff5973a7a461582c15be1d04d2926; SSO_SECURITY_CHECK_TOKEN=0cbc4edae0e7446eb20dad7f445fba75
+    getloginstatedatatoken: 0cbc4edae0e7446eb20dad7f445fba75
+    getloginstatedataaccesstoken: 82ccaa0cf5e53d06306bc45da887f933
+    getloginstatedatasignkey: a0d1a18f507a007
+    getloginstatedataloginstatus: 2
+    reportloginstatecode: 0
+    rpalogintype: 1
+    isrpaclientonline: true
+    reportloginstateenterpriseid: 91150105MA7CW9N57B
+    
+    continueloginverifycodemcokchannel: GP900000
+    continueloginverifycodecode: 0
+    continueloginverifycodedataisrefreshlogin: true
+is_check_cookie_of_status: false
+is_check_cookie_of_report: false
+login_ing_timeout: 300
+rpa_support_division_codes:
+    150000: neimenggu
+    440000: guangdong
+    510000: sichuan
+    310000: shanghai
+    350200: xiamen
+    610000: shaanxi
+    370200: qingdao
+    210200: dalian
+    120000: tianjin
+    500000: chongqing
+    410000: henan
+    350000: fujian
+    220000: jilin
+    530000: yunnan
+    330200: ningbo
+    440300: shenzhen
+division_codes_login_url_suffix:
+    370200: :7553/sso/login
+    220000: :10812/sword
+division_codes_login_success_dom:
+    610000: searchword
+    500000: searchInput
+    370200: cdss
+    120000: search
+    150000: cxtj
+    530000: searchinput
+cookie_key_of_token: SSO_SECURITY_CHECK_TOKEN
+cookie_key_of_urlyzm: dzfp-ssotoken
+jincaishuke_login_oldversion: 310000 #金财数科 旧版登录方式 地区直接使用|分隔
+auth_qrcode_ing_timeout: 600
+rpaserver_relogin_minutes: 2
+rpaserver_relogin_maxnum: 5
+qywxbot_relogin_maxnum_url: https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=ffb02cab-34af-4938-bcab-d85bb7d9f859

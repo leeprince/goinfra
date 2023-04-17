@@ -33,7 +33,9 @@ func WithTimeoutMs(v uint64) NacosClienParamsOpt {
 
 func WithLogDir(v string) NacosClienParamsOpt {
 	return func(params *NacosClientParams) {
-		params.logDir = v
+		if v != "" {
+			params.logDir = v
+		}
 	}
 }
 
@@ -51,13 +53,17 @@ func WithLogLevel(v string) NacosClienParamsOpt {
 
 func WithIpAddr(v string) NacosClienParamsOpt {
 	return func(params *NacosClientParams) {
-		params.ipAddr = v
+		if v != "" {
+			params.ipAddr = v
+		}
 	}
 }
 
 func WithPort(v uint64) NacosClienParamsOpt {
 	return func(params *NacosClientParams) {
-		params.port = v
+		if v > 0 {
+			params.port = v
+		}
 	}
 }
 

@@ -21,7 +21,7 @@ import (
 
 const (
 	serviceName = "opentracing_test"
-	env         = consts.ENVLocal
+	env         = consts.ENV_LOCAL
 	logDir      = "./"
 	logFileName = "application.log"
 	port        = ":8084"

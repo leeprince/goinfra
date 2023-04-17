@@ -27,7 +27,7 @@ const (
 func InitTracer(serviceName string, options ...JaegerOptions) {
 	jaegerOption := &jaegerOption{
 		serviceName: serviceName,
-		env:         consts.ENVLocal,
+		env:         consts.ENV_LOCAL,
 		isStdLogger: true,
 	}
 	for _, optionsFunc := range options {

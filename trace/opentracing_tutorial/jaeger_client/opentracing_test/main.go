@@ -12,7 +12,7 @@ import (
 
 const (
 	serviceName = "jaeger_client@opentracing_test"
-	env         = consts.ENVLocal
+	env         = consts.ENV_LOCAL
 	logDir      = "./"
 	logFileName = "application.log"
 )

@@ -27,7 +27,7 @@ import (
 
 const (
 	serviceName = "5passthrough_trace-formatter"
-	env         = consts.ENVLocal
+	env         = consts.ENV_LOCAL
 )
 
 var (

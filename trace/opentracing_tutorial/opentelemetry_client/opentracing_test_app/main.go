@@ -5,7 +5,6 @@ import (
 	"github.com/leeprince/goinfra/consts"
 	"github.com/leeprince/goinfra/http/httpcli"
 	"github.com/leeprince/goinfra/plog"
-	"github.com/leeprince/goinfra/trace/opentracing/opentelemetry_client"
 	"net/http"
 	"net/url"
 	"time"
@@ -19,7 +18,7 @@ import (
 
 const (
 	serviceName = "opentracing_test_app"
-	env         = consts.ENVLocal
+	env         = consts.ENV_LOCAL
 	logDir      = "./"
 	logFileName = "application.log"
 )

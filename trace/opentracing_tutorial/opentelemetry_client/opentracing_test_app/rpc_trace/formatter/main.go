@@ -4,7 +4,6 @@ import (
 	"context"
 	"fmt"
 	"github.com/leeprince/goinfra/consts"
-	"github.com/leeprince/goinfra/trace/opentracing/opentelemetry_client"
 	"log"
 	"net/http"
 	"time"
@@ -18,7 +17,7 @@ import (
 
 const (
 	serviceName = "opentracing_test_app-rpc_trace-formatter"
-	env         = consts.ENVLocal
+	env         = consts.ENV_LOCAL
 )
 
 func main() {

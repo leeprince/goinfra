@@ -24,7 +24,7 @@ const (
 func InitTrace(serviceName string, options ...TracerProviderOptions) {
 	tracerProviderOption := &tracerProviderOption{
 		serviceName: serviceName,
-		env:         consts.ENVLocal,
+		env:         consts.ENV_LOCAL,
 		exporter:    nil, // 默认为 jaeger 导出器
 	}
 	for _, optionsFunc := range options {

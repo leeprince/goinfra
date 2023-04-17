@@ -34,7 +34,7 @@ func NewNacosClient(namespaceId, group, dataID string, opts ...NacosClienParamsO
 		dataID:      dataID,
 		group:       group,
 		timeoutMs:   5000,
-		logDir:      "./log",
+		logDir:      "./logs",
 		cacheDir:    "./cache",
 		logLevel:    "info",
 		ipAddr:      "127.0.0.1",
@@ -89,7 +89,7 @@ func NewNacosClient(namespaceId, group, dataID string, opts ...NacosClienParamsO
 type dynamicConfigHandle func(conf []byte)
 
 func (c *NacosClient) ListenConfig(handle dynamicConfigHandle) (err error) {
-	// 先同步获取配置
+	// 先立即同步获取配置
 	conf, errn := c.configClient.GetConfig(vo.ConfigParam{
 		DataId: c.nacosClientParams.dataID,
 		Group:  c.nacosClientParams.group,
@@ -99,7 +99,7 @@ func (c *NacosClient) ListenConfig(handle dynamicConfigHandle) (err error) {
 	}
 	handle([]byte(conf))
 
-	// 监听配置变更：监听配置变更，动态更新配置
+	// 继续监听配置变更：监听配置变更，动态更新配置
 	err = c.configClient.ListenConfig(vo.ConfigParam{
 		DataId: c.nacosClientParams.dataID,
 		Group:  c.nacosClientParams.group,

@@ -7,19 +7,19 @@ package consts
  */
 
 const (
-    ENVLocal   = "local"
-    ENVDev     = "dev"
-    ENVTest    = "test"
-    ENVUat     = "uat"
-    ENVSandbox = "sandbox"
-    ENVProd    = "prod"
+	ENV_LOCAL   = "local"
+	ENV_DEV     = "dev"
+	ENV_TEST    = "test"
+	ENV_UAT     = "uat"
+	ENV_SANDBOX = "sandbox"
+	ENV_PROD    = "prod"
 )
 
 var AllENV = []string{
-    ENVLocal,
-    ENVDev,
-    ENVTest,
-    ENVUat,
-    ENVSandbox,
-    ENVProd,
+	ENV_LOCAL,
+	ENV_DEV,
+	ENV_TEST,
+	ENV_UAT,
+	ENV_SANDBOX,
+	ENV_PROD,
 }

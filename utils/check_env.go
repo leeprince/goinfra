@@ -1,7 +1,7 @@
 package utils
 
 import (
-    "github.com/leeprince/goinfra/consts"
+	"github.com/leeprince/goinfra/consts"
 )
 
 /**
@@ -11,21 +11,21 @@ import (
  */
 
 func IsProd(env string) (is bool) {
-    is = false
-    if env == consts.ENVProd {
-        is = true
-    }
-    return
+	is = false
+	if env == consts.ENV_PROD {
+		is = true
+	}
+	return
 }
 
 func IsProdOrSandbox(env string) (is bool) {
-    return env == consts.ENVProd || env == consts.ENVUat || env == consts.ENVSandbox
+	return env == consts.ENV_PROD || env == consts.ENV_UAT || env == consts.ENV_SANDBOX
 }
 
 func IsLocal(env string) (is bool) {
-    is = false
-    if env == consts.ENVLocal {
-        is = true
-    }
-    return
+	is = false
+	if env == consts.ENV_LOCAL {
+		is = true
+	}
+	return
 }
