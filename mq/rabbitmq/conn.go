@@ -14,7 +14,7 @@ import (
  */
 
 type RabbitMQClient struct {
-	conf     *rabbitMQConf
+	conf     *RabbitMQConf
 	conn     *amqp.Connection
 	connChan *amqp.Channel
 	queue    amqp.Queue
@@ -52,7 +52,7 @@ func NewRabbitMQClient(opts ...ConfOption) (cli *RabbitMQClient, err error) {
 
 // 初始化配置
 func (cli *RabbitMQClient) initConf(opts ...ConfOption) (err error) {
-	conf := &rabbitMQConf{
+	conf := &RabbitMQConf{
 		url:                   defaultURL,
 		vhost:                 defaultVhost,
 		cancelexchangeDeclare: false,

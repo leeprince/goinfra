@@ -10,7 +10,7 @@ import (
  * @Desc:   初始化客户端的选项
  */
 
-type rabbitMQConf struct {
+type RabbitMQConf struct {
 	// RabbitMQ 连接 url. 格式：amqp协议(固定amqp)//用户名(默认guest):密码(默认guest)@主机(默认localhost):端口(默认5672)。完整示例：amqp://guest:guest@127.0.0.1:5672/
 	url string
 	// 虚拟主机。默认/
@@ -77,38 +77,38 @@ type qos struct {
 }
 
 // --- ConfOption
-type ConfOption func(conf *rabbitMQConf) (err error)
+type ConfOption func(conf *RabbitMQConf) (err error)
 
 func WithUrl(url string) ConfOption {
-	return func(conf *rabbitMQConf) (err error) {
+	return func(conf *RabbitMQConf) (err error) {
 		conf.url = url
 		return
 	}
 }
 
 func WithVhost(vhost string) ConfOption {
-	return func(conf *rabbitMQConf) (err error) {
+	return func(conf *RabbitMQConf) (err error) {
 		conf.vhost = vhost
 		return
 	}
 }
 
 func WithErrRetryTime(t time.Duration) ConfOption {
-	return func(conf *rabbitMQConf) (err error) {
+	return func(conf *RabbitMQConf) (err error) {
 		conf.errRetryTime = t
 		return
 	}
 }
 
 func WithCancelQueueDeclare(cancel bool) ConfOption {
-	return func(conf *rabbitMQConf) (err error) {
+	return func(conf *RabbitMQConf) (err error) {
 		conf.cancelQueueDeclare = cancel
 		return
 	}
 }
 
 func WithQos(prefetchCount, prefetchSize int, global bool) ConfOption {
-	return func(conf *rabbitMQConf) (err error) {
+	return func(conf *RabbitMQConf) (err error) {
 		conf.qos = qos{
 			prefetchCount: prefetchCount,
 			prefetchSize:  prefetchSize,
@@ -119,7 +119,7 @@ func WithQos(prefetchCount, prefetchSize int, global bool) ConfOption {
 }
 
 func WithExchangeDeclare(exchangeName, exchangeType string, opts ...ExchangeDeclareOption) ConfOption {
-	return func(conf *rabbitMQConf) (err error) {
+	return func(conf *RabbitMQConf) (err error) {
 		exchangeDeclare := &exchangeDeclare{
 			exchangeName: exchangeName,
 			exchangeType: exchangeType,
@@ -141,7 +141,7 @@ func WithExchangeDeclare(exchangeName, exchangeType string, opts ...ExchangeDecl
 }
 
 func WithQueueDeclare(queueName string, opts ...QueueDeclareOption) ConfOption {
-	return func(conf *rabbitMQConf) (err error) {
+	return func(conf *RabbitMQConf) (err error) {
 		queueDeclare := &queueDeclare{
 			queueName:  queueName,
 			durable:    true, // 队列是否持久化.默认持久化
@@ -162,7 +162,7 @@ func WithQueueDeclare(queueName string, opts ...QueueDeclareOption) ConfOption {
 }
 
 func WithRoutingKey(routingKey string) ConfOption {
-	return func(conf *rabbitMQConf) (err error) {
+	return func(conf *RabbitMQConf) (err error) {
 		conf.routingKey = routingKey
 		return
 	}

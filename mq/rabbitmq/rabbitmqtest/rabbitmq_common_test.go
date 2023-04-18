@@ -1,4 +1,4 @@
-package rabbitmq
+package rabbitmqtest
 
 /**
  * @Author: prince.lee <leeprince@foxmail.com>

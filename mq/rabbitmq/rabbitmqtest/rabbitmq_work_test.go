@@ -1,7 +1,8 @@
-package rabbitmq
+package rabbitmqtest
 
 import (
 	"fmt"
+	. "github.com/leeprince/goinfra/mq/rabbitmq"
 	"github.com/spf13/cast"
 	"github.com/streadway/amqp"
 	"testing"

@@ -1,7 +1,8 @@
-package rabbitmq
+package rabbitmqtest
 
 import (
 	"fmt"
+	. "github.com/leeprince/goinfra/mq/rabbitmq"
 	"github.com/spf13/cast"
 	"github.com/streadway/amqp"
 	"sync"
@@ -17,7 +18,7 @@ import (
 
 func TestRabbitMQClient_PublishDirect(t *testing.T) {
 	type fields struct {
-		conf     *rabbitMQConf
+		conf     *RabbitMQConf
 		conn     *amqp.Connection
 		connChan *amqp.Channel
 		queue    amqp.Queue
@@ -66,7 +67,7 @@ func TestRabbitMQClient_PublishDirect(t *testing.T) {
 
 func TestRabbitMQClient_PublishDirect01(t *testing.T) {
 	type fields struct {
-		conf     *rabbitMQConf
+		conf     *RabbitMQConf
 		conn     *amqp.Connection
 		connChan *amqp.Channel
 		queue    amqp.Queue

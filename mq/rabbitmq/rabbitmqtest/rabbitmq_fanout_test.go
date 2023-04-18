@@ -1,7 +1,8 @@
-package rabbitmq
+package rabbitmqtest
 
 import (
 	"fmt"
+	. "github.com/leeprince/goinfra/mq/rabbitmq"
 	"github.com/spf13/cast"
 	"github.com/streadway/amqp"
 	"testing"
@@ -16,7 +17,7 @@ import (
 
 func TestRabbitMQClient_PublishFanout(t *testing.T) {
 	type fields struct {
-		conf     *rabbitMQConf
+		conf     *RabbitMQConf
 		conn     *amqp.Connection
 		connChan *amqp.Channel
 		queue    amqp.Queue
@@ -66,7 +67,7 @@ func TestRabbitMQClient_PublishFanout(t *testing.T) {
 
 func TestRabbitMQClient_PublishFanout01(t *testing.T) {
 	type fields struct {
-		conf     *rabbitMQConf
+		conf     *RabbitMQConf
 		conn     *amqp.Connection
 		connChan *amqp.Channel
 		queue    amqp.Queue
