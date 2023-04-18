@@ -4,7 +4,6 @@ go 1.16
 
 require (
 	github.com/HdrHistogram/hdrhistogram-go v1.1.2 // indirect
-	github.com/agiledragon/gomonkey v2.0.2+incompatible // indirect
 	github.com/elastic/go-elasticsearch/v8 v8.3.0
 	github.com/getsentry/sentry-go v0.13.0
 	github.com/go-redis/redis/v8 v8.11.5
@@ -19,9 +18,11 @@ require (
 	github.com/lestrrat-go/strftime v1.0.5 // indirect
 	github.com/nacos-group/nacos-sdk-go v1.1.1
 	github.com/opentracing/opentracing-go v1.2.0
+	github.com/otiai10/gosseract/v2 v2.4.0 // indirect
 	github.com/pkg/errors v0.9.1
+	github.com/progrium/macdriver v0.2.0
 	github.com/sirupsen/logrus v1.8.1
-	github.com/smartystreets/goconvey v1.8.0 // indirect
+	github.com/smartystreets/goconvey v1.8.0
 	github.com/spf13/cast v1.3.1
 	github.com/streadway/amqp v1.0.0
 	github.com/tencentyun/cos-go-sdk-v5 v0.7.41
