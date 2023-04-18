@@ -7,6 +7,7 @@ import (
 	"time"
 )
 
+// 库有升级，可对照修改
 func main() {
 	// 查找目标窗口
 	title := "目标窗口标题"
