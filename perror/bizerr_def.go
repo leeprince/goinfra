@@ -31,5 +31,6 @@ var (
 	BizErrGenerateData  = NewBizErr(100000016, "生成数据错误!")
 	BizErrEncode        = NewBizErr(100000017, "编码错误!")
 	BizErrDecode        = NewBizErr(100000018, "解码错误!")
+	BizErrObjNil        = NewBizErr(100000019, "对象为nil!")
 	BizErrPanic         = NewBizErr(100000999, "处理异常!")
 )

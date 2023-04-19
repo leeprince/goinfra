@@ -2,6 +2,7 @@ package rabbitmq
 
 import (
 	"errors"
+	"github.com/leeprince/goinfra/consts"
 	"github.com/streadway/amqp"
 )
 
@@ -36,7 +37,13 @@ func (cli *RabbitMQClient) Publish(opts ...PublishParamOpt) (err error) {
 		mandatory:  false,
 		immediate:  false,
 		expiration: "0",
-		properties: &properties{},
+		properties: &properties{
+			contentType:  consts.CONTEXT_TYPE_TEXT_PLAIN,
+			headers:      make(map[string]interface{}, 0),
+			deliveryMode: amqp.Persistent, // 消息临时化：amqp.Transient;消息持久化:amqp.Persistent
+			priority:     0,
+			body:         nil,
+		},
 	}
 
 	for _, opt := range opts {

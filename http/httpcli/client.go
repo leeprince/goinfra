@@ -9,6 +9,7 @@ import (
 	"github.com/leeprince/goinfra/plog"
 	"github.com/leeprince/goinfra/trace/opentracing/jaegerclient"
 	"github.com/leeprince/goinfra/utils"
+	"github.com/leeprince/goinfra/utils/stringutil"
 	"github.com/pkg/errors"
 	"github.com/sirupsen/logrus"
 	"io/ioutil"
@@ -152,23 +153,6 @@ func (s *HttpClient) do() ([]byte, *http.Response, error) {
 
 	if s.header == nil {
 		s.header = defaultHeader
-	}
-
-	// 链路追踪
-	if s.isHttpTrace {
-		//// 新增埋点
-		//routerSuffix := "-"
-		//pos := strings.LastIndex(s.url, "/")
-		//if pos+1 < len(s.url) {
-		//	routerSuffix = s.url[pos+1:] //以接口路由的最后一级节点名作为span的操作名称
-		//}
-		//operationName := "http-" + routerSuffix
-		//pos = strings.Index(operationName, "?")
-		//if pos != -1 {
-		//	operationName = operationName[:pos]
-		//}
-		//s.ctx = jaeger_client.StartSpan(s.ctx, operationName)
-		//defer jaeger_client.Finish(s.ctx)
 	}
 
 	var (

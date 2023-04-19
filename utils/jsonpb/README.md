@@ -22,7 +22,7 @@ message Department {
 }
 ```
 
-```golang
+```
 type Department struct {
     ID int64 
     Name string
@@ -41,7 +41,8 @@ func (s *GRPCServer) GetDepartment(ctx context.Context, req *pb.GetDepartmentReq
 ```
 
 通过`grpc-echosystem/grpc-gateway`转换后会序列化为:
-```json
+```
+// 注意id字段
 {
     "id": "1379",
     "name": "some department",

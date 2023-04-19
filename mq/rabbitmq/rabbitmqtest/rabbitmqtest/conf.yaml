@@ -1,0 +1,21 @@
+jaeger_agent_uri: jaeger-agent.monitoring.svc.cluster.local:6831
+
+rabbit:
+  # prince_test
+  prince_test:
+    url: amqp://rabbit:aTjHMj7opZ3d5Kw6@10.21.32.14:5672/
+    exchange_name: prince_test_ex
+    queue_name: prince_test_queue
+    delay_queue_name:
+    key:   prince_test_key
+    queue_type: direct
+    delay_interval: 300
+    prefech: 10
+
+
+
+
+
+
+
+

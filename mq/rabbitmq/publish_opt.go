@@ -40,7 +40,7 @@ func WithPublishParamProperties(body []byte, opts ...PropertiesOpt) PublishParam
 	return func(publishParams *publishParams) {
 		properties := &properties{
 			contentType:  consts.CONTEXT_TYPE_TEXT_PLAIN,
-			headers:      nil,
+			headers:      make(map[string]interface{}, 0),
 			deliveryMode: amqp.Persistent, // 消息临时化：amqp.Transient;消息持久化:amqp.Persistent
 			priority:     0,
 			body:         body,

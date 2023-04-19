@@ -3,7 +3,7 @@ package rabbitmq
 /**
  * @Author: prince.lee <leeprince@foxmail.com>
  * @Date:   2022/5/14 上午11:21
- * @Desc:   发布消息的直接应用
+ * @Desc:   对应交换机类型的发布消息封装方法
  */
 
 // 简单队列（一次向一个消费者发送消息）

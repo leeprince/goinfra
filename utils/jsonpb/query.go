@@ -1,8 +1,3 @@
-/*
- * @Date: 2020-12-18 11:50:23
- * @LastEditors: aiden.deng (Zhenpeng Deng)
- * @LastEditTime: 2020-12-18 11:50:36
- */
 package jsonpb
 
 import (

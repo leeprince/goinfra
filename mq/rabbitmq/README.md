@@ -136,9 +136,9 @@ consume_app_test.go@TestRabbitMQClient_ConsumeTopic、@TestRabbitMQClient_Consum
     - 对应的消息队列类型（其余的队列类型没有使用交换机类型）
         - fanout：发布和订阅队列. 会自动忽略RoutingKey的设置（无需 RoutingKey）
             - fanout(扇出)交换机类型，它没有给我们太多的灵活性，它只能进行无意识的广播
-            - direct：路由队列
-                - direct(直接)交换机类型是fanout(扇出)交换机类型的升级类型，direct(直接)
-                  交换机类型背后的路由算法很简单—，消息进入绑定键RoutingKey与消息的路由键完全匹配的队列
+        - direct：路由队列
+            - direct(直接)交换机类型是fanout(扇出)交换机类型的升级类型，direct(直接)
+              交换机类型背后的路由算法很简单—，消息进入绑定键RoutingKey与消息的路由键完全匹配的队列
         - topic：主题队列
             - topic(主题)交换机类型是direct(直接)交换机类型的升级类型
             - RoutingKey绑定键它必须是单词列表，由点（`.`）分隔。这些词可以是任何东西，但通常它们指定与消息相关的一些特征。最多为
@@ -346,3 +346,11 @@ https://hub.docker.com/_/rabbitmq
 RabbitMQ是一种开源的消息代理，它支持多种消息协议，包括HTTP。你可以使用HTTP
 API来发布和消费消息。你可以使用任何HTTP客户端来与RabbitMQ进行交互，例如curl或者Python的requests库。你需要在RabbitMQ中创建一个队列，然后使用HTTP
 API将消息发布到该队列中。你可以使用HTTP API从队列中获取消息。
+
+
+## 更改记录
+- 完成对rabbitmq的封装及测试
+- 完成文档整理
+- 添加链路追踪
+  - 将`uber-trace-id`放到合并到包含body的自定义结构体中
+  - 将`uber-trace-id`放到header【推荐】
