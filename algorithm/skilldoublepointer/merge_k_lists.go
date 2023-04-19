@@ -82,8 +82,8 @@ func MergeKListsV1(lists []*ListNode) *ListNode {
 		}
 	}
 
-	for minHeap != nil {
-		minNode := minHeap.Pop().(*ListNode)
+	for minHeap.Len() > 0 {
+		minNode := heap.Pop(&minHeap).(*ListNode)
 		dumpNewList.Next = minNode
 		if minNode.Next != nil {
 			heap.Push(&minHeap, minNode.Next)
