@@ -35,10 +35,6 @@ package skilldoublepointer
 https://leetcode.cn/problems/merge-two-sorted-lists/
 */
 
-func MergeTwoLists() {
-	MergeTwoListsV1(&ListNode{}, &ListNode{})
-}
-
 /*
 形象地理解，这个算法的逻辑类似于拉拉链，l1, l2 类似于拉链两侧的锯齿，指针 p 就好像拉链的拉索，将两个有序链表合并；或者说这个过程像蛋白酶合成蛋白质，l1, l2 就好比两条氨基酸，而指针 p 就好像蛋白酶，将氨基酸组合成蛋白质。
 
@@ -47,6 +43,10 @@ func MergeTwoLists() {
 	总结下：当你需要创造一条新链表的时候，可以使用虚拟头结点简化边界情况的处理。比如说，让你把两条有序链表合并成一条新的有序链表，是不是要创造一条新链表？再比你想把一条链表分解成两条链表，是不是也在创造新链表？这些情况都可以使用虚拟头结点简化边界情况的处理。
 */
 
+func MergeTwoLists() {
+	MergeTwoListsV1(&ListNode{}, &ListNode{})
+}
+
 func MergeTwoListsV1(list1 *ListNode, list2 *ListNode) *ListNode {
 	// 虚拟头节点
 	newListNode := &ListNode{
@@ -54,7 +54,7 @@ func MergeTwoListsV1(list1 *ListNode, list2 *ListNode) *ListNode {
 		Next: nil,
 	}
 
-	// 保持原始链表：复制为可操控指针的新链表
+	// 保持原始链表：复制为可移动指针的新链表
 	p := newListNode
 	p1 := list1
 	p2 := list2

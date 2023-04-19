@@ -22,5 +22,6 @@ import (
 func DoublePointer() {
 	skilldoublepointer.MergeTwoLists() // 合并两个有序链表
 	skilldoublepointer.Partition()     // 分隔链表
+	skilldoublepointer.MergeKLists()   // 合并 K 个升序链表
 
 }
