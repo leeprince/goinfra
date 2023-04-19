@@ -7,6 +7,7 @@ require (
 	github.com/elastic/go-elasticsearch/v8 v8.3.0
 	github.com/getsentry/sentry-go v0.13.0
 	github.com/go-redis/redis/v8 v8.11.5
+	github.com/go-vgo/robotgo v1.0.0-beta5.3
 	github.com/golang/protobuf v1.5.2
 	github.com/gomodule/redigo v1.8.8
 	github.com/gookit/color v1.5.1
@@ -18,9 +19,10 @@ require (
 	github.com/lestrrat-go/strftime v1.0.5 // indirect
 	github.com/nacos-group/nacos-sdk-go v1.1.1
 	github.com/opentracing/opentracing-go v1.2.0
-	github.com/otiai10/gosseract/v2 v2.4.0 // indirect
+	github.com/otiai10/gosseract/v2 v2.4.0
 	github.com/pkg/errors v0.9.1
 	github.com/progrium/macdriver v0.2.0
+	github.com/robotn/gohook v0.40.0
 	github.com/sirupsen/logrus v1.8.1
 	github.com/smartystreets/goconvey v1.8.0
 	github.com/spf13/cast v1.3.1
@@ -29,6 +31,8 @@ require (
 	github.com/tjfoc/gmsm v1.4.1
 	github.com/uber/jaeger-client-go v2.30.0+incompatible
 	github.com/uber/jaeger-lib v2.4.1+incompatible // indirect
+	github.com/vcaesar/bitmap v0.10.0-beta3.2
+	github.com/vcaesar/imgo v0.30.2
 	go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp v0.31.0
 	go.opentelemetry.io/otel v1.6.3
 	go.opentelemetry.io/otel/exporters/jaeger v1.6.3

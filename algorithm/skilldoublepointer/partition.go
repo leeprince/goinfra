@@ -3,7 +3,7 @@ package skilldoublepointer
 /**
  * @Author: prince.lee <leeprince@foxmail.com>
  * @Date:   2023/4/11 01:35
- * @Desc:	分隔链表: 注意虚拟头结点的运用
+ * @Desc:	分隔链表
  */
 
 /*
@@ -37,6 +37,13 @@ https://leetcode.cn/problems/partition-list/
 func Partition() {
 	PartitionV1(&ListNode{}, 3)
 }
+
+/*
+在合并两个有序链表时让你合二为一，而这里需要分解让你把原链表一分为二。具体来说，我们可以把原链表分成两个小链表，一个链表中的元素大小都小于 x，另一个链表中的元素都大于等于 x，最后再把这两条链表接到一起，就得到了题目想要的结果。
+
+整体逻辑和合并有序链表非常相似，细节直接看代码吧，注意虚拟头结点的运用
+*/
+
 func PartitionV1(head *ListNode, x int) *ListNode {
 	// 左链表
 	left := &ListNode{
@@ -48,10 +55,10 @@ func PartitionV1(head *ListNode, x int) *ListNode {
 		Val:  -1,
 		Next: nil,
 	}
-	// 复制可移动指针的左右链表
+	// 左右链表复制可移动指针的链表
 	l, r := left, right
 
-	// 复制可移动指针的初始链表
+	// 初始链表复制可移动指针的链表
 	h := head
 
 	// 遍历初始链表
