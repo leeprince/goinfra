@@ -1,30 +1,29 @@
-package rabbitmqtest
+package rabbitmqgdtest
 
 import (
 	"bytes"
 	"encoding/json"
 	"fmt"
 	"github.com/golang/protobuf/jsonpb"
-	"github.com/leeprince/goinfra/mq/rabbitmq/rabbitmqtest/rabbitmqtest/pbfile"
 	"github.com/streadway/amqp"
 	"testing"
 )
 
 /**
  * @Author: prince.lee <leeprince@foxmail.com>
- * @Date:   2023/4/17 17:32
+ * @Date:   2023/4/17 17:30
  * @Desc:
  */
 
-// ---------------------------- 生产者、消费者 proto 中定义 enum 类型 -------------------------------------
+// ---------------------------- 生产者、消费者 proto 中定义的结构体 -------------------------------------
 // 测试发布消息
-func TestMQservicePublishEnum(t *testing.T) {
+func TestMQservicePublish(t *testing.T) {
 	logID := "prince-test-TestMQservicePublishEnum"
-	mqReq := pbfile.ClientReportBussinessResult{
-		RequestSeq:   logID,
-		EnterpriseId: "xxxxxxxxx",
-		ResultType:   pbfile.ClientReportBussinessResultResultType(1),
-		Body:         nil,
+	mqReq := pbfile.CommonConnectInfo{
+		ClientAddr:   "prince-ClientAddr",
+		CreatedAt:    0,
+		UpdatedAt:    0,
+		EnterpriseId: "prince-EnterpriseId",
 	}
 	// 获取配置
 	rabbitConf := GetRabbitConf(RABBIT_CONFKEY)
@@ -38,7 +37,6 @@ func TestMQservicePublishEnum(t *testing.T) {
 	if err != nil {
 		panic("conn.DeclareQueue(rabbitConf.QueueName, rabbitConf.Key)")
 	}
-	// 发布成功的消息为：{"request_seq":"prince-test-TestMQservicePublishEnum","enterprise_id":"xxxxxxxxx","result_type":"QrCode","body":null}
 	err = conn.Publish(rabbitConf.Key, &mqReq)
 	if err != nil {
 		gclog.WithField("mqReq", &mqReq).WithError(err).Error(logID, " MQservice.TestMQservicePublish mq.GetRabbitConf err")
@@ -50,12 +48,11 @@ func TestMQservicePublishEnum(t *testing.T) {
 }
 
 // 测试消费消息
-func TestMQserviceComsumptionPublishEnum(t *testing.T) {
+func TestMQserviceComsumptionPublish(t *testing.T) {
 	consumeHandler := func(msg *amqp.Delivery) {
-		var msgData pbfile.ClientReportBussinessResult
+		var msgData pbfile.CommonConnectInfo
 		err := json.Unmarshal(msg.Body, &msgData)
 		if err != nil {
-			// 正确的解析方式
 			fmt.Println("json.Unmarshal err: ", err, "-msg.Body：", string(msg.Body))
 			reader := bytes.NewReader(msg.Body)
 			err := jsonpb.Unmarshal(reader, &msgData)
@@ -88,4 +85,4 @@ func TestMQserviceComsumptionPublishEnum(t *testing.T) {
 	conn.Consume(consumeHandler, rabbitConf.QueueName, 2, rabbitConf.Key)
 }
 
-// ---------------------------- 生产者、消费者 proto 中定义 enum 类型 -end -------------------------------------
+// ---------------------------- 生产者、消费者 proto 中定义的结构体 -end -------------------------------------

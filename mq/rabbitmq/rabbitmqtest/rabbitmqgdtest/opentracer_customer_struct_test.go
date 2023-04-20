@@ -1,9 +1,10 @@
-package rabbitmqtest
+package rabbitmqgdtest
 
 import (
 	"context"
 	"fmt"
 	"github.com/golang/protobuf/jsonpb"
+	"github.com/leeprince/goinfra/mq/rabbitmq/rabbitmqtest/rabbitmqtest/pbfile"
 	"github.com/opentracing/opentracing-go"
 	"github.com/streadway/amqp"
 	"testing"
@@ -15,9 +16,9 @@ import (
  * @Desc:
  */
 
-// ---------------------------- 生产者、消费者 PublishTracerV2:测试span互通,logID互通,jaeger上报为完整数据链-v2 -------------------------------------
+// ---------------------------- 生产者、消费者 PublishTracer:测试span互通,logID互通,jaeger上报为完整数据链 -------------------------------------
 // 测试发布消息
-func TestMQservicePublishTracerV2(t *testing.T) {
+func TestMQservicePublishTracer(t *testing.T) {
 	fmt.Println("初始化链路追踪...")
 	tracer.InitTracer(Config.JaegerAgentUri, "prince-jaeger-mq-test-publish")
 
@@ -52,7 +53,7 @@ func TestMQservicePublishTracerV2(t *testing.T) {
 	ctx = opentracing.ContextWithSpan(ctx, span)
 	fmt.Println("context-----2", ctx)
 
-	err = conn.PublishTracerV2(ctx, rabbitConf.Key, &mqReq)
+	err = conn.PublishTracer(ctx, rabbitConf.Key, &mqReq)
 	if err != nil {
 		panic("conn.PublishTracer(context.Background(), rabbitConf.Key, mqReq)")
 	}
@@ -66,7 +67,7 @@ func TestMQservicePublishTracerV2(t *testing.T) {
 }
 
 // 测试消费消息
-func TestMQserviceComsumptionTraceAndParseDataV2(t *testing.T) {
+func TestMQserviceComsumptionTraceAndParseData(t *testing.T) {
 	fmt.Println("初始化链路追踪...")
 	tracer.InitTracer(Config.JaegerAgentUri, "prince-jaeger-mq-test-comsumption")
 
@@ -82,7 +83,7 @@ func TestMQserviceComsumptionTraceAndParseDataV2(t *testing.T) {
 
 	consumeHandler := func(msg *amqp.Delivery) {
 		fmt.Println(" -msg.Body：", string(msg.Body))
-		ctx, dataBytes, err := conn.ParsePublishTracerDataV2(msg)
+		ctx, dataBytes, err := conn.ParsePublishTracerData(msg)
 		if err != nil {
 			fmt.Println("consumeHandler ParsePublishTracerData err", err.Error())
 			msg.Reject(false)
@@ -114,4 +115,6 @@ func TestMQserviceComsumptionTraceAndParseDataV2(t *testing.T) {
 	conn.Consume(consumeHandler, rabbitConf.QueueName, 2, rabbitConf.Key)
 }
 
-// ---------------------------- 生产者、消费者 PublishTracer:测试span互通,logID互通,jaeger上报为完整数据链-v2 -end -------------------------------------
+// ---------------------------- 生产者、消费者 PublishTracer -end -------------------------------------
+
+// ---------------------------- 生产者、消费者 PublishTracer:测试span互通,logID互通,jaeger上报为完整数据链-end -------------------------------------

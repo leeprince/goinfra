@@ -1,4 +1,4 @@
-package rabbitmqtest
+package rabbitmqgdtest
 
 import (
 	"fmt"

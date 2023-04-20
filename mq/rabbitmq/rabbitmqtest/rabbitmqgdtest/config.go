@@ -1,4 +1,4 @@
-package rabbitmqtest
+package rabbitmqgdtest
 
 var Config *Conf
 
