@@ -4,9 +4,6 @@ package skilldoublepointer
  * @Author: prince.lee <leeprince@foxmail.com>
  * @Date:   2023/4/5 23:43
  * @Desc:	合并两个有序链表
- *				代码中还用到一个链表的算法题中是很常见的「虚拟头结点」技巧，也就是 newListNode 节点。你可以试试，如果不使用 newListNode 虚拟节点，代码会复杂一些，需要额外处理指针 p 为空的情况。而有了 dummy 节点这个占位符，可以避免处理空指针的情况，降低代码的复杂性。
- *				- 什么时候需要用虚拟头结点？
- *					总结下：当你需要创造一条新链表的时候，可以使用虚拟头结点简化边界情况的处理。比如说，让你把两条有序链表合并成一条新的有序链表，是不是要创造一条新链表？再比你想把一条链表分解成两条链表，是不是也在创造新链表？这些情况都可以使用虚拟头结点简化边界情况的处理。
  */
 
 /*
@@ -38,6 +35,14 @@ package skilldoublepointer
 https://leetcode.cn/problems/merge-two-sorted-lists/
 */
 
+/*
+形象地理解，这个算法的逻辑类似于拉拉链，l1, l2 类似于拉链两侧的锯齿，指针 p 就好像拉链的拉索，将两个有序链表合并；或者说这个过程像蛋白酶合成蛋白质，l1, l2 就好比两条氨基酸，而指针 p 就好像蛋白酶，将氨基酸组合成蛋白质。
+
+代码中还用到一个链表的算法题中是很常见的「虚拟头结点」技巧，也就是 newListNode 节点。你可以试试，如果不使用 newListNode 虚拟节点，代码会复杂一些，需要额外处理指针 p 为空的情况。而有了 dummy 节点这个占位符，可以避免处理空指针的情况，降低代码的复杂性。
+	- 什么时候需要用虚拟头结点？
+	总结下：当你需要创造一条新链表的时候，可以使用虚拟头结点简化边界情况的处理。比如说，让你把两条有序链表合并成一条新的有序链表，是不是要创造一条新链表？再比你想把一条链表分解成两条链表，是不是也在创造新链表？这些情况都可以使用虚拟头结点简化边界情况的处理。
+*/
+
 func MergeTwoLists() {
 	MergeTwoListsV1(&ListNode{}, &ListNode{})
 }
@@ -49,14 +54,14 @@ func MergeTwoListsV1(list1 *ListNode, list2 *ListNode) *ListNode {
 		Next: nil,
 	}
 
-	// 保持原始链表
+	// 保持原始链表：复制为可移动指针的新链表
 	p := newListNode
 	p1 := list1
 	p2 := list2
 
 	for p1 != nil && p2 != nil {
 		// 比较 p1 和 p2 两个指针
-        // 将值较小的的节点接到 p 指针
+		// 将值较小的的节点接到 p 指针
 		if p1.Val < p2.Val {
 			p.Next = p1
 			p1 = p1.Next
@@ -74,44 +79,8 @@ func MergeTwoListsV1(list1 *ListNode, list2 *ListNode) *ListNode {
 		p.Next = p2
 	}
 
-	// 易错点：必须使用原有的newListNode变量非p变量，因为p变量的Next指针是在不断变化的
+	// 易错点：必须使用原有的newListNode变量非p变量去除虚拟节点，因为p变量的Next指针是在不断变化的。
 	newListNode = newListNode.Next
 
 	return newListNode
-}
-
-// 注意：go 代码由 chatGPT🤖 根据我的 java 代码翻译，旨在帮助不同背景的读者理解算法逻辑。
-// 本代码还未经过力扣测试，仅供参考，如有疑惑，可以参照我写的 java 代码对比查看。
-
-func MergeTwoListsV2(l1 *ListNode, l2 *ListNode) *ListNode {
-	// 虚拟头结点
-	dummy := &ListNode{-1, nil}
-	p := dummy
-	p1 := l1
-	p2 := l2
-
-	for p1 != nil && p2 != nil {
-		// 比较 p1 和 p2 两个指针
-		// 将值较小的的节点接到 p 指针
-		if p1.Val > p2.Val {
-			p.Next = p2
-			p2 = p2.Next
-		} else {
-			p.Next = p1
-			p1 = p1.Next
-		}
-		// p 指针不断前进
-		p = p.Next
-	}
-
-	if p1 != nil {
-		p.Next = p1
-	}
-
-	if p2 != nil {
-		p.Next = p2
-	}
-
-	dummy = dummy.Next
-	return dummy
 }

@@ -1,9 +1,9 @@
 package stringer_test_test
 
 import (
-    "fmt"
-    "github.com/leeprince/goinfra/kv/stringer_test"
-    "testing"
+	"fmt"
+	"github.com/leeprince/goinfra/utils/stringutil/stringer_test"
+	"testing"
 )
 
 /**
@@ -11,7 +11,6 @@ import (
  * @Date:   2022/6/27 下午2:39
  * @Desc:   测试 PrinceTypeInt
  */
-
 
 // Type describes the type of the data Value holds.
 type PrinceTypeInt int
@@ -37,23 +36,23 @@ const (
 	STRINGSLICE
 )
 
-func TestPrinceType(t *testing.T)  {
-    v := BOOL
-    fmt.Println(v)
-    
-    v1 := stringer_test.BOOL
-    fmt.Println(v1)
-    v11 := stringer_test.BOOL.String()
-    fmt.Println(v11)
-    
-    v2 := stringer_test.TestComentHaveOther
-    fmt.Println(v2)
-    v21 := stringer_test.TestComentHaveOther.String()
-    fmt.Println(v21)
-    
-    fmt.Println(v)
-    v3 := stringer_test.TestNotComment
-    fmt.Println(v3)
-    v31 := stringer_test.TestNotComment.String()
-    fmt.Println(v31)
+func TestPrinceType(t *testing.T) {
+	v := BOOL
+	fmt.Println(v)
+
+	v1 := stringer_test.BOOL
+	fmt.Println(v1)
+	v11 := stringer_test.BOOL.String()
+	fmt.Println(v11)
+
+	v2 := stringer_test.TestComentHaveOther
+	fmt.Println(v2)
+	v21 := stringer_test.TestComentHaveOther.String()
+	fmt.Println(v21)
+
+	fmt.Println(v)
+	v3 := stringer_test.TestNotComment
+	fmt.Println(v3)
+	v31 := stringer_test.TestNotComment.String()
+	fmt.Println(v31)
 }

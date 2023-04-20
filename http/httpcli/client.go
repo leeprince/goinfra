@@ -19,28 +19,30 @@ import (
 	"time"
 )
 
-//1.基于httpclient_v2版本实现
-//2.变更了span上报字段名为小写
-//3.修改了类名(HttpCtlService->HttpClient)
-//4.去除了无用的New部分代码片段
-//5.增加了调用方法（如WithContext、WithLogID、DoRequest）
-//6.优化了报错信息
-//7.去除clone逻辑
-//8.添加是否打印日志
-//9.添加是否添加http链路追踪
-//10.添加是否使用代理
-//11.添加重定向检查
+// 1.基于httpclient_v2版本实现
+// 2.变更了span上报字段名为小写
+// 3.修改了类名(HttpCtlService->HttpClient)
+// 4.去除了无用的New部分代码片段
+// 5.增加了调用方法（如WithContext、WithLogID、DoRequest）
+// 6.优化了报错信息
+// 7.去除clone逻辑
+// 8.添加是否打印日志
+// 9.添加是否添加http链路追踪
+// 10.添加是否使用代理
+// 11.添加重定向检查
 
-const HttpDefaultTimeout = time.Second * 8
+const (
+	HttpDefaultTimeout = time.Second * 3
+)
 
 var defaultHeader = map[string]string{"Content-Type": "application/json"}
 
 type HttpClient struct {
-	ctx           context.Context
+	url           string
+	method        string          // http包中的字符串。如：http.MethodGet
+	ctx           context.Context // 默认：context.Background()
 	logID         string
 	timeout       time.Duration
-	method        string // http包中的字符串。如：http.MethodGet
-	url           string
 	header        map[string]string
 	requestBody   interface{}
 	skipVerify    bool // 是否跳过安全校验
@@ -50,12 +52,11 @@ type HttpClient struct {
 	checkRedirect func(req *http.Request, via []*http.Request) error // 检查重定向的方法
 }
 
-// TODO: 优化为传递必传参数 prince@todo 2023/4/12 16:56
 func NewHttpClient() *HttpClient {
 	hc := &HttpClient{
-		timeout:       HttpDefaultTimeout,
-		method:        "",
 		url:           "",
+		timeout:       HttpDefaultTimeout,
+		method:        http.MethodGet,
 		logID:         utils.UniqID(),
 		header:        nil,
 		requestBody:   nil,
@@ -105,7 +106,7 @@ func (s *HttpClient) WithBody(body interface{}) *HttpClient {
 	return s
 }
 
-//不打印日志
+// 不打印日志
 func (s *HttpClient) WithNotLogging(notLogging bool) *HttpClient {
 	s.notLogging = notLogging
 	return s
@@ -117,11 +118,11 @@ func (s *HttpClient) WithSkipVerify(skipVerify bool) *HttpClient {
 }
 
 // 链路追踪。这是WithIsHttpTrace后可以省略 WithContext()
-func (s *HttpClient) WithIsHttpTrace(isHttpTrace bool, ctx context.Context) *HttpClient {
+func (s *HttpClient) WithIsHttpTrace(isHttpTrace bool, ctx ...context.Context) *HttpClient {
 	s.isHttpTrace = isHttpTrace
-	s.ctx = ctx
+	s.ctx = ctx[0]
 	if isHttpTrace {
-		if jaegerclient.SpanFromContext(ctx) == nil {
+		if jaegerclient.SpanFromContext(ctx[0]) == nil {
 			s.isHttpTrace = false
 		}
 	}
