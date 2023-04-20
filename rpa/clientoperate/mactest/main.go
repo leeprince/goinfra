@@ -3,7 +3,7 @@ package main
 /**
  * @Author: prince.lee <leeprince@foxmail.com>
  * @Date:   2023/4/19 01:29
- * @Desc:
+ * @Desc:   待测试
  */
 
 /*
@@ -116,30 +116,31 @@ package main
 
 import (
 	"C"
-	"time"
+	"fmt"
 )
 
 func main() {
 	// 查找目标窗口
 	// 需要注意的是，窗口标题可能会因为不同的应用程序而有所不同，需要根据实际情况进行调整。
-	title := "目标窗口标题"
+	title := "Sublime Text"
 	windowRef := C.getWindowByTitle(C.CString(title))
 	if windowRef == nil {
 		panic("未找到目标窗口")
 	}
+	fmt.Println("找到了目标窗口")
 	// 将目标窗口置于前台
 	C.SelectWindow(windowRef)
 
-	// 模拟点击操作
-	point := C.CGPoint{X: 300, Y: 300}
-	C.simulateClick(point)
-
-	// 模拟输入操作
-	C.simulateKey(C.char('A'))
-	C.simulateKey(C.char('B'))
-
-	// 模拟快捷键操作
-	C.simulateShortcut(C.kVK_ANSI_C)
-	time.Sleep(time.Millisecond * 100)
-	C.simulateShortcut(C.kVK_Return)
+	// // 模拟点击操作
+	// point := C.CGPoint{X: 300, Y: 300}
+	// C.simulateClick(point)
+	//
+	// // 模拟输入操作
+	// C.simulateKey(C.char('A'))
+	// C.simulateKey(C.char('B'))
+	//
+	// // 模拟快捷键操作
+	// C.simulateShortcut(C.kVK_ANSI_C)
+	// time.Sleep(time.Millisecond * 100)
+	// C.simulateShortcut(C.kVK_Return)
 }
