@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"github.com/golang/protobuf/jsonpb"
+	"github.com/leeprince/goinfra/mq/rabbitmq/rabbitmqtest/rabbitmqgdtest/pbfile"
 	"github.com/opentracing/opentracing-go"
 	"github.com/streadway/amqp"
 	"testing"
@@ -23,7 +24,7 @@ func TestMQservicePublishTracerV2(t *testing.T) {
 
 	ctx := context.Background()
 	logID := common.LogIdByCtx(ctx)
-	fmt.Println("logID------1", logID)
+	fmt.Println("logID------0", logID)
 
 	mqReq := pbfile.ClientReportBussinessResult{
 		RequestSeq:   logID,
@@ -49,15 +50,19 @@ func TestMQservicePublishTracerV2(t *testing.T) {
 	span := tracer.GetTracer().StartSpan("PublishTracer-op")
 	defer span.Finish()
 	fmt.Println("context-----1", ctx)
+	logID = common.LogIdByCtx(ctx)
+	fmt.Println("logID-----1", logID)
 	ctx = opentracing.ContextWithSpan(ctx, span)
 	fmt.Println("context-----2", ctx)
+	logID = common.LogIdByCtx(ctx)
+	fmt.Println("logID-----2", logID)
 
 	err = conn.PublishTracerV2(ctx, rabbitConf.Key, &mqReq)
 	if err != nil {
 		panic("conn.PublishTracer(context.Background(), rabbitConf.Key, mqReq)")
 	}
 	logID = common.LogIdByCtx(ctx)
-	fmt.Println("logID------3", logID)
+	fmt.Println("logID-----3", logID)
 
 	fmt.Println(" MQservice.TestMQservicePublishTracer successfuly info")
 

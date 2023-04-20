@@ -8,7 +8,10 @@ rabbit:
     queue_name: prince_test_queue
     delay_queue_name:
     key:   prince_test_key
+    # queue_type: direct 链路追踪正常
     queue_type: direct
+    # queue_type: fanout 链路追踪正常
+    # queue_type: fanout
     delay_interval: 300
     prefech: 10
 
