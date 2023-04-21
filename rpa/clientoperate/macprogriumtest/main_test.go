@@ -1,12 +1,24 @@
 package main
 
-import "testing"
+import (
+	"os"
+	"runtime"
+	"testing"
+)
 
 /**
  * @Author: prince.lee <leeprince@foxmail.com>
  * @Date:   2023/4/20 23:13
  * @Desc:
  */
+
+func TestMain(m *testing.M) {
+	if runtime.GOOS == "windows" {
+		ACTIVE_NAME = "sublime_text.exe"
+	}
+
+	os.Exit(m.Run())
+}
 
 // 选择窗口
 func TestSelectWindow(t *testing.T) {

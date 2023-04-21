@@ -69,6 +69,10 @@ func Key() {
 	// err = robotgo.KeyTap(robotgo.Down)
 	// perror.ErrPanic(err)
 
+	// err = robotgo.KeyTap(robotgo.Key1)
+	//err = robotgo.KeyTap(robotgo.KeyA)
+
+	// --- mac: command+f
 	/*
 		报错：
 		fatal error: unexpected signal during runtime execution
@@ -95,23 +99,35 @@ func Key() {
 			/Users/leeprince/www/go/goinfra/rpa/clientoperate/macprogriumtest/main.go:74 +0x205 fp=0xc000058f60 sp=0xc000058ef8 pc=0x41ae2a5
 		github.com/leeprince/goinfra/rpa/clientoperate/macprogriumtest.TestKey(0x0?)
 	*/
+	//err = robotgo.KeyTap(robotgo.KeyF, robotgo.Cmd)
+	// 等于下面的操作
+	//err = robotgo.KeyToggle(robotgo.Cmd, "down")
+	//perror.ErrPanic(err)
+	//err = robotgo.KeyTap(robotgo.KeyF)
+	//perror.ErrPanic(err)
+	//err = robotgo.KeyToggle(robotgo.Cmd, "up")
+	//perror.ErrPanic(err)
 	// ---
-	err = robotgo.KeyToggle(robotgo.Cmd, "down")
+
+	// --- windows: ctrl+f  >> windows 完美执行完成
+	/*
+		go version go1.18.5 windows/amd64
+	*/
+	/*
+		gcc.exe (x86_64-posix-sjlj-rev0, Built by MinGW-W64 project) 8.1.0
+			Copyright (C) 2018 Free Software Foundation, Inc.
+			This is free software; see the source for copying conditions.  There is NO
+			warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+	*/
+	//err = robotgo.KeyTap(robotgo.KeyF, robotgo.Ctrl)
+	// 等于下面的操作
+	err = robotgo.KeyToggle(robotgo.Ctrl, "down")
 	perror.ErrPanic(err)
-	err = robotgo.KeyTap("a")
+	err = robotgo.KeyTap(robotgo.KeyF)
 	perror.ErrPanic(err)
-	err = robotgo.KeyToggle(robotgo.Cmd, "up")
+	err = robotgo.KeyToggle(robotgo.Ctrl, "up")
 	perror.ErrPanic(err)
 	// ---
-	// err = robotgo.KeyTap(robotgo.Key1)
-	// err = robotgo.KeyTap("a")
-	// err = robotgo.KeyTap("a", "shift")
-	// err = robotgo.KeyTap("i", "cmd")
-	// err = robotgo.KeyTap("f", "command")
-	// err = robotgo.KeyTap(robotgo.KeyF, "command")
-	// err = robotgo.KeyTap(robotgo.KeyF, robotgo.Cmd)
-	// err = robotgo.KeyTap(robotgo.KeyF, robotgo.Cmd, robotgo.Shift)
-	// err = robotgo.KeyTap(robotgo.KeyF, robotgo.Shift, robotgo.Cmd)
 	perror.ErrPanic(err)
 
 }

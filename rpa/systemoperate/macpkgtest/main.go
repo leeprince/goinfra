@@ -227,9 +227,6 @@ func Mouse() {
 
 	robotgo.MouseSleep = 10
 
-	robotgo.ScrollMouse(10, "up")
-	robotgo.ScrollMouse(20, "right")
-
 	robotgo.Scroll(0, -10)
 	robotgo.Scroll(100, 0)
 
@@ -265,7 +262,7 @@ func Window() {
 			robotgo.KeyToggle("a", fpid[0])
 			robotgo.KeyToggle("a", fpid[0], "up")
 
-			err = robotgo.ActivePID(fpid[0])
+			err = robotgo.ActivePid(fpid[0])
 			if err != nil {
 				fmt.Println("robotgo.ActivePID(fpid[0]) err:", err)
 			}
