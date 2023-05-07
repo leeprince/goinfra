@@ -1,8 +1,11 @@
 package main
 
 import (
+	"fmt"
 	"github.com/go-vgo/robotgo"
 	"github.com/leeprince/goinfra/perror"
+	"runtime"
+	"time"
 )
 
 /**
@@ -17,7 +20,14 @@ var (
 
 var err error
 
+func init() {
+	if runtime.GOOS == "windows" {
+		ACTIVE_NAME = ACTIVE_NAME + ".exe"
+	}
+}
+
 func main() {
+	Key()
 }
 
 // 选择窗口
@@ -57,6 +67,8 @@ func Key() {
 	err = robotgo.ActiveName(ACTIVE_NAME)
 	perror.ErrPanic(err)
 
+	time.Sleep(time.Second * 2)
+
 	robotgo.KeySleep = 2000
 	err = robotgo.KeyTap(robotgo.Enter)
 	perror.ErrPanic(err)
@@ -70,7 +82,7 @@ func Key() {
 	// perror.ErrPanic(err)
 
 	// err = robotgo.KeyTap(robotgo.Key1)
-	//err = robotgo.KeyTap(robotgo.KeyA)
+	// err = robotgo.KeyTap(robotgo.KeyA)
 
 	// --- mac: command+f
 	/*
@@ -99,14 +111,14 @@ func Key() {
 			/Users/leeprince/www/go/goinfra/rpa/clientoperate/macprogriumtest/main.go:74 +0x205 fp=0xc000058f60 sp=0xc000058ef8 pc=0x41ae2a5
 		github.com/leeprince/goinfra/rpa/clientoperate/macprogriumtest.TestKey(0x0?)
 	*/
-	//err = robotgo.KeyTap(robotgo.KeyF, robotgo.Cmd)
+	// err = robotgo.KeyTap(robotgo.KeyF, robotgo.Cmd)
 	// 等于下面的操作
-	//err = robotgo.KeyToggle(robotgo.Cmd, "down")
-	//perror.ErrPanic(err)
-	//err = robotgo.KeyTap(robotgo.KeyF)
-	//perror.ErrPanic(err)
-	//err = robotgo.KeyToggle(robotgo.Cmd, "up")
-	//perror.ErrPanic(err)
+	// err = robotgo.KeyToggle(robotgo.Cmd, "down")
+	// perror.ErrPanic(err)
+	// err = robotgo.KeyTap(robotgo.KeyF)
+	// perror.ErrPanic(err)
+	// err = robotgo.KeyToggle(robotgo.Cmd, "up")
+	// perror.ErrPanic(err)
 	// ---
 
 	// --- windows: ctrl+f  >> windows 完美执行完成
@@ -119,15 +131,32 @@ func Key() {
 			This is free software; see the source for copying conditions.  There is NO
 			warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 	*/
-	//err = robotgo.KeyTap(robotgo.KeyF, robotgo.Ctrl)
+	// err = robotgo.KeyTap(robotgo.KeyF, robotgo.Ctrl)
 	// 等于下面的操作
-	err = robotgo.KeyToggle(robotgo.Ctrl, "down")
-	perror.ErrPanic(err)
-	err = robotgo.KeyTap(robotgo.KeyF)
-	perror.ErrPanic(err)
-	err = robotgo.KeyToggle(robotgo.Ctrl, "up")
-	perror.ErrPanic(err)
+	// err = robotgo.KeyToggle(robotgo.Ctrl, "down")
+	// perror.ErrPanic(err)
+	// err = robotgo.KeyTap(robotgo.KeyF)
+	// perror.ErrPanic(err)
+	// err = robotgo.KeyToggle(robotgo.Ctrl, "up")
+	// perror.ErrPanic(err)
 	// ---
+
+}
+
+// 屏幕操作
+func Screen() {
+	err = robotgo.ActiveName(ACTIVE_NAME)
 	perror.ErrPanic(err)
 
+	bit := robotgo.CaptureScreen()
+	fmt.Println("abitMap...", bit)
+	gbit := robotgo.ToBitmap(bit)
+	fmt.Println("bitmap...", gbit.Width)
+
+	// gbitMap := robotgo.CaptureGo()
+	// fmt.Println("Go CaptureScreen...", gbitMap.Width)
+	// fmt.Println("...", gbitMap.Width, gbitMap.BytesPerPixel)
+	//
+	// img := robotgo.CaptureImg()
+	// robotgo.Save(img, "save.png")
 }

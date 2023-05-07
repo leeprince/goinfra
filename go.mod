@@ -1,14 +1,16 @@
 module github.com/leeprince/goinfra
 
-go 1.18
+go 1.19
 
 require (
+	github.com/chromedp/chromedp v0.9.1
 	github.com/elastic/go-elasticsearch/v8 v8.3.0
 	github.com/getsentry/sentry-go v0.13.0
 	github.com/go-redis/redis/v8 v8.11.5
 	github.com/go-vgo/robotgo v1.0.0-rc1
 	github.com/golang/protobuf v1.5.3
 	github.com/gomodule/redigo v1.8.8
+	github.com/google/gopacket v1.1.19
 	github.com/gookit/color v1.5.1
 	github.com/gookit/goutil v0.5.7
 	github.com/grpc-ecosystem/grpc-gateway v1.16.0
@@ -18,7 +20,7 @@ require (
 	github.com/opentracing/opentracing-go v1.2.0
 	github.com/otiai10/gosseract/v2 v2.4.0
 	github.com/pkg/errors v0.9.1
-	github.com/robotn/gohook v0.40.0
+	github.com/progrium/macdriver v0.2.0
 	github.com/sirupsen/logrus v1.8.1
 	github.com/smartystreets/goconvey v1.8.0
 	github.com/spf13/cast v1.3.1
@@ -26,8 +28,6 @@ require (
 	github.com/tencentyun/cos-go-sdk-v5 v0.7.41
 	github.com/tjfoc/gmsm v1.4.1
 	github.com/uber/jaeger-client-go v2.30.0+incompatible
-	github.com/vcaesar/bitmap v0.10.0-beta3.2
-	github.com/vcaesar/imgo v0.30.2
 	go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp v0.31.0
 	go.opentelemetry.io/otel v1.6.3
 	go.opentelemetry.io/otel/exporters/jaeger v1.6.3
@@ -48,6 +48,8 @@ require (
 	github.com/aliyun/alibaba-cloud-sdk-go v1.61.18 // indirect
 	github.com/buger/jsonparser v1.1.1 // indirect
 	github.com/cespare/xxhash/v2 v2.2.0 // indirect
+	github.com/chromedp/cdproto v0.0.0-20230419194459-b5ff65bc57a3 // indirect
+	github.com/chromedp/sysutil v1.0.0 // indirect
 	github.com/clbanning/mxj v1.8.4 // indirect
 	github.com/dgryski/go-rendezvous v0.0.0-20200823014737-9f7001d12a5f // indirect
 	github.com/elastic/elastic-transport-go/v8 v8.0.0-20211216131617-bbee439d559c // indirect
@@ -58,6 +60,9 @@ require (
 	github.com/go-logr/stdr v1.2.2 // indirect
 	github.com/go-ole/go-ole v1.2.6 // indirect
 	github.com/go-sql-driver/mysql v1.6.0 // indirect
+	github.com/gobwas/httphead v0.1.0 // indirect
+	github.com/gobwas/pool v0.2.1 // indirect
+	github.com/gobwas/ws v1.2.0 // indirect
 	github.com/google/go-querystring v1.0.0 // indirect
 	github.com/gopherjs/gopherjs v1.17.2 // indirect
 	github.com/jezek/xgb v0.0.0-20210312150743-0e0f116e1240 // indirect
@@ -65,11 +70,13 @@ require (
 	github.com/jinzhu/now v1.1.5 // indirect
 	github.com/jmespath/go-jmespath v0.0.0-20180206201540-c2b33e8439af // indirect
 	github.com/jonboulle/clockwork v0.2.2 // indirect
+	github.com/josharian/intern v1.0.0 // indirect
 	github.com/jtolds/gls v4.20.0+incompatible // indirect
 	github.com/kbinani/screenshot v0.0.0-20210720154843-7d3a670d8329 // indirect
 	github.com/lestrrat-go/strftime v1.0.5 // indirect
 	github.com/lufia/plan9stats v0.0.0-20220913051719-115f729f3c8c // indirect
 	github.com/lxn/win v0.0.0-20210218163916-a377121e959e // indirect
+	github.com/mailru/easyjson v0.7.7 // indirect
 	github.com/mitchellh/mapstructure v1.4.3 // indirect
 	github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd // indirect
 	github.com/modern-go/reflect2 v1.0.2 // indirect
@@ -85,6 +92,7 @@ require (
 	github.com/tklauser/numcpus v0.6.0 // indirect
 	github.com/uber/jaeger-lib v2.4.1+incompatible // indirect
 	github.com/vcaesar/gops v0.30.0 // indirect
+	github.com/vcaesar/imgo v0.30.2 // indirect
 	github.com/vcaesar/keycode v0.10.0 // indirect
 	github.com/vcaesar/tt v0.20.0 // indirect
 	github.com/xo/terminfo v0.0.0-20210125001918-ca9a967f8778 // indirect
@@ -94,7 +102,7 @@ require (
 	go.uber.org/multierr v1.6.0 // indirect
 	go.uber.org/zap v1.16.0 // indirect
 	golang.org/x/image v0.5.0 // indirect
-	golang.org/x/sys v0.6.0 // indirect
+	golang.org/x/sys v0.7.0 // indirect
 	google.golang.org/genproto v0.0.0-20230410155749-daa745c078e1 // indirect
 	google.golang.org/grpc v1.54.0 // indirect
 	gopkg.in/check.v1 v1.0.0-20200227125254-8fa46927fb4f // indirect
