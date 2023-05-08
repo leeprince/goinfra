@@ -18,18 +18,17 @@ go vet ./...
 
 这个命令对当前目录下的所有Go源文件进行静态代码分析，并输出潜在问题和错误。如果没有问题，则不会输出任何内容。
 
-除了go vet之外，还有一些第三方的静态代码分析工具，例如golint、staticcheck、gosec等等。这些工具可以检查更多的问题，并提供更详细的报告和建议。这些工具可以通过go get命令安装，例如：
+除了go vet之外，还有一些第三方的静态代码分析工具，例如golangci-lint、revive等等。这些工具可以检查更多的问题，并提供更详细的报告和建议。这些工具可以通过go get命令安装，例如：
 ```
-go install golang.org/x/lint/golint
-go install honnef.co/go/tools/cmd/staticcheck
-go install github.com/securego/gosec/cmd/gosec
+go install github.com/golangci/golangci-lint
+go install github.com/mgechev/revive
+go install golang.org/x/lint/golint # 已经被废弃,使用 revive 代替
 ```
 
 安装完成后，可以使用以下命令来运行些工具：
 ```
-golint ./...
-staticcheck ./...
-gosec ./...
+golangci-lint run
+revive ./...
 ```
 
 这些工具的输出结果可能比较详细，需要仔细阅读并逐一解决。静态代码分析虽然不能完全保证代码的正确性，但可以大大减少潜在问题和错误，提高代码的质量和可维护性。
