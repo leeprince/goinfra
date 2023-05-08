@@ -6,6 +6,7 @@ import (
 	"crypto/cipher"
 	"crypto/des"
 	"errors"
+	"github.com/leeprince/goinfra/perror"
 )
 
 /**
@@ -22,8 +23,9 @@ const (
 
 // --- DES ------------------------------------------------------------------------------------
 // DES加密
-//  key: 密钥字节数必须等于8||24。根据密钥字节数匹配具体的密码函数：密码分组函数
-//  encryptOpts.isToHex: 默认转十六进制
+//
+//	key: 密钥字节数必须等于8||24。根据密钥字节数匹配具体的密码函数：密码分组函数
+//	encryptOpts.isToHex: 默认转十六进制
 func DESEncrypt(src, key string, opts ...OptionFunc) (string, error) {
 	srcByte := []byte(src)
 	keyByte := []byte(key)
@@ -50,9 +52,10 @@ func DESEncrypt(src, key string, opts ...OptionFunc) (string, error) {
 }
 
 // DES解密
-//  crypt: 默认是十六进制字符串
-//  key: 密钥字节数必须等于8||24。。根据key的字节数对应到不同的`密码函数：密码分组函数`
-//  encryptOpts.isToHex: 默认传入的decrypted是转十六进制
+//
+//	crypt: 默认是十六进制字符串
+//	key: 密钥字节数必须等于8||24。。根据key的字节数对应到不同的`密码函数：密码分组函数`
+//	encryptOpts.isToHex: 默认传入的decrypted是转十六进制
 func DESDecrypt(crypt, key string, opts ...OptionFunc) (string, error) {
 	opt := initOption(opts...)
 	srcByte, err := input(crypt, opt.inputType)
@@ -117,11 +120,12 @@ func desSwitchKeyLenGetCipherBlock(key []byte) (blockFunc cipher.Block, err erro
 
 // --- AES ------------------------------------------------------------------------------------
 // AES加密
-//  src: 明文
-//  key: 密钥字节数必须是：16（AES-128）|| 24（AES-192）|| 32（AES-256）。根据key的字节数对应到不同的`密码函数：密码分组函数`
-//  可选项
-//      opt.aesBlockModeType: 默认AESBlockModeTypeCBC
-//      opt.aesIV: 默认填充"0000000000000000"
+//
+//	src: 明文
+//	key: 密钥字节数必须是：16（AES-128）|| 24（AES-192）|| 32（AES-256）。根据key的字节数对应到不同的`密码函数：密码分组函数`
+//	可选项
+//	    opt.aesBlockModeType: 默认AESBlockModeTypeCBC
+//	    opt.aesIV: 默认填充"0000000000000000"
 func AESEncrypt(src, key string, opts ...OptionFunc) (string, error) {
 	opt := initOption(opts...)
 
@@ -155,11 +159,12 @@ func AESEncrypt(src, key string, opts ...OptionFunc) (string, error) {
 }
 
 // AES解密
-//  crypt: 默认是十六进制字符串
-//  key: 密钥字节数必须是：16（AES-128）|| 24（AES-192）|| 32（AES-256）
-//  可选项
-//      opt.aesBlockModeType: 默认AESBlockModeTypeCBC
-//      opt.aesIV: 默认填充"0000000000000000
+//
+//	crypt: 默认是十六进制字符串
+//	key: 密钥字节数必须是：16（AES-128）|| 24（AES-192）|| 32（AES-256）
+//	可选项
+//	    opt.aesBlockModeType: 默认AESBlockModeTypeCBC
+//	    opt.aesIV: 默认填充"0000000000000000
 func AESDecrypt(crypt, key string, opts ...OptionFunc) (string, error) {
 	opt := initOption(opts...)
 	srcByte, err := input(crypt, opt.inputType)

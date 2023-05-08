@@ -1,10 +1,10 @@
-package bot
+package botutil
 
 import (
 	"bytes"
 	"encoding/json"
 	"github.com/leeprince/goinfra/http/httpcli"
-	"github.com/leeprince/goinfra/utils"
+	"github.com/leeprince/goinfra/utils/sliceutil"
 	"github.com/pkg/errors"
 	"net/http"
 )
@@ -37,8 +37,9 @@ type MarkdownBody struct {
 }
 
 // contextType
-// 	contextType=BOT_CONTENTTYPE_TEXT,则content的内容自动以中文逗号分割（不支持换行）
-// 	contextType=BOT_CONTENTTYPE_MARKDOWN,则content的内容以换行符分割（支持换行）
+//
+//	contextType=BOT_CONTENTTYPE_TEXT,则content的内容自动以中文逗号分割（不支持换行）
+//	contextType=BOT_CONTENTTYPE_MARKDOWN,则content的内容以换行符分割（支持换行）
 func SendQYWXBot(url string, contextType BotContentType, title string, contents []string) (respBobyBytes []byte, resp *http.Response, err error) {
 	if url == "" {
 		err = errors.New("SendQYWXBot url 必填")
@@ -49,7 +50,7 @@ func SendQYWXBot(url string, contextType BotContentType, title string, contents 
 		return
 	}
 
-	if !utils.InString(string(contextType), []string{
+	if !sliceutil.InString(string(contextType), []string{
 		string(BOT_CONTENTTYPE_TEXT),
 		string(BOT_CONTENTTYPE_MARKDOWN),
 	}) {
@@ -114,7 +115,7 @@ func SendQYWXBot(url string, contextType BotContentType, title string, contents 
 		}
 	}
 
-	//发送数据
+	// 发送数据
 	return httpcli.NewHttpClient().
 		WithURL(url).
 		WithMethod(http.MethodPost).

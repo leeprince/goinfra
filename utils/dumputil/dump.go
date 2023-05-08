@@ -1,4 +1,4 @@
-package dump
+package dumputil
 
 /**
  * @Author: prince.lee <leeprince@foxmail.com>

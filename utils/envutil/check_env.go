@@ -1,4 +1,4 @@
-package utils
+package envutil
 
 import (
 	"github.com/leeprince/goinfra/consts"

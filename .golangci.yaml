@@ -1,0 +1,32 @@
+linters:
+  disable-all: true
+  enable:
+    - deadcode
+    - errcheck
+    - gosimple
+    - govet
+    - ineffassign
+    - staticcheck
+    - structcheck
+    - typecheck
+    - unused
+    - varcheck
+    - goimports
+    - golint
+    - scopelint
+    - bodyclose
+    - dogsled
+    - dupl
+    - errorlint
+
+linters-settings:
+  govet:
+    check-unreacheable: true
+    check-rangeloops: true
+    check-copylocks: true
+    disable:
+      - composite
+
+# issues:
+#   include:
+#     - "EXC0002" # 检查对外暴露的方法已加上注释。需要开启 golint 才生效

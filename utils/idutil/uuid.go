@@ -1,8 +1,8 @@
-package utils
+package idutil
 
 import (
-    "fmt"
-    "time"
+	"fmt"
+	"time"
 )
 
 /**

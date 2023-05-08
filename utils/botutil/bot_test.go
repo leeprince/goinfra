@@ -1,4 +1,4 @@
-package bot
+package botutil
 
 import (
 	"net/http"

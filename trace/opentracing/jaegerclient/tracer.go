@@ -2,7 +2,7 @@ package jaegerclient
 
 import (
 	"github.com/leeprince/goinfra/plog"
-	"github.com/leeprince/goinfra/utils"
+	"github.com/leeprince/goinfra/utils/envutil"
 	"github.com/opentracing/opentracing-go"
 	"github.com/uber/jaeger-client-go"
 	"github.com/uber/jaeger-client-go/config"
@@ -86,7 +86,7 @@ func initTracer(opt *jaegerOption) (opentracing.Tracer, io.Closer, error) {
 		},
 	}
 
-	if utils.IsProdOrSandbox(opt.env) || opt.reporterLogSpans == false {
+	if envutil.IsProdOrSandbox(opt.env) || opt.reporterLogSpans == false {
 		cfg.Reporter.LogSpans = false
 	}
 

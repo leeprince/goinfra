@@ -1,6 +1,7 @@
 package test
 
 import (
+	"github.com/leeprince/goinfra/algorithm/skilldoublepointer"
 	"github.com/smartystreets/goconvey/convey"
 	"reflect"
 	"testing"

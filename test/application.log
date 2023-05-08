@@ -1,0 +1,6 @@
+{"context":{},"level":"debug","msg":"prince log Debug SetReportCaller","time":"2023-05-08 09:47:39.214378"}
+{"context":{},"level":"debug","msg":"prince log Debug SetReportCaller","time":"2023-05-08 09:47:39.214651"}
+{"context":{"WithField01":"WithFieldValue"},"level":"debug","msg":"prince log Debug WithField","time":"2023-05-08 09:47:39.214679"}
+{"context":{},"level":"debug","msg":"prince log Debug SetReportCaller","time":"2023-05-08 09:47:53.868965"}
+{"context":{},"level":"debug","msg":"prince log Debug SetReportCaller","time":"2023-05-08 09:47:53.869393"}
+{"context":{"WithField01":"WithFieldValue"},"level":"debug","msg":"prince log Debug WithField","time":"2023-05-08 09:47:53.869430"}

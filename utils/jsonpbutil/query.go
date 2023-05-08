@@ -1,4 +1,4 @@
-package jsonpb
+package jsonpbutil
 
 import (
 	"reflect"

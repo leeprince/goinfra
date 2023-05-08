@@ -4,7 +4,7 @@ import (
 	"errors"
 	"fmt"
 	jsoniter "github.com/json-iterator/go"
-	"github.com/leeprince/goinfra/utils"
+	"github.com/leeprince/goinfra/utils/idutil"
 	"testing"
 )
 
@@ -111,7 +111,7 @@ func TestWithFiledLogID(t *testing.T) {
 	Debug("prince log Debug SetReportCaller 01")
 	WithField("WithField01", "WithFieldValue01").Debug("prince log Debug WithField")
 
-	logID := utils.UniqID()
+	logID := idutil.UniqID()
 	LogID(logID).Debug("prince log Debug")
 	Debug("prince log Debug")
 	LogID(logID).WithField("WithField01", "WithFieldValue01").Debug("prince log Debug WithField")

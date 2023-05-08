@@ -5,6 +5,7 @@ import (
 	"crypto/md5"
 	"crypto/sha1"
 	"crypto/sha256"
+	"github.com/leeprince/goinfra/perror"
 	"golang.org/x/crypto/bcrypt"
 	"hash"
 )
@@ -16,7 +17,8 @@ import (
  */
 
 // MD5:
-//  encryptOpts.isToHex: 默认转十六进制
+//
+//	encryptOpts.isToHex: 默认转十六进制
 func MD5(src string, opts ...OptionFunc) string {
 	h := md5.New()
 	h.Write([]byte(src))
@@ -26,7 +28,8 @@ func MD5(src string, opts ...OptionFunc) string {
 }
 
 // SHA256:
-//  encryptOpts.isToHex: 默认转十六进制
+//
+//	encryptOpts.isToHex: 默认转十六进制
 func SHA256(src string, opts ...OptionFunc) string {
 	h := sha256.New()
 	h.Write([]byte(src))
@@ -36,7 +39,8 @@ func SHA256(src string, opts ...OptionFunc) string {
 }
 
 // Hmac+Hash函数
-//  encryptOpts.isToHex: 默认转十六进制
+//
+//	encryptOpts.isToHex: 默认转十六进制
 func HMACHash(src, key string, opts ...OptionFunc) (string, error) {
 	opt := initOption(opts...)
 

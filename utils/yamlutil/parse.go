@@ -2,7 +2,7 @@ package yamlutil
 
 import (
 	"gopkg.in/yaml.v3"
-	"io/ioutil"
+	"os"
 )
 
 /**
@@ -11,8 +11,8 @@ import (
  * @Desc:
  */
 
-func ParseFileToConfig(file string, config interface{}) {
-	content, err := ioutil.ReadFile(file)
+func ParseYaml(file string, config interface{}) {
+	content, err := os.ReadFile(file)
 	if err != nil {
 		panic("加载配置文件错误" + file + "错误原因" + err.Error())
 	}

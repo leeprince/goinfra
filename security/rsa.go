@@ -9,6 +9,7 @@ import (
 	"crypto/x509"
 	"encoding/pem"
 	"errors"
+	"github.com/leeprince/goinfra/perror"
 )
 
 /**
@@ -20,8 +21,9 @@ import (
  */
 
 // RSA加密:公钥加密
-//  key: 公钥。格式：1.除了开头和结尾外，按64位长度一行的格式 2.每行开头和结尾不能有空格
-//  encryptOpts.isToHex: 默认是转十六进制
+//
+//	key: 公钥。格式：1.除了开头和结尾外，按64位长度一行的格式 2.每行开头和结尾不能有空格
+//	encryptOpts.isToHex: 默认是转十六进制
 func RSAEncrypt(src, publicKey string, opts ...OptionFunc) (string, error) {
 	// 解密pem格式的公钥
 	block, _ := pem.Decode([]byte(publicKey))
@@ -50,7 +52,7 @@ func RSAEncrypt(src, publicKey string, opts ...OptionFunc) (string, error) {
 }
 
 // EncryptPKCS1v15加密:兼容长文本加密
-//  - 兼容 `len(srcByte) > *rsa.PublicKey.Size()-11` 的情况。分组处理长文本，避免报`rsa.ErrMessageTooLong`的错误
+//   - 兼容 `len(srcByte) > *rsa.PublicKey.Size()-11` 的情况。分组处理长文本，避免报`rsa.ErrMessageTooLong`的错误
 func compatibleEncryptPKCS1v15(srcByte []byte, pubKey *rsa.PublicKey) (crypted []byte, err error) {
 	srcSize := len(srcByte)
 	keySize := pubKey.Size()
@@ -86,9 +88,10 @@ func compatibleEncryptPKCS1v15(srcByte []byte, pubKey *rsa.PublicKey) (crypted [
 }
 
 // RSA解密:私钥解密
-//  crypt: 默认是十六进制字符串
-//  key: 私钥。格式：1.除了开头和结尾外，按64位长度一行的格式 2.每行开头和结尾不能有空格
-//  encryptOpts.isToHex: 默认是转十六进制
+//
+//	crypt: 默认是十六进制字符串
+//	key: 私钥。格式：1.除了开头和结尾外，按64位长度一行的格式 2.每行开头和结尾不能有空格
+//	encryptOpts.isToHex: 默认是转十六进制
 func RSADecrypt(crypt, privateKey string, opts ...OptionFunc) (string, error) {
 	opt := initOption(opts...)
 	srcByte, err := input(crypt, opt.inputType)
@@ -120,7 +123,7 @@ func RSADecrypt(crypt, privateKey string, opts ...OptionFunc) (string, error) {
 }
 
 // DecryptPKCS1v15解密:兼容长文本解密
-//  - 兼容 `len(srcByte) > *rsa.PrivateKey.Size()` 的情况。分组处理长文本，避免报`rsa.ErrDecryption`的错误
+//   - 兼容 `len(srcByte) > *rsa.PrivateKey.Size()` 的情况。分组处理长文本，避免报`rsa.ErrDecryption`的错误
 func compatibleDecryptPKCS1v15(cryptByte []byte, privKey *rsa.PrivateKey, opts ...OptionFunc) (decryptByte []byte, err error) {
 	srcSize := len(cryptByte)
 	keySize := privKey.Size()
@@ -153,7 +156,7 @@ func compatibleDecryptPKCS1v15(cryptByte []byte, privKey *rsa.PrivateKey, opts .
 }
 
 // 生成RSA公/私钥匙
-//  - bits: 生成密钥的位数。如：1024、2048
+//   - bits: 生成密钥的位数。如：1024、2048
 func GenerateRsaKey(bits int) (privKey string, pubKey string, err error) {
 	// 生成私钥
 	privateKey, err := rsa.GenerateKey(rand.Reader, bits)

@@ -8,7 +8,7 @@ import (
 	"github.com/leeprince/goinfra/perror"
 	"github.com/leeprince/goinfra/plog"
 	"github.com/leeprince/goinfra/trace/opentracing/jaegerclient"
-	"github.com/leeprince/goinfra/utils"
+	"github.com/leeprince/goinfra/utils/idutil"
 	"github.com/leeprince/goinfra/utils/stringutil"
 	"github.com/pkg/errors"
 	"github.com/sirupsen/logrus"
@@ -57,7 +57,7 @@ func NewHttpClient() *HttpClient {
 		url:           "",
 		timeout:       HttpDefaultTimeout,
 		method:        http.MethodGet,
-		logID:         utils.UniqID(),
+		logID:         idutil.UniqID(),
 		header:        nil,
 		requestBody:   nil,
 		ctx:           context.Background(),

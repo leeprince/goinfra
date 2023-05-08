@@ -3,11 +3,12 @@ package security
 import (
 	"bytes"
 	"crypto/cipher"
+	"github.com/leeprince/goinfra/perror"
 	"github.com/tjfoc/gmsm/sm4"
 )
 
 // SM4加密
-//  - key: 字节长度只能等于16
+//   - key: 字节长度只能等于16
 func SM4Encrypt(src, key string, opts ...OptionFunc) (string, error) {
 	keyBytes := []byte(key)
 	dataBytes := []byte(src)

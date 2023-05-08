@@ -1,8 +1,8 @@
-package utils
+package idutil
 
 import (
-    "fmt"
-    "testing"
+	"fmt"
+	"testing"
 )
 
 /**
@@ -12,6 +12,6 @@ import (
  */
 
 func TestUniqID(t *testing.T) {
-    got := UniqID()
-    fmt.Println(got)
+	got := UniqID()
+	fmt.Println(got)
 }
