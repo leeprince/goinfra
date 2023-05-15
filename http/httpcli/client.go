@@ -57,7 +57,7 @@ func NewHttpClient() *HttpClient {
 		url:           "",
 		timeout:       HttpDefaultTimeout,
 		method:        http.MethodGet,
-		logID:         idutil.UniqID(),
+		logID:         idutil.UniqIDV1(),
 		header:        nil,
 		requestBody:   nil,
 		ctx:           context.Background(),

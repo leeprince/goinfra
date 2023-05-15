@@ -12,6 +12,7 @@ require (
 	github.com/golang/protobuf v1.5.3
 	github.com/gomodule/redigo v1.8.8
 	github.com/google/gopacket v1.1.19
+	github.com/google/uuid v1.3.0
 	github.com/gookit/color v1.5.2
 	github.com/gookit/goutil v0.5.7
 	github.com/grpc-ecosystem/grpc-gateway v1.16.0
@@ -67,7 +68,6 @@ require (
 	github.com/gobwas/pool v0.2.1 // indirect
 	github.com/gobwas/ws v1.2.0 // indirect
 	github.com/golang/mock v1.4.4 // indirect
-	github.com/golangci/golangci-lint v1.52.2 // indirect
 	github.com/google/go-querystring v1.0.0 // indirect
 	github.com/gopherjs/gopherjs v1.17.2 // indirect
 	github.com/jezek/xgb v0.0.0-20210312150743-0e0f116e1240 // indirect
