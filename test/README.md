@@ -72,6 +72,10 @@ go test -v binary_search_test.go
 go test -v -run=TestBinarySearchV11
 go test -v -run=BinarySearchV11
 
+# 会包含：TestBinarySearchV1、TestBinarySearchV11
+go test -v -run=TestBinarySearchV1
+go test -v -run=BinarySearchV1
+
 # 不运行任何单元测试，即不运行任何`TestXxx`方法
 go test -run=none
 ```
@@ -109,6 +113,10 @@ go test -v -bench=. -run=none
 # 测试当前包的所有`*_test.go`中符合`BenchmarkXxx`或者`BenchmarkXxx`中的`Xxx`前缀匹配的方法。。需匹配的前缀推荐写`TestXxx`格式
 #   需匹配的前缀分别为`BenchmarkBinarySearchV1`、`BinarySearchV1`。 
 #   因为`BenchmarkBinarySearchV1`和`BinarySearchV1`的区别在于前面的`Benchmark`，所以最终匹配后执行的测试方法是一致的
+go test -v -bench=BenchmarkBinarySearchV1 -run=none
+go test -v -bench=BinarySearchV1 -run=none 
+
+# 会包含：BenchmarkBinarySearchV1、BenchmarkBinarySearchV11
 go test -v -bench=BenchmarkBinarySearchV1 -run=none
 go test -v -bench=BinarySearchV1 -run=none 
 

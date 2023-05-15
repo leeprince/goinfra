@@ -116,3 +116,11 @@ func BenchmarkBinarySearchV1(b *testing.B) {
 		}, 3)
 	}
 }
+
+func BenchmarkBinarySearchV11(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		arrayslice.BinarySearchV1([]int{
+			1, 3, 5, 7, 9,
+		}, 3)
+	}
+}
