@@ -21,4 +21,5 @@ func ParseYaml(file string, config interface{}) {
 	if err != nil {
 		panic("解析配置文件错误" + file + "错误原因" + err.Error())
 	}
+	return
 }

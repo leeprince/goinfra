@@ -6,23 +6,23 @@
 package constval
 
 type StringConst interface {
-	Name() string
+	Key() string
 	Value() string
 }
 
 type stringConstImpl struct {
+	key   string
 	value string
-	name  string
 }
 
-func NewString(value string, name string) StringConst {
-	return &stringConstImpl{value: value, name: name}
-}
-
-func (c *stringConstImpl) Name() string {
-	return c.name
+func NewString(key string, value string) StringConst {
+	return &stringConstImpl{key: key, value: value}
 }
 
 func (c *stringConstImpl) Value() string {
 	return c.value
+}
+
+func (c *stringConstImpl) Key() string {
+	return c.key
 }

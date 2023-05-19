@@ -11,7 +11,7 @@ func NewInt32Group(consts ...Int32Const) *Int32Group {
 		value2Const: make(map[int32]Int32Const),
 	}
 	for _, c := range consts {
-		group.value2Const[c.Value()] = c
+		group.value2Const[c.Key()] = c
 	}
 	return group
 }

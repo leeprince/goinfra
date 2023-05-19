@@ -17,7 +17,7 @@ func NewIntGroup(consts ...IntConst) *IntGroup {
 		value2Const: make(map[int]IntConst),
 	}
 	for _, c := range consts {
-		group.value2Const[c.Value()] = c
+		group.value2Const[c.Key()] = c
 	}
 	return group
 }

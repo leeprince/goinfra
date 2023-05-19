@@ -17,7 +17,7 @@ func NewInt64Group(consts ...Int64Const) *Int64Group {
 		value2Const: make(map[int64]Int64Const),
 	}
 	for _, c := range consts {
-		group.value2Const[c.Value()] = c
+		group.value2Const[c.Key()] = c
 	}
 	return group
 }

@@ -17,7 +17,7 @@ func NewStringGroup(consts ...StringConst) *StringGroup {
 		value2Const: make(map[string]StringConst),
 	}
 	for _, c := range consts {
-		group.value2Const[c.Value()] = c
+		group.value2Const[c.Key()] = c
 	}
 	return group
 }

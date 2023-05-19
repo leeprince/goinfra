@@ -23,9 +23,10 @@ import (
 // --- 设置 logger 参数
 // jsoniter 更快的json序列化方式
 // jsoniterAPI =
-// 	jsoniter.ConfigDefault |
-// 	jsoniter.ConfigCompatibleWithStandardLibrary() (推荐：100% 兼容json标准库:"encoding/json") |
-// 	jsoniter.ConfigFastest
+//
+//	jsoniter.ConfigDefault |
+//	jsoniter.ConfigCompatibleWithStandardLibrary() (推荐：100% 兼容json标准库:"encoding/json") |
+//	jsoniter.ConfigFastest
 func SetFormatterJsonInter(jsoniterAPI jsoniter.API) {
 	formatter := &formatters.JSONFormatter{
 		TimestampFormat:  "2006-01-02 15:04:05.000",
@@ -162,7 +163,8 @@ func SetOutputRotateFile(dirPath, filename string, isBothStdout bool, rotationFi
 }
 
 // AddHookReportCaller
-//  目标：检索第一个非 plog 包的调用函数信息（文件名、方法、行号）
+//
+//	目标：检索第一个非 plog 包的调用函数信息（文件名、方法、行号）
 func addHookReportCaller(levels ...logrus.Level) {
 	AddHook(hooks.NewReportCallerHook(levels...))
 }

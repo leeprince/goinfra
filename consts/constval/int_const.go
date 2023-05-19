@@ -6,23 +6,23 @@
 package constval
 
 type IntConst interface {
-	Name() string
-	Value() int
+	Key() int
+	Value() string
 }
 
 type intConstImpl struct {
-	value int
-	name  string
+	key   int
+	value string
 }
 
-func NewInt(value int, name string) IntConst {
-	return &intConstImpl{value: value, name: name}
+func NewInt(key int, value string) IntConst {
+	return &intConstImpl{key: key, value: value}
 }
 
-func (c *intConstImpl) Name() string {
-	return c.name
-}
-
-func (c *intConstImpl) Value() int {
+func (c *intConstImpl) Value() string {
 	return c.value
+}
+
+func (c *intConstImpl) Key() int {
+	return c.key
 }

@@ -1,23 +1,23 @@
 package constval
 
 type Int32Const interface {
-	Name() string
-	Value() int32
+	Key() int32
+	Value() string
 }
 
 type int32ConstImpl struct {
-	value int32
-	name  string
+	key   int32
+	value string
 }
 
-func NewInt32(value int32, name string) Int32Const {
-	return &int32ConstImpl{value: value, name: name}
+func NewInt32(key int32, value string) Int32Const {
+	return &int32ConstImpl{key: key, value: value}
 }
 
-func (c *int32ConstImpl) Name() string {
-	return c.name
-}
-
-func (c *int32ConstImpl) Value() int32 {
+func (c *int32ConstImpl) Value() string {
 	return c.value
+}
+
+func (c *int32ConstImpl) Key() int32 {
+	return c.key
 }
