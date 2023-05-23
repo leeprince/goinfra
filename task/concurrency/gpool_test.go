@@ -41,3 +41,53 @@ func TestNewPool(t *testing.T) {
 		t.Errorf("iterations %v is not equal counterFinal %v", iterations, counterFinal)
 	}
 }
+
+// 测试通过协程池执行任务，并将结果全部先保留到通道
+func TestWait(t *testing.T) {
+	reqs := []int{}
+	type data struct{}
+
+	taskNum := len(reqs)
+	jobNum := 5
+	if taskNum < jobNum {
+		jobNum = taskNum
+	}
+
+	pool := NewPool(jobNum, taskNum)
+	defer pool.Release()
+	errChan := make(chan error, taskNum)
+	dataChan := make(chan []*data, taskNum)
+
+	var wg sync.WaitGroup
+	wg.Add(taskNum)
+
+	for _, v := range reqs {
+		childReq := v
+		f := func() {
+			defer wg.Done()
+
+			// 业务处理流程
+			dataItem, err := func(childReq int) ([]*data, error) {
+				return []*data{}, nil
+			}(childReq)
+
+			if err != nil {
+				errChan <- err
+			} else {
+				dataChan <- dataItem
+			}
+		}
+		pool.JobQueue <- f
+	}
+
+	wg.Wait()
+	// 主动关闭chan
+	close(errChan)
+	close(dataChan)
+	//全部都有问题才返回
+	if taskNum == len(errChan) {
+		return
+	}
+
+	return
+}
