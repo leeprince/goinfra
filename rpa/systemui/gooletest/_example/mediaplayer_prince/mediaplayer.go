@@ -13,9 +13,9 @@ import (
 func main() {
 	ole.CoInitialize(0)
 
-	//unknown, err := oleutil.CreateObject("WMPlayer.OCX") // 成功
+	unknown, err := oleutil.CreateObject("WMPlayer.OCX") // 成功
 	//unknown, err := oleutil.CreateObject("Windows Media Player") // 失败
-	unknown, err := oleutil.CreateObject("17208") // 失败
+	//unknown, err := oleutil.CreateObject("17208") // 失败
 	if err != nil {
 		log.Fatal(err)
 	}
