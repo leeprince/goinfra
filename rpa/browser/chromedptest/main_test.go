@@ -8,8 +8,21 @@ import "testing"
  * @Desc:
  */
 
-func TestShowBrower(t *testing.T) {
-	ShowBrower()
+func TestShowBroswer(t *testing.T) {
+	ShowBrowser()
+}
+
+func TestCloseBrowserV1(t *testing.T) {
+	go CloseBrowserV1()
+	select {}
+}
+func TestCloseBrowserV2(t *testing.T) {
+	go CloseBrowserV2()
+	select {}
+}
+func TestCloseBrowserV3(t *testing.T) {
+	go CloseBrowserV3()
+	select {}
 }
 
 func TestSearch(t *testing.T) {

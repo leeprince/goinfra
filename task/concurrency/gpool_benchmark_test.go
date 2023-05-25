@@ -48,4 +48,6 @@ func BenchmarkGpool(b *testing.B) {
 			}
 		}
 	}
+
+	wg.Wait()
 }

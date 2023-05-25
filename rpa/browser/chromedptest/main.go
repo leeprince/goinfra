@@ -7,5 +7,7 @@ package main
  */
 
 func main() {
-
+	CloseBrowserV1()
+	// CloseBrowserV2()
+	// CloseBrowserV3()
 }

@@ -14,7 +14,7 @@ import (
  */
 
 // 显示浏览器
-func ShowBrower() {
+func ShowBrowser() {
 	// --- 创建有头浏览器 ---
 	// 设置Chrome浏览器的启动参数
 	opts := append(chromedp.DefaultExecAllocatorOptions[:],

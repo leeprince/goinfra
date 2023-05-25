@@ -1,9 +1,13 @@
-package file
+package fileutil
 
 import (
+	"bufio"
+	"bytes"
 	"errors"
+	"io"
 	"io/ioutil"
 	"log"
+	"net/http"
 	"os"
 	"path/filepath"
 	"runtime"
@@ -24,7 +28,7 @@ var osFilePath string
 
 func init() {
 	osType = runtime.GOOS
-	if os.IsPathSeparator('\\') { //前边的判断是否是系统的分隔符
+	if os.IsPathSeparator('\\') { // 前边的判断是否是系统的分隔符
 		osFilePath = "\\"
 	} else {
 		osFilePath = "/"
@@ -60,10 +64,24 @@ func WriteFile(dirPath, filename string, data []byte, isAppend bool) (ok bool, e
 		err = fErr
 		return
 	}
-	if _, err = fs.Write(data); err != nil {
+	defer fs.Close()
+
+	// 创建带有缓冲区的Writer对象
+	writer := bufio.NewWriter(fs)
+	// 写入数据
+	if _, err = writer.Write(data); err != nil {
 		return
 	}
-	defer fs.Close()
+	// 自动添加换行符
+	if isAppend {
+		if _, err = writer.Write([]byte("\n")); err != nil {
+			return
+		}
+	}
+
+	// 刷新缓冲区
+	writer.Flush()
+
 	ok = true
 	return
 }
@@ -83,7 +101,7 @@ func MkdirIfNecessary(createDir string) (err error) {
 }
 
 func GetCurrentPath() string {
-	dir, err := os.Getwd() //当前的目录
+	dir, err := os.Getwd() // 当前的目录
 	if err != nil {
 		dir, err = filepath.Abs(filepath.Dir(os.Args[0]))
 		if err != nil {
@@ -91,4 +109,52 @@ func GetCurrentPath() string {
 		}
 	}
 	return dir
+}
+
+func GetFileBytesByUrl(url string) ([]byte, error) {
+	resp, err := http.Get(url)
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+
+	fileBytes, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return nil, err
+	}
+
+	return fileBytes, nil
+}
+
+func GetFileByteSizeByUrl(url string) (byteSize int64, err error) {
+	resp, err := http.Head(url)
+	if err != nil {
+		return
+	}
+
+	return resp.ContentLength, nil
+}
+
+func GetFileReaderByUrl(url string) (io.Reader, []byte, error) {
+	fileBytes, err := GetFileBytesByUrl(url)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	return bytes.NewReader(fileBytes), fileBytes, nil
+}
+
+// byteSize：单位：字节
+// isThan：是否超过限制
+func CheckFileSizeByUrl(url string, byteSize int64) (isLimit bool, err error) {
+	fileByteSize, err := GetFileByteSizeByUrl(url)
+	if err != nil {
+		return
+	}
+
+	if fileByteSize > byteSize {
+		return true, nil
+	}
+
+	return false, nil
 }

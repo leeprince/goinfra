@@ -41,10 +41,9 @@ func MonitorHttpV1() {
 	url := "http://localhost:8090/prince/post"
 	log.Println("监听指定的URL的HTTP请求 url:", url)
 
-	// this will be used to capture the request id for matching network events
+	// 这将用于捕获匹配网络事件的请求id
 	var requestID network.RequestID
-
-	// set up a channel, so we can block later while we monitor the get response body progress
+	// 设置一个缓冲区为1的channel，用于异步接收等待监听指定url事件的结果通知
 	listenChan := make(chan struct{}, 1)
 	chromedp.ListenTarget(ctx, func(ev interface{}) {
 		switch ev := ev.(type) {
@@ -92,19 +91,19 @@ func MonitorHttpV1() {
 		log.Fatal(err)
 	}
 
-	// This will block until the chromedp listener closes the channel
+	// 这将被阻止，直到chromedp监听器通知接收到响应的通知到channel中
 	for {
 		select {
 		case <-listenChan:
-			// get the downloaded bytes for the request id
+			// 根据已接收到响应的请求ID获取响应的内容
 			if err := chromedp.Run(ctx, chromedp.ActionFunc(func(ctx context.Context) error {
-				byteBody, err := network.GetResponseBody(requestID).Do(ctx) // 总是会报错：invalid context
+				byteBody, err := network.GetResponseBody(requestID).Do(ctx)
 				if err != nil {
 					log.Println("GetResponseBody", err)
 					return err
 				}
 
-				// 实际内容
+				// 响应内容
 				log.Printf("Response body:%+v\n", string(byteBody))
 
 				return nil
@@ -113,15 +112,4 @@ func MonitorHttpV1() {
 			}
 		}
 	}
-
-	// // 保持打开的Chrome浏览器示例不主动退出
-	// log.Println("保持打开的Chrome浏览器示例不主动退出")
-	// err = chromedp.Run(ctx,
-	// 	chromedp.ActionFunc(func(ctx context.Context) error {
-	// 		select {}
-	// 	}),
-	// )
-	// if err != nil {
-	// 	log.Fatal(err)
-	// }
 }

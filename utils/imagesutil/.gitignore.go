@@ -1,4 +1,4 @@
-package pdf
+package imagesutil
 
 /**
  * @Author: prince.lee <leeprince@foxmail.com>

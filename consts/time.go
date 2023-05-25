@@ -14,4 +14,6 @@ const (
 	TimeLayoutV41 = "2006/01/02"
 	TimeLayoutV5  = "01-02-2006"
 	TimeLayoutV6  = "01-02-06"
+	TimeLayoutV7  = "2006-01"
+	TimeLayoutV8  = "2006"
 )

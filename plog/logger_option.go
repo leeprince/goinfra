@@ -4,7 +4,7 @@ import (
 	jsoniter "github.com/json-iterator/go"
 	"github.com/leeprince/goinfra/plog/formatters"
 	"github.com/leeprince/goinfra/plog/hooks"
-	"github.com/leeprince/goinfra/resource/file"
+	"github.com/leeprince/goinfra/utils/fileutil"
 	rotatelogs "github.com/lestrrat-go/file-rotatelogs"
 	"github.com/sirupsen/logrus"
 	"io"
@@ -49,7 +49,7 @@ func SetOutputFile(dirPath, filename string, isBothStdout bool) error {
 	var err error
 
 	filePath := filepath.Join(dirPath, filename)
-	if _, ok := file.CheckFileExist(filePath); ok {
+	if _, ok := fileutil.CheckFileExist(filePath); ok {
 		writer, err = os.OpenFile(filePath, os.O_APPEND|os.O_WRONLY, os.ModeAppend)
 	} else {
 		// 创建目录

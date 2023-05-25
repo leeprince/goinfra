@@ -1,4 +1,4 @@
-package cos
+package cosutil
 
 /**
  * @Author: prince.lee <leeprince@foxmail.com>

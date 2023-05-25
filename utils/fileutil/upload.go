@@ -1,4 +1,4 @@
-package file
+package fileutil
 
 import (
 	"context"
@@ -33,7 +33,7 @@ func UploadBase64FileToCos(cosClient *cos.Client, base64File string, filePath, f
 
 	tmpPath := fmt.Sprintf("%s%s", "tmp", filePath)
 	if runtime.GOOS == "windows" {
-		tmpPath = fmt.Sprintf("F:%s%s", string(os.PathSeparator), tmpPath)
+		tmpPath = fmt.Sprintf("F:%s%s", string(os.PathSeparator), tmpPath) // windows 本地环境中当前项目是在F:盘中，所以使用根路径/即指向的根路径就是F:盘
 	}
 	tmpPathFile := fmt.Sprintf("%s%s", tmpPath, fileName)
 	if err = CreateFileAndWrite(tmpPath, tmpPathFile, fileBytes); err != nil {
@@ -49,7 +49,7 @@ func UploadBase64FileToCos(cosClient *cos.Client, base64File string, filePath, f
 	}
 
 	// 删除临时文件
-	//err = os.Remove(tmpPathFile)
+	// err = os.Remove(tmpPathFile)
 	if err != nil {
 		return "", errors.Wrap(err, "删除临时文件失败")
 	}
