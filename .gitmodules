@@ -1,0 +1,3 @@
+[submodule "ocr/ocrserver"]
+	path = ocr/ocrserver
+	url = https://github.com/otiai10/ocrserver.git
