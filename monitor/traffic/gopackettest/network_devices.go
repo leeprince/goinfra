@@ -11,7 +11,7 @@ import (
  * @Desc:
  */
 
-func MacIfconfig() {
+func NetworkDevices() {
 	// 获取所有网络接口信息
 	devices, err := pcap.FindAllDevs()
 	if err != nil {

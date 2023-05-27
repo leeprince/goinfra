@@ -8,8 +8,8 @@ import "testing"
  * @Desc:
  */
 
-func TestMacIfconfig(t *testing.T) {
-	MacIfconfig()
+func TestNetworkDevices(t *testing.T) {
+	NetworkDevices()
 }
 
 func TestMonitorLoopback(t *testing.T) {
@@ -22,4 +22,8 @@ func TestMonitorLoopbackNoserver(t *testing.T) {
 
 func TestMonitorMACLoopbackNoserverNoclient(t *testing.T) {
 	MonitorMACLoopbackNoserverNoclient()
+}
+
+func TestMonitorMACWIFINoserverNoclient(t *testing.T) {
+	MonitorMACWIFINoserverNoclient()
 }

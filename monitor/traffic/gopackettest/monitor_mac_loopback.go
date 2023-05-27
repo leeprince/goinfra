@@ -12,7 +12,6 @@ import (
 	"io"
 	"log"
 	"net/http"
-	"strings"
 	"time"
 )
 
@@ -20,7 +19,7 @@ import (
  * @Author: prince.lee <leeprince@foxmail.com>
  * @Date:   2023/5/4 22:29
  * @Desc:	监控本机mac lo0网卡流量
- * 				该应用服务自行模拟HTTP服务器和客户端
+ * 				该应用服务自行模拟HTTP服务器和客户端（不经过网卡监听不到）
  */
 
 func MonitorMACLoopback() {
@@ -143,12 +142,8 @@ func MonitorMACLoopback() {
 		}
 		log.Println(">>>tcp:", tcp)
 		log.Println("tcp.Payload:", string(tcp.Payload))
-		log.Println("tcp.SrcPort:", tcp.SrcPort)
-		log.Println("tcp.DstPort:", tcp.DstPort)
-		log.Println("tcp.SYN:", tcp.SYN)
-		log.Println("tcp.ACK:", tcp.ACK)
-		log.Println("tcp.PSH:", tcp.PSH)
-		log.Println("tcp.FIN:", tcp.FIN)
+		log.Printf("tcp.SrcPort:%v;tcp.DstPort:%v", tcp.SrcPort, tcp.DstPort)
+		log.Printf("tcp.SYN:%v;tcp.ACK:%v;tcp.PSH:%v;tcp.FIN:%v;", tcp.SYN, tcp.ACK, tcp.PSH, tcp.FIN)
 		log.Println("<<<tcp")
 		tcpPayload := tcp.Payload
 
@@ -170,6 +165,8 @@ func MonitorMACLoopback() {
 		listenPort := layers.TCPPort(8091)
 		log.Println("监听的端口layers.TCPPort:", listenPort)
 		if tcp.SrcPort == listenPort || tcp.DstPort == listenPort {
+			log.Println("tcp.SrcPort == listenPort || tcp.DstPort == listenPort")
+
 			// 尝试解析HTTP请求
 			req, err := http.ReadRequest(bufio.NewReader(bytes.NewReader(tcpPayload)))
 			if err == nil {
@@ -190,27 +187,9 @@ func MonitorMACLoopback() {
 					continue
 				}
 				log.Println("Response body:", string(body))
+				log.Println("Response body Content-Length:", len(body))
 			} else {
 				log.Println("Response err != nil:", err)
-			}
-		}
-
-		if tcp.SYN && !tcp.ACK {
-			log.Println("--- tcp.SYN && !tcp.ACK ---")
-			requestPayload := "GET http://localhost:8091/prince/get HTTP/1.1"
-
-			// 发 HTTP 请求
-			if strings.Contains(string(tcp.Payload), requestPayload) {
-				fmt.Println("--------------Sending request:", requestPayload)
-			}
-		} else if tcp.ACK && tcp.PSH && tcp.FIN {
-			responsePayload := "HTTP/1.1 200 OK\r\n"
-			log.Println("--- tcp.ACK && tcp.PSH && tcp.FIN ---")
-
-			// 接收 HTTP 响应
-			if strings.Contains(string(tcp.Payload), responsePayload) {
-				fmt.Println("--------------Received response:", responsePayload)
-				fmt.Println(string(tcp.Payload))
 			}
 		}
 	}

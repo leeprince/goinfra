@@ -98,6 +98,24 @@
 
 # 二一、rpa
 
+# 编译
+## windows32 位
+```
+GOOS=windows GOARCH=386 go build -o main.exe main.go 
+```
+```
+GOOS=windows GOARCH=386 go build -o network_devices.exe monitor/traffic/gopackettest/main.go monitor/traffic/gopackettest/network_devices.go
+```
 
-# todo priority
-# ES
+## windows64 位
+```
+GOOS=windows GOARCH=amd64 go build -o main.exe main.go 
+```
+
+## macOS
+```
+GOOS=darwin GOARCH=amd64 go build -o main.exe main.go 
+```
+```
+GOOS=darwin GOARCH=amd64 go build -o network_devices monitor/traffic/gopackettest/main.go monitor/traffic/gopackettest/network_devices.go
+```

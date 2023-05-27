@@ -6,5 +6,5 @@ package main
  * @Desc:
  */
 func main() {
-
+	NetworkDevices()
 }

@@ -9,30 +9,29 @@ import (
 	"io"
 	"log"
 	"net/http"
-	"time"
 )
 
 /**
  * @Author: prince.lee <leeprince@foxmail.com>
  * @Date:   2023/5/4 22:29
  * @Desc:	监控本机mac lo0网卡流量
- * 				- 该应用服务自行模拟客户端,外部HTTP服务（经过网卡可以监听到）：goinfra/http/httpservertest/sample/main.go
+ * 				- 外部HTTP服务（经过网卡可以监听到）：goinfra/http/httpservertest/sample/main.go
  * 					- 需先启动外部http服务
  */
 
-func MonitorMACLoopbackNoserver() {
+func MonitorMACWIFINoserverNoclient() {
 	// 打开网络接口
 	// lo0网卡
-	handle, err := pcap.OpenLive("lo0", 65535, true, pcap.BlockForever)
+	// handle, err := pcap.OpenLive("lo0", 65535, true, pcap.BlockForever)
 	// eno网卡：wifi网卡
-	// handle, err := pcap.OpenLive("en0", 65535, true, pcap.BlockForever)
+	handle, err := pcap.OpenLive("en0", 65535, true, pcap.BlockForever)
 	if err != nil {
 		log.Fatal(err)
 	}
 	defer handle.Close()
 
 	// 设置过滤条件
-	filter := "host localhost and port 8090" // 注意切换网卡。需使用lo0网卡`handle, err := pcap.OpenLive("lo0", 65535, true, pcap.BlockForever)`
+	filter := "host ug.baidu.com" // 注意切换网卡。需使用lo0网卡`handle, err := pcap.OpenLive("lo0", 65535, true, pcap.BlockForever)`
 	err = handle.SetBPFFilter(filter)
 	if err != nil {
 		log.Fatal(err)
@@ -40,37 +39,6 @@ func MonitorMACLoopbackNoserver() {
 
 	// 开始监听网络流量
 	packetSource := gopacket.NewPacketSource(handle, handle.LinkType())
-
-	// --- 模拟HTTP客户端
-	go func() {
-		time.Sleep(time.Second * 1)
-		log.Println("创建HTTP客户端...")
-
-		// 创建HTTP客户端
-		req, err := http.NewRequest("GET", "http://localhost:8090/prince/get", nil)
-		if err != nil {
-			log.Println("NewRequest err:", err)
-			return
-		}
-		// 发送请求
-		httpClient := http.DefaultClient
-		resp, err := httpClient.Do(req)
-		log.Println("httpClient.Do(req)", resp)
-		if err != nil {
-			log.Println("http.DefaultClient.Do", err)
-			return
-		}
-		defer resp.Body.Close()
-		bodyByte, err := io.ReadAll(resp.Body)
-		if err != nil {
-			log.Println("http.DefaultClient.Do", err)
-			return
-		}
-		log.Println("httpClient.Do(req)", string(bodyByte))
-		log.Println("创建HTTP客户端...end")
-	}()
-
-	// --- 模拟HTTP客户端 -end
 
 	log.Println("开始监听:", filter)
 	for packet := range packetSource.Packets() {
@@ -142,11 +110,10 @@ func MonitorMACLoopbackNoserver() {
 
 		// 判断是否为HTTP请求或响应
 		// 监听的端口
-		listenPort := layers.TCPPort(8090)
+		listenPort := layers.TCPPort(443)
 		log.Println("监听的端口layers.TCPPort:", listenPort)
 		if tcp.SrcPort == listenPort || tcp.DstPort == listenPort {
 			log.Println("tcp.SrcPort == listenPort || tcp.DstPort == listenPort")
-
 			// 尝试解析HTTP请求
 			req, err := http.ReadRequest(bufio.NewReader(bytes.NewReader(tcpPayload)))
 			if err == nil {
