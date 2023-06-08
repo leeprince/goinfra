@@ -43,6 +43,8 @@ func InputChar() {
 	err = robotgo.ActiveName(ACTIVE_NAME)
 	perror.ErrPanic(err)
 
+	time.Sleep(time.Second * 2)
+
 	robotgo.TypeStr("Hello, world!")
 }
 
@@ -153,10 +155,10 @@ func Screen() {
 	gbit := robotgo.ToBitmap(bit)
 	fmt.Println("bitmap...", gbit.Width)
 
-	// gbitMap := robotgo.CaptureGo()
-	// fmt.Println("Go CaptureScreen...", gbitMap.Width)
-	// fmt.Println("...", gbitMap.Width, gbitMap.BytesPerPixel)
-	//
-	// img := robotgo.CaptureImg()
-	// robotgo.Save(img, "save.png")
+	gbitMap := robotgo.CaptureGo()
+	fmt.Println("Go CaptureScreen...", gbitMap.Width)
+	fmt.Println("...", gbitMap.Width, gbitMap.BytesPerPixel)
+
+	img := robotgo.CaptureImg()
+	robotgo.Save(img, "save.png")
 }
