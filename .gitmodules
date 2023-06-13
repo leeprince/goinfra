@@ -1,3 +1,6 @@
 [submodule "ocr/ocrserver"]
 	path = ocr/ocrserver
 	url = https://github.com/otiai10/ocrserver.git
+[submodule "ocr/gosseracttest/ocrserver"]
+	path = ocr/gosseracttest/ocrserver
+	url = https://github.com/otiai10/ocrserver

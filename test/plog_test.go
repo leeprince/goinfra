@@ -2,6 +2,7 @@ package test
 
 import (
 	"github.com/leeprince/goinfra/plog"
+	"github.com/leeprince/goinfra/utils/idutil"
 	"testing"
 )
 
@@ -48,5 +49,26 @@ func TestPlogSetReportCaller(t *testing.T) {
 	plog.Debug("prince log Debug SetReportCaller 02")
 	plog.Debug("prince log Debug SetReportCaller 02")
 	plog.WithField("WithField01", "WithFieldValue02").Debug("prince log Debug WithField 02")
+}
+
+func TestPlogEntry(t *testing.T) {
+	plogEntry := plog.LogID(idutil.UniqIDV3()).WithField("method", "TestPlogEntry")
+
+	plogEntry.Info("request")
+
+	plogEntry.Info("handler...")
+
+	plogEntry.Info("response")
+
+}
+
+func TestPanicLog(t *testing.T) {
+	plogEntry := plog.LogID(idutil.UniqIDV3()).WithField("method", "TestPlogEntry")
+
+	plogEntry.Panic("request")
+
+	plogEntry.Panic("handler...")
+
+	plogEntry.Panic("response")
 
 }

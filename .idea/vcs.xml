@@ -2,6 +2,7 @@
 <project version="4">
   <component name="VcsDirectoryMappings">
     <mapping directory="$PROJECT_DIR$" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/ocr/gosseracttest/ocrserver" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/ocr/ocrserver" vcs="Git" />
   </component>
 </project>

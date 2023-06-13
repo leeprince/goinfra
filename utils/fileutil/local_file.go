@@ -2,7 +2,9 @@ package fileutil
 
 import (
 	"bufio"
+	"bytes"
 	"errors"
+	"io"
 	"log"
 	"os"
 	"path/filepath"
@@ -61,8 +63,8 @@ func WriteFile(dirPath, filename string, data []byte, isAppend bool) (ok bool, e
 }
 
 // 读取文件
-func ReadFile(filePath, file string) (data []byte, err error) {
-	fileSrc := filepath.Join(filePath, file)
+func ReadFile(filePath, filename string) (data []byte, err error) {
+	fileSrc := filepath.Join(filePath, filename)
 	if _, ok := CheckFileExist(fileSrc); !ok {
 		return nil, FileNoExistErr
 	}
@@ -83,4 +85,13 @@ func GetCurrentPath() string {
 		}
 	}
 	return dir
+}
+
+func GetFileReaderByLocalPath(filePath, filename string) (io.Reader, []byte, error) {
+	fileBytes, err := ReadFile(filePath, filename)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	return bytes.NewReader(fileBytes), fileBytes, nil
 }
