@@ -15,7 +15,7 @@ import (
 func TestWriteFile(t *testing.T) {
 	// dirPath := "./cache"
 	dirPath := "./cache/"
-	fileName := "data.dt"
+	fileName := "data5.dt"
 	data := []byte(fmt.Sprintf("prince-%d", time.Now().Unix()))
 	isAppend := true
 

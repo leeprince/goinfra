@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/PuerkitoBio/goquery"
 	"github.com/leeprince/goinfra/utils/fileutil"
+	"github.com/leeprince/goinfra/utils/stringutil"
 	"log"
 	"regexp"
 	"strings"
@@ -17,7 +18,7 @@ import (
  */
 
 // 单人单程成功,但是未能兼容单人换乘
-func TestOnePersonOneWay(t *testing.T) {
+func TestMyWorkV1(t *testing.T) {
 	filePath := "/Users/leeprince/www/go/goinfra/utils/htmlutil/htmlutiltest/goquerytest/rpahtml/"
 	filename := "单人单程-孙孙孙.html"
 	// filename := "单人换乘-冯冯.html" // 不能兼容该 html
@@ -42,42 +43,42 @@ func TestOnePersonOneWay(t *testing.T) {
 	if err != nil {
 		log.Fatal(err)
 	}
-	log.Println("doc.Find(\"tbody tr:nth-child(2)\").Html():", orderInfo)
+	log.Println("doc.Find(\"tbody tr:nth-child(2)\").Html():", strings.TrimSpace(orderInfo))
 	// 证件类型
 	orderInfo = doc.Find("tbody tr:nth-child(2) td:nth-child(1)").Text()
-	log.Println("证件类型:", orderInfo)
+	log.Println("证件类型:", strings.TrimSpace(orderInfo))
 	// 姓名
 	orderInfo = doc.Find("tbody tr:nth-child(2) td:nth-child(2)").Text()
-	log.Println("姓名:", orderInfo)
+	log.Println("姓名:", strings.TrimSpace(orderInfo))
 	// 身份证号
 	orderInfo = doc.Find("tbody tr:nth-child(2) td:nth-child(3)").Text()
-	log.Println("身份证号:", orderInfo)
+	log.Println("身份证号:", strings.TrimSpace(orderInfo))
 	// 票种：成人票、小孩票
 	orderInfo = doc.Find("tbody tr:nth-child(2) td:nth-child(4)").Text()
-	log.Println("票种：成人票、小孩票:", orderInfo)
+	log.Println("票种：成人票、小孩票:", strings.TrimSpace(orderInfo))
 	// 座位类型
 	orderInfo = doc.Find("tbody tr:nth-child(2) td:nth-child(5) input[name='seatType']").AttrOr("value", "")
-	log.Println("座位类型:", orderInfo)
+	log.Println("座位类型:", strings.TrimSpace(orderInfo))
 	// 车厢
 	orderInfo = doc.Find("tbody tr:nth-child(2) td:nth-child(6) input[name='coachNo']").AttrOr("value", "")
-	log.Println("车厢:", orderInfo)
+	log.Println("车厢:", strings.TrimSpace(orderInfo))
 	// 座位号
 	orderInfo = doc.Find("tbody tr:nth-child(2) td:nth-child(7) input[name='seatNo']").AttrOr("value", "")
-	log.Println("座位号:", orderInfo)
+	log.Println("座位号:", strings.TrimSpace(orderInfo))
 	// 单张票（单人一程票）的价格
 	orderInfo = doc.Find("tbody tr:nth-child(2) td:nth-child(8) input[name='ticketPrice']").AttrOr("value", "")
-	log.Println("单张票（单人一程票）的价格:", orderInfo)
+	log.Println("单张票（单人一程票）的价格:", strings.TrimSpace(orderInfo))
 
 	// --- 订单最后一项
 	// 订单手机号
 	orderInfo, err = doc.Find("tbody .redMobile").Html()
-	log.Println("订单手机号:", orderInfo)
+	log.Println("订单手机号:", strings.TrimSpace(orderInfo))
 	// 获取成功：乘客信息-end
 }
 
 // 兼容：单人单程、单人单程-占座票、单人换乘、多人换乘
 // 最后特殊的html就需要自定义处理（如<tr>祖先不存在<table>的部分 html），可以通过"golang.org/x/net/html"完成，具体请看`htmltest/rpahtml`
-func TestMyWork(t *testing.T) {
+func TestMyWorkV2(t *testing.T) {
 	filePath := "/Users/leeprince/www/go/goinfra/utils/htmlutil/htmlutiltest/goquerytest/rpahtml/"
 	// filename := "单人单程-孙孙孙.html" // 兼容
 	// filename := "单人换乘-冯冯.html" // 兼容
@@ -102,7 +103,7 @@ func TestMyWork(t *testing.T) {
 	)
 
 	// 获取单程时的要求信息；或者获取多程时的单程信息和要求信息
-	fmt.Printf("\n\n>>>>开始输出获取行程和要求信息\n")
+	fmt.Printf("\n\n>>>>开始输出行程和要求信息\n")
 	selection = doc.Find("td[colspan='8'][style='padding:5px;']")
 	if selection.Size() > 0 {
 		selection.Each(func(i int, sl *goquery.Selection) {
@@ -114,7 +115,7 @@ func TestMyWork(t *testing.T) {
 		fmt.Println("V---", "找不到td[colspan='8'][style='padding:5px;']的td元素")
 	}
 
-	fmt.Printf("\n\n>>>>开始输出获取行程和要求信息的详细信息\n")
+	fmt.Printf("\n\n>>>>开始输出行程和要求信息\n")
 
 	// 用于换乘时，判断是否包含换乘信息
 	moreWayReg := regexp.MustCompile(`第\d程：`)
@@ -131,6 +132,7 @@ func TestMyWork(t *testing.T) {
 
 			if moreWayReg.MatchString(slText) {
 				fmt.Println("这是换乘信息，并开始输出换乘信息：", slText)
+
 			}
 
 			requirementText := strings.Trim(sl.Find("span[class='maxRedFont'][id]").Text(), "")
@@ -178,33 +180,43 @@ func TestMyWork(t *testing.T) {
 			fmt.Printf("V1---")
 
 			orderInfo = sl.Find("td:nth-child(1)").Text()
-			log.Println("证件类型:", orderInfo)
+			log.Println("证件类型:", strings.TrimSpace(orderInfo))
+
 			orderInfo = sl.Find("td:nth-child(2)").Text()
-			log.Println("姓名:", orderInfo)
+			log.Println("姓名:", strings.TrimSpace(orderInfo))
+
 			orderInfo = sl.Find("td:nth-child(3)").Text()
+			log.Println("未处理的身份证号信息:", orderInfo)
+			orderInfo = stringutil.ReplaceSpace(orderInfo)
+			orderInfoRune := []rune(orderInfo)
+			orderInfo = string(orderInfoRune[:len(orderInfoRune)-2])
 			log.Println("身份证号:", orderInfo)
+
 			orderInfo = sl.Find("td:nth-child(4)").Text()
-			log.Println("票种：成人票、小孩票:", orderInfo)
+			log.Println("票种：成人票、小孩票:", strings.TrimSpace(orderInfo))
 			orderInfo, exist = sl.Find("td:nth-child(5) input[name='seatType']").Attr("value")
 			if !exist {
 				log.Fatal("座位类型 !exist")
 			}
-			log.Println("座位类型:", orderInfo)
+			log.Println("座位类型:", strings.TrimSpace(orderInfo))
+
 			orderInfo, exist = sl.Find("td:nth-child(6) input[name='coachNo']").Attr("value")
 			if !exist {
 				log.Fatal("车厢 !exist")
 			}
-			log.Println("车厢:", orderInfo)
+			log.Println("车厢:", strings.TrimSpace(orderInfo))
+
 			orderInfo, exist = sl.Find("td:nth-child(7) input[name='seatNo']").Attr("value")
 			if !exist {
 				log.Fatal("座位号 !exist")
 			}
-			log.Println("座位号:", orderInfo)
+			log.Println("座位号:", strings.TrimSpace(orderInfo))
+
 			orderInfo, exist = sl.Find("td:nth-child(8) input[name='ticketPrice']").Attr("value")
 			if !exist {
 				log.Fatal("单张票（单人一程票）的价格 !exist")
 			}
-			log.Println("单张票（单人一程票）的价格:", orderInfo)
+			log.Println("单张票（单人一程票）的价格:", strings.TrimSpace(orderInfo))
 
 			fmt.Printf("\n------------\n")
 		})

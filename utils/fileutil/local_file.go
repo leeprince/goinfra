@@ -31,7 +31,7 @@ func WriteFile(dirPath, filename string, data []byte, isAppend bool) (ok bool, e
 		}
 	}
 
-	flag := os.O_CREATE | os.O_WRONLY
+	flag := os.O_CREATE | os.O_RDWR
 	if isAppend {
 		flag = flag | os.O_APPEND
 	}

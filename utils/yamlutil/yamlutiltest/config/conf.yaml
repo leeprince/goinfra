@@ -1,0 +1,21 @@
+Env: dev
+AppName: ticket-office-rpa-web
+Port: 8080
+LogPath: ./logs/
+LogLevel: 5
+IsBothStdout: true
+
+Website:
+  LoginUrl: https://lian-tie.com/agentadmin/Login.aspx
+  LoginUserName: EP202
+  LoginPassword: EP2022
+
+ListenNetwork:
+  Order:
+    Url: https://lian-tie.com/agentadmin/offline/SupplierHandler.ashx
+    NewOrderBodyContains: <tr
+    SaveNewOrderInfo:
+      FilePath: ./data
+      FileName: order_%s.dt
+      IsAppend: true
+
