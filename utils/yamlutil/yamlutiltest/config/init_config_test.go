@@ -1,9 +1,10 @@
-package app
+package config
 
 import (
 	"flag"
 	"github.com/leeprince/goinfra/plog"
 	"github.com/leeprince/goinfra/utils/yamlutil"
+	"testing"
 )
 
 /**
@@ -18,6 +19,10 @@ var (
 	configPath string
 )
 
+func TestInitConf(t *testing.T) {
+	InitConfig()
+}
+
 // confPath 优先级大于 flag.StringVar 获取的配置文件路径
 func InitConfig(confPath ...string) {
 	plog.Info("initConfigLocal")
@@ -31,6 +36,7 @@ func InitConfig(confPath ...string) {
 	plog.WithField("configPath", configPath).Info("initConfigLocal")
 
 	// 解析配置文件
+	// 不管是定义：var Config *conf，还是定义 var Config conf。解析时都是传递&Config =>yamlutil.ParseYaml(configPath, &Config)
 	yamlutil.ParseYaml(configPath, &Config)
 
 	plog.WithField("configPath", configPath).WithField("Config", Config).Info("initConfigLocal:")

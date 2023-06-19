@@ -63,11 +63,11 @@ func NewHttpClient() *HttpClient {
 		ctx:           context.Background(),
 		skipVerify:    false,
 		notLogging:    false,
-		isHttpTrace:   true,
+		isHttpTrace:   false,
 		proxyURL:      nil,
 		checkRedirect: nil,
 	}
-
+	
 	return hc
 }
 
@@ -120,9 +120,11 @@ func (s *HttpClient) WithSkipVerify(skipVerify bool) *HttpClient {
 // 链路追踪。这是WithIsHttpTrace后可以省略 WithContext()
 func (s *HttpClient) WithIsHttpTrace(isHttpTrace bool, ctx ...context.Context) *HttpClient {
 	s.isHttpTrace = isHttpTrace
-	s.ctx = ctx[0]
+	if len(ctx) > 1 {
+		s.ctx = ctx[0]
+	}
 	if isHttpTrace {
-		if jaegerclient.SpanFromContext(ctx[0]) == nil {
+		if jaegerclient.SpanFromContext(s.ctx) == nil {
 			s.isHttpTrace = false
 		}
 	}
@@ -151,17 +153,17 @@ func (s *HttpClient) do() ([]byte, *http.Response, error) {
 	if s.url == "" {
 		return nil, nil, errors.New("无效的URL")
 	}
-
+	
 	if s.header == nil {
 		s.header = defaultHeader
 	}
-
+	
 	var (
 		reqBytes []byte
 		ok       bool
 		err      error
 	)
-
+	
 	if s.requestBody != nil {
 		if reqBytes, ok = s.requestBody.([]byte); !ok {
 			reqBytes, err = jsoniter.Marshal(s.requestBody)
@@ -170,19 +172,19 @@ func (s *HttpClient) do() ([]byte, *http.Response, error) {
 			}
 		}
 	}
-
+	
 	method := s.method
 	fields := logrus.Fields{}
 	fields["http.req.url"] = s.url
 	fields["http.req.method"] = method
-
+	
 	fields["http.req.body"] = stringutil.Bytes2String(reqBytes)
-
+	
 	req, err := http.NewRequest(method, s.url, bytes.NewReader(reqBytes))
 	if err != nil {
 		return nil, nil, err
 	}
-
+	
 	hasContentType := false
 	for k, v := range s.header {
 		req.Header.Set(k, v)
@@ -190,13 +192,13 @@ func (s *HttpClient) do() ([]byte, *http.Response, error) {
 			hasContentType = true
 		}
 	}
-
+	
 	if method == http.MethodPost && !hasContentType {
 		req.Header.Set("Content-Type", "application/json")
 	}
-
+	
 	req = req.WithContext(s.ctx)
-
+	
 	// 链路追踪。
 	fields["http.req.isHttpTrace"] = s.isHttpTrace
 	if s.isHttpTrace {
@@ -212,7 +214,7 @@ func (s *HttpClient) do() ([]byte, *http.Response, error) {
 		}
 	}
 	fields["http.req.header"] = req.Header
-
+	
 	fields["http.req.isProxy"] = false
 	if s.proxyURL != nil {
 		fields["http.req.isProxy"] = true
@@ -229,17 +231,17 @@ func (s *HttpClient) do() ([]byte, *http.Response, error) {
 			InsecureSkipVerify: s.skipVerify,
 		},
 	}
-
+	
 	client := &http.Client{
 		Transport:     transport,
 		CheckRedirect: s.checkRedirect,
 		Timeout:       0,
 	}
-
+	
 	if !s.notLogging {
 		plog.LogID(s.logID).WithFields(fields).Info("发起Http请求")
 	}
-
+	
 	resp, err := client.Do(req)
 	if err != nil {
 		if !s.notLogging {
@@ -249,7 +251,7 @@ func (s *HttpClient) do() ([]byte, *http.Response, error) {
 		}
 		return nil, nil, err
 	}
-
+	
 	body, err := ioutil.ReadAll(resp.Body)
 	_ = resp.Body.Close()
 	if err != nil {
@@ -260,7 +262,7 @@ func (s *HttpClient) do() ([]byte, *http.Response, error) {
 		}
 		return nil, nil, perror.ReplaceIPErr(err)
 	}
-
+	
 	if resp.StatusCode != http.StatusOK {
 		if !s.notLogging {
 			plog.LogID(s.logID).WithError(err).
@@ -271,7 +273,7 @@ func (s *HttpClient) do() ([]byte, *http.Response, error) {
 		}
 		return nil, nil, errors.Errorf("上游服务报错,http status code:%d", resp.StatusCode)
 	}
-
+	
 	if !s.notLogging {
 		respBodyLog := body
 		if len(body) > 1024 {
@@ -284,7 +286,7 @@ func (s *HttpClient) do() ([]byte, *http.Response, error) {
 				Info("接收http响应")
 		}
 	}
-
+	
 	return body, resp, nil
 }
 

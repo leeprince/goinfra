@@ -17,11 +17,8 @@ import (
 // 成功
 func TestHtmlOrder(t *testing.T) {
 	filePath := "/Users/leeprince/www/go/goinfra/utils/htmlutil/htmlutiltest/goquerytest/rpahtml/"
-	// filename := "单人单程-孙孙孙.html" // 兼容
-	// filename := "单人换乘-冯冯.html" // 兼容
-	// filename := "多人单程-周周周.html" // 兼容
-	// filename := "单人单程-占座票-安安安.html" // 兼容
-	filename := "多人换乘-余余余.html" // 兼容
+	filename := "多人单程-王王王.html" // 有要求
+	// filename := "单人单程-李李李.html" // 无要求-添加<table>包含所有原始数据
 	fileReader, _, err := fileutil.GetFileReaderByLocalPath(filePath, filename)
 	if err != nil {
 		log.Fatal(err)
@@ -43,7 +40,7 @@ var (
 func HtmlOrder(n *html.Node) string {
 	// 未能解析的完整订单数据
 	if n.Type == html.TextNode && strings.Contains(n.Data, "||||") {
-		log.Println("未能解析的完整订单数据：n.Data", n.Data)
+		log.Println("未能解析的完整订单数据：", n.Data)
 		fullOrderBaseInfo = n.Data
 	}
 

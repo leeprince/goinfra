@@ -1,18 +1,18 @@
 Env: dev
-AppName: ticket-office-rpa-web
+AppName: ticket-xxx-yyy-zzz
 Port: 8080
 LogPath: ./logs/
 LogLevel: 5
 IsBothStdout: true
 
 Website:
-  LoginUrl: https://lian-tie.com/agentadmin/Login.aspx
-  LoginUserName: EP202
-  LoginPassword: EP2022
+  LoginUrl: https://xxxx.com/agentadmin/Login.aspx
+  LoginUserName: xxxx
+  LoginPassword: yyyy
 
 ListenNetwork:
   Order:
-    Url: https://lian-tie.com/agentadmin/offline/SupplierHandler.ashx
+    Url: https://yyyy.com/agentadmin/offline/SupplierHandler.ashx
     NewOrderBodyContains: <tr
     SaveNewOrderInfo:
       FilePath: ./data

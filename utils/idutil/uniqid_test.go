@@ -13,7 +13,7 @@ import (
 
 func TestUUID(t *testing.T) {
 	var id string
-	id = UUID()
+	id = UniqIDV2()
 	fmt.Println("UUID:", id)
 }
 

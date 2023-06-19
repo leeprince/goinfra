@@ -1,6 +1,7 @@
 package test
 
 import (
+	"errors"
 	"fmt"
 	"runtime"
 	"testing"
@@ -17,9 +18,15 @@ func TestPanic(t *testing.T) {
 }
 
 func panicFunc() {
+	// 发生 panic 的处理方式
 	defer func() {
 		if r := recover(); r != nil {
 			fmt.Println("Recovered from panic:", r)
+
+			reconverErr, isError := r.(error)
+			if isError {
+				fmt.Println("reconverErr:", reconverErr)
+			}
 
 			// 获取panic发生的位置
 			_, file, line, ok := runtime.Caller(2)
@@ -30,17 +37,22 @@ func panicFunc() {
 	}()
 
 	// 代码中故意引发panic
-	// panic("Something went wrong!")
-	panicFunc01()
+	// panic("Something went wrong!") // 方式 1
+	// panicFunc01() // 方式 2
+	panicFunc03() // 方式 3
 }
 
 func panicFunc01() {
 	// 代码中故意引发panic
-	// panic("Something went wrong!")
 	panicFunc02()
 }
 
 func panicFunc02() {
 	// 代码中故意引发panic
 	panic("Something went wrong!")
+}
+
+func panicFunc03() {
+	// 代码中故意引发panic
+	panic(errors.New("panic is errors.New"))
 }

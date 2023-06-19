@@ -2,6 +2,7 @@ package idutil
 
 import (
 	"fmt"
+	"github.com/google/uuid"
 	"math/rand"
 	"strings"
 	"time"
@@ -24,7 +25,7 @@ func UniqIDV1() string {
 }
 
 func UniqIDV2() string {
-	uuid := UUID()
+	uuid := uuid.New().String()
 	idArr := strings.Split(uuid, "-")
 	return idArr[0] + idArr[1] + idArr[2]
 }
