@@ -13,8 +13,8 @@ import (
  * @Desc:
  */
 
-// 显示浏览器
-func ShowBrowser() {
+// 显示浏览器执行自动化操作
+func OpenBrowser() {
 	// --- 创建有头浏览器 ---
 	// 设置Chrome浏览器的启动参数
 	opts := append(chromedp.DefaultExecAllocatorOptions[:],
