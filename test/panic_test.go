@@ -22,12 +22,13 @@ func panicFunc() {
 	defer func() {
 		if r := recover(); r != nil {
 			fmt.Println("Recovered from panic:", r)
-
+			
+			// 断言错误类型
 			reconverErr, isError := r.(error)
 			if isError {
-				fmt.Println("reconverErr:", reconverErr)
+				fmt.Println("isError reconverErr:", reconverErr)
 			}
-
+			
 			// 获取panic发生的位置
 			_, file, line, ok := runtime.Caller(2)
 			if ok {
@@ -35,7 +36,7 @@ func panicFunc() {
 			}
 		}
 	}()
-
+	
 	// 代码中故意引发panic
 	// panic("Something went wrong!") // 方式 1
 	// panicFunc01() // 方式 2

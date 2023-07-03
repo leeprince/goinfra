@@ -45,8 +45,8 @@ func TestSetMaxWindow(t *testing.T) {
 }
 
 // 在浏览器上设置弹窗
-func TestSetAlert(t *testing.T) {
-	SetAlert()
+func TestSetAlertWindows(t *testing.T) {
+	SetBrowserAlertWindows()
 }
 
 // 等待指定选择器可见
@@ -62,4 +62,9 @@ func TestMonitorHttp(t *testing.T) {
 // 监听http 网络
 func TestMonitorHttpV1(t *testing.T) {
 	MonitorHttpV1()
+}
+
+// 操作保存在全局变量中的浏览器，实际上是需要保存浏览器的上下文 context
+func TestOperateGolobalVariableBrowser(t *testing.T) {
+	OperateGolobalVariableBrowser()
 }

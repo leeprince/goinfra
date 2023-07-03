@@ -12,12 +12,6 @@ import (
  * @Desc:
  */
 
-func TestUUID(t *testing.T) {
-	var id string
-	id = idutil.UUID()
-	fmt.Println("UUID:", id)
-}
-
 func TestSnowflakeID(t *testing.T) {
 	var idNO int64
 	idNO = idutil.NewSnowflake(10).NextId()

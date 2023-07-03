@@ -30,7 +30,7 @@ func WriteFile(dirPath, filename string, data []byte, isAppend bool) (ok bool, e
 			return
 		}
 	}
-
+	
 	flag := os.O_CREATE | os.O_RDWR
 	if isAppend {
 		flag = flag | os.O_APPEND
@@ -41,7 +41,7 @@ func WriteFile(dirPath, filename string, data []byte, isAppend bool) (ok bool, e
 		return
 	}
 	defer fs.Close()
-
+	
 	// 创建带有缓冲区的Writer对象
 	writer := bufio.NewWriter(fs)
 	// 写入数据
@@ -54,10 +54,10 @@ func WriteFile(dirPath, filename string, data []byte, isAppend bool) (ok bool, e
 			return
 		}
 	}
-
+	
 	// 刷新缓冲区
 	writer.Flush()
-
+	
 	ok = true
 	return
 }
@@ -72,10 +72,20 @@ func ReadFile(filePath, filename string) (data []byte, err error) {
 	return
 }
 
+func ReadFileReader(filePath, filename string) (io.Reader, []byte, error) {
+	fileBytes, err := ReadFile(filePath, filename)
+	if err != nil {
+		return nil, nil, err
+	}
+	
+	return bytes.NewReader(fileBytes), fileBytes, nil
+}
+
 func MkdirIfNecessary(createDir string) (err error) {
 	return os.MkdirAll(createDir, os.ModePerm)
 }
 
+// 跟设置的工作目录有关，相同的文件路径不同的工作目录获取的结果不一样。不明确项目所在的工作目录时，推荐使用绝对路径
 func GetCurrentPath() string {
 	dir, err := os.Getwd() // 当前的目录
 	if err != nil {
@@ -88,10 +98,5 @@ func GetCurrentPath() string {
 }
 
 func GetFileReaderByLocalPath(filePath, filename string) (io.Reader, []byte, error) {
-	fileBytes, err := ReadFile(filePath, filename)
-	if err != nil {
-		return nil, nil, err
-	}
-
-	return bytes.NewReader(fileBytes), fileBytes, nil
+	return ReadFileReader(filePath, filename)
 }

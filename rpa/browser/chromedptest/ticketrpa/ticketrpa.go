@@ -1,0 +1,325 @@
+package main
+
+import (
+	"context"
+	"encoding/json"
+	"flag"
+	"fmt"
+	"github.com/chromedp/chromedp"
+	"github.com/leeprince/goinfra/utils/fileutil"
+	"log"
+	"net/http"
+)
+
+/**
+ * @Author: prince.lee <leeprince@foxmail.com>
+ * @Date:   2023/7/2 10:40
+ * @Desc:
+ */
+
+// 要先通过 chrome 打开 `多人换乘-余余余-补全.html` 复制链接放到这里。注意要是：chrome 打开
+const (
+	navigateRPAHtmlUrl = "http://localhost:8090/defaultHandler"
+)
+
+var port *int
+
+// 启动 http 服务器
+func HttpServer() {
+	port = flag.Int("port", 8090, "port")
+	flag.Parse()
+	
+	http.HandleFunc("/defaultHandler", defaultHandler)
+	
+	fmt.Printf("Server listening on port:%d ...\n", *port)
+	go http.ListenAndServe(fmt.Sprintf(":%d", *port), nil)
+}
+
+func defaultHandler(w http.ResponseWriter, r *http.Request) {
+	if r.Method == "GET" {
+		w.Header().Set("Content-Type", "text/html; charset=utf-8")
+		
+		fileBytes, err := fileutil.ReadFile("/Users/leeprince/www/go/goinfra/rpa/browser/chromedptest/ticketrpa/", "多人换乘-余余余-补全.html")
+		if err != nil {
+			http.Error(w, "读取 html文件错误", http.StatusInternalServerError)
+			return
+		}
+		fmt.Fprint(w, string(fileBytes))
+	} else {
+		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+	}
+}
+
+func main() {
+	HttpServer()
+	
+	// --- 创建有头浏览器 ---
+	// 设置Chrome浏览器的启动参数
+	opts := append(chromedp.DefaultExecAllocatorOptions[:],
+		chromedp.Flag("headless", false),
+		chromedp.Flag("disable-gpu", true),
+		chromedp.Flag("remote-debugging-port", "9222"),
+	)
+	allocCtx, cancel := chromedp.NewExecAllocator(context.Background(), opts...)
+	defer cancel()
+	
+	// 创建一个Chrome浏览器实例
+	ctx, cancel := chromedp.NewContext(allocCtx)
+	defer cancel()
+	// --- 创建有头浏览器-end ---
+	
+	// --- 创建无头浏览器：默认 ---
+	// // create context
+	// ctx, cancel := chromedp.NewContext(context.Background())
+	// defer cancel()
+	// --- 创建无头浏览器：默认-end ---
+	
+	// 打开目标网页
+	err := chromedp.Run(ctx,
+		chromedp.Navigate(navigateRPAHtmlUrl),
+	)
+	if err != nil {
+		log.Fatal(err)
+	}
+	
+	// 开始 rpa操作
+	/*
+		{
+		    "orderID": "订单ID-string(32)",
+		    "resultType": "订单任务处理结果类型：购票成功(Success)、无满足车票(NoTicket)、任务暂停(Suspend)、-string(18)",
+		    "message": "resultType的简要说明",
+		    "data":"订单任务处理结果不同，data对应不同结构体-object"
+		}
+	
+		---
+		# 购票成功(Success)的data结构体
+		{
+		    "ticketNumber": "取票号-string(12)",
+		    "passengerList": [
+		        {
+		            "passengerId": "乘客ID-string(32)",
+		            "creditType": "证件类型:ED(居民身份证)；LS(临时身份证)；WJ(警官证)；JG(军官证)；YW(义务兵证)；SG(士官证)；WG(文职干部证)；WY(文职人员证)；WH(外国人护照，需选择国家)；HZ(中国护照)；GN(港澳居民来往内地通行证)；QT(其他)。暂仅支持ED(居民身份证)",
+		            "creditTypeName": "证件类型名称",
+		            "creditNo": "证件号",
+		            "fullName": "乘客姓名-string(32)",
+		            "ticketType": "票种:Adult(成人票)、Child(小孩票)",
+		            "seatType": "座位类型",
+		            "carriage": "车厢号",
+		            "seatNumber": "座位号",
+		            "sleeper": "确定的卧铺位置：None(无)；Up(上)；Mid(中)；Down(下)"
+		            "seatPrice": "该乘客一程票价格（单位角）",
+		        }
+		    ]
+		}
+	
+	
+		# 无满足车票(NoTicket)的data结构体
+		{
+		    "noTicketType": "无满足车票的占座失败类型：Other(其他)、TrainNoTicket(车次无票)、SeatNo(坐席无法满足)、UserNameNoMatch(姓名不匹配)、TrainNoExist(车次不存在)、TrainShutdown(列车停运)、TrainStopped(已停止售票)、-string(20)",
+		    "otherTypeContext":"'其他'占座失败类型的原因说明-string(255)"
+		}
+	
+		# 任务暂停(Suspend)的data结构体
+		{
+		    "reasonType":"暂停原因类型: WaitUserPay(占座票等待用户付款，后web端继续发起继续扣款任务)、NoOneTicket(等待单人单程有要求甩票后无满足条件订单，需操作员手动操作)-string(18)"
+		}
+	*/
+	data := `{
+	    "orderID": "HDTT202306100954030604914284",
+	    "resultType": "Success",
+	    "message": "订单任务处理结果类型：购票成功(Success)、无满足车票(NoTicket)、任务暂停(Suspend)",
+	    "data":
+	    {
+	        "ticketNumber": "ticketNumber=prince001",
+	        "passengerList":
+	        [
+	            {
+	                "passengerId": "21998005_1938898",
+	                "creditType": "证件类型:ED(居民身份证)；LS(临时身份证)；WJ(警官证)；JG(军官证)；YW(义务兵证)；SG(士官证)；WG(文职干部证)；WY(文职人员证)；WH(外国人护照，需选择国家)；HZ(中国护照)；GN(港澳居民来往内地通行证)；QT(其他)。暂仅支持ED(居民身份证)",
+	                "creditTypeName": "证件类型名称",
+	                "creditNo": "44152120010116824X",
+	                "fullName": "余余余",
+	                "ticketType": "票种:Adult(成人票)、Child(小孩票)",
+	                "seatType": "座位类型",
+	                "carriage": "03",
+	                "seatNumber": "02A",
+	                "sleeper": "Down",
+	                "seatPrice": 1435
+	            }
+	        ]
+	    }
+	}`
+	
+	// 解析数据
+	var result CallbackOrderTaskResult
+	err = json.Unmarshal([]byte(data), &result)
+	if err != nil {
+		log.Fatal("解析data为CallbackOrderTaskResult错误:", err)
+	}
+	
+	orderId := result.OrderID
+	fmt.Println("result:", result)
+	// 开始输入
+	if result.ResultType == string(ResultTypeSuccess) {
+		resultTypeSuccessData := &ResultTypeSuccessData{}
+		result.Data = resultTypeSuccessData
+		err = json.Unmarshal([]byte(data), &result)
+		if err != nil {
+			log.Fatal("解析data为CallbackOrderTaskResult.resultTypeSuccessData错误:", err)
+		}
+		
+		fmt.Println("resultTypeSuccessData:", resultTypeSuccessData)
+		
+		resultTypeSuccessData, resultTypeSuccessDataOk := result.Data.(*ResultTypeSuccessData)
+		if !resultTypeSuccessDataOk {
+			log.Fatal("断言ResultTypeSuccessData错误:", err)
+		}
+		
+		ticketNumber := resultTypeSuccessData.TicketNumber
+		ticketNumberId := "#EOrderNumberInput" + orderId
+		// 等待 ID 出现
+		chromedp.WaitVisible(ticketNumberId)
+		fmt.Println("ticketNumberId:", ticketNumberId)
+		err = chromedp.Run(ctx,
+			chromedp.SetValue(ticketNumberId, ticketNumber, chromedp.ByID),
+			// TODO: 设置超时 - prince@todo 2023/7/2 23:48
+		)
+		if err != nil {
+			log.Fatal("设置取票号失败：", err)
+		}
+		
+		for _, passenger := range resultTypeSuccessData.PassengerList {
+			fmt.Println("passenger:", passenger)
+			
+			passengerId := passenger.PassengerId
+			// creditNo := passenger.CreditNo
+			carriage := passenger.Carriage
+			seatNumber := passenger.SeatNumber
+			// sleeper := passenger.Sleeper
+			// seatPrice := passenger.SeatPrice
+			
+			fmt.Println("passengerId:", passengerId)
+			// err = chromedp.Run(ctx,
+			// 	chromedp.WaitVisible(fmt.Sprintf("#%s", passengerId), chromedp.ByID),
+			// )
+			// if err != nil {
+			// 	log.Fatal("WaitVisible err:", fmt.Sprintf("#%s", passengerId), err)
+			// }
+			// fmt.Println("WaitVisible end:", fmt.Sprintf("#%s", passengerId))
+			//
+			
+			// 设置车厢号
+			fmt.Println("carriage:", carriage)
+			// carriageDom := fmt.Sprintf(`#%s input[name="coachNo"]`, passengerId)
+			// carriageDom := fmt.Sprintf(`#%s > input[name="coachNo"]`, passengerId)
+			carriageDom := fmt.Sprintf(`input[name="coachNo"]`)
+			fmt.Println("carriageDom:", carriageDom)
+			err = chromedp.Run(ctx,
+				chromedp.SetValue(carriageDom, carriage, chromedp.ByQuery),
+			)
+			if err != nil {
+				log.Fatal("SetValue carriageDom err:", err)
+			}
+			
+			var (
+				dom string
+			)
+			// 设置座位号
+			fmt.Println("seatNumber:", seatNumber)
+			// seatNumberDom := fmt.Sprintf(`#%s > input[name="seatNo"]`, passengerId)
+			dom = fmt.Sprintf(`//*[@id="21998005_1938898"]/td[7]/input`)
+			fmt.Println("dom:", dom)
+			err = chromedp.Run(ctx,
+				// chromedp.SetValue(seatNumberDom, seatNumber, chromedp.ByQuery),
+				chromedp.SetValue(dom, seatNumber, chromedp.BySearch),
+			)
+			if err != nil {
+				log.Fatal("SetValue carriageDom err:", err)
+			}
+			fmt.Println("seatNumberDom 1")
+			
+			// 设置座位号：成功
+			fmt.Println("seatNumber:", seatNumber)
+			// 因为 ID 选择器必须以字母或下划线开头你可以使用 \\3 转义字符来转义数字，并且在该数字背后加一个空格
+			dom = fmt.Sprintf(`document.querySelector("#\\32 1998005_1938898 > td:nth-child(7) > input")`)
+			fmt.Println("dom:", dom)
+			err = chromedp.Run(ctx,
+				chromedp.SetValue(dom, seatNumber, chromedp.ByJSPath),
+			)
+			if err != nil {
+				log.Fatal("SetValue carriageDom err:", err)
+			}
+			fmt.Println("seatNumberDom 2")
+			
+			// ---
+			
+			var (
+				haveCreditNoText string
+				javascript       string
+			)
+			javascript = fmt.Sprintf(`document.getElementById("%s").innerText`, passengerId)
+			fmt.Println("javascript:", javascript)
+			err = chromedp.Run(ctx, chromedp.EvaluateAsDevTools(javascript, &haveCreditNoText))
+			if err != nil {
+				log.Fatal("EvaluateAsDevTools haveCreditNoText err:", err)
+			}
+			fmt.Println("haveCreditNoText 1:", haveCreditNoText)
+			
+			javascript = fmt.Sprintf(`document.querySelector("tr[id='%s']").innerText`, passengerId)
+			fmt.Println("javascript:", javascript)
+			err = chromedp.Run(ctx, chromedp.EvaluateAsDevTools(javascript, &haveCreditNoText))
+			if err != nil {
+				log.Fatal("EvaluateAsDevTools haveCreditNoText err:", err)
+			}
+			fmt.Println("haveCreditNoText 2:", haveCreditNoText)
+			
+			javascript = fmt.Sprintf(`document.querySelector("tr[id='%s'] td:nth-child(3)").innerText`, passengerId)
+			fmt.Println("javascript:", javascript)
+			err = chromedp.Run(ctx, chromedp.EvaluateAsDevTools(javascript, &haveCreditNoText))
+			if err != nil {
+				log.Fatal("EvaluateAsDevTools haveCreditNoText err:", err)
+			}
+			fmt.Println("haveCreditNoText 3:", haveCreditNoText)
+			
+			// haveCreditNo := haveCreditNoText
+			// if creditNo != haveCreditNo {
+			// 	log.Fatal("creditNo != haveCreditNo")
+			// }
+			
+			/*
+							//义要设置的值
+							coachNo := "A1"
+							seatNo := "12"
+							eOrderNumber := "1234567"
+			
+							// 定义要查找的元素
+							var id string = "21998005_1938898"
+			
+							// 定义要获取的身份证号
+							var idCard string
+			
+							// 定义要执行的任务列表
+							tasks := chromedp.Tasks{
+							    // 查找指定的tr元素
+							    chromedp.WaitVisible("#" + id),
+							    // 获取身份证号
+							    chromedp.EvaluateAsDevTools(`document.querySelector("#`+id+` td span.maxRedFont").innerText`, &idCard),
+							 	// 获取身份证号
+				    			chromedp.EvaluateAsDevTools(`document.querySelector("#`+id+` td:nth-child(3)").innerText`, &idCard),
+			
+							    // 设置车厢号
+							 	chromedp.SetValue(`input[name="coachNo"]`, coachNo, chromedp.ByQuery),
+							    // 设置座位号
+							    chromedp.SetValue(`input[name="seatNo"]`, seatNo, chromedp.ByQuery),
+							    // 设置取票号
+							    chromedp.SetValue(`input[id="EOrderNumberInputHDTT2023061009540306049142841938898"]`, eOrderNumber, chromedp.ByQuery),
+							    模拟按下回车键
+							    chromedp.KeyEvent(kb.Enter),
+							}
+			*/
+		}
+		
+	}
+	
+	select {}
+}
