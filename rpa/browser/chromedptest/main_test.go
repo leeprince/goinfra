@@ -45,8 +45,8 @@ func TestSetMaxWindow(t *testing.T) {
 }
 
 // 在浏览器上设置弹窗
-func TestSetAlertWindows(t *testing.T) {
-	SetBrowserAlertWindows()
+func TestSetBrowserAlertWindow(t *testing.T) {
+	SetBrowserAlertWindow()
 }
 
 // 等待指定选择器可见

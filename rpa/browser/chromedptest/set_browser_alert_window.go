@@ -15,7 +15,7 @@ import (
  */
 
 // 显示浏览器执行自动化操作,并弹窗提示
-func SetBrowserAlertWindows() {
+func SetBrowserAlertWindow() {
 	// --- 创建有头浏览器 ---
 	// 设置Chrome浏览器的启动参数
 	opts := append(chromedp.DefaultExecAllocatorOptions[:],

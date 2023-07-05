@@ -17,8 +17,8 @@ import (
  * @Desc:
  */
 
-// 要先通过 chrome 打开 `多人换乘-余余余-补全.html` 复制链接放到这里。注意要是：chrome 打开
 const (
+	// 启动 http 服务器后的要访问的 html页面地址
 	navigateRPAHtmlUrl = "http://localhost:8090/defaultHandler"
 )
 
@@ -39,7 +39,7 @@ func defaultHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method == "GET" {
 		w.Header().Set("Content-Type", "text/html; charset=utf-8")
 		
-		fileBytes, err := fileutil.ReadFile("/Users/leeprince/www/go/goinfra/rpa/browser/chromedptest/ticketrpa/", "多人换乘-余余余-补全.html")
+		fileBytes, err := fileutil.ReadFile("/Users/leeprince/www/go/goinfra/rpa/browser/chromedptest/operaterhtml", "test.html")
 		if err != nil {
 			http.Error(w, "读取 html文件错误", http.StatusInternalServerError)
 			return
@@ -156,9 +156,10 @@ func main() {
 	if err != nil {
 		log.Fatal("解析data为CallbackOrderTaskResult错误:", err)
 	}
+	fmt.Println("result:", result)
 	
 	orderId := result.OrderID
-	fmt.Println("result:", result)
+	fmt.Println("orderId:", orderId)
 	// 开始输入
 	if result.ResultType == string(ResultTypeSuccess) {
 		resultTypeSuccessData := &ResultTypeSuccessData{}
@@ -175,6 +176,7 @@ func main() {
 			log.Fatal("断言ResultTypeSuccessData错误:", err)
 		}
 		
+		// 设置取票号
 		ticketNumber := resultTypeSuccessData.TicketNumber
 		ticketNumberId := "#EOrderNumberInput" + orderId
 		// 等待 ID 出现
@@ -182,7 +184,6 @@ func main() {
 		fmt.Println("ticketNumberId:", ticketNumberId)
 		err = chromedp.Run(ctx,
 			chromedp.SetValue(ticketNumberId, ticketNumber, chromedp.ByID),
-			// TODO: 设置超时 - prince@todo 2023/7/2 23:48
 		)
 		if err != nil {
 			log.Fatal("设置取票号失败：", err)
@@ -208,48 +209,108 @@ func main() {
 			// fmt.Println("WaitVisible end:", fmt.Sprintf("#%s", passengerId))
 			//
 			
-			// 设置车厢号
-			fmt.Println("carriage:", carriage)
-			// carriageDom := fmt.Sprintf(`#%s input[name="coachNo"]`, passengerId)
-			// carriageDom := fmt.Sprintf(`#%s > input[name="coachNo"]`, passengerId)
-			carriageDom := fmt.Sprintf(`input[name="coachNo"]`)
-			fmt.Println("carriageDom:", carriageDom)
-			err = chromedp.Run(ctx,
-				chromedp.SetValue(carriageDom, carriage, chromedp.ByQuery),
-			)
-			if err != nil {
-				log.Fatal("SetValue carriageDom err:", err)
-			}
-			
 			var (
 				dom string
 			)
-			// 设置座位号
-			fmt.Println("seatNumber:", seatNumber)
-			// seatNumberDom := fmt.Sprintf(`#%s > input[name="seatNo"]`, passengerId)
-			dom = fmt.Sprintf(`//*[@id="21998005_1938898"]/td[7]/input`)
+			
+			// 设置车厢号：成功
+			// 复制的的 selector。因为 ID 选择器必须以字母或下划线开头你可以使用 \3 转义字符来转义数字，并且在该数字背后加一个空格
+			/*
+				chrome selector(css选择器):#\32 1998005_1938898 > td:nth-child(6) > input
+			*/
+			/*fmt.Println("carriage:", carriage)
+			dom = fmt.Sprintf(`#\32 1998005_1938898 > td:nth-child(6) > input`)
 			fmt.Println("dom:", dom)
 			err = chromedp.Run(ctx,
-				// chromedp.SetValue(seatNumberDom, seatNumber, chromedp.ByQuery),
-				chromedp.SetValue(dom, seatNumber, chromedp.BySearch),
+				chromedp.SetValue(dom, carriage, chromedp.ByQuery), // 成功
+				// chromedp.SetValue(dom, carriage, chromedp.BySearch), // 成功
 			)
 			if err != nil {
-				log.Fatal("SetValue carriageDom err:", err)
+				log.Fatal("SetValue carriage err:", err)
 			}
-			fmt.Println("seatNumberDom 1")
+			fmt.Println("carriage 1")*/
+			
+			// 设置车厢号：成功
+			// 复制的的 js path。因为 ID 选择器必须以字母或下划线开头你可以使用 \3 转义字符来转义数字，并且在该数字背后加一个空格
+			/*
+				chrome js path:document.querySelector("#\\32 1998005_1938898 > td:nth-child(6) > input")
+			*/
+			/*fmt.Println("carriage:", carriage)
+			dom = fmt.Sprintf(`document.querySelector("#\\32 1998005_1938898 > td:nth-child(6) > input")`)
+			fmt.Println("dom:", dom)
+			err = chromedp.Run(ctx,
+				chromedp.SetValue(dom, carriage, chromedp.ByJSPath),
+			)
+			if err != nil {
+				log.Fatal("SetValue carriage err:", err)
+			}
+			fmt.Println("carriage 2")*/
+			
+			// 设置车厢号：成功
+			/*
+				firefox xpath:/html/body/span/span/table/tbody/tr[3]/td[7]/input
+				chrome xpath://*[@id="21998005_1938898"]/td[6]/input
+			*/
+			fmt.Println("carriage:", carriage)
+			dom = fmt.Sprintf(`//*[@id="21998005_1938898"]/td[6]/input`)
+			fmt.Println("dom:", dom)
+			err = chromedp.Run(ctx,
+				chromedp.SetValue(dom, carriage, chromedp.BySearch),
+			)
+			if err != nil {
+				log.Fatal("SetValue carriage err:", err)
+			}
+			fmt.Println("carriage 3")
 			
 			// 设置座位号：成功
-			fmt.Println("seatNumber:", seatNumber)
-			// 因为 ID 选择器必须以字母或下划线开头你可以使用 \\3 转义字符来转义数字，并且在该数字背后加一个空格
+			// 复制的的 selector。因为 ID 选择器必须以字母或下划线开头你可以使用 \3 转义字符来转义数字，并且在该数字背后加一个空格
+			/*
+				chrome selector(css选择器):#\32 1998005_1938898 > td:nth-child(7) > input
+			*/
+			/*fmt.Println("seatNumber:", seatNumber)
+			dom = fmt.Sprintf(`#\32 1998005_1938898 > td:nth-child(7) > input`)
+			fmt.Println("dom:", dom)
+			err = chromedp.Run(ctx,
+				chromedp.SetValue(dom, seatNumber, chromedp.ByQuery), // 成功
+				// chromedp.SetValue(dom, seatNumber, chromedp.BySearch), // 成功
+			)
+			if err != nil {
+				log.Fatal("SetValue seatNumber err:", err)
+			}
+			fmt.Println("seatNumber 1")*/
+			
+			// 设置座位号：成功
+			// 复制的的 js path。因为 ID 选择器必须以字母或下划线开头你可以使用 \3 转义字符来转义数字，并且在该数字背后加一个空格
+			/*
+				chrome js path:document.querySelector("#\\32 1998005_1938898 > td:nth-child(7) > input")
+			*/
+			/*fmt.Println("seatNumber:", seatNumber)
 			dom = fmt.Sprintf(`document.querySelector("#\\32 1998005_1938898 > td:nth-child(7) > input")`)
 			fmt.Println("dom:", dom)
 			err = chromedp.Run(ctx,
 				chromedp.SetValue(dom, seatNumber, chromedp.ByJSPath),
 			)
 			if err != nil {
-				log.Fatal("SetValue carriageDom err:", err)
+				log.Fatal("SetValue seatNumber err:", err)
 			}
-			fmt.Println("seatNumberDom 2")
+			fmt.Println("seatNumber 2")*/
+			
+			// 设置座位号：成功
+			// 复制的 xpath
+			/*
+				firefox xpath:/html/body/span/span/table/tbody/tr[3]/td[7]/input
+				chrome xpath://*[@id="21998005_1938898"]/td[7]/input
+			*/
+			fmt.Println("seatNumber:", seatNumber)
+			dom = fmt.Sprintf(`//*[@id="21998005_1938898"]/td[7]/input`)
+			fmt.Println("dom:", dom)
+			err = chromedp.Run(ctx,
+				chromedp.SetValue(dom, seatNumber, chromedp.BySearch),
+			)
+			if err != nil {
+				log.Fatal("SetValue seatNumber err:", err)
+			}
+			fmt.Println("seatNumber 3")
 			
 			// ---
 			
@@ -280,43 +341,6 @@ func main() {
 				log.Fatal("EvaluateAsDevTools haveCreditNoText err:", err)
 			}
 			fmt.Println("haveCreditNoText 3:", haveCreditNoText)
-			
-			// haveCreditNo := haveCreditNoText
-			// if creditNo != haveCreditNo {
-			// 	log.Fatal("creditNo != haveCreditNo")
-			// }
-			
-			/*
-							//义要设置的值
-							coachNo := "A1"
-							seatNo := "12"
-							eOrderNumber := "1234567"
-			
-							// 定义要查找的元素
-							var id string = "21998005_1938898"
-			
-							// 定义要获取的身份证号
-							var idCard string
-			
-							// 定义要执行的任务列表
-							tasks := chromedp.Tasks{
-							    // 查找指定的tr元素
-							    chromedp.WaitVisible("#" + id),
-							    // 获取身份证号
-							    chromedp.EvaluateAsDevTools(`document.querySelector("#`+id+` td span.maxRedFont").innerText`, &idCard),
-							 	// 获取身份证号
-				    			chromedp.EvaluateAsDevTools(`document.querySelector("#`+id+` td:nth-child(3)").innerText`, &idCard),
-			
-							    // 设置车厢号
-							 	chromedp.SetValue(`input[name="coachNo"]`, coachNo, chromedp.ByQuery),
-							    // 设置座位号
-							    chromedp.SetValue(`input[name="seatNo"]`, seatNo, chromedp.ByQuery),
-							    // 设置取票号
-							    chromedp.SetValue(`input[id="EOrderNumberInputHDTT2023061009540306049142841938898"]`, eOrderNumber, chromedp.ByQuery),
-							    模拟按下回车键
-							    chromedp.KeyEvent(kb.Enter),
-							}
-			*/
 		}
 		
 	}
