@@ -94,8 +94,8 @@ func TestJsonDataInterface(t *testing.T) {
 	
 	// 开始输入
 	if result.ResultType == string(ResultTypeSuccess) {
-		resultTypeSuccessData := &ResultTypeSuccessData{}
-		result.Data = resultTypeSuccessData
+		// 注意 result.Data 是接口类型，所以必须用指针类型进行赋值才可以断言类型得到正确结果即：&ResultTypeSuccessData{}
+		result.Data = &ResultTypeSuccessData{}
 		err = json.Unmarshal([]byte(data), &result)
 		if err != nil {
 			log.Fatal("解析data为CallbackOrderTaskResult.resultTypeSuccessData错误:", err)
