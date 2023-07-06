@@ -8,10 +8,12 @@ package perror
 
 var (
 	// 特殊的状态码
-	BizErrSuccess           = NewBizErr(0, "成功")
+	Success = NewBizErr(0, "成功")
+	Fail    = NewBizErr(1, "系统异常，请重试！")
+	
 	BizErrNotAuthentication = NewBizErr(401, "未授权!")
 	BizErrAccessForbidden   = NewBizErr(403, "禁止访问!")
-
+	
 	BizErrRequired      = NewBizErr(100000001, "缺少必填项!")
 	BizErrFormat        = NewBizErr(100000002, "格式错误!")
 	BizErrConvertFormat = NewBizErr(100000003, "格式转换错误!")
@@ -33,6 +35,6 @@ var (
 	BizErrDecode        = NewBizErr(100000018, "解码错误!")
 	BizErrObjNil        = NewBizErr(100000019, "结果nil!")
 	BizErrCode          = NewBizErr(100000019, "响应code为失败!")
-
+	
 	BizErrPanic = NewBizErr(100000999, "处理异常!")
 )
