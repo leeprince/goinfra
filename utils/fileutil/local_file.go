@@ -20,6 +20,12 @@ var (
 	FileNoExistErr = errors.New("file not exist")
 )
 
+// 写入数据到文件: WriteFile 后面优化返回参数：ok字段后，向前兼容。简化 WriteFile 方法
+func Write(dirPath, filename string, data []byte, isAppend bool) (err error) {
+	_, err = WriteFile(dirPath, filename, data, isAppend)
+	return err
+}
+
 // 写入数据到文件
 func WriteFile(dirPath, filename string, data []byte, isAppend bool) (ok bool, err error) {
 	filePath := filepath.Join(dirPath, filename)
@@ -27,6 +33,7 @@ func WriteFile(dirPath, filename string, data []byte, isAppend bool) (ok bool, e
 		// 创建目录
 		err = os.MkdirAll(dirPath, os.ModePerm)
 		if ok = os.IsNotExist(err); ok {
+			err = errors.New("创建文件目录错误")
 			return
 		}
 	}

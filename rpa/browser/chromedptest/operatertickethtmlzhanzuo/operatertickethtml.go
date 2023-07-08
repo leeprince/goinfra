@@ -21,6 +21,7 @@ import (
 const (
 	// 启动 http 服务器后的要访问的 html页面地址
 	navigateRPAHtmlUrl = "http://localhost:8090/defaultHandler"
+	ticketHtmlFileDir  = "/Users/leeprince/www/go/goinfra/rpa/browser/chromedptest/operatertickethtmlzhanzuo"
 )
 
 var port *int
@@ -40,7 +41,7 @@ func defaultHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method == "GET" {
 		w.Header().Set("Content-Type", "text/html; charset=utf-8")
 		
-		fileBytes, err := fileutil.ReadFile("/Users/leeprince/www/go/goinfra/rpa/browser/chromedptest/operatertickethtml", "ticket.html")
+		fileBytes, err := fileutil.ReadFile(ticketHtmlFileDir, "ticket.html")
 		if err != nil {
 			http.Error(w, "读取 html文件错误", http.StatusInternalServerError)
 			return
@@ -190,7 +191,7 @@ func main() {
 			log.Fatal("断言ResultTypeSuccessData错误:", err)
 		}
 		
-		// 设置取票号：占座订单未支付后才有取票号，暂注释
+		// 设置取票号：占座订单支付后才有取票号，暂注释
 		// ticketNumber := resultTypeSuccessData.TicketNumber
 		// ticketNumberId := "#EOrderNumberInput" + orderId
 		// // 等待 ID 出现
@@ -229,18 +230,23 @@ func main() {
 			)
 			
 			// 校验乘客身份证
-			dom = fmt.Sprintf(`document.querySelector("tr[id='%s'] td:nth-child(3)").innerText`, passengerId)
+			// `//*[@id="22268659_94601872"]/td[3]`
+			dom = fmt.Sprintf(`//*[@id='%s']/td[3]`, passengerId)
 			fmt.Println("dom:", dom)
-			err = chromedp.Run(ctx, chromedp.EvaluateAsDevTools(dom, &haveCreditNoText))
+			err = chromedp.Run(ctx, chromedp.Text(dom, &haveCreditNoText, chromedp.BySearch))
 			if err != nil {
 				log.Fatal("EvaluateAsDevTools haveCreditNoText err:", err)
 			}
 			fmt.Println("haveCreditNoText:", haveCreditNoText)
+			if haveCreditNoText == "" {
+				log.Fatal("身份证号-找不到")
+			}
 			haveCreditNo := GetCreditNo(haveCreditNoText)
 			fmt.Println("haveCreditNo:", haveCreditNo)
 			if haveCreditNo != creditNo {
-				log.Fatal("身份证号不匹配")
+				log.Fatal("身份证号-不匹配")
 			}
+			log.Println("身份证号-匹配")
 			
 			// 设置车厢号：成功
 			/*

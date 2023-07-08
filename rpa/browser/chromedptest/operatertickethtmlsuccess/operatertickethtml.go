@@ -10,7 +10,6 @@ import (
 	"github.com/leeprince/goinfra/utils/stringutil"
 	"log"
 	"net/http"
-	"time"
 )
 
 /**
@@ -22,7 +21,7 @@ import (
 const (
 	// 启动 http 服务器后的要访问的 html页面地址
 	navigateRPAHtmlUrl = "http://localhost:8090/defaultHandler"
-	testHtmlFileDir    = "/Users/leeprince/www/go/goinfra/rpa/browser/chromedptest/operaterhtml"
+	htmlFileDir        = "/Users/leeprince/www/go/goinfra/rpa/browser/chromedptest/operatertickethtmlsuccess"
 )
 
 var port *int
@@ -42,7 +41,7 @@ func defaultHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method == "GET" {
 		w.Header().Set("Content-Type", "text/html; charset=utf-8")
 		
-		fileBytes, err := fileutil.ReadFile(testHtmlFileDir, "test.html")
+		fileBytes, err := fileutil.ReadFile(htmlFileDir, "ticket.html")
 		if err != nil {
 			http.Error(w, "读取 html文件错误", http.StatusInternalServerError)
 			return
@@ -128,7 +127,7 @@ func main() {
 		}
 	*/
 	data := `{
-	    "orderID": "HDTT202306100954030604914284",
+	    "orderID": "FeiZ3424193749701983461",
 	    "resultType": "Success",
 	    "message": "订单任务处理结果类型：购票成功(Success)、无满足车票(NoTicket)、任务暂停(Suspend)",
 	    "data":
@@ -137,17 +136,56 @@ func main() {
 	        "passengerList":
 	        [
 	            {
-	                "passengerId": "21998005_1938898",
+	                "passengerId": "23923345_6039823406",
 	                "creditType": "证件类型:ED(居民身份证)；LS(临时身份证)；WJ(警官证)；JG(军官证)；YW(义务兵证)；SG(士官证)；WG(文职干部证)；WY(文职人员证)；WH(外国人护照，需选择国家)；HZ(中国护照)；GN(港澳居民来往内地通行证)；QT(其他)。暂仅支持ED(居民身份证)",
 	                "creditTypeName": "证件类型名称",
-	                "creditNo": "44152120010116824X",
-	                "fullName": "余余余",
+	                "creditNo": "120108198911280024",
+	                "fullName": "user1",
+	                "ticketType": "票种:Adult(成人票)、Child(小孩票)",
+	                "seatType": "座位类型",
+	                "carriage": "01",
+	                "seatNumber": "01A",
+	                "sleeper": "None",
+	                "seatPrice": 2795
+	            },
+	            {
+	                "passengerId": "23923345_6039823407",
+	                "creditType": "证件类型:ED(居民身份证)；LS(临时身份证)；WJ(警官证)；JG(军官证)；YW(义务兵证)；SG(士官证)；WG(文职干部证)；WY(文职人员证)；WH(外国人护照，需选择国家)；HZ(中国护照)；GN(港澳居民来往内地通行证)；QT(其他)。暂仅支持ED(居民身份证)",
+	                "creditTypeName": "证件类型名称",
+	                "creditNo": "120108199002121012",
+	                "fullName": "user2",
+	                "ticketType": "票种:Adult(成人票)、Child(小孩票)",
+	                "seatType": "座位类型",
+	                "carriage": "02",
+	                "seatNumber": "02A",
+	                "sleeper": "None",
+	                "seatPrice": 2795
+	            },
+	            {
+	                "passengerId": "23923346_6039823408",
+	                "creditType": "证件类型:ED(居民身份证)；LS(临时身份证)；WJ(警官证)；JG(军官证)；YW(义务兵证)；SG(士官证)；WG(文职干部证)；WY(文职人员证)；WH(外国人护照，需选择国家)；HZ(中国护照)；GN(港澳居民来往内地通行证)；QT(其他)。暂仅支持ED(居民身份证)",
+	                "creditTypeName": "证件类型名称",
+	                "creditNo": "120108198911280024",
+	                "fullName": "user2",
 	                "ticketType": "票种:Adult(成人票)、Child(小孩票)",
 	                "seatType": "座位类型",
 	                "carriage": "03",
-	                "seatNumber": "02A",
-	                "sleeper": "Down",
-	                "seatPrice": 1435
+	                "seatNumber": "03A",
+	                "sleeper": "None",
+	                "seatPrice": 2795
+	            },
+	            {
+	                "passengerId": "23923346_6039823409",
+	                "creditType": "证件类型:ED(居民身份证)；LS(临时身份证)；WJ(警官证)；JG(军官证)；YW(义务兵证)；SG(士官证)；WG(文职干部证)；WY(文职人员证)；WH(外国人护照，需选择国家)；HZ(中国护照)；GN(港澳居民来往内地通行证)；QT(其他)。暂仅支持ED(居民身份证)",
+	                "creditTypeName": "证件类型名称",
+	                "creditNo": "120108199002121012",
+	                "fullName": "user2",
+	                "ticketType": "票种:Adult(成人票)、Child(小孩票)",
+	                "seatType": "座位类型",
+	                "carriage": "04",
+	                "seatNumber": "04A",
+	                "sleeper": "None",
+	                "seatPrice": 2795
 	            }
 	        ]
 	    }
@@ -179,46 +217,18 @@ func main() {
 			log.Fatal("断言ResultTypeSuccessData错误:", err)
 		}
 		
-		// 设置取票号
-		ticketNumber := resultTypeSuccessData.TicketNumber
-		ticketNumberId := "#EOrderNumberInput" + orderId
-		// 等待 ID 出现
-		fmt.Println("ticketNumberId:", ticketNumberId)
-		err = chromedp.Run(ctx,
-			chromedp.WaitVisible(ticketNumberId),
-			chromedp.SetValue(ticketNumberId, ticketNumber, chromedp.ByID),
-		)
-		if err != nil {
-			log.Fatal("设置取票号失败：", err)
-		}
-		log.Println("设置取票号设置成功")
-		
-		// 模拟设置取票号的选择器不存在
-		ticketNumberId = "#EOrderNumberInput---" + orderId
-		fmt.Println("ticketNumberId:", ticketNumberId)
-		// 模拟设置取票号的选择器不存在-模拟 1：等待的方式。这种方式会堵塞到选择器存在,适用选择器需要强制等待的场景
-		/*fmt.Println("模拟设置取票号的选择器不存在，开始等待")
-		err = chromedp.Run(ctx, chromedp.WaitVisible(ticketNumberId))
-		if err != nil {
-			log.Println("模拟设置取票号的选择器不存在 err：", err)
-		}
-		fmt.Println("模拟设置取票号的选择器不存在，等待结束")*/
-		// 模拟设置取票号的选择器不存在-模拟 2：同样是等待的方式。这种方式会堵塞到选择器存在,适用选择器需要强制等待的场景
-		/*fmt.Println("模拟设置取票号的选择器不存在，开始等待")
-		err = chromedp.Run(ctx, chromedp.Query(ticketNumberId, chromedp.ByQuery))
-		if err != nil {
-			log.Println("模拟设置取票号的选择器不存在 err：", err)
-		}
-		fmt.Println("模拟设置取票号的选择器不存在，等待结束")*/
-		// 模拟设置取票号的选择器不存在-模拟 3：设置上下文超时的方式。适用于立即等待和超时等待的场景
-		fmt.Println("模拟设置取票号的选择器不存在，开始等待")
-		// 创建带有超时选项的上下文
-		selctx, _ := context.WithTimeout(ctx, time.Second*1)
-		err = chromedp.Run(selctx, chromedp.WaitVisible(ticketNumberId))
-		if err != nil {
-			log.Println("模拟设置取票号的选择器不存在 err：", err)
-		}
-		fmt.Println("模拟设置取票号的选择器不存在，等待结束")
+		// 设置取票号：占座订单支付后才有取票号，暂注释
+		// ticketNumber := resultTypeSuccessData.TicketNumber
+		// ticketNumberId := "#EOrderNumberInput" + orderId
+		// // 等待 ID 出现
+		// chromedp.WaitVisible(ticketNumberId)
+		// fmt.Println("ticketNumberId:", ticketNumberId)
+		// err = chromedp.Run(ctx,
+		// 	chromedp.SetValue(ticketNumberId, ticketNumber, chromedp.ByID),
+		// )
+		// if err != nil {
+		// 	log.Fatal("设置取票号失败：", err)
+		// }
 		
 		for _, passenger := range resultTypeSuccessData.PassengerList {
 			fmt.Println("passenger:", passenger)
@@ -227,10 +237,18 @@ func main() {
 			creditNo := passenger.CreditNo
 			carriage := passenger.Carriage
 			seatNumber := passenger.SeatNumber
-			// sleeper := passenger.Sleeper
+			sleeper := passenger.Sleeper
 			// seatPrice := passenger.SeatPrice
 			
 			fmt.Println("passengerId:", passengerId)
+			// err = chromedp.Run(ctx,
+			// 	chromedp.WaitVisible(fmt.Sprintf("#%s", passengerId), chromedp.ByID),
+			// )
+			// if err != nil {
+			// 	log.Fatal("WaitVisible err:", fmt.Sprintf("#%s", passengerId), err)
+			// }
+			// fmt.Println("WaitVisible end:", fmt.Sprintf("#%s", passengerId))
+			//
 			
 			var (
 				haveCreditNoText string
@@ -243,7 +261,7 @@ func main() {
 			fmt.Println("dom:", dom)
 			err = chromedp.Run(ctx, chromedp.Text(dom, &haveCreditNoText, chromedp.BySearch))
 			if err != nil {
-				log.Fatal("haveCreditNoText err:", err)
+				log.Fatal("EvaluateAsDevTools haveCreditNoText err:", err)
 			}
 			fmt.Println("haveCreditNoText:", haveCreditNoText)
 			if haveCreditNoText == "" {
@@ -257,45 +275,12 @@ func main() {
 			log.Println("身份证号-匹配")
 			
 			// 设置车厢号：成功
-			// 复制的的 selector。因为 ID 选择器必须以字母或下划线开头你可以使用 \3 转义字符来转义数字，并且在该数字背后加一个空格
-			/*
-				chrome selector(css选择器):#\32 1998005_1938898 > td:nth-child(6) > input
-			*/
-			/*fmt.Println("carriage:", carriage)
-			dom = fmt.Sprintf(`#\32 1998005_1938898 > td:nth-child(6) > input`)
-			fmt.Println("dom:", dom)
-			err = chromedp.Run(ctx,
-				chromedp.SetValue(dom, carriage, chromedp.ByQuery), // 成功
-				// chromedp.SetValue(dom, carriage, chromedp.BySearch), // 成功
-			)
-			if err != nil {
-				log.Fatal("SetValue carriage err:", err)
-			}
-			fmt.Println("carriage 1")*/
-			
-			// 设置车厢号：成功
-			// 复制的的 js path。因为 ID 选择器必须以字母或下划线开头你可以使用 \3 转义字符来转义数字，并且在该数字背后加一个空格
-			/*
-				chrome js path:document.querySelector("#\\32 1998005_1938898 > td:nth-child(6) > input")
-			*/
-			/*fmt.Println("carriage:", carriage)
-			dom = fmt.Sprintf(`document.querySelector("#\\32 1998005_1938898 > td:nth-child(6) > input")`)
-			fmt.Println("dom:", dom)
-			err = chromedp.Run(ctx,
-				chromedp.SetValue(dom, carriage, chromedp.ByJSPath),
-			)
-			if err != nil {
-				log.Fatal("SetValue carriage err:", err)
-			}
-			fmt.Println("carriage 2")*/
-			
-			// 设置车厢号：成功
 			/*
 				firefox xpath:/html/body/span/span/table/tbody/tr[3]/td[7]/input
 				chrome xpath://*[@id="21998005_1938898"]/td[6]/input
 			*/
 			fmt.Println("carriage:", carriage)
-			dom = fmt.Sprintf(`//*[@id="21998005_1938898"]/td[6]/input`)
+			dom = fmt.Sprintf(`//*[@id="%s"]/td[6]/input`, passengerId)
 			fmt.Println("dom:", dom)
 			err = chromedp.Run(ctx,
 				chromedp.SetValue(dom, carriage, chromedp.BySearch),
@@ -303,40 +288,7 @@ func main() {
 			if err != nil {
 				log.Fatal("SetValue carriage err:", err)
 			}
-			fmt.Println("carriage 3")
-			
-			// 设置座位号：成功
-			// 复制的的 selector。因为 ID 选择器必须以字母或下划线开头你可以使用 \3 转义字符来转义数字，并且在该数字背后加一个空格
-			/*
-				chrome selector(css选择器):#\32 1998005_1938898 > td:nth-child(7) > input
-			*/
-			/*fmt.Println("seatNumber:", seatNumber)
-			dom = fmt.Sprintf(`#\32 1998005_1938898 > td:nth-child(7) > input`)
-			fmt.Println("dom:", dom)
-			err = chromedp.Run(ctx,
-				chromedp.SetValue(dom, seatNumber, chromedp.ByQuery), // 成功
-				// chromedp.SetValue(dom, seatNumber, chromedp.BySearch), // 成功
-			)
-			if err != nil {
-				log.Fatal("SetValue seatNumber err:", err)
-			}
-			fmt.Println("seatNumber 1")*/
-			
-			// 设置座位号：成功
-			// 复制的的 js path。因为 ID 选择器必须以字母或下划线开头你可以使用 \3 转义字符来转义数字，并且在该数字背后加一个空格
-			/*
-				chrome js path:document.querySelector("#\\32 1998005_1938898 > td:nth-child(7) > input")
-			*/
-			/*fmt.Println("seatNumber:", seatNumber)
-			dom = fmt.Sprintf(`document.querySelector("#\\32 1998005_1938898 > td:nth-child(7) > input")`)
-			fmt.Println("dom:", dom)
-			err = chromedp.Run(ctx,
-				chromedp.SetValue(dom, seatNumber, chromedp.ByJSPath),
-			)
-			if err != nil {
-				log.Fatal("SetValue seatNumber err:", err)
-			}
-			fmt.Println("seatNumber 2")*/
+			fmt.Println("carriage")
 			
 			// 设置座位号：成功
 			// 复制的 xpath
@@ -345,7 +297,7 @@ func main() {
 				chrome xpath://*[@id="21998005_1938898"]/td[7]/input
 			*/
 			fmt.Println("seatNumber:", seatNumber)
-			dom = fmt.Sprintf(`//*[@id="21998005_1938898"]/td[7]/input`)
+			dom = fmt.Sprintf(`//*[@id="%s"]/td[7]/input`, passengerId)
 			fmt.Println("dom:", dom)
 			err = chromedp.Run(ctx,
 				chromedp.SetValue(dom, seatNumber, chromedp.BySearch),
@@ -353,34 +305,70 @@ func main() {
 			if err != nil {
 				log.Fatal("SetValue seatNumber err:", err)
 			}
-			fmt.Println("seatNumber 3")
+			fmt.Println("seatNumber")
 			
-			// ---
-			dom = fmt.Sprintf(`document.getElementById("%s").innerText`, passengerId)
-			fmt.Println("dom:", dom)
-			err = chromedp.Run(ctx, chromedp.EvaluateAsDevTools(dom, &haveCreditNoText))
-			if err != nil {
-				log.Fatal("EvaluateAsDevTools haveCreditNoText err:", err)
+			fmt.Println("sleeper:", sleeper)
+			if sleeper != "" && sleeper != "None" {
+				// 确定的卧铺位置：None(无)；Up(上)；Mid(中)；Down(下)
+				var sleeperValue string
+				switch sleeper {
+				case "Up":
+					sleeperValue = "上铺"
+				case "Mid":
+					sleeperValue = "中铺"
+				case "Down":
+					sleeperValue = "下铺"
+				default:
+					log.Fatal("sleeper 无匹配")
+				}
+				dom = fmt.Sprintf(`//*[@id="%s"]/td[7]/select`, passengerId)
+				err = chromedp.Run(ctx,
+					// v等于select 中 option 展示的值，而不是 value
+					chromedp.SendKeys(dom, sleeperValue, chromedp.BySearch),
+				)
+				if err != nil {
+					log.Fatal(err)
+				}
 			}
-			fmt.Println("haveCreditNoText 1:", haveCreditNoText)
-			
-			dom = fmt.Sprintf(`document.querySelector("tr[id='%s']").innerText`, passengerId)
-			fmt.Println("dom:", dom)
-			err = chromedp.Run(ctx, chromedp.EvaluateAsDevTools(dom, &haveCreditNoText))
-			if err != nil {
-				log.Fatal("EvaluateAsDevTools haveCreditNoText err:", err)
-			}
-			fmt.Println("haveCreditNoText 2:", haveCreditNoText)
-			
-			dom = fmt.Sprintf(`document.querySelector("tr[id='%s'] td:nth-child(3)").innerText`, passengerId)
-			fmt.Println("dom:", dom)
-			err = chromedp.Run(ctx, chromedp.EvaluateAsDevTools(dom, &haveCreditNoText))
-			if err != nil {
-				log.Fatal("EvaluateAsDevTools haveCreditNoText err:", err)
-			}
-			fmt.Println("haveCreditNoText 3:", haveCreditNoText)
 		}
 		
+		fmt.Println("---所有乘客购票信息已输入完成")
+		
+		fmt.Println("点击出票/占座结果")
+		var sel string
+		/*
+			// 非占座票-出票成功
+			document.querySelector("#BookSucTBody{订单ID} input.btn.btn-primary.btn-lg")
+			// 非占座票-出票失败
+			document.querySelector("#BookSucTBody{订单ID} input.btn.btn-default.btn-lg")
+		
+			// 占座票-占座成功
+			document.querySelector("#BookSucTBody{订单ID} input.btn.btn-success.btn-lg")
+			// 占座票-占座失败
+			document.querySelector("#BookSucTBody{订单ID} input.btn.btn-danger.btn-lg")")
+		*/
+		// 非占座票-出票成功
+		sel = fmt.Sprintf(`document.querySelector("#BookSucTBody%s input.btn.btn-primary.btn-lg")`, orderId)
+		fmt.Println("sel:", sel)
+		err = chromedp.Run(ctx,
+			chromedp.Click(sel, chromedp.ByJSPath),
+		)
+		if err != nil {
+			log.Fatal("点击：非占座票-出票成功 err:", err)
+		} else {
+			fmt.Println("点击：非占座票-出票成功 成功")
+		}
+		// 非占座票-出票失败
+		sel = fmt.Sprintf(`document.querySelector("#BookSucTBody%s input.btn.btn-default.btn-lg")`, orderId)
+		fmt.Println("sel:", sel)
+		err = chromedp.Run(ctx,
+			chromedp.Click(sel, chromedp.ByJSPath),
+		)
+		if err != nil {
+			log.Fatal("点击：非占座票-出票失败 err:", err)
+		} else {
+			fmt.Println("点击：非占座票-出票失败 成功")
+		}
 	}
 	
 	select {}

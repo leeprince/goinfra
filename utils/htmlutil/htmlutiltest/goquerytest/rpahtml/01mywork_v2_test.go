@@ -27,6 +27,8 @@ func TestMyWorkV2(t *testing.T) {
 	/*
 		添加<table>包含所有原始数据，可以保证能解析出"订单概要信息的详细信息"
 	*/
+	filename := "单人单程-高高高.html" // 有要求-添加<table>包含所有原始数据
+	// filename := "单人单程-包包包.html" // 无要求-添加<table>包含所有原始数据
 	// filename := "单人单程-李李李.html" // 无要求-添加<table>包含所有原始数据
 	// filename := "单人单程-孙孙孙.html" // 无要求-添加<table>包含所有原始数据
 	// filename := "单人单程-蔡蔡蔡.html" // 无要求-添加<table>包含所有原始数据
@@ -38,7 +40,7 @@ func TestMyWorkV2(t *testing.T) {
 	// filename := "多人单程-周周周.html" // 有要求-添加<table>包含所有原始数据
 	// filename := "多人单程-马马.html" // 无要求-添加<table>包含所有原始数据
 	// filename := "多人单程-王王王.html" // 有要求-保持不添加<table>包含所有原始数据
-	filename := "多人换乘-余余余.html" // 有要求-添加<table>包含所有原始数据
+	// filename := "多人换乘-余余余.html" // 有要求-添加<table>包含所有原始数据
 	fileReader, _, err := fileutil.GetFileReaderByLocalPath(filePath, filename)
 	if err != nil {
 		log.Fatal(err)
@@ -173,13 +175,14 @@ func TestMyWorkV2(t *testing.T) {
 	fmt.Printf("\n\n>>>>开始输出乘客信息\n")
 	
 	// 获取成功：乘客信息
-	// 完成乘客信息V1
+	// 完成乘客信息V1 tr[expectupseat] 或 tr[expectdownseat] 或 tr[expectmidseat]
 	selection = doc.Find("tr[expectupseat], tr[expectdownseat], tr[expectmidseat]")
 	if selection.Size() > 0 {
 		selection.Each(func(i int, sl *goquery.Selection) {
 			fmt.Printf("V1---%d \n", i)
 			fmt.Println(sl.Html())
 			
+			// 获取属性值
 			id, exist = sl.Attr("id")
 			if !exist {
 				fmt.Println("当前Selection不存在id属性")
@@ -190,19 +193,32 @@ func TestMyWorkV2(t *testing.T) {
 	} else {
 		fmt.Println("V1---", "找不到包含expectupseat、expectdownseat或expectmidseat属性的tr元素。")
 	}
-	// 完成乘客信息V2
+	// 完成乘客信息V2 tr[expectupseat='0'] 或 tr[expectdownseat='0'] 或 tr[expectmidseat='0']
 	selection = doc.Find("tr[expectupseat='0'], tr[expectdownseat='0'], tr[expectmidseat='0']")
 	if selection.Size() > 0 {
 		selection.Each(func(i int, sl *goquery.Selection) {
 			fmt.Printf("V2---%d \n", i)
 			fmt.Println(sl.Html())
 			
+			// 获取属性值
 			id, exist = sl.Attr("id")
 			if !exist {
 				fmt.Println("当前Selection不存在id属性")
 				return
 			}
 			fmt.Println("当前Selection的id属性:", id)
+			
+			// 判断前面的所有乘客是否为同一程
+			html, _ := sl.Next().Html()
+			text := sl.Next().Text()
+			if strings.Contains(text, "程：") {
+				fmt.Println("判断前面的所有乘客是否为同一程 ⬆︎⬆以上乘客为同一程︎⬆︎⬆:", html)
+				fmt.Println("判断前面的所有乘客是否为同一程 ⬆︎⬆以上乘客为同一程︎⬆︎⬆:", text)
+			} else {
+				fmt.Println("判断前面的所有乘客是否为同一程 同一程", html)
+				fmt.Println("判断前面的所有乘客是否为同一程 同一程", text)
+			}
+			
 		})
 	} else {
 		fmt.Println("V2---", "找不到包含expectupseat、expectdownseat或expectmidseat属性的tr元素。")
@@ -264,10 +280,7 @@ func TestMyWorkV2(t *testing.T) {
 			}
 			log.Println("单张票（单人一程票）的价格:", strings.TrimSpace(orderInfo))
 			
-			orderInfo, exist = sl.Find("td:nth-child(8) input[name='ticketPrice']").Attr("onblur")
-			if exist && orderInfo != "" {
-				fmt.Printf("\n>>>>---以上的乘客信息为一程\n")
-			}
+			fmt.Printf("\n>>>>---以上的乘客信息为一程\n")
 			
 			fmt.Printf("\n---\n")
 		})
