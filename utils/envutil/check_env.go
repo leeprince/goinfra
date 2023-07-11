@@ -2,6 +2,7 @@ package envutil
 
 import (
 	"github.com/leeprince/goinfra/consts"
+	"os"
 )
 
 /**
@@ -28,4 +29,14 @@ func IsLocal(env string) (is bool) {
 		is = true
 	}
 	return
+}
+
+func GetenvIsMock() (is bool) {
+	if os.Getenv("IsMock") == "True" ||
+		os.Getenv("ismock") == "true" ||
+		os.Getenv("IsMock") == "true" ||
+		os.Getenv("IsMock") == "True" {
+		return true
+	}
+	return false
 }

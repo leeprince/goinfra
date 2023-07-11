@@ -17,9 +17,11 @@ func NetworkDevices() {
 	if err != nil {
 		panic(err)
 	}
-
+	
 	// 打印每个网络接口的信息
 	for _, device := range devices {
+		fmt.Println("----------------------以下为网络接口信息")
+		
 		fmt.Println("Name:", device.Name)
 		fmt.Println("Description:", device.Description)
 		fmt.Println("Addresses:")

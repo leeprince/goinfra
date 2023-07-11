@@ -28,8 +28,17 @@ func ToLocalUnix(timeStr, timeLayout string) (timeUnix int64, err error) {
 func DataTime() string {
 	return time.Now().Format(consts.TimeLayoutV1)
 }
-func DataTimeT(t time.Time) string {
+func DataTimeF(t time.Time) string {
 	return t.Format(consts.TimeLayoutV1)
+}
+func DataTimeNanosecond() string {
+	return time.Now().Format(consts.TimeLayoutV12)
+}
+func DataTimeMicrosecond() string {
+	return time.Now().Format(consts.TimeLayoutV13)
+}
+func DataTimeMillisecond() string {
+	return time.Now().Format(consts.TimeLayoutV14)
 }
 func Year() string {
 	return time.Now().Format(consts.TimeLayoutV8)

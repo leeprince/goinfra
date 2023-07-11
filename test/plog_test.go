@@ -39,6 +39,21 @@ func TestPlogSetOutputFileV2(t *testing.T) {
 	plog.WithField("WithField01", "WithFieldValue").Debug("prince log Debug WithField")
 }
 
+func TestPlogLevel(t *testing.T) {
+	plog.SetOutputFile("./", "application.log", true)
+	// plog.SetLevel(plog.DebugLevel)
+	plog.SetLevel(plog.InfoLevel)
+	plog.SetLevel(plog.ErrorLevel)
+	
+	plog.Trace("prince log Trace")
+	plog.Debug("prince log Debug")
+	plog.Info("prince log Info")
+	plog.Warn("prince log Warn")
+	plog.Warning("prince log Warning")
+	plog.Error("prince log Error")
+	plog.WithField("WithField01", "WithFieldValue").Debug("prince log Debug WithField")
+}
+
 func TestPlogSetReportCaller(t *testing.T) {
 	// plog.Debug("prince log Debug SetReportCaller 01")
 	plog.SetReportCaller(true)

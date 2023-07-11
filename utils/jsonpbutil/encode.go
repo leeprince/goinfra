@@ -1,5 +1,5 @@
 // Copyright 2015 The Go Authors. All rights reserved.
-// Use of this source code is governed by a BSD-style
+// Use of this resource code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
 package jsonpbutil
@@ -15,7 +15,7 @@ import (
 	"strconv"
 	"strings"
 	"time"
-
+	
 	"github.com/golang/protobuf/proto"
 	"google.golang.org/protobuf/encoding/protojson"
 	protoV2 "google.golang.org/protobuf/proto"
@@ -30,21 +30,21 @@ const wrapJSONMarshalV2 = false
 type Marshaler struct {
 	// OrigName specifies whether to use the original protobuf name for fields.
 	OrigName bool
-
+	
 	// EnumsAsInts specifies whether to render enum values as integers,
 	// as opposed to string values.
 	EnumsAsInts bool
-
+	
 	// EmitDefaults specifies whether to render fields with zero values.
 	EmitDefaults bool
-
+	
 	// Indent controls whether the output is compact or not.
 	// If empty, the output is compact JSON. Otherwise, every JSON object
 	// entry and JSON array value will be on its own line.
 	// Each line will be preceded by repeated copies of Indent, where the
 	// number of copies is the current indentation depth.
 	Indent string
-
+	
 	// AnyResolver is used to resolve the google.protobuf.Any well-known type.
 	// If unset, the global registry is used by default.
 	AnyResolver AnyResolver
@@ -88,13 +88,13 @@ func (jm *Marshaler) marshal(m proto.Message) ([]byte, error) {
 	if m == nil || (v.Kind() == reflect.Ptr && v.IsNil()) {
 		return nil, errors.New("Marshal called with nil")
 	}
-
+	
 	// Check for custom marshalers first since they may not properly
 	// implement protobuf reflection that the logic below relies on.
 	if jsm, ok := m.(JSONPBMarshaler); ok {
 		return jsm.MarshalJSONPB(jm)
 	}
-
+	
 	if wrapJSONMarshalV2 {
 		opts := protojson.MarshalOptions{
 			UseProtoNames:   jm.OrigName,
@@ -112,7 +112,7 @@ func (jm *Marshaler) marshal(m proto.Message) ([]byte, error) {
 		if err := protoV2.CheckInitialized(m2.Interface()); err != nil {
 			return nil, err
 		}
-
+		
 		w := jsonWriter{Marshaler: jm}
 		err := w.marshalMessage(m2, "", "")
 		return w.buf, err
@@ -152,10 +152,10 @@ func (w *jsonWriter) marshalMessage(m protoreflect.Message, indent, typeURL stri
 		w.write(string(b))
 		return nil
 	}
-
+	
 	md := m.Descriptor()
 	fds := md.Fields()
-
+	
 	// Handle well-known types.
 	const secondInNanos = int64(time.Second / time.Nanosecond)
 	switch wellKnownType(md.FullName()) {
@@ -220,12 +220,12 @@ func (w *jsonWriter) marshalMessage(m protoreflect.Message, indent, typeURL stri
 		fd := fds.ByNumber(1)
 		return w.marshalValue(fd, m.Get(fd), indent)
 	}
-
+	
 	w.write("{")
 	if w.Indent != "" {
 		w.write("\n")
 	}
-
+	
 	firstField := true
 	if typeURL != "" {
 		if err := w.marshalTypeURL(indent, typeURL); err != nil {
@@ -233,7 +233,7 @@ func (w *jsonWriter) marshalMessage(m protoreflect.Message, indent, typeURL stri
 		}
 		firstField = false
 	}
-
+	
 	for i := 0; i < fds.Len(); {
 		fd := fds.Get(i)
 		if od := fd.ContainingOneof(); od != nil {
@@ -245,9 +245,9 @@ func (w *jsonWriter) marshalMessage(m protoreflect.Message, indent, typeURL stri
 		} else {
 			i++
 		}
-
+		
 		v := m.Get(fd)
-
+		
 		if !m.Has(fd) {
 			if !w.EmitDefaults || fd.ContainingOneof() != nil {
 				continue
@@ -256,7 +256,7 @@ func (w *jsonWriter) marshalMessage(m protoreflect.Message, indent, typeURL stri
 				v = protoreflect.Value{} // use "null" for singular messages or proto2 scalars
 			}
 		}
-
+		
 		if !firstField {
 			w.writeComma()
 		}
@@ -265,7 +265,7 @@ func (w *jsonWriter) marshalMessage(m protoreflect.Message, indent, typeURL stri
 		}
 		firstField = false
 	}
-
+	
 	// Handle proto2 extensions.
 	if md.ExtensionRanges().Len() > 0 {
 		// Collect a sorted list of all extension descriptor and values.
@@ -283,7 +283,7 @@ func (w *jsonWriter) marshalMessage(m protoreflect.Message, indent, typeURL stri
 		sort.Slice(exts, func(i, j int) bool {
 			return exts[i].desc.Number() < exts[j].desc.Number()
 		})
-
+		
 		for _, ext := range exts {
 			if !firstField {
 				w.writeComma()
@@ -294,7 +294,7 @@ func (w *jsonWriter) marshalMessage(m protoreflect.Message, indent, typeURL stri
 			firstField = false
 		}
 	}
-
+	
 	if w.Indent != "" {
 		w.write("\n")
 		w.write(indent)
@@ -319,7 +319,7 @@ func (w *jsonWriter) marshalAny(m protoreflect.Message, indent string) error {
 	md := m.Descriptor()
 	typeURL := m.Get(md.Fields().ByNumber(1)).String()
 	rawVal := m.Get(md.Fields().ByNumber(2)).Bytes()
-
+	
 	var m2 protoreflect.Message
 	if w.AnyResolver != nil {
 		mi, err := w.AnyResolver.Resolve(typeURL)
@@ -334,15 +334,15 @@ func (w *jsonWriter) marshalAny(m protoreflect.Message, indent string) error {
 		}
 		m2 = mt.New()
 	}
-
+	
 	if err := protoV2.Unmarshal(rawVal, m2.Interface()); err != nil {
 		return err
 	}
-
+	
 	if wellKnownType(m2.Descriptor().FullName()) == "" {
 		return w.marshalMessage(m2, indent, typeURL)
 	}
-
+	
 	w.write("{")
 	if w.Indent != "" {
 		w.write("\n")
@@ -400,7 +400,7 @@ func (w *jsonWriter) marshalField(fd protoreflect.FieldDescriptor, v protoreflec
 		if isMessageSet(fd.ContainingMessage()) {
 			name = strings.TrimSuffix(name, ".message_set_extension")
 		}
-
+		
 		w.write("[" + name + "]")
 	case w.OrigName:
 		name := string(fd.Name())
@@ -448,7 +448,7 @@ func (w *jsonWriter) marshalValue(fd protoreflect.FieldDescriptor, v protoreflec
 		kfd := fd.MapKey()
 		vfd := fd.MapValue()
 		mv := v.Map()
-
+		
 		// Collect a sorted list of all map keys and values.
 		type entry struct{ key, val protoreflect.Value }
 		var entries []entry
@@ -470,7 +470,7 @@ func (w *jsonWriter) marshalValue(fd protoreflect.FieldDescriptor, v protoreflec
 				panic("invalid kind")
 			}
 		})
-
+		
 		w.write(`{`)
 		comma := ""
 		for _, entry := range entries {
@@ -481,19 +481,19 @@ func (w *jsonWriter) marshalValue(fd protoreflect.FieldDescriptor, v protoreflec
 				w.write(w.Indent)
 				w.write(w.Indent)
 			}
-
+			
 			s := fmt.Sprint(entry.key.Interface())
 			b, err := json.Marshal(s)
 			if err != nil {
 				return err
 			}
 			w.write(string(b))
-
+			
 			w.write(`:`)
 			if w.Indent != "" {
 				w.write(` `)
 			}
-
+			
 			if err := w.marshalSingularValue(vfd, entry.val, indent+w.Indent); err != nil {
 				return err
 			}
@@ -523,7 +523,7 @@ func (w *jsonWriter) marshalSingularValue(fd protoreflect.FieldDescriptor, v pro
 			w.write("null")
 			return nil
 		}
-
+		
 		vd := fd.Enum().Values().ByNumber(v.Enum())
 		if vd == nil || w.EnumsAsInts {
 			w.write(strconv.Itoa(int(v.Enum())))
@@ -549,7 +549,7 @@ func (w *jsonWriter) marshalSingularValue(fd protoreflect.FieldDescriptor, v pro
 			w.write(fmt.Sprintf(`%d`, v.Interface()))
 			return nil
 		}
-
+		
 		b, err := json.Marshal(v.Interface())
 		if err != nil {
 			return err

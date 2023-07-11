@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<head>
+    <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script>
+        function sendGet() {
+            $.get("/prince/get", function (data, status) {
+                console.log("/prince/get", data, status)
+            });
+        }
+
+        function sendPost() {
+            $.ajax({
+                url: "/prince/post",
+                type: 'POST',
+                aysnc: true,
+                dataType: "json",
+                contentType: 'application/json;charset=UTF-8',
+                data: JSON.stringify({
+                    name: "Donald Duck",
+                    city: "Duckburg"
+                }),
+                success: function (r) {
+                    console.log("/prince/post", r)
+                }
+            })
+        }
+    </script>
+</head>
+<body>
+<form>
+    <label for="input">Input:</label>
+    <input id="input" name="input" value="">
+    <p>
+
+        <label for="checkbox1">Checkbox 1:</label>
+        <input type="checkbox" id="checkbox1" name="checkbox1" value="1">
+        <label for="checkbox2">Checkbox 2:</label>
+        <input type="checkbox" id="checkbox2" name="checkbox2" value="2">
+    <p>
+
+        <label for="select1">Select:</label>
+        <select id="select1" name="select1">
+            <option value="1">Option 1</option>
+            <option value="2">Option 2</option>
+            <option value="3">Option 3</option>
+        </select>
+    <p>
+
+        <label for="select2">Select multiple:</label>
+        <select id="select2" name="select2" multiple>
+            <option value="1">Option 1</option>
+            <option value="2">Option 2</option>
+            <option value="3">Option 3</option>
+        </select>
+    <p>
+        <label for="textarea">Textarea:</label>
+        <textarea id="textarea" name="textarea" style="width:200px;height:50px">textarea</textarea>
+    <p>
+
+        <input type="submit" value="Submit">
+</form>
+
+<hr>
+
+<input id="sendGet" type="button" value="Send GET" onclick="sendGet()">
+<input id="sendPost" type="button" value="Send POST" onclick="sendPost()">
+</body>
+</html>

@@ -8,6 +8,10 @@ package consts
 
 const (
 	TimeLayoutV1  = "2006-01-02 15:04:05"
+	TimeLayoutV11 = "2006-01-02 15:04:05.999999999 -0700 MST"
+	TimeLayoutV12 = "2006-01-02 15:04:05.999999999"
+	TimeLayoutV13 = "2006-01-02 15:04:05.999999"
+	TimeLayoutV14 = "2006-01-02 15:04:05.999"
 	TimeLayoutV2  = "2006-01-02 15:04"
 	TimeLayoutV3  = "2006-01-02 15"
 	TimeLayoutV4  = "2006-01-02"

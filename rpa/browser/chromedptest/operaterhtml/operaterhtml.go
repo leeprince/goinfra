@@ -128,7 +128,7 @@ func main() {
 		}
 	*/
 	data := `{
-	    "orderID": "HDTT202306100954030604914284",
+	    "orderID": "HDTT202306100954030604914284---",
 	    "resultType": "Success",
 	    "message": "订单任务处理结果类型：购票成功(Success)、无满足车票(NoTicket)、任务暂停(Suspend)",
 	    "data":
@@ -181,44 +181,40 @@ func main() {
 		
 		// 设置取票号
 		ticketNumber := resultTypeSuccessData.TicketNumber
-		ticketNumberId := "#EOrderNumberInput" + orderId
-		// 等待 ID 出现
+		ticketNumberId := "EOrderNumberInput" + orderId // 因为是chromedp.ByID，所以前面不能加上#
 		fmt.Println("ticketNumberId:", ticketNumberId)
+		// 模拟设置取票号的选择器
+		// 模拟设置取票号的选择器不存在-模拟 1：等待的方式。这种方式会堵塞到选择器存在,适用选择器需要强制等待的场景
+		/*fmt.Println("模拟设置取票号的选择器，开始等待")
+		err = chromedp.Run(ctx, chromedp.WaitVisible(ticketNumberId))
+		if err != nil {
+			log.Println("模拟设置取票号的选择器不存在 err：", err)
+		}
+		fmt.Println("模拟设置取票号的选择器，等待结束")*/
+		// 模拟设置取票号的选择器不存在-模拟 2：同样是等待的方式。这种方式会堵塞到选择器存在,适用选择器需要强制等待的场景
+		/*fmt.Println("模拟设置取票号的选择器，开始等待")
+		err = chromedp.Run(ctx, chromedp.Query(ticketNumberId, chromedp.ByQuery))
+		if err != nil {
+			log.Println("模拟设置取票号的选择器不存在 err：", err)
+		}
+		fmt.Println("模拟设置取票号的选择器，等待结束")*/
+		// 模拟设置取票号的选择器不存在-模拟 3：设置上下文超时的方式。适用于立即等待和超时等待的场景
+		fmt.Println("模拟设置取票号的选择器，开始等待")
+		// 创建带有超时选项的上下文
+		selctx, _ := context.WithTimeout(ctx, time.Second*1)
+		err = chromedp.Run(selctx, chromedp.WaitVisible(ticketNumberId, chromedp.ByID)) // 存在
+		// err = chromedp.Run(selctx, chromedp.WaitVisible(ticketNumberId+"-", chromedp.ByID)) // 模拟不存在
+		if err != nil {
+			log.Println("模拟设置取票号的选择器不存在 err：", err)
+		}
+		fmt.Println("模拟设置取票号的选择器，等待结束")
 		err = chromedp.Run(ctx,
-			chromedp.WaitVisible(ticketNumberId),
 			chromedp.SetValue(ticketNumberId, ticketNumber, chromedp.ByID),
 		)
 		if err != nil {
 			log.Fatal("设置取票号失败：", err)
 		}
 		log.Println("设置取票号设置成功")
-		
-		// 模拟设置取票号的选择器不存在
-		ticketNumberId = "#EOrderNumberInput---" + orderId
-		fmt.Println("ticketNumberId:", ticketNumberId)
-		// 模拟设置取票号的选择器不存在-模拟 1：等待的方式。这种方式会堵塞到选择器存在,适用选择器需要强制等待的场景
-		/*fmt.Println("模拟设置取票号的选择器不存在，开始等待")
-		err = chromedp.Run(ctx, chromedp.WaitVisible(ticketNumberId))
-		if err != nil {
-			log.Println("模拟设置取票号的选择器不存在 err：", err)
-		}
-		fmt.Println("模拟设置取票号的选择器不存在，等待结束")*/
-		// 模拟设置取票号的选择器不存在-模拟 2：同样是等待的方式。这种方式会堵塞到选择器存在,适用选择器需要强制等待的场景
-		/*fmt.Println("模拟设置取票号的选择器不存在，开始等待")
-		err = chromedp.Run(ctx, chromedp.Query(ticketNumberId, chromedp.ByQuery))
-		if err != nil {
-			log.Println("模拟设置取票号的选择器不存在 err：", err)
-		}
-		fmt.Println("模拟设置取票号的选择器不存在，等待结束")*/
-		// 模拟设置取票号的选择器不存在-模拟 3：设置上下文超时的方式。适用于立即等待和超时等待的场景
-		fmt.Println("模拟设置取票号的选择器不存在，开始等待")
-		// 创建带有超时选项的上下文
-		selctx, _ := context.WithTimeout(ctx, time.Second*1)
-		err = chromedp.Run(selctx, chromedp.WaitVisible(ticketNumberId))
-		if err != nil {
-			log.Println("模拟设置取票号的选择器不存在 err：", err)
-		}
-		fmt.Println("模拟设置取票号的选择器不存在，等待结束")
 		
 		for _, passenger := range resultTypeSuccessData.PassengerList {
 			fmt.Println("passenger:", passenger)

@@ -42,9 +42,9 @@ func SelectWindow() {
 func InputChar() {
 	err = robotgo.ActiveName(ACTIVE_NAME)
 	perror.ErrPanic(err)
-
+	
 	time.Sleep(time.Second * 2)
-
+	
 	robotgo.TypeStr("Hello, world!")
 }
 
@@ -52,15 +52,15 @@ func InputChar() {
 func Mouse() {
 	err = robotgo.ActiveName(ACTIVE_NAME)
 	perror.ErrPanic(err)
-
+	
 	robotgo.MoveSmooth(100, 200, 1.0, 2.0, 2000)
-
+	
 	robotgo.MouseSleep = 2000
 	robotgo.MoveClick(100, 400)
-
+	
 	robotgo.MouseSleep = 2000
 	robotgo.MoveClick(200, 400, "right", true)
-
+	
 	robotgo.MovesClick(200, 600, "right", true)
 }
 
@@ -68,13 +68,13 @@ func Mouse() {
 func Key() {
 	err = robotgo.ActiveName(ACTIVE_NAME)
 	perror.ErrPanic(err)
-
+	
 	time.Sleep(time.Second * 2)
-
+	
 	robotgo.KeySleep = 2000
 	err = robotgo.KeyTap(robotgo.Enter)
 	perror.ErrPanic(err)
-
+	
 	// robotgo.KeySleep = 1000
 	// err = robotgo.KeyTap(robotgo.Up)
 	// perror.ErrPanic(err)
@@ -82,22 +82,22 @@ func Key() {
 	// robotgo.KeySleep = 1000
 	// err = robotgo.KeyTap(robotgo.Down)
 	// perror.ErrPanic(err)
-
+	
 	// err = robotgo.KeyTap(robotgo.Key1)
 	// err = robotgo.KeyTap(robotgo.KeyA)
-
+	
 	// --- mac: command+f
 	/*
 		报错：
 		fatal error: unexpected signal during runtime execution
 		[signal SIGSEGV: segmentation violation code=0x1 addr=0x8 pc=0x41aeda8]
-
+	
 		runtime stack:
 		runtime.throw({0x4214fca?, 0x0?})
 			/Users/leeprince/.g/go/src/runtime/panic.go:992 +0x71
 		runtime.sigpanic()
 			/Users/leeprince/.g/go/src/runtime/signal_unix.go:802 +0x3a9
-
+	
 		goroutine 35 [syscall]:
 		runtime.cgocall(0x41aed80, 0xc000058cb8)
 			/Users/leeprince/.g/go/src/runtime/cgocall.go:157 +0x5c fp=0xc000058c90 sp=0xc000058c58 pc=0x40073bc
@@ -122,7 +122,7 @@ func Key() {
 	// err = robotgo.KeyToggle(robotgo.Cmd, "up")
 	// perror.ErrPanic(err)
 	// ---
-
+	
 	// --- windows: ctrl+f  >> windows 完美执行完成
 	/*
 		go version go1.18.5 windows/amd64
@@ -130,7 +130,7 @@ func Key() {
 	/*
 		gcc.exe (x86_64-posix-sjlj-rev0, Built by MinGW-W64 project) 8.1.0
 			Copyright (C) 2018 Free Software Foundation, Inc.
-			This is free software; see the source for copying conditions.  There is NO
+			This is free software; see the resource for copying conditions.  There is NO
 			warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 	*/
 	// err = robotgo.KeyTap(robotgo.KeyF, robotgo.Ctrl)
@@ -142,23 +142,23 @@ func Key() {
 	// err = robotgo.KeyToggle(robotgo.Ctrl, "up")
 	// perror.ErrPanic(err)
 	// ---
-
+	
 }
 
 // 屏幕操作
 func Screen() {
 	err = robotgo.ActiveName(ACTIVE_NAME)
 	perror.ErrPanic(err)
-
+	
 	bit := robotgo.CaptureScreen()
 	fmt.Println("abitMap...", bit)
 	gbit := robotgo.ToBitmap(bit)
 	fmt.Println("bitmap...", gbit.Width)
-
+	
 	gbitMap := robotgo.CaptureGo()
 	fmt.Println("Go CaptureScreen...", gbitMap.Width)
 	fmt.Println("...", gbitMap.Width, gbitMap.BytesPerPixel)
-
+	
 	img := robotgo.CaptureImg()
 	robotgo.Save(img, "save.png")
 }
