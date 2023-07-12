@@ -3,6 +3,7 @@ package test
 import (
 	"errors"
 	"fmt"
+	"github.com/leeprince/goinfra/utils/panicutil"
 	"runtime"
 	"testing"
 )
@@ -15,6 +16,10 @@ import (
 
 func TestPanic(t *testing.T) {
 	panicFunc()
+}
+
+func TestPanicFunc(t *testing.T) {
+	panicFuncFunc()
 }
 
 func panicFunc() {
@@ -34,6 +39,22 @@ func panicFunc() {
 			if ok {
 				fmt.Printf("Panic occurred at %s:%d\n", file, line)
 			}
+		}
+	}()
+	
+	// 代码中故意引发panic
+	// panic("Something went wrong!") // 方式 1
+	// panicFunc01() // 方式 2
+	panicFunc03() // 方式 3
+}
+
+func panicFuncFunc() {
+	// 发生 panic 的处理方式
+	defer func() {
+		if r := recover(); r != nil {
+			fmt.Println("Recovered from panic:", r)
+			
+			panicutil.PanicRecover(r)
 		}
 	}()
 	
