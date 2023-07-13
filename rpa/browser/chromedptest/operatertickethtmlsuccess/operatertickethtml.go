@@ -7,9 +7,12 @@ import (
 	"fmt"
 	"github.com/chromedp/chromedp"
 	"github.com/leeprince/goinfra/utils/fileutil"
+	"github.com/leeprince/goinfra/utils/moneyutil"
 	"github.com/leeprince/goinfra/utils/stringutil"
+	"github.com/spf13/cast"
 	"log"
 	"net/http"
+	"strings"
 )
 
 /**
@@ -238,7 +241,7 @@ func main() {
 			carriage := passenger.Carriage
 			seatNumber := passenger.SeatNumber
 			sleeper := passenger.Sleeper
-			// seatPrice := passenger.SeatPrice
+			seatPrice := passenger.SeatPrice
 			
 			fmt.Println("passengerId:", passengerId)
 			// err = chromedp.Run(ctx,
@@ -330,6 +333,21 @@ func main() {
 					log.Fatal(err)
 				}
 			}
+			
+			// 检查价格是否一致，不一致则设置价格
+			fmt.Println("seatPrice:", seatPrice) // 单位角
+			seatPriceYuan := moneyutil.JiaoToYuan(cast.ToInt64(seatPrice))
+			passengerIdArr := strings.Split(passengerId, "_")
+			passengerIdTicketPriceStr := passengerId
+			if len(passengerIdArr) >= 2 {
+				passengerIdTicketPriceStr = passengerIdArr[1]
+			}
+			dom = fmt.Sprintf(`//*[@id="TicketPrice%s%s"]`, orderId, passengerIdTicketPriceStr)
+			fmt.Println("dom:", dom)
+			err = chromedp.Run(ctx,
+				chromedp.SetValue(dom, seatPriceYuan, chromedp.BySearch),
+			)
+			
 		}
 		
 		fmt.Println("---所有乘客购票信息已输入完成")
@@ -360,7 +378,6 @@ func main() {
 		}
 		// 非占座票-出票失败
 		sel = fmt.Sprintf(`document.querySelector("#BookSucTBody%s input.btn.btn-default.btn-lg")`, orderId)
-		fmt.Println("sel:", sel)
 		err = chromedp.Run(ctx,
 			chromedp.Click(sel, chromedp.ByJSPath),
 		)
