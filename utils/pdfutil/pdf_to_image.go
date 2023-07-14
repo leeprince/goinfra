@@ -4,17 +4,15 @@ import (
 	"errors"
 	"fmt"
 	"github.com/h2non/bimg"
-	"github.com/ledongthuc/pdf"
 	"github.com/leeprince/goinfra/consts"
 	"github.com/leeprince/goinfra/utils/fileutil"
-	"github.com/signintech/gopdf"
 	"path"
 )
 
 /**
  * @Author: prince.lee <leeprince@foxmail.com>
  * @Date:   2023/7/14 9:34
- * @Desc:
+ * @Desc:	pdf 转图片 待解决本地环境问题：windows、linux、mac
  */
 
 /*
@@ -63,76 +61,5 @@ func PdfToImageV1(pdfUrl string) (imagePath string, err error) {
 
 	imagePath = path.Join(filePath, fileNameOfJpeg)
 	err = bimg.Write(imagePath, newImage)
-	return
-}
-
-/*
-同 PdfToImageV1 的报错一致
-*/
-func PdfToImageV2(pdfUrl string) (imagePath string, err error) {
-	fileInfo := fileutil.GetFileInfoByUrl(pdfUrl)
-	if fileInfo.Ext != ".pdf" {
-		err = errors.New("pdfurl no .pdf")
-		return
-	}
-
-	filePath := fmt.Sprintf("/%s/%s/", "goinfra", consts.ENV_LOCAL)
-	fileName := fmt.Sprintf("pdftojpeg_pdf_tmp-%s", fileInfo.FileName)
-	//fileNameOfJpeg := fmt.Sprintf("pdftojpeg_jpeg_%s", fileInfo.Name, ".jpeg")
-	pathFile, err := fileutil.SaveLocalFileByUrl(pdfUrl, fileName, filePath)
-	if err != nil {
-		return
-	}
-
-	// Open the PDF file
-	/*f, err := os.Open(pathFile)
-	if err != nil {
-		fmt.Println(err)
-		return
-	}
-	defer f.Close()*/
-
-	// Read the PDF file
-	_, pdfReader, err := pdf.Open(pathFile)
-	if err != nil {
-		fmt.Println(err)
-		return
-	}
-
-	// Get the number of pages in the PDF file
-	numPages := pdfReader.NumPage()
-
-	// Create a new PDF document
-	pdfDoc := gopdf.GoPdf{}
-	pdfDoc.Start(gopdf.Config{PageSize: *gopdf.PageSizeA4})
-	for i := 1; i <= numPages; i++ {
-		// Get the page from the PDF file
-		page := pdfReader.Page(i)
-
-		content := page.Content()
-		fmt.Println(content)
-
-		/*// Convert the page to an image
-		img, err := page.ToImage(72, 1.0)
-		if err != nil {
-			fmt.Println(err)
-			return
-		}*/
-
-		/*// Add the image to the PDF document
-		pdfDoc.AddPage()
-		err = pdfDoc.ImageFrom(img, 0, 0, nil)
-		if err != nil {
-			fmt.Println(err)
-			return
-		}*/
-	}
-
-	/*// Save the PDF document to a file
-	err = pdfDoc.WritePdf("example.pdf")
-	if err != nil {
-		fmt.Println(err)
-		return
-	}*/
 	return
 }
