@@ -17,12 +17,10 @@ func main() {
 		panic(err)
 	}
 
-	// 设置快捷键为 Ctrl+Alt+T
-	kb.HasCTRL(true)
-	/*kb.SetKeys(keybd_event.VK_CONTROL, keybd_event.VK_MENU, keybd_event.VK_T)
-	kb.SetKeys(keybd_event.VK_C, keybd_event.VK_MENU, keybd_event.VK_T)
+	// 设置快捷键为 F1
+	kb.SetKeys(keybd_event.VK_F1)
 
-	// 监听快捷键被按下的事件
+	/*// 监听快捷键被按下的事件
 	for {
 		if kb.HasCTRLPressed() && kb.HasALTPressed() && kb.HasKeyPressed(keybd_event.VK_T) {
 			fmt.Println("快捷键 Ctrl+Alt+T按下了")
