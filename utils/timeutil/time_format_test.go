@@ -159,4 +159,7 @@ func TestFormat(t *testing.T) {
 	ts = DataTimeMillisecond()
 	fmt.Println("DataTimeMillisecond", ts)
 	
+	ts = DataTimeDataSecond()
+	fmt.Println("DataTimeDataSecond", ts)
+	
 }

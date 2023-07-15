@@ -2,12 +2,10 @@ package main
 
 import (
 	"context"
-	"flag"
 	"fmt"
 	"github.com/chromedp/chromedp"
-	"github.com/leeprince/goinfra/utils/fileutil"
 	"log"
-	"net/http"
+	"time"
 )
 
 /**
@@ -17,41 +15,11 @@ import (
  */
 
 const (
-	// 启动 http 服务器后的要访问的 html页面地址
-	navigateRPAHtmlUrl = "http://localhost:8090/defaultHandler"
-	htmlFileDir        = "/Users/leeprince/www/go/goinfra/rpa/browser/chromedptest/operatertickethtmlfail"
+	// 要访问的 html页面地址
+	navigateRPAHtmlUrl = "http://127.0.0.1:19999/ticket-html-2"
 )
 
-var port *int
-
-// 启动 http 服务器
-func HttpServer() {
-	port = flag.Int("port", 8090, "port")
-	flag.Parse()
-	
-	http.HandleFunc("/defaultHandler", defaultHandler)
-	
-	fmt.Printf("Server listening on port:%d ...\n", *port)
-	go http.ListenAndServe(fmt.Sprintf(":%d", *port), nil)
-}
-
-func defaultHandler(w http.ResponseWriter, r *http.Request) {
-	if r.Method == "GET" {
-		w.Header().Set("Content-Type", "text/html; charset=utf-8")
-		
-		fileBytes, err := fileutil.ReadFile(htmlFileDir, "ticket.html")
-		if err != nil {
-			http.Error(w, "读取 html文件错误", http.StatusInternalServerError)
-			return
-		}
-		fmt.Fprint(w, string(fileBytes))
-	} else {
-		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
-	}
-}
-
 func main() {
-	HttpServer()
 	
 	// --- 创建有头浏览器 ---
 	// 设置Chrome浏览器的启动参数
@@ -83,14 +51,64 @@ func main() {
 	}
 	
 	var (
-		orderId = "FeiZ3424193749701983461"
+		orderId = "HDTT202307091114133215077033---"
 	)
 	
-	// 非占座票-出票失败
+	// 非占座票-点击出票失败
 	selector := fmt.Sprintf(`document.querySelector("#BookSucTBody%s input.btn.btn-default.btn-lg")`, orderId)
-	fmt.Println("sel:", selector)
+	fmt.Println("非占座票-点击出票失败 selector:", selector)
 	err = chromedp.Run(ctx,
 		chromedp.Click(selector, chromedp.ByJSPath),
+	)
+	if err != nil {
+		log.Fatal(err)
+	}
+	
+	// 选择失败的原因
+	// 需要稍微等待一下，否则弹窗可能还没出来；或者等待元素可见
+	// time.Sleep(time.Second * 1)
+	// waitSeletorTime := time.Second * 1
+	waitSeletorTime := time.Millisecond * 200
+	// 检查选择器
+	selector = "FailResonGroup"
+	fmt.Println("选择失败的原因 selector:", selector)
+	selctx, _ := context.WithTimeout(ctx, waitSeletorTime)
+	// 等待元素可见.chromedp.ByID 所以"SetBookFailPanel" 前面不带#
+	err = chromedp.Run(selctx, chromedp.WaitVisible(selector, chromedp.ByID))
+	if err != nil {
+		fmt.Println("选择失败的原因 selector 不存在或者超时")
+		log.Fatal("WaitVisible ", err)
+	}
+	fmt.Println("选择失败的原因 selector 已存在")
+	err = chromedp.Run(ctx,
+		chromedp.Sleep(time.Millisecond*300),
+		
+		// 按下 1，并且松开
+		chromedp.KeyEvent("1"), // 成功
+		// chromedp.KeyEvent(("\u0031")), // 成功
+		
+		chromedp.Sleep(time.Second*1),
+		chromedp.KeyEvent("2"),
+		
+		chromedp.Sleep(time.Second*1),
+		chromedp.KeyEvent("3"),
+		
+		chromedp.Sleep(time.Second*1),
+		chromedp.KeyEvent("4"),
+		
+		chromedp.Sleep(time.Second*1),
+		chromedp.KeyEvent("1"),
+	
+	)
+	if err != nil {
+		log.Fatal(err)
+	}
+	
+	// 点击确定
+	selector = fmt.Sprintf(`//*[@id="SetBookFailPanel"]/div[1]/div/div[3]/button[2]`)
+	fmt.Println("设置占座失败-点击确定 selector:", selector)
+	err = chromedp.Run(ctx,
+		chromedp.Click(selector, chromedp.BySearch),
 	)
 	
 	select {}

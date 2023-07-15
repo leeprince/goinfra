@@ -40,6 +40,9 @@ func DataTimeMicrosecond() string {
 func DataTimeMillisecond() string {
 	return time.Now().Format(consts.TimeLayoutV14)
 }
+func DataTimeDataSecond() string {
+	return time.Now().Format(consts.TimeLayoutV15)
+}
 func Year() string {
 	return time.Now().Format(consts.TimeLayoutV8)
 }

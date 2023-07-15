@@ -182,7 +182,7 @@ func main() {
 		// 设置取票号
 		ticketNumber := resultTypeSuccessData.TicketNumber
 		ticketNumberId := "EOrderNumberInput" + orderId // 因为是chromedp.ByID，所以前面不能加上#
-		fmt.Println("ticketNumberId:", ticketNumberId)
+		fmt.Println("设置取票号 选择器:", ticketNumberId)
 		// 模拟设置取票号的选择器
 		// 模拟设置取票号的选择器不存在-模拟 1：等待的方式。这种方式会堵塞到选择器存在,适用选择器需要强制等待的场景
 		/*fmt.Println("模拟设置取票号的选择器，开始等待")
@@ -206,6 +206,7 @@ func main() {
 		// err = chromedp.Run(selctx, chromedp.WaitVisible(ticketNumberId+"-", chromedp.ByID)) // 模拟不存在
 		if err != nil {
 			log.Println("模拟设置取票号的选择器不存在 err：", err)
+			// log.Fatal("模拟设置取票号的选择器不存在 err：", err)
 		}
 		fmt.Println("模拟设置取票号的选择器，等待结束")
 		err = chromedp.Run(ctx,
