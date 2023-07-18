@@ -23,7 +23,7 @@ const (
 
 type Snowflake struct {
 	mutex     sync.Mutex // 互斥锁，确保并发安全
-	timestamp int64      // 上一次生成ID的时间戳
+	timestamp int64      // 上一次生成ID的时间
 	workerId  int64      // 工作ID
 	sequence  int64      // 序列号
 }
@@ -42,19 +42,20 @@ func NewSnowflake(workerId int64) *Snowflake {
 func (sf *Snowflake) NextId() int64 {
 	sf.mutex.Lock()         // 加锁
 	defer sf.mutex.Unlock() // 解锁
-
-	nowUnixNano := time.Now().UnixNano() / 1000000 // 获取当前时间戳，单位为毫秒
-	if sf.timestamp == nowUnixNano {               // 如果当前时间戳与上一次生成ID的时间戳相同
+	
+	divInt := int64(10)
+	nowUnixNano := time.Now().UnixNano() / divInt // 获取当前时间，单位看出除于的值
+	if sf.timestamp == nowUnixNano {              // 如果当前时间戳与上一次生成ID的时间戳相同
 		sf.sequence = (sf.sequence + 1) & sequenceMask // 序列号递增，并与序列号的最大值进行按位与运算
 		if sf.sequence == 0 {                          // 如果序列号达到了最大值
-			for nowUnixNano <= sf.timestamp { // 等待下一个时间戳
-				nowUnixNano = time.Now().UnixNano() / 1000000
+			for nowUnixNano <= sf.timestamp { // 等待下一个获取当前时间
+				nowUnixNano = time.Now().UnixNano() / divInt
 			}
 		}
 	} else { // 如果当前时间戳与上一次生成ID的时间戳不同
 		sf.sequence = 0 // 序列号重置0
 	}
-
+	
 	sf.timestamp = nowUnixNano                                                             // 更新上一次生成ID的时间戳
 	return (sf.timestamp << timestampShift) | (sf.workerId << workerShift) | (sf.sequence) // 组合时间戳、工作ID和序列号，生成唯ID并返回
 }

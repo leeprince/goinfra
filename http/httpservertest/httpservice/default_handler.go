@@ -5,6 +5,7 @@ import (
 	"github.com/leeprince/goinfra/utils/idutil"
 	"github.com/leeprince/goinfra/utils/stringutil"
 	"net/http"
+	"time"
 )
 
 /**
@@ -20,5 +21,6 @@ func defaultHandler(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, "Hello, World!")*/
 	
 	// 默认响应指定长度字符串
+	time.Sleep((time.Millisecond * 800))
 	fmt.Fprint(w, stringutil.FillCharRight(idutil.UniqIDV3(), '0', 28))
 }

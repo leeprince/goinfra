@@ -39,6 +39,13 @@ func TestUniqID(t *testing.T) {
 	fmt.Println(UniqIDV1())
 	fmt.Println(UniqIDV2())
 	fmt.Println(UniqIDV3())
+	
+	fmt.Println()
+	// time.Sleep(time.Millisecond * 1)
+	
+	fmt.Println(UniqIDV1())
+	fmt.Println(UniqIDV2())
+	fmt.Println(UniqIDV3())
 }
 
 func BenchmarkUniqIDV1(b *testing.B) {
