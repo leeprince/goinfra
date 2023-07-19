@@ -1,10 +1,10 @@
 # 监控按键
 
+# f1~f12无`ev.Kind == hook.KeyDown`事件
 
 # 注意不同操作系统的按键`事件`和`Rawcode`是不一样的
 1. mac和 windows的大部分按键Rawcode是不一样的。
 2. mac部分按键`事件`不存在。
-   1. 如mac pro对于f1~f12不支持`ev.Kind == hook.KeyDown`事件，可能是自己的电脑mac pro的 f1~f12是 Touch Bar(触摸屏按键)所以不支持
 
 ## windows
 github.com/robotn/gohook/tables.go
@@ -12,7 +12,7 @@ github.com/robotn/gohook/tables.go
 package hook
 
 var (
-	raw2key = map[uint16]string{ // https://github.com/wesbos/keycodes
+	raw2key = map[uint16]string{
 		0:     "error",
 		3:     "break",
 		8:     "backspace",
@@ -366,7 +366,7 @@ var (
 
 ```
 
-## mac pro (f1～f12 在 Touch Bar)
+## mac pro
 github.com/vcaesar/keycode/Keycode.go
 ```
 // Copyright 2016 The go-vgo Project Developers. See the COPYRIGHT
@@ -521,6 +521,22 @@ var Special = map[string]string{
 	">": ".",
 	"?": "/",
 }
+```
+
+### Mac Pro f1～f12 在 Touch Bar 的 `Rawcode`
+```
+f1:122
+f2:120
+f3:99
+f4:118
+f5:96
+f6:97
+f7:98
+f8:100
+f9:101
+f10:109
+f11:103
+f12:111
 ```
 
 
