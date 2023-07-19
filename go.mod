@@ -20,7 +20,6 @@ require (
 	github.com/grpc-ecosystem/grpc-gateway v1.16.0
 	github.com/h2non/bimg v1.1.9
 	github.com/json-iterator/go v1.1.12
-	github.com/ledongthuc/pdf v0.0.0-20220302134840-0c2507a12d80
 	github.com/lestrrat-go/file-rotatelogs v2.4.0+incompatible
 	github.com/mholt/archiver/v3 v3.5.1
 	github.com/nacos-group/nacos-sdk-go v1.1.1
@@ -28,7 +27,6 @@ require (
 	github.com/otiai10/gosseract/v2 v2.4.0
 	github.com/pkg/errors v0.9.1
 	github.com/progrium/macdriver v0.2.0
-	github.com/signintech/gopdf v0.18.0
 	github.com/sirupsen/logrus v1.9.0
 	github.com/smartystreets/goconvey v1.8.0
 	github.com/spf13/cast v1.5.0
@@ -61,8 +59,8 @@ require (
 	github.com/golang/snappy v0.0.2 // indirect
 	github.com/klauspost/compress v1.11.4 // indirect
 	github.com/leodido/go-urn v1.2.0 // indirect
-	github.com/phpdave11/gofpdi v1.0.14-0.20211212211723-1f10f9844311 // indirect
 	github.com/pierrec/lz4/v4 v4.1.2 // indirect
+	github.com/robotn/gohook v0.40.0 // indirect
 	github.com/ugorji/go/codec v1.1.7 // indirect
 	gopkg.in/check.v1 v1.0.0-20200227125254-8fa46927fb4f // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect

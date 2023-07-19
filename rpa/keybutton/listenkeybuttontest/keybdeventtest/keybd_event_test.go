@@ -2,12 +2,14 @@ package keybdeventtest
 
 import (
 	"runtime"
+	"testing"
 	"time"
 
 	"github.com/micmonay/keybd_event"
 )
 
-func ExampleNewKeyBonding() {
+// 在当前光标，通过按键输入值
+func TestExampleNewKeyBonding(test *testing.T) {
 	kb, err := keybd_event.NewKeyBonding()
 	if err != nil {
 		panic(err)
