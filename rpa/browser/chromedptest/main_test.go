@@ -49,6 +49,11 @@ func TestSetBrowserAlertWindow(t *testing.T) {
 	SetBrowserAlertWindow()
 }
 
+// 在浏览器上设置悬浮窗口
+func TestSetBrowserFloatWindow(t *testing.T) {
+	SetBrowserFloatWindow()
+}
+
 // 等待指定选择器可见
 func TestVisible(t *testing.T) {
 	Visible()

@@ -76,14 +76,16 @@ func SetBrowserAlertWindow() {
             popup.style.position = 'fixed';
             popup.style.top = '60px';
             popup.style.right = right; // 将弹窗放置在窗口的右侧
-            popup.style.padding = '10px';
+            
+			// 内填充
+			popup.style.padding = '10px';
             
             // 设置背景及边框
             popup.style.backgroundColor = '#fff';
             popup.style.border = '1px solid #ccc';
             popup.style.boxShadow = '0 2px 6px rgba(0, 0, 0, 0.3)';
             
-            // 设置
+            // 设置边框大小
             popup.style.width = '200px';
             popup.style.height = '20px';
             
