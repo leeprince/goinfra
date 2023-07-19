@@ -14,8 +14,14 @@ func TestCheckOsKey(t *testing.T) {
 	select {}
 }
 
-func TestListenKey(t *testing.T) {
-	ListenKeyButton()
+func TestWindowsOsListenKeyButton(t *testing.T) {
+	WindowsOsListenKeyButton()
+	
+	select {}
+}
+
+func TestMacProOsListenKeyButton(t *testing.T) {
+	MacProOsListenKeyButton()
 	
 	select {}
 }
