@@ -12,7 +12,7 @@ import (
  */
 
 // 监听windows操作系统按键
-func WindowsOsListenKeyButton() {
+func WindowsOsListen() {
 	
 	hooks := hook.Start()
 	
@@ -20,7 +20,7 @@ func WindowsOsListenKeyButton() {
 	
 	for ev := range hooks {
 		
-		//	监听键盘-按下
+		//	监听按键-按下
 		if ev.Kind == hook.KeyDown {
 			
 			//	监听w
@@ -44,7 +44,7 @@ func WindowsOsListenKeyButton() {
 			
 		}
 		
-		//	监听键盘-按住
+		//	监听按键-按住
 		if ev.Kind == hook.KeyHold {
 			
 			//	监听w
@@ -68,7 +68,7 @@ func WindowsOsListenKeyButton() {
 			
 		}
 		
-		//	监听键盘-松开
+		//	监听按键-松开
 		if ev.Kind == hook.KeyUp {
 			
 			//	监听w
