@@ -54,6 +54,11 @@ func TestSetBrowserFloatWindow(t *testing.T) {
 	SetBrowserFloatWindow()
 }
 
+// 在浏览器上设置悬浮窗口,并操作点击事件
+func TestSetBrowserEventWindow(t *testing.T) {
+	SetBrowserEventWindow()
+}
+
 // 等待指定选择器可见
 func TestVisible(t *testing.T) {
 	Visible()

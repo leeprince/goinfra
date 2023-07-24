@@ -12,7 +12,7 @@ import (
  * @Author: prince.lee <leeprince@foxmail.com>
  * @Date:   2023/4/22 15:09
  * @Desc:	监控指定URL的http请求：成功获取响应内容
- * 				外部HTTP服务：goinfra/http/httpservertest/sample/main.go
+ * 				外部HTTP服务：goinfra/http/httpservertest/httpservice/main.go
  */
 
 func MonitorHttpV1() {
@@ -25,22 +25,22 @@ func MonitorHttpV1() {
 	)
 	allocCtx, cancel := chromedp.NewExecAllocator(context.Background(), opts...)
 	defer cancel()
-
+	
 	// 创建一个Chrome浏览器实例
 	ctx, cancel := chromedp.NewContext(allocCtx)
 	defer cancel()
 	// --- 创建有头浏览器-end ---
-
+	
 	// --- 创建无头浏览器：默认 ---
 	// // create context
 	// ctx, cancel := chromedp.NewContext(context.Background())
 	// defer cancel()
 	// --- 创建无头浏览器：默认-end ---
-
+	
 	// 监听指定的URL的HTTP请求
 	url := "http://localhost:8090/prince/post"
 	log.Println("监听指定的URL的HTTP请求 url:", url)
-
+	
 	// 这将用于捕获匹配网络事件的请求id
 	var requestID network.RequestID
 	// 设置一个缓冲区为1的channel，用于异步接收等待监听指定url事件的结果通知
@@ -60,7 +60,7 @@ func MonitorHttpV1() {
 			}
 		}
 	})
-
+	
 	// 打开目标网页
 	log.Println("打开目标网页")
 	err := chromedp.Run(ctx,
@@ -69,7 +69,7 @@ func MonitorHttpV1() {
 	if err != nil {
 		log.Fatal(err)
 	}
-
+	
 	// 获取多行输入框内容
 	log.Println("获取多行输入框内容")
 	var textareaValue string
@@ -81,7 +81,7 @@ func MonitorHttpV1() {
 		log.Fatal(err)
 	}
 	log.Printf("#textarea1 value: %s", textareaValue)
-
+	
 	// 点击触发post Ajax请求
 	log.Println("点击触发post Ajax请求")
 	err = chromedp.Run(ctx,
@@ -90,7 +90,7 @@ func MonitorHttpV1() {
 	if err != nil {
 		log.Fatal(err)
 	}
-
+	
 	// 这将被阻止，直到chromedp监听器通知接收到响应的通知到channel中
 	for {
 		select {
@@ -102,10 +102,10 @@ func MonitorHttpV1() {
 					log.Println("GetResponseBody", err)
 					return err
 				}
-
+				
 				// 响应内容
 				log.Printf("Response body:%+v\n", string(byteBody))
-
+				
 				return nil
 			})); err != nil {
 				log.Fatal(err)

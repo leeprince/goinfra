@@ -365,3 +365,13 @@ func TestBizErrFmtErrorfWrapAssert(t *testing.T) {
 		fmt.Println("BizErrRequired>>>>>>>>>>not err.(perror.BizErr)")
 	}
 }
+
+func TestBizErrDataParse(t *testing.T) {
+	fmt.Println(perror.BizErrDataParse)
+	
+	perror.BizErrDataParse.SetMessage("订单数据解析失败1")
+	fmt.Println(perror.BizErrDataParse)
+	
+	bizErrDataParse := perror.BizErrDataParse.SetMessage("订单数据解析失败2")
+	fmt.Println(bizErrDataParse)
+}

@@ -9,6 +9,7 @@ import "github.com/leeprince/goinfra/consts/constval"
  */
 
 const (
+	KeyEsc = "esc"
 	KeyF1  = "f1"
 	KeyF2  = "f2"
 	KeyF3  = "f3"
@@ -24,6 +25,7 @@ const (
 )
 
 var DarwinOSKeyButtonRawcode = constval.NewStringUint16Group(
+	constval.NewStringUint16(KeyEsc, 53),
 	constval.NewStringUint16(KeyF1, 122),
 	constval.NewStringUint16(KeyF2, 120),
 	constval.NewStringUint16(KeyF3, 99),
@@ -39,6 +41,7 @@ var DarwinOSKeyButtonRawcode = constval.NewStringUint16Group(
 )
 
 var WindowsOSKeyButtonRawcode = constval.NewStringUint16Group(
+	constval.NewStringUint16(KeyEsc, 27),
 	constval.NewStringUint16(KeyF1, 112),
 	constval.NewStringUint16(KeyF2, 113),
 	constval.NewStringUint16(KeyF3, 114),

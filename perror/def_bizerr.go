@@ -34,7 +34,10 @@ var (
 	BizErrEncode        = NewBizErr(100000017, "编码错误!")
 	BizErrDecode        = NewBizErr(100000018, "解码错误!")
 	BizErrObjNil        = NewBizErr(100000019, "结果nil!")
-	BizErrCode          = NewBizErr(100000019, "响应code为失败!")
+	BizErrCode          = NewBizErr(100000020, "响应code为失败!")
+	BizErrOpreate       = NewBizErr(100000021, "操作失败!")
+	BizErrDataExist     = NewBizErr(100000022, "数据已存在!")
+	BizErrDataParse     = NewBizErr(100000022, "数据解析错误!")
 	
 	BizErrPanic = NewBizErr(100000999, "处理异常!")
 )

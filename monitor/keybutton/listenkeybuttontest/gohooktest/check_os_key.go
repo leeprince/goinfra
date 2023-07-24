@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	hook "github.com/robotn/gohook"
+	"runtime"
 )
 
 /**
@@ -17,7 +18,7 @@ import (
 // 		2. mac部分按键`事件`不存在。
 // 			1. 如mac pro对于f1~f12不支持`ev.Kind == hook.KeyDown`事件，可能是自己的电脑mac pro的 f1~f12是 Touch Bar(触摸屏按键)所以不支持
 func CheckOsKey() {
-	fmt.Println("---检查当前操作系统按键---")
+	fmt.Printf("---检查当前操作系统:`%s`的按键---\n\n", runtime.GOOS)
 	evChan := hook.Start()
 	defer hook.End()
 	

@@ -61,6 +61,11 @@ func (e BizErr) GetMessage() string {
 	return e.message
 }
 
+func (e BizErr) SetMessage(msg string) BizErr {
+	e.message = msg
+	return e
+}
+
 // 获取错误信息。只有通过`WithError`方法添加错误信息才会返回error信息
 func (e BizErr) GetError() error {
 	return e.error
