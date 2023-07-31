@@ -15,9 +15,9 @@ import (
 // 简单队列（一次向一个消费者发送消息）
 func (cli *RabbitMQClient) PublishSimpleTrace(ctx context.Context, body []byte, opts ...PropertiesOpt) (err error) {
 	if jaegerclient.SpanFromContext(ctx) == nil {
-		return perror.BizErrObjNil
+		return perror.BizErrDataNil
 	}
-
+	
 	err = cli.Publish(
 		WithPublishParamProperties(
 			body,

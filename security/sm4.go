@@ -12,19 +12,19 @@ import (
 func SM4Encrypt(src, key string, opts ...OptionFunc) (string, error) {
 	keyBytes := []byte(key)
 	dataBytes := []byte(src)
-
+	
 	iv := make([]byte, sm4.BlockSize)
-
+	
 	block, err := sm4.NewCipher(keyBytes)
 	if err != nil {
-		return "", perror.BizErrEncrypt.WithError(err, "NewCipher")
+		return "", perror.BizErrSecurityEncrypt.WithError(err, "NewCipher")
 	}
 	blockSize := block.BlockSize()
 	origData := pkcs5Padding(dataBytes, blockSize)
 	blockMode := cipher.NewCBCEncrypter(block, iv)
 	cryptByte := make([]byte, len(origData))
 	blockMode.CryptBlocks(cryptByte, origData)
-
+	
 	opt := initOption(opts...)
 	return output(cryptByte, opt.outputType), nil
 }
@@ -33,14 +33,14 @@ func SM4Decrypt(crypt, key string, opts ...OptionFunc) (string, error) {
 	opt := initOption(opts...)
 	srcByte, err := input(crypt, opt.inputType)
 	if err != nil {
-		return "", perror.BizErrDecrypt.WithError(err)
+		return "", perror.BizErrSecurityDecrypt.WithError(err)
 	}
 	if len(srcByte) == 0 {
-		return "", perror.BizErrDecrypt.WithError(perror.BizErrLen)
+		return "", perror.BizErrSecurityDecrypt.WithError(perror.BizErrLen)
 	}
-
+	
 	keyByte := []byte(key)
-
+	
 	iv := make([]byte, sm4.BlockSize)
 	block, err := sm4.NewCipher(keyByte)
 	if err != nil {

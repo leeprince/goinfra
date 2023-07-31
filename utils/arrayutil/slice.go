@@ -1,4 +1,4 @@
-package sliceutil
+package arrayutil
 
 /**
  * @Author: prince.lee <leeprince@foxmail.com>

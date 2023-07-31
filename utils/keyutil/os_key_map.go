@@ -4,7 +4,7 @@ import (
 	"errors"
 	"github.com/leeprince/goinfra/consts"
 	"github.com/leeprince/goinfra/consts/constval"
-	"github.com/leeprince/goinfra/utils/sliceutil"
+	"github.com/leeprince/goinfra/utils/arrayutil"
 	"runtime"
 )
 
@@ -15,7 +15,7 @@ import (
  */
 
 func GetOsKeyButtonRawCode() (keyMap *constval.StringUint16Group, err error) {
-	if !sliceutil.InString(runtime.GOOS, []string{
+	if !arrayutil.InString(runtime.GOOS, []string{
 		consts.GOOSDarwin,
 		consts.GOOSWindows,
 	}) {

@@ -62,7 +62,6 @@ require (
 	github.com/klauspost/compress v1.11.4 // indirect
 	github.com/leodido/go-urn v1.2.0 // indirect
 	github.com/pierrec/lz4/v4 v4.1.2 // indirect
-	github.com/progrium/watcher v1.0.7 // indirect
 	github.com/ugorji/go/codec v1.1.7 // indirect
 	gopkg.in/check.v1 v1.0.0-20200227125254-8fa46927fb4f // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect

@@ -32,6 +32,8 @@ func SetBrowserEventWindow() {
 		chromedp.Flag("headless", false),
 		chromedp.Flag("disable-gpu", true),
 		chromedp.Flag("remote-debugging-port", "9222"),
+		// 设置最大窗口
+		chromedp.WindowSize(1920, 1040),
 	)
 	allocCtx, cancel := chromedp.NewExecAllocator(context.Background(), opts...)
 	defer cancel()
@@ -132,6 +134,22 @@ func SetBrowserEventWindow() {
 	err = chromedp.Run(ctx, chromedp.Click(autoModelSelector, chromedp.ByID))
 	if err != nil {
 		log.Fatal(">>>>>>Click err:", err)
+	}
+	
+	// 等待后，检查该弹窗是否存在，用于判断弹窗不存在时重新设置浮动弹窗
+	fmt.Println("等待后，检查该弹窗是否存在，用于判断弹窗不存在时重新设置浮动弹窗")
+	time.Sleep(time.Second * 5)
+	
+	// 执行 JavaScript 代码来检查指定 ID 是否存在
+	var exists bool
+	err = chromedp.Run(ctx, chromedp.Evaluate(fmt.Sprintf(`document.getElementById("%s") !== null`, autoModeElID), &exists))
+	if err != nil {
+		panic(err)
+	}
+	if exists {
+		fmt.Println("ID exists")
+	} else {
+		fmt.Println("ID does not exist")
 	}
 	
 	// 等待后，关闭浏览器

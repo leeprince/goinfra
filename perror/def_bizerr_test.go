@@ -258,7 +258,7 @@ func TestBizErrFmtErrorfWithErrorAssert(t *testing.T) {
 	}
 	
 	fmt.Println("========")
-	err.WithError(perror.BizErrConvertFormat)
+	err.WithError(perror.BizErrFormatConvert)
 	fmt.Println(err)
 	if errors.Is(err, &perror.BizErr{}) {
 		fmt.Println("BizErrRequired>>>>>>>>>>errors.Is(error, &perror.BizErr{})")
@@ -272,11 +272,11 @@ func TestBizErrFmtErrorfWithErrorAssert(t *testing.T) {
 	} else {
 		fmt.Println("BizErrRequired>>>>>>>>>>not errors.Is(error, code.BizErrRequired)")
 	}
-	if errors.Is(err, perror.BizErrConvertFormat) {
-		fmt.Println("BizErrRequired>>>>>>>>>>errors.Is(error, code.BizErrConvertFormat)")
+	if errors.Is(err, perror.BizErrFormatConvert) {
+		fmt.Println("BizErrRequired>>>>>>>>>>errors.Is(error, code.BizErrFormatConvert)")
 		fmt.Println(err)
 	} else {
-		fmt.Println("BizErrRequired>>>>>>>>>>not errors.Is(error, code.BizErrConvertFormat)")
+		fmt.Println("BizErrRequired>>>>>>>>>>not errors.Is(error, code.BizErrFormatConvert)")
 	}
 	if errors.As(err, &perror.BizErr{}) {
 		fmt.Println("BizErrRequired>>>>>>>>>>errors.As(error, &perror.BizErr{})")
@@ -347,7 +347,7 @@ func TestBizErrFmtErrorfWrapAssert(t *testing.T) {
 		fmt.Println(bizErr)
 		fmt.Println(bizErr.GetError())
 		bizErr = bizErr.WithError(perror.BizErrDataEmpty)
-		bizErr = bizErr.WithError(perror.BizErrNoExistType)
+		bizErr = bizErr.WithError(perror.BizErrTypeNoExist)
 		fmt.Println(bizErr)
 		err = bizErr.GetError()
 		fmt.Println("===", err)

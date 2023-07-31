@@ -28,25 +28,25 @@ func RSAEncrypt(src, publicKey string, opts ...OptionFunc) (string, error) {
 	// 解密pem格式的公钥
 	block, _ := pem.Decode([]byte(publicKey))
 	if block == nil {
-		return "", perror.BizErrEncrypt.WithError(errors.New("block == nil "))
+		return "", perror.BizErrSecurityEncrypt.WithError(errors.New("block == nil "))
 	}
 	// 解析公钥
 	pubInterface, err := x509.ParsePKIXPublicKey(block.Bytes)
 	if err != nil {
-		return "", perror.BizErrEncrypt.WithError(err, "ParsePKIXPublicKey")
+		return "", perror.BizErrSecurityEncrypt.WithError(err, "ParsePKIXPublicKey")
 	}
 	// 类型断⾔
 	pub, ok := pubInterface.(*rsa.PublicKey)
 	if !ok {
 		return "", perror.BizErrTypeAsserts
 	}
-
+	
 	// EncryptPKCS1v15加密:兼容长文本加密
 	cryptByte, err := compatibleEncryptPKCS1v15([]byte(src), pub)
 	if err != nil {
 		return "", err
 	}
-
+	
 	opt := initOption(opts...)
 	return output(cryptByte, opt.outputType), nil
 }
@@ -56,17 +56,17 @@ func RSAEncrypt(src, publicKey string, opts ...OptionFunc) (string, error) {
 func compatibleEncryptPKCS1v15(srcByte []byte, pubKey *rsa.PublicKey) (crypted []byte, err error) {
 	srcSize := len(srcByte)
 	keySize := pubKey.Size()
-
+	
 	// `srcSize <= keySize-11`的情况正常处理
 	if srcSize <= keySize-11 {
 		// 加密
 		crypted, err = rsa.EncryptPKCS1v15(rand.Reader, pubKey, srcByte)
 		if err != nil {
-			return nil, perror.BizErrEncrypt.WithError(err, "EncryptPKCS1v15")
+			return nil, perror.BizErrSecurityEncrypt.WithError(err, "EncryptPKCS1v15")
 		}
 		return
 	}
-
+	
 	// 兼容 `len(srcByte) > *rsa.PublicKey.Size()-11` 的情况处理长文本，否则会报`rsa.ErrMessageTooLong`的错误
 	offset, once := 0, keySize-11
 	buffer := bytes.Buffer{}
@@ -77,13 +77,13 @@ func compatibleEncryptPKCS1v15(srcByte []byte, pubKey *rsa.PublicKey) (crypted [
 		}
 		byteOnce, err := rsa.EncryptPKCS1v15(rand.Reader, pubKey, srcByte[offset:endindex])
 		if err != nil {
-			return nil, perror.BizErrEncrypt.WithError(err, "EncryptPKCS1v15 of long text")
+			return nil, perror.BizErrSecurityEncrypt.WithError(err, "EncryptPKCS1v15 of long text")
 		}
 		buffer.Write(byteOnce)
 		offset = endindex
 	}
 	crypted = buffer.Bytes()
-
+	
 	return
 }
 
@@ -96,29 +96,29 @@ func RSADecrypt(crypt, privateKey string, opts ...OptionFunc) (string, error) {
 	opt := initOption(opts...)
 	srcByte, err := input(crypt, opt.inputType)
 	if err != nil {
-		return "", perror.BizErrDecrypt.WithError(err)
+		return "", perror.BizErrSecurityDecrypt.WithError(err)
 	}
 	if len(srcByte) == 0 {
-		return "", perror.BizErrDecrypt.WithError(perror.BizErrLen)
+		return "", perror.BizErrSecurityDecrypt.WithError(perror.BizErrLen)
 	}
-
+	
 	// 解密
 	block, _ := pem.Decode([]byte(privateKey))
 	if block == nil {
-		return "", perror.BizErrDecrypt.WithError(errors.New("block == nil "))
+		return "", perror.BizErrSecurityDecrypt.WithError(errors.New("block == nil "))
 	}
 	// 解析PKCS1格式的私钥
 	priv, err := x509.ParsePKCS1PrivateKey(block.Bytes)
 	if err != nil {
-		return "", perror.BizErrDecrypt.WithError(err, "ParsePKCS1PrivateKey")
+		return "", perror.BizErrSecurityDecrypt.WithError(err, "ParsePKCS1PrivateKey")
 	}
-
+	
 	// DecryptPKCS1v15解密:兼容长文本解密
 	decryptByte, err := compatibleDecryptPKCS1v15(srcByte, priv)
 	if err != nil {
 		return "", err
 	}
-
+	
 	return string(decryptByte), nil
 }
 
@@ -127,16 +127,16 @@ func RSADecrypt(crypt, privateKey string, opts ...OptionFunc) (string, error) {
 func compatibleDecryptPKCS1v15(cryptByte []byte, privKey *rsa.PrivateKey, opts ...OptionFunc) (decryptByte []byte, err error) {
 	srcSize := len(cryptByte)
 	keySize := privKey.Size()
-
+	
 	// `len(srcByte) <= *rsa.PrivateKey.Size()`的情况正常处理
 	if srcSize <= keySize {
 		decryptByte, err = rsa.DecryptPKCS1v15(rand.Reader, privKey, cryptByte)
 		if err != nil {
-			return nil, perror.BizErrDecrypt.WithError(err, "DecryptPKCS1v15")
+			return nil, perror.BizErrSecurityDecrypt.WithError(err, "DecryptPKCS1v15")
 		}
 		return
 	}
-
+	
 	// - 兼容 `len(srcByte) > *rsa.PrivateKey.Size()` 的情况。分组处理长文本，避免报`rsa.ErrDecryption`的错误
 	offset := 0
 	buffet := bytes.Buffer{}
@@ -147,7 +147,7 @@ func compatibleDecryptPKCS1v15(cryptByte []byte, privKey *rsa.PrivateKey, opts .
 		}
 		byteOnce, err := rsa.DecryptPKCS1v15(rand.Reader, privKey, cryptByte[offset:endIndex])
 		if err != nil {
-			return nil, perror.BizErrDecrypt.WithError(err, "DecryptPKCS1v15 long text")
+			return nil, perror.BizErrSecurityDecrypt.WithError(err, "DecryptPKCS1v15 long text")
 		}
 		buffet.Write(byteOnce)
 		offset = endIndex
@@ -161,7 +161,7 @@ func GenerateRsaKey(bits int) (privKey string, pubKey string, err error) {
 	// 生成私钥
 	privateKey, err := rsa.GenerateKey(rand.Reader, bits)
 	if err != nil {
-		err = perror.BizErrGenerateData.WithError(err, "GenerateKey")
+		err = perror.BizErrDataGenerate.WithError(err, "GenerateKey")
 		return
 	}
 	derStream := x509.MarshalPKCS1PrivateKey(privateKey)
@@ -171,12 +171,12 @@ func GenerateRsaKey(bits int) (privKey string, pubKey string, err error) {
 	}
 	prvKeyByte := pem.EncodeToMemory(block)
 	privKey = string(prvKeyByte)
-
+	
 	// 生成公钥
 	publicKey := &privateKey.PublicKey
 	derPkix, err := x509.MarshalPKIXPublicKey(publicKey)
 	if err != nil {
-		err = perror.BizErrGenerateData.WithError(err, "MarshalPKIXPublicKey")
+		err = perror.BizErrDataGenerate.WithError(err, "MarshalPKIXPublicKey")
 		return
 	}
 	block = &pem.Block{
@@ -185,7 +185,7 @@ func GenerateRsaKey(bits int) (privKey string, pubKey string, err error) {
 	}
 	pubKeyByte := pem.EncodeToMemory(block)
 	pubKey = string(pubKeyByte)
-
+	
 	return
 }
 
@@ -196,18 +196,18 @@ func RSASignWithSHA256(src, privKey string, opts ...OptionFunc) (string, error) 
 	hashed := h.Sum(nil)
 	block, _ := pem.Decode([]byte(privKey))
 	if block == nil {
-		return "", perror.BizErrSign.WithError(errors.New("block == nil"))
+		return "", perror.BizErrSecuritySignGenerate.WithError(errors.New("block == nil"))
 	}
 	privateKey, err := x509.ParsePKCS1PrivateKey(block.Bytes)
 	if err != nil {
-		return "", perror.BizErrSign.WithError(err, "ParsePKCS1PrivateKey")
+		return "", perror.BizErrSecuritySignGenerate.WithError(err, "ParsePKCS1PrivateKey")
 	}
-
+	
 	signByte, err := rsa.SignPKCS1v15(rand.Reader, privateKey, crypto.SHA256, hashed)
 	if err != nil {
-		return "", perror.BizErrSign.WithError(err, "SignPKCS1v15")
+		return "", perror.BizErrSecuritySignGenerate.WithError(err, "SignPKCS1v15")
 	}
-
+	
 	opt := initOption(opts...)
 	return output(signByte, opt.outputType), nil
 }
@@ -217,25 +217,25 @@ func RSASignVerifyWithSha256(src, sign, publicKey string, opts ...OptionFunc) (b
 	opt := initOption(opts...)
 	signByte, err := input(sign, opt.inputType)
 	if err != nil {
-		return false, perror.BizErrVerifySign.WithError(err, "input")
+		return false, perror.BizErrSignVerify.WithError(err, "input")
 	}
 	if len(signByte) == 0 {
-		return false, perror.BizErrVerifySign.WithError(perror.BizErrLen)
+		return false, perror.BizErrSignVerify.WithError(perror.BizErrLen)
 	}
-
+	
 	block, _ := pem.Decode([]byte(publicKey))
 	if block == nil {
-		return false, perror.BizErrVerifySign.WithError(errors.New("block == nil"))
+		return false, perror.BizErrSignVerify.WithError(errors.New("block == nil"))
 	}
 	pubInterface, err := x509.ParsePKIXPublicKey(block.Bytes)
 	if err != nil {
-		return false, perror.BizErrVerifySign.WithError(err)
+		return false, perror.BizErrSignVerify.WithError(err)
 	}
-
+	
 	hashed := sha256.Sum256([]byte(src))
 	err = rsa.VerifyPKCS1v15(pubInterface.(*rsa.PublicKey), crypto.SHA256, hashed[:], signByte)
 	if err != nil {
-		return false, perror.BizErrVerifySign.WithError(err)
+		return false, perror.BizErrSignVerify.WithError(err)
 	}
 	return true, nil
 }

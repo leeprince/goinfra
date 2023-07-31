@@ -22,6 +22,8 @@ func SetBrowserFloatWindow() {
 		chromedp.Flag("headless", false),
 		chromedp.Flag("disable-gpu", true),
 		chromedp.Flag("remote-debugging-port", "9222"),
+		// 设置最大窗口
+		chromedp.WindowSize(1920, 1040),
 	)
 	allocCtx, cancel := chromedp.NewExecAllocator(context.Background(), opts...)
 	defer cancel()
@@ -57,16 +59,16 @@ func SetBrowserFloatWindow() {
 			popup.style.position = 'fixed';
 
 			// 弹窗出现在右上角
-			// popup.style.top = '60px';
-			// popup.style.right = right;
+			popup.style.top = '60px';
+			popup.style.right = right;
 
 			// 弹窗出现在右下角
 			// popup.style.bottom = '20px';
 			// popup.style.right = '20px';
 
 			// 弹窗出现在左下角
-			popup.style.bottom = '50px';
-			popup.style.left = '20px';
+			// popup.style.bottom = '50px';
+			// popup.style.left = '20px';
 			
 			// 内填充
 			popup.style.padding = '10px';

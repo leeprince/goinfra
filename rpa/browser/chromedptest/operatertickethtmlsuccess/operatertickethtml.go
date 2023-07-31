@@ -320,7 +320,7 @@ func main() {
 		
 		// 设置取票号：占座订单支付后才有取票号，暂注释
 		ticketNumber := resultTypeSuccessData.TicketNumber
-		selector = "EOrderNumberInput" + orderId // 因为是chromedp.ByID，所以前面不能加上#
+		selector = "#EOrderNumberInput" + orderId
 		fmt.Println("取票号-选择器:", selector)
 		selctx, _ := context.WithTimeout(ctx, time.Millisecond*300)
 		err = chromedp.Run(selctx, chromedp.WaitVisible(selector, chromedp.ByID))
@@ -352,7 +352,7 @@ func main() {
 		fmt.Println("点击刷新流水号-成功")
 		
 		// 获取刷新流水号
-		selector = fmt.Sprintf(`//*[@id='AliPayTradeNoOther%s']`, orderId)
+		selector = fmt.Sprintf(`//*[@id='AliPayTradeNoList%s']/span/label/input`, orderId)
 		// 等待 ID 出现
 		fmt.Println("获取刷新流水号 selector:", selector)
 		selctx, _ = context.WithTimeout(ctx, time.Second*5)

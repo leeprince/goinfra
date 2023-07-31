@@ -2,7 +2,7 @@ package rabbitmq
 
 import (
 	"github.com/leeprince/goinfra/consts"
-	"github.com/leeprince/goinfra/utils/sliceutil"
+	"github.com/leeprince/goinfra/utils/arrayutil"
 	"github.com/streadway/amqp"
 	"strconv"
 	"time"
@@ -45,11 +45,11 @@ func WithPublishParamProperties(body []byte, opts ...PropertiesOpt) PublishParam
 			priority:     0,
 			body:         body,
 		}
-
+		
 		for _, opt := range opts {
 			opt(properties)
 		}
-
+		
 		publishParams.properties = properties
 	}
 }
@@ -77,7 +77,7 @@ func WithPropertiesHeaders(headers map[string]interface{}) PropertiesOpt {
 // 消息临时化：amqp.Transient=1;消息持久化:amqp.Persistent=2
 func WithPropertiesDeliveryMode(deliveryMode uint8) PropertiesOpt {
 	return func(properties *properties) {
-		if sliceutil.InUint8(deliveryMode, []uint8{PropertiesDeliveryModeTransient, PropertiesDeliveryModePersistent}) {
+		if arrayutil.InUint8(deliveryMode, []uint8{PropertiesDeliveryModeTransient, PropertiesDeliveryModePersistent}) {
 			deliveryMode = PropertiesDeliveryModePersistent
 		}
 		properties.deliveryMode = deliveryMode

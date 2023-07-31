@@ -32,12 +32,12 @@ func DESEncrypt(src, key string, opts ...OptionFunc) (string, error) {
 	// 密码函数：密码分组函数
 	blockFunc, err := desSwitchKeyLenGetCipherBlock(keyByte)
 	if err != nil {
-		return "", perror.BizErrEncrypt.WithError(err)
+		return "", perror.BizErrSecurityEncrypt.WithError(err)
 	}
 	bs := blockFunc.BlockSize()
 	srcByte = desZeroPadding(srcByte, bs)
 	if len(srcByte)%bs != 0 {
-		return "", perror.BizErrDecrypt.WithError(errors.New("len(srcByte)%bs != 0"))
+		return "", perror.BizErrSecurityDecrypt.WithError(errors.New("len(srcByte)%bs != 0"))
 	}
 	cryptByte := make([]byte, len(srcByte))
 	dst := cryptByte
@@ -46,7 +46,7 @@ func DESEncrypt(src, key string, opts ...OptionFunc) (string, error) {
 		srcByte = srcByte[bs:]
 		dst = dst[bs:]
 	}
-
+	
 	opt := initOption(opts...)
 	return output(cryptByte, opt.outputType), nil
 }
@@ -60,23 +60,23 @@ func DESDecrypt(crypt, key string, opts ...OptionFunc) (string, error) {
 	opt := initOption(opts...)
 	srcByte, err := input(crypt, opt.inputType)
 	if err != nil {
-		return "", perror.BizErrDecrypt.WithError(err)
+		return "", perror.BizErrSecurityDecrypt.WithError(err)
 	}
 	if len(srcByte) == 0 {
-		return "", perror.BizErrDecrypt.WithError(perror.BizErrLen)
+		return "", perror.BizErrSecurityDecrypt.WithError(perror.BizErrLen)
 	}
-
+	
 	keyByte := []byte(key)
 	// 密码函数：密码分组函数
 	blockFunc, err := desSwitchKeyLenGetCipherBlock(keyByte)
 	if err != nil {
-		return "", perror.BizErrDecrypt.WithError(err)
+		return "", perror.BizErrSecurityDecrypt.WithError(err)
 	}
 	decryptByte := make([]byte, len(srcByte))
 	dst := decryptByte
 	bs := blockFunc.BlockSize()
 	if len(srcByte)%bs != 0 {
-		return "", perror.BizErrDecrypt.WithError(errors.New("len(srcByte)%bs != 0"))
+		return "", perror.BizErrSecurityDecrypt.WithError(errors.New("len(srcByte)%bs != 0"))
 	}
 	for len(srcByte) > 0 {
 		blockFunc.Decrypt(dst, srcByte[:bs])
@@ -84,7 +84,7 @@ func DESDecrypt(crypt, key string, opts ...OptionFunc) (string, error) {
 		dst = dst[bs:]
 	}
 	decryptByte = desZeroUnPadding(decryptByte)
-
+	
 	return string(decryptByte), nil
 }
 
@@ -128,18 +128,18 @@ func desSwitchKeyLenGetCipherBlock(key []byte) (blockFunc cipher.Block, err erro
 //	    opt.aesIV: 默认填充"0000000000000000"
 func AESEncrypt(src, key string, opts ...OptionFunc) (string, error) {
 	opt := initOption(opts...)
-
+	
 	if src == "" {
 		return "", perror.BizErrDataEmpty
 	}
-
+	
 	keyByte := []byte(key)
 	// 密码函数：密码分组函数
 	block, err := aes.NewCipher(keyByte)
 	if err != nil {
-		return "", perror.BizErrEncrypt.WithError(err)
+		return "", perror.BizErrSecurityEncrypt.WithError(err)
 	}
-
+	
 	var cryptByte []byte
 	switch opt.aesBlockModeType {
 	case AESBlockModeTypeCBC:
@@ -152,9 +152,9 @@ func AESEncrypt(src, key string, opts ...OptionFunc) (string, error) {
 		// 执行加密
 		blockModeCBCFunc.CryptBlocks(cryptByte, content)
 	default:
-		return "", perror.BizErrEncrypt.WithError(perror.BizErrNoExistType)
+		return "", perror.BizErrSecurityEncrypt.WithError(perror.BizErrTypeNoExist)
 	}
-
+	
 	return output(cryptByte, opt.outputType), nil
 }
 
@@ -169,19 +169,19 @@ func AESDecrypt(crypt, key string, opts ...OptionFunc) (string, error) {
 	opt := initOption(opts...)
 	srcByte, err := input(crypt, opt.inputType)
 	if err != nil {
-		return "", perror.BizErrDecrypt.WithError(err)
+		return "", perror.BizErrSecurityDecrypt.WithError(err)
 	}
 	if len(srcByte) == 0 {
-		return "", perror.BizErrDecrypt.WithError(perror.BizErrLen)
+		return "", perror.BizErrSecurityDecrypt.WithError(perror.BizErrLen)
 	}
-
+	
 	keyByte := []byte(key)
 	// 密码函数：密码分组函数
 	block, err := aes.NewCipher(keyByte)
 	if err != nil {
-		return "", perror.BizErrDecrypt.WithError(err)
+		return "", perror.BizErrSecurityDecrypt.WithError(err)
 	}
-
+	
 	var decryptByte []byte
 	switch opt.aesBlockModeType {
 	case AESBlockModeTypeCBC:
@@ -190,9 +190,9 @@ func AESDecrypt(crypt, key string, opts ...OptionFunc) (string, error) {
 		decryptByte = make([]byte, len(srcByte))
 		blockModeCBCFunc.CryptBlocks(decryptByte, srcByte)
 	default:
-		return "", perror.BizErrEncrypt.WithError(perror.BizErrNoExistType)
+		return "", perror.BizErrSecurityEncrypt.WithError(perror.BizErrTypeNoExist)
 	}
-
+	
 	// 取出
 	return string(aesPKCS5UnPadding(decryptByte)), nil
 }

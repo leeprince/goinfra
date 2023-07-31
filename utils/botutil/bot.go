@@ -4,7 +4,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"github.com/leeprince/goinfra/http/httpcli"
-	"github.com/leeprince/goinfra/utils/sliceutil"
+	"github.com/leeprince/goinfra/utils/arrayutil"
 	"github.com/pkg/errors"
 	"net/http"
 )
@@ -49,15 +49,15 @@ func SendQYWXBot(url string, contextType BotContentType, title string, contents 
 		err = errors.New("SendQYWXBot title 必填")
 		return
 	}
-
-	if !sliceutil.InString(string(contextType), []string{
+	
+	if !arrayutil.InString(string(contextType), []string{
 		string(BOT_CONTENTTYPE_TEXT),
 		string(BOT_CONTENTTYPE_MARKDOWN),
 	}) {
 		err = errors.New("SendQYWXBot contextType 暂不支持")
 		return
 	}
-
+	
 	// 组装默认格式
 	var sendContentBuf *bytes.Buffer
 	if contextType == BOT_CONTENTTYPE_TEXT {
@@ -83,7 +83,7 @@ func SendQYWXBot(url string, contextType BotContentType, title string, contents 
 		}
 	}
 	sendContent := sendContentBuf.String()
-
+	
 	var sendBodyByte []byte
 	if contextType == BOT_CONTENTTYPE_TEXT {
 		sendBody := TextBody{
@@ -94,7 +94,7 @@ func SendQYWXBot(url string, contextType BotContentType, title string, contents 
 				Content: sendContent,
 			},
 		}
-
+		
 		sendBodyByte, err = json.Marshal(sendBody)
 		if err != nil {
 			return
@@ -108,13 +108,13 @@ func SendQYWXBot(url string, contextType BotContentType, title string, contents 
 				Content: sendContent,
 			},
 		}
-
+		
 		sendBodyByte, err = json.Marshal(sendBody)
 		if err != nil {
 			return
 		}
 	}
-
+	
 	// 发送数据
 	return httpcli.NewHttpClient().
 		WithURL(url).

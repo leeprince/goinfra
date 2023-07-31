@@ -22,7 +22,7 @@ import (
 func MD5(src string, opts ...OptionFunc) string {
 	h := md5.New()
 	h.Write([]byte(src))
-
+	
 	opt := initOption(opts...)
 	return output(h.Sum(nil), opt.outputType)
 }
@@ -33,7 +33,7 @@ func MD5(src string, opts ...OptionFunc) string {
 func SHA256(src string, opts ...OptionFunc) string {
 	h := sha256.New()
 	h.Write([]byte(src))
-
+	
 	opt := initOption(opts...)
 	return output(h.Sum(nil), opt.outputType)
 }
@@ -43,7 +43,7 @@ func SHA256(src string, opts ...OptionFunc) string {
 //	encryptOpts.isToHex: 默认转十六进制
 func HMACHash(src, key string, opts ...OptionFunc) (string, error) {
 	opt := initOption(opts...)
-
+	
 	var h hash.Hash
 	switch opt.hmacHashType {
 	case HMACHashTypeMd5:
@@ -53,20 +53,20 @@ func HMACHash(src, key string, opts ...OptionFunc) (string, error) {
 	case HMACHashTypeSha256:
 		h = hmac.New(sha256.New, []byte(key))
 	default:
-		return "", perror.BizErrNoExistType
+		return "", perror.BizErrTypeNoExist
 	}
-
+	
 	h.Write([]byte(src))
-
+	
 	return output(h.Sum(nil), opt.outputType), nil
 }
 
 func Bcrypt(src string, opts ...OptionFunc) (string, error) {
 	opt := initOption(opts...)
-
+	
 	cryptByte, err := bcrypt.GenerateFromPassword([]byte(src), opt.bcryptCost)
 	if err != nil {
-
+	
 	}
 	return output(cryptByte, opt.outputType), nil
 }
