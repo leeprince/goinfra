@@ -30,19 +30,19 @@ func ReturnErr02() (s string, err error) {
 	return "", errors.New("ReturnErr02")
 }
 
-func TestReturnOtherScopeErr(t *testing.T) {
-	err := ReturnOtherScopeErr01()
-	fmt.Println("ReturnOtherScopeErr01:", err)
+func TestReturnForScopeErr(t *testing.T) {
+	err := ReturnForScopeErr01()
+	fmt.Println("ReturnForScopeErr01:", err)
 
 	// 会报错：因为在其他作用域的使用了返回参数的变量，进行了重新声明赋值，导致报错。
 	// 解决：在其他作用域的使用了返回参数的变量时，不要重新声明，只需赋值。
 	//	如：var s string; s, err = xxx();
 	//	如：s, serr := xxx(); err = serr;
-	err = ReturnOtherScopeErr0101()
-	fmt.Println("ReturnOtherScopeErr0101:", err)
+	err = ReturnForScopeErr0101()
+	fmt.Println("ReturnForScopeErr0101:", err)
 }
 
-func ReturnOtherScopeErr01() (err error) {
+func ReturnForScopeErr01() (err error) {
 	s, err := ReturnErr02()
 	if err != nil {
 		fmt.Println("ReturnErr02 err:", err)
@@ -51,7 +51,7 @@ func ReturnOtherScopeErr01() (err error) {
 	fmt.Println(s)
 	return
 }
-func ReturnOtherScopeErr0101() (err error) {
+func ReturnForScopeErr0101() (err error) {
 	/*for i := 0; i < 3; i++ {
 		// 报错：inner declaration of var err error
 		s, err := ReturnErr02()
@@ -88,6 +88,51 @@ func ReturnOtherScopeErr0101() (err error) {
 		fmt.Println(s)
 		return
 	}
+
+	return
+}
+
+func TestReturnIfScopeErr(t *testing.T) {
+	var err error
+
+	err = ReturnIfScopeErr01()
+	fmt.Println("ReturnForScopeErr01:", err)
+
+	err = ReturnIfScopeErr02()
+	fmt.Println("ReturnIfScopeErr02:", err)
+}
+
+func ReturnIfScopeErr01() (err error) {
+	if true {
+		/*
+			报错：
+			.\return_error_test.go:112:3: result parameter err not in scope at return
+				.\return_error_test.go:109:6: inner declaration of var err error
+
+			解决：在其他作用域的使用了返回参数的变量时，不要重新声明，只需赋值。
+				如：var s string; s, err = xxx();
+				如：s, serr := xxx(); err = serr;
+
+		*/
+		s, serr := ReturnErr02()
+		if serr != nil {
+			err = serr
+		}
+		fmt.Println("ReturnIfScopeErr01 s:", s)
+		fmt.Println("ReturnIfScopeErr01 err:", err)
+		return
+	}
+
+	return
+}
+
+func ReturnIfScopeErr02() (err error) {
+	s, err := ReturnErr02()
+	if err != nil {
+		fmt.Println("ReturnIfScopeErr02 err:", err)
+		return
+	}
+	fmt.Println("ReturnIfScopeErr02 s:", s)
 
 	return
 }
