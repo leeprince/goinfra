@@ -38,6 +38,7 @@ func TestReturnForScopeErr(t *testing.T) {
 	// 解决：在其他作用域的使用了返回参数的变量时，不要重新声明，只需赋值。
 	//	如：var s string; s, err = xxx();
 	//	如：s, serr := xxx(); err = serr;
+	//	如：_, err = xxx();
 	err = ReturnForScopeErr0101()
 	fmt.Println("ReturnForScopeErr0101:", err)
 }
@@ -89,6 +90,16 @@ func ReturnForScopeErr0101() (err error) {
 		return
 	}
 
+	// 解决：方式三 如：_, err = xxx();
+	for i := 0; i < 3; i++ {
+		_, err = ReturnErr02()
+		if err != nil {
+			fmt.Println("ReturnErr02 err:", err)
+			return
+		}
+		return
+	}
+
 	return
 }
 
@@ -112,14 +123,14 @@ func ReturnIfScopeErr01() (err error) {
 			解决：在其他作用域的使用了返回参数的变量时，不要重新声明，只需赋值。
 				如：var s string; s, err = xxx();
 				如：s, serr := xxx(); err = serr;
+				如：_, err = xxx();
 
 		*/
-		s, serr := ReturnErr02()
-		if serr != nil {
-			err = serr
+		_, err = ReturnErr02()
+		if err != nil {
+			fmt.Println("ReturnIfScopeErr01 err:", err)
+			return
 		}
-		fmt.Println("ReturnIfScopeErr01 s:", s)
-		fmt.Println("ReturnIfScopeErr01 err:", err)
 		return
 	}
 
