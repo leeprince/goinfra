@@ -26,8 +26,33 @@ func TestMouse(t *testing.T) {
 }
 
 // 键盘操作
-func TestKey(t *testing.T) {
-	Key()
+func TestKeyEnter(t *testing.T) {
+	KeyEnter()
+}
+
+// 键盘操作
+func TestKeyEnterActiveName(t *testing.T) {
+	KeyEnterActiveName()
+}
+
+// 键盘操作
+func TestKeyUpDown(t *testing.T) {
+	KeyUpDown()
+}
+
+// 键盘操作
+func TestKeyChar(t *testing.T) {
+	KeyChar()
+}
+
+// 键盘操作
+func TestKeyEnterActiveNameDarwinCtrlF(t *testing.T) {
+	KeyEnterActiveNameDarwinCtrlF()
+}
+
+// 键盘操作
+func TestKeyEnterActiveNameWindowsCtrlF(t *testing.T) {
+	KeyEnterActiveNameWindowsCtrlF()
 }
 
 // 屏幕操作

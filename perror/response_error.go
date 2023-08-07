@@ -3,6 +3,7 @@ package perror
 import (
 	"errors"
 	"fmt"
+	"log"
 	"regexp"
 	"sync"
 )
@@ -30,7 +31,12 @@ func ReplaceIPErr(err error) error {
 
 func ErrPanic(err error) {
 	if err != nil {
-
 		panic(fmt.Sprintf("ErrPanic:%+v", err))
+	}
+}
+
+func ErrLogFatal(err error) {
+	if err != nil {
+		log.Fatal(err)
 	}
 }

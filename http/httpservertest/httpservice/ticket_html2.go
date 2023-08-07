@@ -19,9 +19,9 @@ var ticketHtml2Once sync.Once
 
 func ticketHtml2(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "text/html; charset=utf-8")
-
+	
 	currentResoureDir := path.Join(resoureDir, "ticketHtml2")
-
+	
 	// 设置静态文件目录
 	/*
 		http.FileServer函数创建了一个处理静态文件的处理器，并将其注册到以/test/为前缀的路由上。这样，当访问以/test/开头的URL时，服务器将在定的静态文件目录中查找相应的文件并返回给客户端。
@@ -29,7 +29,7 @@ func ticketHtml2(w http.ResponseWriter, r *http.Request) {
 		1. 简化代码：将静态文件的处理交给专门的处理器，使得您的服务器代码更加简洁和专注于业务逻辑。
 		2. 提高性能：静态文件可以由Web服务器直接提供，而不需要经过您的应用程序处理。这样可以减轻应用程序的负载，提高响应速度和并发能力。
 		3. 组织结构清晰：将静态文件放在单独的目录中，使得项目结构更加清晰，易于维护和扩展。
-
+	
 		例如：
 		例如，如果有一个名为test/style.css的CSS文件，可以通过访问http://localhost:8080/test/style.css来获取该文件的内容。
 		通过设置静态文件目录，您可以轻松地为您的Web应用程序提供CSS、JavaScript、图像等静态，并且可以根据需要进行组织和管理。
@@ -39,9 +39,10 @@ func ticketHtml2(w http.ResponseWriter, r *http.Request) {
 	*/
 	ticketHtml2Once.Do(func() {
 		fs := http.FileServer(http.Dir(currentResoureDir))
+		// SupplierBookingEPay.aspx.html 会定时发送请求`{当前域名}/SupplierHandler.ashx`,且不同的请求参数。
 		http.Handle("/SupplierBookingEPay.aspx_files/", http.StripPrefix("", fs))
 	})
-
+	
 	fileBytes, err := fileutil.ReadFile(currentResoureDir, "SupplierBookingEPay.aspx.html")
 	if err != nil {
 		http.Error(w, "读取 html文件错误", http.StatusInternalServerError)
