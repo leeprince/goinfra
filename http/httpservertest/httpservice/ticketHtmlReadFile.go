@@ -15,12 +15,12 @@ import (
  */
 
 // 用于解决第一次访问正常，第二次访问出现：加载页面时与服务器的连接被重置。原因每次请求都重新设置"设置静态文件目录"而导致的错误
-var ticketHtml2Once sync.Once
+var ticketHtmlReadFileOnce sync.Once
 
-func ticketHtml2(w http.ResponseWriter, r *http.Request) {
+func ticketHtmlReadFile(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "text/html; charset=utf-8")
 	
-	currentResoureDir := path.Join(resoureDir, "ticketHtml2")
+	currentResoureDir := path.Join(resoureDir, "ticketHtmlReadFile")
 	
 	// 设置静态文件目录
 	/*
@@ -37,7 +37,7 @@ func ticketHtml2(w http.ResponseWriter, r *http.Request) {
 		http.StripPrefix函数的作用是从URL中剥离指定的前缀。在这个例子中，我们使用http.StripPrefix("/test/", fs)将fs处理器注册到以/test/开头的URL上，并从URL中剥离掉/test/前缀。这样，当客户端请求/test/style.css时，服务器会将请求转发给fs处理器，并从URL中剥离掉/test/前缀，最终静态文件目录中查找名为style.css的文件并返回给客户端。
 		总之，http.Handle("/test/", http.StripPrefix("/test/", fs))的作用是将以/test/开头的URL请求转发到fs处理器，并从URL中剥离掉/test/前缀，以便在静态文件目录中查找相应的文件。
 	*/
-	ticketHtml2Once.Do(func() {
+	ticketHtmlReadFileOnce.Do(func() {
 		fs := http.FileServer(http.Dir(currentResoureDir))
 		// SupplierBookingEPay.aspx.html 会定时发送请求`{当前域名}/SupplierHandler.ashx`,且不同的请求参数。
 		http.Handle("/SupplierBookingEPay.aspx_files/", http.StripPrefix("", fs))

@@ -26,7 +26,7 @@ const (
 	// 本服务启动 http 服务器后的要访问的 html页面地址
 	navigateRPAHtmlUrl = "http://localhost:8090/defaultHandler"
 	// 远程服务 Url
-	navigateRPAHtmlRemoteUrl = "http://127.0.0.1:19999/ticket-html-2"
+	navigateRPAHtmlRemoteUrl = "http://127.0.0.1:19999/ticketHtmlWaitReadFile"
 	htmlFileDir              = "/Users/leeprince/www/go/goinfra/rpa/browser/chromedptest/operatertickethtmlsuccess"
 )
 

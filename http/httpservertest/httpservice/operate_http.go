@@ -12,10 +12,10 @@ import (
  * @Desc:
  */
 
-func OperateHttp(w http.ResponseWriter, r *http.Request) {
+func operateHttp(w http.ResponseWriter, r *http.Request) {
 	if r.Method == "GET" {
 		w.Header().Set("Content-Type", "text/html; charset=utf-8")
-		fileBytes, err := fileutil.ReadFile(resoureDir, "OperateHttp.html")
+		fileBytes, err := fileutil.ReadFile(resoureDir, "operateHttp.html")
 		if err != nil {
 			http.Error(w, "读取 html文件错误", http.StatusInternalServerError)
 			return
