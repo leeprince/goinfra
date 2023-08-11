@@ -16,7 +16,7 @@ import (
 
 const (
 	// 要访问的 html页面地址
-	navigateRPAHtmlUrl = "http://127.0.0.1:19999/ticket-html-2"
+	navigateRPAHtmlUrl = "http://127.0.0.1:19999/ticketHtmlWaitReadFile"
 )
 
 func main() {
@@ -51,12 +51,31 @@ func main() {
 	}
 	
 	var (
-		orderId = "HDTT202307091114133215077033---"
+		orderId = "HT20230724175444A6YDXJ3W3408"
+		
+		// 是否是占座订单
+		isOccupy = true
 	)
 	
-	// 非占座票-点击出票失败
-	selector := fmt.Sprintf(`document.querySelector("#BookSucTBody%s input.btn.btn-default.btn-lg")`, orderId)
-	fmt.Println("非占座票-点击出票失败 selector:", selector)
+	var selector string
+	/*
+		// 非占座票-出票成功
+		document.querySelector("#BookSucTBody{订单ID} input.btn.btn-primary.btn-lg")
+		// 非占座票-出票失败
+		document.querySelector("#BookSucTBody{订单ID} input.btn.btn-default.btn-lg")
+	
+		// 占座票-占座成功
+		document.querySelector("#BookSucTBody{订单ID} input.btn.btn-success.btn-lg")
+		// 占座票-占座失败
+		document.querySelector("#BookSucTBody{订单ID} input.btn.btn-danger.btn-lg")")
+	*/
+	if isOccupy {
+		selector = fmt.Sprintf(`document.querySelector("#BookSucTBody%s input.btn.btn-danger.btn-lg")`, orderId)
+		fmt.Println("占座票-点击出票失败 selector:", selector)
+	} else {
+		selector = fmt.Sprintf(`document.querySelector("#BookSucTBody%s input.btn.btn-default.btn-lg")`, orderId)
+		fmt.Println("非占座票-点击出票失败 selector:", selector)
+	}
 	err = chromedp.Run(ctx,
 		chromedp.Click(selector, chromedp.ByJSPath),
 	)
@@ -66,14 +85,11 @@ func main() {
 	
 	// 选择失败的原因
 	// 需要稍微等待一下，否则弹窗可能还没出来；或者等待元素可见
-	// time.Sleep(time.Second * 1)
-	// waitSeletorTime := time.Second * 1
-	waitSeletorTime := time.Millisecond * 200
+	waitSeletorTime := time.Second * 5
 	// 检查选择器
-	selector = "FailResonGroup"
+	selector = "#FailResonGroup"
 	fmt.Println("选择失败的原因 selector:", selector)
 	selctx, _ := context.WithTimeout(ctx, waitSeletorTime)
-	// 等待元素可见.chromedp.ByID 所以"SetBookFailPanel" 前面不带#
 	err = chromedp.Run(selctx, chromedp.WaitVisible(selector, chromedp.ByID))
 	if err != nil {
 		fmt.Println("选择失败的原因 selector 不存在或者超时")
@@ -84,20 +100,81 @@ func main() {
 		chromedp.Sleep(time.Millisecond*300),
 		
 		// 按下 1，并且松开
+		// 车次已无票
 		chromedp.KeyEvent("1"), // 成功
-		// chromedp.KeyEvent(("\u0031")), // 成功
 		
-		chromedp.Sleep(time.Second*1),
+		// 坐席无法满足
+		/*chromedp.Sleep(time.Second*1),
 		chromedp.KeyEvent("2"),
-		
+		// 坐席无法满足的具体单选框：无上铺
 		chromedp.Sleep(time.Second*1),
-		chromedp.KeyEvent("3"),
+		chromedp.Click("//*[@id='seatTypeNotMatch']/div/div/span[1]/input", chromedp.BySearch),
+		// 坐席无法满足的具体单选框：无中铺
+		chromedp.Sleep(time.Second*1),
+		chromedp.Click("//*[@id='seatTypeNotMatch']/div/div/span[2]/input", chromedp.BySearch),
+		// 坐席无法满足的具体单选框：无下铺
+		chromedp.Sleep(time.Second*1),
+		chromedp.Click("//*[@id='seatTypeNotMatch']/div/div/span[3]/input", chromedp.BySearch),
+		// 坐席无法满足的具体单选框：无靠窗
+		chromedp.Sleep(time.Second*1),
+		chromedp.Click("//*[@id='seatTypeNotMatch']/div/div/span[7]/input", chromedp.BySearch),
+		// 坐席无法满足的具体单选框：无过道
+		chromedp.Sleep(time.Second*1),
+		chromedp.Click("//*[@id='seatTypeNotMatch']/div/div/span[8]/input", chromedp.BySearch),
+		// 坐席无法满足的具体单选框：无F
+		chromedp.Sleep(time.Second*1),
+		chromedp.Click("//*[@id='seatTypeNotMatch']/div/div/span[9]/input", chromedp.BySearch),
+		// 坐席无法满足的具体单选框：无DF
+		chromedp.Sleep(time.Second*1),
+		chromedp.Click("//*[@id='seatTypeNotMatch']/div/div/span[10]/input", chromedp.BySearch),
+		// 坐席无法满足的具体单选框：无连坐
+		chromedp.Sleep(time.Second*1),
+		chromedp.Click("//*[@id='seatTypeNotMatch']/div/div/span[11]/input", chromedp.BySearch),
+		// 坐席无法满足的具体单选框：无同车厢
+		chromedp.Sleep(time.Second*1),
+		chromedp.Click("//*[@id='seatTypeNotMatch']/div/div/span[12]/input", chromedp.BySearch),
+		// 坐席无法满足的具体单选框：无同包厢
+		chromedp.Sleep(time.Second*1),
+		chromedp.Click("//*[@id='seatTypeNotMatch']/div/div/span[13]/input", chromedp.BySearch),
+		// 坐席无法满足的具体单选框：无指定车厢
+		chromedp.Sleep(time.Second*1),
+		chromedp.Click("//*[@id='seatTypeNotMatch']/div/div/span[14]/input", chromedp.BySearch),
+		// 坐席无法满足的具体单选框：只有无座，用户不接受无座
+		chromedp.Sleep(time.Second*1),
+		chromedp.Click("//*[@id='seatTypeNotMatch']/div/div/span[17]/input", chromedp.BySearch),
+		*/
 		
+		// 行程冲突：需选择具体乘客
+		/*chromedp.Sleep(time.Second*1),
+		chromedp.KeyEvent("3"),
+		// 选择具体乘客：默认选择第一个即可
+		chromedp.Sleep(time.Second*1),
+		chromedp.Click("//*[@id='SubFailReasonForPassengerForm']/span/input", chromedp.BySearch),
+		*/
+		
+		// 存在未支付订单：需选择具体乘客
 		chromedp.Sleep(time.Second*1),
 		chromedp.KeyEvent("4"),
 		
+		// 限制高消费：需选择具体乘客
 		chromedp.Sleep(time.Second*1),
-		chromedp.KeyEvent("1"),
+		chromedp.KeyEvent("5"),
+		
+		// 未采集联系方式：需选择具体乘客
+		chromedp.Sleep(time.Second*1),
+		chromedp.KeyEvent("6"),
+		
+		// 身份信息未核验：需选择具体乘客
+		chromedp.Sleep(time.Second*1),
+		chromedp.KeyEvent("7"),
+		
+		// 姓名不匹配：需选择具体乘客
+		chromedp.Sleep(time.Second*1),
+		chromedp.KeyEvent("8"),
+		
+		// 证件号重复
+		chromedp.Sleep(time.Second*1),
+		chromedp.KeyEvent("9"),
 	
 	)
 	if err != nil {

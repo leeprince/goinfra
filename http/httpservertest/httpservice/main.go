@@ -26,14 +26,15 @@ func main() {
 	
 	// 路由定义
 	http.HandleFunc("/", defaultHandler)
-	http.HandleFunc("/get", getHandler)
-	http.HandleFunc("/post", postHandler)
-	http.HandleFunc("/post-form", postFormHandler)
-	http.HandleFunc("/operate-http", OperateHttp)
+	http.HandleFunc("/getHandler", getHandler)
+	http.HandleFunc("/postHandler", postHandler)
+	http.HandleFunc("/postFormHandler", postFormHandler)
+	http.HandleFunc("/operateHttp", operateHttp)
 	
 	// --- 项目相关
-	http.HandleFunc("/ticket-html-1", ticketHtml1)
-	http.HandleFunc("/ticket-html-2", ticketHtml2)
+	http.HandleFunc("/ticketHtmlSample", ticketHtmlSample)
+	http.HandleFunc("/ticketHtmlReadFile", ticketHtmlReadFile)
+	http.HandleFunc("/ticketHtmlWaitReadFile", ticketHtmlWaitReadFile)
 	http.HandleFunc("/SupplierHandler.ashx", SupplierHandler)
 	
 	fmt.Printf("Server listening on port:%d ...\n", *port)

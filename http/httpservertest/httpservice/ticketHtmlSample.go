@@ -12,10 +12,10 @@ import (
  * @Desc:
  */
 
-func ticketHtml1(w http.ResponseWriter, r *http.Request) {
+func ticketHtmlSample(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "text/html; charset=utf-8")
-
-	fileBytes, err := fileutil.ReadFile(resoureDir, "ticketHtml1.html")
+	
+	fileBytes, err := fileutil.ReadFile(resoureDir, "ticketHtmlSample.html")
 	if err != nil {
 		http.Error(w, "读取 html文件错误", http.StatusInternalServerError)
 		return

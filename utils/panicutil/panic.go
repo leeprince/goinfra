@@ -12,7 +12,7 @@ import (
  * @Desc:
  */
 
-func PanicRecover(recover interface{}, logIDs ...string) {
+func PanicRecover(recover interface{}, logIDs ...string) error {
 	var plogEntry *logrus.Entry
 	if len(logIDs) > 0 && logIDs[0] != "" {
 		plogEntry = plog.LogID(logIDs[0]).WithField("method", "PanicRecover")
@@ -32,5 +32,5 @@ func PanicRecover(recover interface{}, logIDs ...string) {
 		plogEntry.Errorf("Panic occurred at %s:%d\n", file, line)
 	}
 	
-	return
+	return reconverErr
 }

@@ -39,6 +39,11 @@ func TestKeysV1(t *testing.T) {
 	KeysV1()
 }
 
+// 按键关闭弹窗
+func TestKeysV2(t *testing.T) {
+	KeysV2()
+}
+
 // 在浏览器上设置窗口最大化
 func TestSetMaxWindow(t *testing.T) {
 	SetMaxWindow()

@@ -16,6 +16,7 @@ import (
  * @Desc:
  */
 
+// 读取文件内容返回
 func SupplierHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method == "POST" {
 		log.Println(">>> SupplierHandler")
@@ -33,12 +34,24 @@ func SupplierHandler(w http.ResponseWriter, r *http.Request) {
 		data.ExistOrderNumbers = r.Form.Get("ExistOrderNumbers")
 		
 		if data.Optype == "BookingOrderForAli" {
-			data, err := fileutil.ReadFile(dataDir, "SupplierHandler.txt")
+			// SupplierHandler.txt 的内容参考：fileData/BookingOrderForAli.txt.dt
+			fileData, err := fileutil.ReadFile(dataDir, "BookingOrderForAli.txt")
 			if err != nil {
 				http.Error(w, "fileutil.ReadFile: "+err.Error(), http.StatusInternalServerError)
 				return
 			}
-			fmt.Fprint(w, string(data))
+			fmt.Fprint(w, string(fileData))
+			return
+		}
+		
+		if data.Optype == "ConfirmSetBookSuc" {
+			// SupplierHandler.txt 的内容参考：fileData/ConfirmSetBookSuc.txt.dt
+			fileData, err := fileutil.ReadFile(dataDir, "ConfirmSetBookSuc.txt")
+			if err != nil {
+				http.Error(w, "fileutil.ReadFile: "+err.Error(), http.StatusInternalServerError)
+				return
+			}
+			fmt.Fprint(w, string(fileData))
 			return
 		}
 	}
