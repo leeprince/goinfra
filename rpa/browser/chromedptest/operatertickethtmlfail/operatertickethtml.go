@@ -16,7 +16,7 @@ import (
 
 const (
 	// 要访问的 html页面地址
-	navigateRPAHtmlUrl = "http://127.0.0.1:19999/ticketHtmlWaitReadFile"
+	navigateRPAHtmlUrl = "http://127.0.0.1:19999/ticketHtmlReadFile"
 )
 
 func main() {
@@ -50,11 +50,15 @@ func main() {
 		log.Fatal(err)
 	}
 	
-	var (
+	/*var (
 		orderId = "HT20230724175444A6YDXJ3W3408"
-		
 		// 是否是占座订单
 		isOccupy = true
+	)*/
+	var (
+		orderId = "MT1690287534020001"
+		// 是否是占座订单
+		isOccupy = false
 	)
 	
 	var selector string
@@ -103,9 +107,10 @@ func main() {
 		// 车次已无票
 		chromedp.KeyEvent("1"), // 成功
 		
-		// 坐席无法满足
+		// 坐席无法满足:
 		/*chromedp.Sleep(time.Second*1),
 		chromedp.KeyEvent("2"),
+		// 坐席无法满足的具体单选框：选择后后面的KeyEvent仅能触发一次，因为访问的网页 js控制了。
 		// 坐席无法满足的具体单选框：无上铺
 		chromedp.Sleep(time.Second*1),
 		chromedp.Click("//*[@id='seatTypeNotMatch']/div/div/span[1]/input", chromedp.BySearch),
@@ -144,7 +149,7 @@ func main() {
 		chromedp.Click("//*[@id='seatTypeNotMatch']/div/div/span[17]/input", chromedp.BySearch),
 		*/
 		
-		// 行程冲突：需选择具体乘客
+		// 行程冲突：需选择具体乘客：选择后后面的KeyEvent仅能触发一次，因为访问的网页 js控制了。
 		/*chromedp.Sleep(time.Second*1),
 		chromedp.KeyEvent("3"),
 		// 选择具体乘客：默认选择第一个即可
@@ -175,6 +180,41 @@ func main() {
 		// 证件号重复
 		chromedp.Sleep(time.Second*1),
 		chromedp.KeyEvent("9"),
+		
+		// 证件带*号
+		chromedp.Sleep(time.Second*1),
+		chromedp.Click("//*[@id='FailResonGroup']/span[10]/input", chromedp.BySearch),
+		
+		// 列车停运
+		chromedp.Sleep(time.Second*1),
+		chromedp.Click("//*[@id='FailResonGroup']/span[11]/input", chromedp.BySearch),
+		
+		// 已停止售票
+		chromedp.Sleep(time.Second*1),
+		chromedp.Click("//*[@id='FailResonGroup']/span[12]/input", chromedp.BySearch),
+		
+		// 价格不符
+		chromedp.Sleep(time.Second*1),
+		chromedp.Click("//*[@id='FailResonGroup']/span[13]/input", chromedp.BySearch),
+		
+		// 不可进京
+		chromedp.Sleep(time.Second*1),
+		chromedp.Click("//*[@id='FailResonGroup']/span[14]/input", chromedp.BySearch),
+		
+		// 第二程无票：需选择具体乘客
+		/*chromedp.Sleep(time.Second*1),
+		chromedp.Click("//*[@id='FailResonGroup']/span[17]/input", chromedp.BySearch),
+		// 选择具体乘客：默认选择第一个即可
+		chromedp.Sleep(time.Second*1),
+		chromedp.Click("//*[@id='SubFailReasonForPassengerForm']/span/input", chromedp.BySearch),*/
+		
+		// 车次不存在
+		chromedp.Sleep(time.Second*1),
+		chromedp.Click("//*[@id='FailResonGroup']/span[19]/input", chromedp.BySearch),
+		
+		// 未到预售期
+		chromedp.Sleep(time.Second*1),
+		chromedp.Click("//*[@id='FailResonGroup']/span[21]/input", chromedp.BySearch),
 	
 	)
 	if err != nil {

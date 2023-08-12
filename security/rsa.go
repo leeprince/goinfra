@@ -48,7 +48,7 @@ func RSAEncrypt(src, publicKey string, opts ...OptionFunc) (string, error) {
 	}
 	
 	opt := initOption(opts...)
-	return output(cryptByte, opt.outputType), nil
+	return OutputFormat(cryptByte, opt.outputType), nil
 }
 
 // EncryptPKCS1v15加密:兼容长文本加密
@@ -94,7 +94,7 @@ func compatibleEncryptPKCS1v15(srcByte []byte, pubKey *rsa.PublicKey) (crypted [
 //	encryptOpts.isToHex: 默认是转十六进制
 func RSADecrypt(crypt, privateKey string, opts ...OptionFunc) (string, error) {
 	opt := initOption(opts...)
-	srcByte, err := input(crypt, opt.inputType)
+	srcByte, err := InputFormat(crypt, opt.inputType)
 	if err != nil {
 		return "", perror.BizErrSecurityDecrypt.WithError(err)
 	}
@@ -209,15 +209,15 @@ func RSASignWithSHA256(src, privKey string, opts ...OptionFunc) (string, error) 
 	}
 	
 	opt := initOption(opts...)
-	return output(signByte, opt.outputType), nil
+	return OutputFormat(signByte, opt.outputType), nil
 }
 
 // RSA+SHA256 签名验证: 公钥验证签名
 func RSASignVerifyWithSha256(src, sign, publicKey string, opts ...OptionFunc) (bool, error) {
 	opt := initOption(opts...)
-	signByte, err := input(sign, opt.inputType)
+	signByte, err := InputFormat(sign, opt.inputType)
 	if err != nil {
-		return false, perror.BizErrSignVerify.WithError(err, "input")
+		return false, perror.BizErrSignVerify.WithError(err, "InputFormat")
 	}
 	if len(signByte) == 0 {
 		return false, perror.BizErrSignVerify.WithError(perror.BizErrLen)

@@ -24,22 +24,20 @@ func MD5(src string, opts ...OptionFunc) string {
 	h.Write([]byte(src))
 	
 	opt := initOption(opts...)
-	return output(h.Sum(nil), opt.outputType)
+	return OutputFormat(h.Sum(nil), opt.outputType)
 }
 
 // SHA256:
-//
 //	encryptOpts.isToHex: 默认转十六进制
 func SHA256(src string, opts ...OptionFunc) string {
 	h := sha256.New()
 	h.Write([]byte(src))
 	
 	opt := initOption(opts...)
-	return output(h.Sum(nil), opt.outputType)
+	return OutputFormat(h.Sum(nil), opt.outputType)
 }
 
 // Hmac+Hash函数
-//
 //	encryptOpts.isToHex: 默认转十六进制
 func HMACHash(src, key string, opts ...OptionFunc) (string, error) {
 	opt := initOption(opts...)
@@ -58,7 +56,7 @@ func HMACHash(src, key string, opts ...OptionFunc) (string, error) {
 	
 	h.Write([]byte(src))
 	
-	return output(h.Sum(nil), opt.outputType), nil
+	return OutputFormat(h.Sum(nil), opt.outputType), nil
 }
 
 func Bcrypt(src string, opts ...OptionFunc) (string, error) {
@@ -68,12 +66,12 @@ func Bcrypt(src string, opts ...OptionFunc) (string, error) {
 	if err != nil {
 	
 	}
-	return output(cryptByte, opt.outputType), nil
+	return OutputFormat(cryptByte, opt.outputType), nil
 }
 
 func BcryptVerify(src, dest string, opts ...OptionFunc) bool {
 	opt := initOption(opts...)
-	destByte, err := input(dest, opt.inputType)
+	destByte, err := InputFormat(dest, opt.inputType)
 	if err == nil {
 		err = bcrypt.CompareHashAndPassword(destByte, []byte(src))
 		return err == nil

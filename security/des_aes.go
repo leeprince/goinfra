@@ -48,7 +48,7 @@ func DESEncrypt(src, key string, opts ...OptionFunc) (string, error) {
 	}
 	
 	opt := initOption(opts...)
-	return output(cryptByte, opt.outputType), nil
+	return OutputFormat(cryptByte, opt.outputType), nil
 }
 
 // DES解密
@@ -58,7 +58,7 @@ func DESEncrypt(src, key string, opts ...OptionFunc) (string, error) {
 //	encryptOpts.isToHex: 默认传入的decrypted是转十六进制
 func DESDecrypt(crypt, key string, opts ...OptionFunc) (string, error) {
 	opt := initOption(opts...)
-	srcByte, err := input(crypt, opt.inputType)
+	srcByte, err := InputFormat(crypt, opt.inputType)
 	if err != nil {
 		return "", perror.BizErrSecurityDecrypt.WithError(err)
 	}
@@ -155,7 +155,7 @@ func AESEncrypt(src, key string, opts ...OptionFunc) (string, error) {
 		return "", perror.BizErrSecurityEncrypt.WithError(perror.BizErrTypeNoExist)
 	}
 	
-	return output(cryptByte, opt.outputType), nil
+	return OutputFormat(cryptByte, opt.outputType), nil
 }
 
 // AES解密
@@ -167,7 +167,7 @@ func AESEncrypt(src, key string, opts ...OptionFunc) (string, error) {
 //	    opt.aesIV: 默认填充"0000000000000000
 func AESDecrypt(crypt, key string, opts ...OptionFunc) (string, error) {
 	opt := initOption(opts...)
-	srcByte, err := input(crypt, opt.inputType)
+	srcByte, err := InputFormat(crypt, opt.inputType)
 	if err != nil {
 		return "", perror.BizErrSecurityDecrypt.WithError(err)
 	}

@@ -26,12 +26,12 @@ func SM4Encrypt(src, key string, opts ...OptionFunc) (string, error) {
 	blockMode.CryptBlocks(cryptByte, origData)
 	
 	opt := initOption(opts...)
-	return output(cryptByte, opt.outputType), nil
+	return OutputFormat(cryptByte, opt.outputType), nil
 }
 
 func SM4Decrypt(crypt, key string, opts ...OptionFunc) (string, error) {
 	opt := initOption(opts...)
-	srcByte, err := input(crypt, opt.inputType)
+	srcByte, err := InputFormat(crypt, opt.inputType)
 	if err != nil {
 		return "", perror.BizErrSecurityDecrypt.WithError(err)
 	}

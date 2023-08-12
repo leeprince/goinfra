@@ -1,8 +1,10 @@
 package osinfo
 
 import (
+	"encoding/base64"
 	"fmt"
 	"github.com/elastic/go-sysinfo"
+	"github.com/leeprince/goinfra/utils/arrayutil"
 	"strings"
 )
 
@@ -26,6 +28,45 @@ func GetOsUniqueId() (mark string, err error) {
 	macsString := strings.Join(info.MACs, ",")
 	
 	mark = fmt.Sprintf("%s;%s;%s;%s;", uniqueId, kernelVersion, hostname, macsString)
+	
+	return
+}
+
+func GetOsUniqueIdBase64() (mark string, err error) {
+	mark, err = GetOsUniqueId()
+	if err != nil {
+		return
+	}
+	
+	mark = base64.StdEncoding.EncodeToString([]byte(mark))
+	
+	return
+}
+
+func CheckOsUniqueIdBase64(in string) (b bool) {
+	mark, err := GetOsUniqueIdBase64()
+	if err != nil {
+		return
+	}
+	
+	if mark == in {
+		b = true
+		return
+	}
+	
+	return
+}
+
+func CheckOsUniqueIdBase64InArr(inArr []string) (b bool) {
+	mark, err := GetOsUniqueIdBase64()
+	if err != nil {
+		return
+	}
+	
+	if arrayutil.InString(mark, inArr) {
+		b = true
+		return
+	}
 	
 	return
 }
