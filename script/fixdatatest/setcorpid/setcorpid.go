@@ -68,6 +68,8 @@ func initFlags(c *cobra.Command) (opt *option, err error) {
 		CropId:  corpId,
 	}
 
+	fmt.Printf("opt:%+v \n", opt)
+
 	return
 }
 
@@ -77,7 +79,6 @@ func findUserDcacheDataAndSetCorpId(c *cobra.Command, _ []string) (err error) {
 		fmt.Println("initFlags err:", err)
 		return
 	}
-	fmt.Println("opt:", opt)
 
 	if opt.UserId == "" {
 		fmt.Println("opt.UserId empty")
