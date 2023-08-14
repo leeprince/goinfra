@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/leeprince/goinfra/script/fixdcachedata/setcorpid"
+	"github.com/leeprince/goinfra/script/fixdatatest/setcorpid"
 	"github.com/spf13/cobra"
 )
 
