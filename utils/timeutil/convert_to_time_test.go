@@ -4,32 +4,35 @@ import (
 	"fmt"
 	"github.com/leeprince/goinfra/consts"
 	"testing"
-	"time"
 )
 
 /**
  * @Author: prince.lee <leeprince@foxmail.com>
- * @Date:   2023/5/20 11:50
+ * @Date:   2023/8/15 17:45
  * @Desc:
  */
 
-func TestToUnix1(t *testing.T) {
+func TestToTimeUnix(t *testing.T) {
 	var v string
 	v = "2023-05-18 16:17:18"
 	fmt.Println(">>>")
-	fmt.Println(ToLocalUnix(v, consts.TimeLayoutV1))
-	
+	fmt.Println(ToTimeUnix(v, consts.TimeLayoutV1))
+
 	v = "2023-05-18 16:17"
 	fmt.Println(">>>")
-	fmt.Println(ToLocalUnix(v, consts.TimeLayoutV2))
-	
+	fmt.Println(ToTimeUnix(v, consts.TimeLayoutV2))
+
 	v = "2023-05-18 16"
 	fmt.Println(">>>")
-	fmt.Println(ToLocalUnix(v, consts.TimeLayoutV3))
-	
+	fmt.Println(ToTimeUnix(v, consts.TimeLayoutV3))
+
 	v = "2023-05-18"
 	fmt.Println(">>>")
-	fmt.Println(ToLocalUnix(v, consts.TimeLayoutV4))
+	fmt.Println(ToTimeUnix(v, consts.TimeLayoutV4))
+
+	v = "202308"
+	fmt.Println(">>>")
+	fmt.Println(ToTimeUnix(v, consts.TimeLayoutV71))
 }
 
 func TestToLocalUnix(t *testing.T) {
@@ -127,39 +130,26 @@ func TestToLocalUnix(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			gotTimeUnix, err := ToLocalUnix(tt.args.timeStr, tt.args.timeLayout)
+			gotTimeUnix, err := ToTimeUnix(tt.args.timeStr, tt.args.timeLayout)
 			fmt.Println(gotTimeUnix, err)
 		})
 	}
 }
 
-func TestFormat(t *testing.T) {
-	var ts string
-	ts = Year()
-	fmt.Println("Year", ts)
-	
-	ts = Month()
-	fmt.Println("Month", ts)
-	
-	ts = Data()
-	fmt.Println("Data", ts)
-	
-	ts = DataTime()
-	fmt.Println("DataTime", ts)
-	
-	ts = DataTimeF(time.Now())
-	fmt.Println("DataTimeF", ts)
-	
-	ts = DataTimeNanosecond()
-	fmt.Println("DataTimeNanosecond", ts)
-	
-	ts = DataTimeMicrosecond()
-	fmt.Println("DataTimeMicrosecond", ts)
-	
-	ts = DataTimeMillisecond()
-	fmt.Println("DataTimeMillisecond", ts)
-	
-	ts = DataTimeDataSecond()
-	fmt.Println("DataTimeDataSecond", ts)
-	
+func TestUnixToTime(t *testing.T) {
+	timeUnix := int64(1622517600)
+	timeObj := ToTimeByUnix(timeUnix)
+	timeUnixMonthString := MonthT(timeObj)
+	fmt.Println(timeUnixMonthString)
+
+}
+
+func TestGetMonthFirthDay(t *testing.T) {
+	d1 := GetMonthFirthDayTime()
+	fmt.Println(d1)
+}
+
+func TestGetYearFirthMonthTime(t *testing.T) {
+	m1 := GetYearFirthMonthTime()
+	fmt.Println(m1)
 }

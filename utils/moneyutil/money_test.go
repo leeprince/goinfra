@@ -61,3 +61,36 @@ func TestYuanToJiao(t *testing.T) {
 		})
 	}
 }
+
+func TestFenToYuan(t *testing.T) {
+	type args struct {
+		fen int64
+	}
+	tests := []struct {
+		name     string
+		args     args
+		wantYuan string
+	}{
+		{
+			name: "",
+			args: args{
+				fen: 10000,
+			},
+			wantYuan: "100",
+		},
+		{
+			name: "",
+			args: args{
+				fen: 10010,
+			},
+			wantYuan: "100.1",
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if gotYuan := FenToYuan(tt.args.fen); gotYuan != tt.wantYuan {
+				t.Errorf("FenToYuan() = %v, want %v", gotYuan, tt.wantYuan)
+			}
+		})
+	}
+}

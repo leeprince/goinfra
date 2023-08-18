@@ -9,15 +9,29 @@ import "github.com/shopspring/decimal"
  */
 
 func JiaoToYuan(jiao int64) (yuan string) {
-	jiaoD := decimal.NewFromInt(jiao)
-	yuanD := jiaoD.Div(decimal.NewFromInt(10))
-	
-	return yuanD.String()
+	from := decimal.NewFromInt(jiao)
+	toInt := from.Div(decimal.NewFromInt(10))
+
+	return toInt.String()
+}
+
+func FenToYuan(fen int64) (yuan string) {
+	from := decimal.NewFromInt(fen)
+	toInt := from.Div(decimal.NewFromInt(100))
+
+	return toInt.String()
 }
 
 func YuanToJiao(yuan int64) (jiao string) {
-	yuanD := decimal.NewFromInt(yuan)
-	jiaoD := yuanD.Mul(decimal.NewFromInt(10))
-	
-	return jiaoD.String()
+	from := decimal.NewFromInt(yuan)
+	toInt := from.Mul(decimal.NewFromInt(10))
+
+	return toInt.String()
+}
+
+func YuanToFen(yuan int64) (jiao string) {
+	from := decimal.NewFromInt(yuan)
+	toInt := from.Mul(decimal.NewFromInt(100))
+
+	return toInt.String()
 }
