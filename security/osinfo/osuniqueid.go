@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"github.com/elastic/go-sysinfo"
 	"github.com/leeprince/goinfra/utils/arrayutil"
-	"strings"
 )
 
 /**
@@ -25,9 +24,8 @@ func GetOsUniqueId() (mark string, err error) {
 	uniqueId := info.UniqueID
 	kernelVersion := info.KernelVersion
 	hostname := info.Hostname
-	macsString := strings.Join(info.MACs, ",")
 	
-	mark = fmt.Sprintf("%s;%s;%s;%s;", uniqueId, kernelVersion, hostname, macsString)
+	mark = fmt.Sprintf("%s;%s;%s;", uniqueId, kernelVersion, hostname)
 	
 	return
 }
