@@ -34,7 +34,9 @@ func main() {
 	// --- 项目相关
 	http.HandleFunc("/ticketHtmlSample", ticketHtmlSample)
 	http.HandleFunc("/ticketHtmlReadFile", ticketHtmlReadFile)
+	http.HandleFunc("/ticketHtmlReadFile20230820", ticketHtmlReadFile20230820)
 	http.HandleFunc("/ticketHtmlWaitReadFile", ticketHtmlWaitReadFile)
+	http.HandleFunc("/ticketHtmlWaitReadFile20230820", ticketHtmlWaitReadFile20230820)
 	http.HandleFunc("/SupplierHandler.ashx", SupplierHandler)
 	
 	fmt.Printf("Server listening on port:%d ...\n", *port)

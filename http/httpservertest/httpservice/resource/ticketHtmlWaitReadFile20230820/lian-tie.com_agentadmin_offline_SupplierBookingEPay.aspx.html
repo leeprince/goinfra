@@ -1,25 +1,32 @@
 <!DOCTYPE html>
 <!-- saved from url=(0064)https://lian-tie.com/agentadmin/offline/SupplierBookingEPay.aspx -->
-<html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>
 
-</title>
+    </title>
     <script src="./lian-tie.com_agentadmin_offline_SupplierBookingEPay.aspx_files/jquery.min.js"></script>
     <script src="./lian-tie.com_agentadmin_offline_SupplierBookingEPay.aspx_files/clipboard.min.js"></script>
-    <link href="./lian-tie.com_agentadmin_offline_SupplierBookingEPay.aspx_files/bootstrap.css" rel="stylesheet"><link href="./lian-tie.com_agentadmin_offline_SupplierBookingEPay.aspx_files/font-awesome.css" rel="stylesheet"><link href="./lian-tie.com_agentadmin_offline_SupplierBookingEPay.aspx_files/metisMenu.min.css" rel="stylesheet">
+    <link href="./lian-tie.com_agentadmin_offline_SupplierBookingEPay.aspx_files/bootstrap.css" rel="stylesheet">
+    <link href="./lian-tie.com_agentadmin_offline_SupplierBookingEPay.aspx_files/font-awesome.css" rel="stylesheet">
+    <link href="./lian-tie.com_agentadmin_offline_SupplierBookingEPay.aspx_files/metisMenu.min.css" rel="stylesheet">
 
-    
+
     <script src="./lian-tie.com_agentadmin_offline_SupplierBookingEPay.aspx_files/jquery.table2excel.js"></script>
-    
+
     <script src="./lian-tie.com_agentadmin_offline_SupplierBookingEPay.aspx_files/tableExport.js"></script>
-    <link href="./lian-tie.com_agentadmin_offline_SupplierBookingEPay.aspx_files/morris.css" rel="stylesheet"><link href="./lian-tie.com_agentadmin_offline_SupplierBookingEPay.aspx_files/sb-admin-2.css" rel="stylesheet">
+    <link href="./lian-tie.com_agentadmin_offline_SupplierBookingEPay.aspx_files/morris.css" rel="stylesheet">
+    <link href="./lian-tie.com_agentadmin_offline_SupplierBookingEPay.aspx_files/sb-admin-2.css" rel="stylesheet">
     <script src="./lian-tie.com_agentadmin_offline_SupplierBookingEPay.aspx_files/bootstrap-paginator.js"></script>
-    
+
 
     <script src="./lian-tie.com_agentadmin_offline_SupplierBookingEPay.aspx_files/bootstrap.js"></script>
 
     <link href="./lian-tie.com_agentadmin_offline_SupplierBookingEPay.aspx_files/bootstrap-table.css" rel="stylesheet">
     <script src="./lian-tie.com_agentadmin_offline_SupplierBookingEPay.aspx_files/bootstrap-table.js"></script>
-    <link href="./lian-tie.com_agentadmin_offline_SupplierBookingEPay.aspx_files/bootstrap-datetimepicker.min.css" rel="stylesheet">
+    <link href="./lian-tie.com_agentadmin_offline_SupplierBookingEPay.aspx_files/bootstrap-datetimepicker.min.css"
+          rel="stylesheet">
 
     <script src="./lian-tie.com_agentadmin_offline_SupplierBookingEPay.aspx_files/bootstrap-datetimepicker.js"></script>
     <script src="./lian-tie.com_agentadmin_offline_SupplierBookingEPay.aspx_files/bootstrap-datetimepicker.zh-CN.js"></script>
@@ -84,7 +91,7 @@
         }
 
         radio {
-            transform: scale(5,5);
+            transform: scale(5, 5);
         }
 
         .bg-grey {
@@ -101,7 +108,7 @@
             border-radius: 6px;
         }
     </style>
-    
+
     <!-- Bootstrap Core CSS -->
 
     <!-- MetisMenu CSS -->
@@ -140,7 +147,6 @@
         }
 
 
-
         .inputlengthMaxAliPayTradeNo {
             width: 300px;
             height: 28px;
@@ -175,7 +181,7 @@
         }
 
         radio {
-            transform: scale(5,5);
+            transform: scale(5, 5);
         }
 
         .bg-grey {
@@ -206,7 +212,7 @@
             width: 150px;
             min-width: 150px;
             max-width: 180px;
-            transform: translate(-50%,-50%);
+            transform: translate(-50%, -50%);
             z-index: 99999;
             text-align: center;
             padding-left: 10px;
@@ -268,6 +274,7 @@
     </style>
     <script>
         var newOrder = 0;
+
         function ConfirmSetBookSuc(orderNumber) {
             var ticketPriceDiff = $("#TicketPriceMaxDiff").text();
             if (ticketPriceDiff != null && ticketPriceDiff.indexOf("票价相差太大") >= 0) {
@@ -287,8 +294,7 @@
                     alert("取票号必须是10位！");
                     return;
                 }
-            }
-            else if ("EKW".length == 3) {
+            } else if ("EKW".length == 3) {
                 eOrderNumber = "EKW" + $("#EOrderNumberInput" + orderNumber + "").val();
                 if (eOrderNumber.length != 10) {
                     alert("取票号必须是10位！");
@@ -310,8 +316,7 @@
             var permition = "出票,电子支付,结算,不出护照,先占座,可转单,抢票";
             if (permition != null && permition != "" && permition.indexOf("电子支付") == -1) {
                 tradeNo = "现金票出票";
-            }
-            else {
+            } else {
                 if (tradeNo == null || tradeNo == "") {
                     tradeNo = $("input[name='tradeNoRadios']:checked").val();
                 }
@@ -363,17 +368,14 @@
 
                     if (wopuValue == "上铺") {
                         upSeat = upSeat + 1;
-                    }
-                    else if (wopuValue == "中铺") {
+                    } else if (wopuValue == "中铺") {
                         midSeat = midSeat + 1;
-                    }
-                    else if (wopuValue == "下铺") {
+                    } else if (wopuValue == "下铺") {
                         downSeat = downSeat + 1;
                     }
 
                     seatNo += wopuValue;
-                }
-                else if (seatNo.length > 5) {
+                } else if (seatNo.length > 5) {
                     alert("座位号有误");
                 }
 
@@ -392,7 +394,14 @@
                     return;
                 }
                 price += Number(ticketPrice);
-                var json = { "tid": tid, "bookTid": trs[j].bookTid, "seatType": seatType, "ticketPrice": ticketPrice, "coachNo": coachNo, "seatNo": seatNo };
+                var json = {
+                    "tid": tid,
+                    "bookTid": trs[j].bookTid,
+                    "seatType": seatType,
+                    "ticketPrice": ticketPrice,
+                    "coachNo": coachNo,
+                    "seatNo": seatNo
+                };
 
                 tickets.push(json)
             }
@@ -436,8 +445,6 @@
             var eOrderNumber = "";
 
 
-        
-
             var price = 0;
             var hasTip = false;
 
@@ -473,11 +480,9 @@
 
                     if (wopuValue == "上铺") {
                         upSeat = upSeat + 1;
-                    }
-                    else if (wopuValue == "中铺") {
+                    } else if (wopuValue == "中铺") {
                         midSeat = midSeat + 1;
-                    }
-                    else if (wopuValue == "下铺") {
+                    } else if (wopuValue == "下铺") {
                         downSeat = downSeat + 1;
                     }
 
@@ -497,7 +502,14 @@
                     return;
                 }
                 price += Number(ticketPrice);
-                var json = { "tid": tid, "bookTid": trs[j].bookTid, "seatType": seatType, "ticketPrice": ticketPrice, "coachNo": coachNo, "seatNo": seatNo };
+                var json = {
+                    "tid": tid,
+                    "bookTid": trs[j].bookTid,
+                    "seatType": seatType,
+                    "ticketPrice": ticketPrice,
+                    "coachNo": coachNo,
+                    "seatNo": seatNo
+                };
 
                 tickets.push(json)
             }
@@ -547,8 +559,7 @@
             var selectSeatInfo = $('#SelectSeatInfoTip_' + orderid).text();
             if (selectSeatInfo != null && selectSeatInfo != "") {
                 $("#seatTypeNotMatchRadio").show(); //.attr("display","none");
-            }
-            else {
+            } else {
                 $("#seatTypeNotMatchRadio").hide();
             }
 
@@ -639,8 +650,7 @@
                         for (var i = 0; i < trades.length; i++) {
                             if (i == 0 && trades[0].split(' ')[0] != "待客服人工处理") {
                                 tradeNoListHtml += "<label><input type='radio'  style=\"transform: scale(1.2,1.2);\" onclick=\"radioClick(this,'" + orderNumber + "')\" name='tradeNoRadios' value='" + trades[i] + "' checked='checked' />" + trades[i] + "</label>";
-                            }
-                            else {
+                            } else {
                                 tradeNoListHtml += "<label  style='margin-left:20px'><input type='radio'  style=\"transform: scale(1.2,1.2); \" onclick=\"radioClick(this,'" + orderNumber + "')\" name='tradeNoRadios' value='" + trades[i] + "' />" + trades[i] + "</label>";
                             }
                         }
@@ -651,8 +661,7 @@
                             $("#AliPayTradeNoOther" + orderNumber + "").val(trades[0]);
                         else
                             tradeNoListHtml += " <input type=\"button\" onclick=\"GetAliTradeNo('" + orderNumber + "')\" class=\"btn btn-primary\" value='刷新获取流水'></input>" + "<input type=\"button\" onclick=\"AlipayLoginByQR()\" class=\"btn btn-primary\" value='扫码登录支付宝'></input>" + "<img id='AlipayLoginQR' style='display:none'>";
-                    }
-                    else {
+                    } else {
                         tradeNoListHtml += "<span class=\"radio-inline\">";
 
                         tradeNoListHtml += "<label><input type='radio'  style=\"transform: scale(1.2,1.2);\" onclick=\"radioClick(this,'" + orderNumber + "')\" name='tradeNoRadios' value='待客服人工处理' />待客服人工处理</label>";
@@ -700,12 +709,10 @@
                         $("#AlipayLoginQR").css("display", "");
                         $("#AlipayLoginQR").attr("src", "data:image/png;base64," + json.QRString);
                         return;
-                    }
-                    else if (json.Code == "2") {
+                    } else if (json.Code == "2") {
                         alert("恭喜，扫码登录成功");
                         return;
-                    }
-                    else {
+                    } else {
                         alert(json.FailMsg);
                         return;
                     }
@@ -756,7 +763,6 @@
                 var ticketPrice = trs[j].querySelector("td:nth-child(8)>input").value;
 
 
-
                 if (!(/(^(([1-9]{1}\d*)|(0{1}))(\.\d{1})$|^(([1-9]{1}\d*)|(0{1}))$)/.test(ticketPrice))) {
 
                     return;
@@ -783,8 +789,7 @@
                         for (var i = 0; i < trades.length; i++) {
                             if (i == 0 && trades[0].split(' ')[0] != "待客服人工处理") {
                                 tradeNoListHtml += "<label><input type='radio'  style=\"transform: scale(1.2,1.2);\" onclick=\"radioClick(this,'" + orderNumber + "')\" name='tradeNoRadios' value='" + trades[i] + "' checked='checked' />" + trades[i] + "</label>";
-                            }
-                            else {
+                            } else {
                                 tradeNoListHtml += "<label style='margin-left:20px'><input type='radio' style=\"transform: scale(1.2,1.2);  \" onclick=\"radioClick(this,'" + orderNumber + "')\" name='tradeNoRadios' value='" + trades[i] + "' />" + trades[i] + "</label>";
                             }
                         }
@@ -795,8 +800,7 @@
                             $("#AliPayTradeNoOther" + orderNumber + "").val(trades[0]);
                         else
                             tradeNoListHtml += " <input type=\"button\" onclick=\"GetAliTradeNo('" + orderNumber + "')\" class=\"btn btn-primary\" value='刷新获取流水'></input>" + "<input type=\"button\" onclick=\"AlipayLoginByQR()\" class=\"btn btn-primary\" value='扫码登录支付宝'></input>" + "<img id='AlipayLoginQR' style='display:none'>";
-                    }
-                    else {
+                    } else {
                         tradeNoListHtml += "<span class=\"radio-inline\">";
 
                         tradeNoListHtml += "<label><input type='radio'  style=\"transform: scale(1.2,1.2);\" onclick=\"radioClick(this,'" + orderNumber + "')\" name='tradeNoRadios' value='待客服人工处理' />待客服人工处理</label>";
@@ -818,7 +822,6 @@
                 },
                 "text");
         }
-
 
 
         function radioClick(a, orderNumber) {
@@ -935,6 +938,7 @@
         function SetTicketPrice(a, b) {
             $("#TicketPrice" + b).val($(a).text());
         }
+
         //复制乘客证件号到剪切板的方法
         function CopypassengerNo(passengerNo, passengerName) {
             var oInput = document.createElement('input');
@@ -1071,7 +1075,6 @@
                     }
 
 
-
                     var details = data.split("||||");
 
                     if (details[0] != "1" && CheckExistOrderNumber(data))
@@ -1142,6 +1145,7 @@
                 },
                 "text");
         }
+
         function SetSupplierSetting(voiceFlag, ticketNo) {
 
 
@@ -1211,8 +1215,7 @@
 
             if (timeSecond > 0) {
                 //Timer(time);
-            }
-            else {
+            } else {
                 $("#" + id).text("已过期,请设置出票失败");
                 //clearInterval(intervalTimer);
 
@@ -1241,685 +1244,1126 @@
         }
 
 
-
     </script>
-<script charset="utf-8" async="" src="./lian-tie.com_agentadmin_offline_SupplierBookingEPay.aspx_files/pk1.js" id="LBFnode"></script><script charset="utf-8" async="" src="./lian-tie.com_agentadmin_offline_SupplierBookingEPay.aspx_files/i.js" id="_da_market"></script></head>
-<body class=""><iframe src="javascript:false" title="" role="presentation" frameborder="0" tabindex="-1" style="position: absolute; width: 0px; height: 0px; border: 0px;" src="./lian-tie.com_agentadmin_offline_SupplierBookingEPay.aspx_files/saved_resource.html"></iframe><style type="text/css">.WPA3-SELECT-PANEL { z-index:2147483647; width:463px; height:292px; margin:0; padding:0; border:1px solid #d4d4d4; background-color:#fff; border-radius:5px; box-shadow:0 0 15px #d4d4d4;}.WPA3-SELECT-PANEL * { position:static; z-index:auto; top:auto; left:auto; right:auto; bottom:auto; width:auto; height:auto; max-height:auto; max-width:auto; min-height:0; min-width:0; margin:0; padding:0; border:0; clear:none; clip:auto; background:transparent; color:#333; cursor:auto; direction:ltr; filter:; float:none; font:normal normal normal 12px "Helvetica Neue", Arial, sans-serif; line-height:16px; letter-spacing:normal; list-style:none; marks:none; overflow:visible; page:auto; quotes:none; -o-set-link-source:none; size:auto; text-align:left; text-decoration:none; text-indent:0; text-overflow:clip; text-shadow:none; text-transform:none; vertical-align:baseline; visibility:visible; white-space:normal; word-spacing:normal; word-wrap:normal; -webkit-box-shadow:none; -moz-box-shadow:none; -ms-box-shadow:none; -o-box-shadow:none; box-shadow:none; -webkit-border-radius:0; -moz-border-radius:0; -ms-border-radius:0; -o-border-radius:0; border-radius:0; -webkit-opacity:1; -moz-opacity:1; -ms-opacity:1; -o-opacity:1; opacity:1; -webkit-outline:0; -moz-outline:0; -ms-outline:0; -o-outline:0; outline:0; -webkit-text-size-adjust:none; font-family:Microsoft YaHei,Simsun;}.WPA3-SELECT-PANEL a { cursor:auto;}.WPA3-SELECT-PANEL .WPA3-SELECT-PANEL-TOP { height:25px;}.WPA3-SELECT-PANEL .WPA3-SELECT-PANEL-CLOSE { float:right; display:block; width:47px; height:25px; background:url(http://combo.b.qq.com/crm/wpa/release/3.3/wpa/views/SelectPanel-sprites.png) no-repeat;}.WPA3-SELECT-PANEL .WPA3-SELECT-PANEL-CLOSE:hover { background-position:0 -25px;}.WPA3-SELECT-PANEL .WPA3-SELECT-PANEL-MAIN { padding:23px 20px 45px;}.WPA3-SELECT-PANEL .WPA3-SELECT-PANEL-GUIDE { margin-bottom:42px; font-family:"Microsoft Yahei"; font-size:16px;}.WPA3-SELECT-PANEL .WPA3-SELECT-PANEL-SELECTS { width:246px; height:111px; margin:0 auto;}.WPA3-SELECT-PANEL .WPA3-SELECT-PANEL-CHAT { float:right; display:block; width:88px; height:111px; background:url(http://combo.b.qq.com/crm/wpa/release/3.3/wpa/views/SelectPanel-sprites.png) no-repeat 0 -80px;}.WPA3-SELECT-PANEL .WPA3-SELECT-PANEL-CHAT:hover { background-position:-88px -80px;}.WPA3-SELECT-PANEL .WPA3-SELECT-PANEL-AIO-CHAT { float:left;}.WPA3-SELECT-PANEL .WPA3-SELECT-PANEL-QQ { display:block; width:76px; height:76px; margin:6px; background:url(http://combo.b.qq.com/crm/wpa/release/3.3/wpa/views/SelectPanel-sprites.png) no-repeat -50px 0;}.WPA3-SELECT-PANEL .WPA3-SELECT-PANEL-QQ-ANONY { background-position:-130px 0;}.WPA3-SELECT-PANEL .WPA3-SELECT-PANEL-LABEL { display:block; padding-top:10px; color:#00a2e6; text-align:center;}.WPA3-SELECT-PANEL .WPA3-SELECT-PANEL-BOTTOM { padding:0 20px; text-align:right;}.WPA3-SELECT-PANEL .WPA3-SELECT-PANEL-INSTALL { color:#8e8e8e;}</style>
-    <form method="post" action="https://lian-tie.com/agentadmin/offline/SupplierBookingEPay.aspx" id="form1">
-<div class="aspNetHidden">
-<input type="hidden" name="__VIEWSTATE" id="__VIEWSTATE" value="/wEPDwULLTEyOTIzNTEwMTQPZBYCZg9kFgICAQ9kFggCAQ8PFgYeBFRleHQFBuW8gOWQrx4JRm9yZUNvbG9yCo0BHgRfIVNCAgRkZAICDw8WBh8ABQNFS1cfAQqNAR8CAgRkZAIDDw8WAh8ABQblnKjnur9kZAIEDw8WAh4HVmlzaWJsZWhkZGQ68LMvbAuHUob4uYlXQGU1MhmHMg==">
-</div>
+    <script charset="utf-8" async="" src="./lian-tie.com_agentadmin_offline_SupplierBookingEPay.aspx_files/pk1.js"
+            id="LBFnode"></script>
+    <script charset="utf-8" async="" src="./lian-tie.com_agentadmin_offline_SupplierBookingEPay.aspx_files/i.js"
+            id="_da_market"></script>
+</head>
+<body class="">
+<iframe src="javascript:false" title="" role="presentation" frameborder="0" tabindex="-1"
+        style="position: absolute; width: 0px; height: 0px; border: 0px;"
+        src="./lian-tie.com_agentadmin_offline_SupplierBookingEPay.aspx_files/saved_resource.html"></iframe>
+<style type="text/css">.WPA3-SELECT-PANEL {
+    z-index: 2147483647;
+    width: 463px;
+    height: 292px;
+    margin: 0;
+    padding: 0;
+    border: 1px solid #d4d4d4;
+    background-color: #fff;
+    border-radius: 5px;
+    box-shadow: 0 0 15px #d4d4d4;
+}
 
-<div class="aspNetHidden">
+.WPA3-SELECT-PANEL * {
+    position: static;
+    z-index: auto;
+    top: auto;
+    left: auto;
+    right: auto;
+    bottom: auto;
+    width: auto;
+    height: auto;
+    max-height: auto;
+    max-width: auto;
+    min-height: 0;
+    min-width: 0;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    clear: none;
+    clip: auto;
+    background: transparent;
+    color: #333;
+    cursor: auto;
+    direction: ltr;
+    filter:;
+    float: none;
+    font: normal normal normal 12px "Helvetica Neue", Arial, sans-serif;
+    line-height: 16px;
+    letter-spacing: normal;
+    list-style: none;
+    marks: none;
+    overflow: visible;
+    page: auto;
+    quotes: none;
+    -o-set-link-source: none;
+    size: auto;
+    text-align: left;
+    text-decoration: none;
+    text-indent: 0;
+    text-overflow: clip;
+    text-shadow: none;
+    text-transform: none;
+    vertical-align: baseline;
+    visibility: visible;
+    white-space: normal;
+    word-spacing: normal;
+    word-wrap: normal;
+    -webkit-box-shadow: none;
+    -moz-box-shadow: none;
+    -ms-box-shadow: none;
+    -o-box-shadow: none;
+    box-shadow: none;
+    -webkit-border-radius: 0;
+    -moz-border-radius: 0;
+    -ms-border-radius: 0;
+    -o-border-radius: 0;
+    border-radius: 0;
+    -webkit-opacity: 1;
+    -moz-opacity: 1;
+    -ms-opacity: 1;
+    -o-opacity: 1;
+    opacity: 1;
+    -webkit-outline: 0;
+    -moz-outline: 0;
+    -ms-outline: 0;
+    -o-outline: 0;
+    outline: 0;
+    -webkit-text-size-adjust: none;
+    font-family: Microsoft YaHei, Simsun;
+}
 
-	<input type="hidden" name="__VIEWSTATEGENERATOR" id="__VIEWSTATEGENERATOR" value="22150E52">
-	<input type="hidden" name="__EVENTVALIDATION" id="__EVENTVALIDATION" value="/wEdAAOHkCpn2PuhtFw5mIEWqbt6q24nq1Uf4Kh8sFL5IlzSah2p2pLeN9O0TVKjduf/dskk0sJO/8ygQ05EOaOTDyz1hKqi+g==">
-</div>
-        <div id="wrapper">
+.WPA3-SELECT-PANEL a {
+    cursor: auto;
+}
 
-            <!-- Navigation -->
-            
+.WPA3-SELECT-PANEL .WPA3-SELECT-PANEL-TOP {
+    height: 25px;
+}
 
-            <!-- /.dropdown-user -->
+.WPA3-SELECT-PANEL .WPA3-SELECT-PANEL-CLOSE {
+    float: right;
+    display: block;
+    width: 47px;
+    height: 25px;
+    background: url(http://combo.b.qq.com/crm/wpa/release/3.3/wpa/views/SelectPanel-sprites.png) no-repeat;
+}
 
-            <!-- /.dropdown -->
+.WPA3-SELECT-PANEL .WPA3-SELECT-PANEL-CLOSE:hover {
+    background-position: 0 -25px;
+}
 
-            <!-- /.navbar-top-links -->
+.WPA3-SELECT-PANEL .WPA3-SELECT-PANEL-MAIN {
+    padding: 23px 20px 45px;
+}
 
-            <nav class="navbar navbar-default navbar-static-top" role="navigation" style="margin-bottom: 0">
-                <div class="navbar-header">
-                    <a class="navbar-brand" href="https://lian-tie.com/agentadmin/offline/SupplierBookingEPay.aspx#" style="font-size: 25px; margin-left: 10px;"><b>代售点管理后台</b></a>
-                    <span style="vertical-align: central;">
-                        <input type="submit" name="ctl00$ActivateBtn" value="一键清零" onclick=" return ActivateConfirm(this);" id="ActivateBtn" class="btn-primary" style="margin-top: 5px;">
+.WPA3-SELECT-PANEL .WPA3-SELECT-PANEL-GUIDE {
+    margin-bottom: 42px;
+    font-family: "Microsoft Yahei";
+    font-size: 16px;
+}
+
+.WPA3-SELECT-PANEL .WPA3-SELECT-PANEL-SELECTS {
+    width: 246px;
+    height: 111px;
+    margin: 0 auto;
+}
+
+.WPA3-SELECT-PANEL .WPA3-SELECT-PANEL-CHAT {
+    float: right;
+    display: block;
+    width: 88px;
+    height: 111px;
+    background: url(http://combo.b.qq.com/crm/wpa/release/3.3/wpa/views/SelectPanel-sprites.png) no-repeat 0 -80px;
+}
+
+.WPA3-SELECT-PANEL .WPA3-SELECT-PANEL-CHAT:hover {
+    background-position: -88px -80px;
+}
+
+.WPA3-SELECT-PANEL .WPA3-SELECT-PANEL-AIO-CHAT {
+    float: left;
+}
+
+.WPA3-SELECT-PANEL .WPA3-SELECT-PANEL-QQ {
+    display: block;
+    width: 76px;
+    height: 76px;
+    margin: 6px;
+    background: url(http://combo.b.qq.com/crm/wpa/release/3.3/wpa/views/SelectPanel-sprites.png) no-repeat -50px 0;
+}
+
+.WPA3-SELECT-PANEL .WPA3-SELECT-PANEL-QQ-ANONY {
+    background-position: -130px 0;
+}
+
+.WPA3-SELECT-PANEL .WPA3-SELECT-PANEL-LABEL {
+    display: block;
+    padding-top: 10px;
+    color: #00a2e6;
+    text-align: center;
+}
+
+.WPA3-SELECT-PANEL .WPA3-SELECT-PANEL-BOTTOM {
+    padding: 0 20px;
+    text-align: right;
+}
+
+.WPA3-SELECT-PANEL .WPA3-SELECT-PANEL-INSTALL {
+    color: #8e8e8e;
+}</style>
+<form method="post" action="https://lian-tie.com/agentadmin/offline/SupplierBookingEPay.aspx" id="form1">
+    <div class="aspNetHidden">
+        <input type="hidden" name="__VIEWSTATE" id="__VIEWSTATE"
+               value="/wEPDwULLTEyOTIzNTEwMTQPZBYCZg9kFgICAQ9kFggCAQ8PFgYeBFRleHQFBuW8gOWQrx4JRm9yZUNvbG9yCo0BHgRfIVNCAgRkZAICDw8WBh8ABQNFS1cfAQqNAR8CAgRkZAIDDw8WAh8ABQblnKjnur9kZAIEDw8WAh4HVmlzaWJsZWhkZGQ68LMvbAuHUob4uYlXQGU1MhmHMg==">
+    </div>
+
+    <div class="aspNetHidden">
+
+        <input type="hidden" name="__VIEWSTATEGENERATOR" id="__VIEWSTATEGENERATOR" value="22150E52">
+        <input type="hidden" name="__EVENTVALIDATION" id="__EVENTVALIDATION"
+               value="/wEdAAOHkCpn2PuhtFw5mIEWqbt6q24nq1Uf4Kh8sFL5IlzSah2p2pLeN9O0TVKjduf/dskk0sJO/8ygQ05EOaOTDyz1hKqi+g==">
+    </div>
+    <div id="wrapper">
+
+        <!-- Navigation -->
+
+
+        <!-- /.dropdown-user -->
+
+        <!-- /.dropdown -->
+
+        <!-- /.navbar-top-links -->
+
+        <nav class="navbar navbar-default navbar-static-top" role="navigation" style="margin-bottom: 0">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="https://lian-tie.com/agentadmin/offline/SupplierBookingEPay.aspx#"
+                   style="font-size: 25px; margin-left: 10px;"><b>代售点管理后台</b></a>
+                <span style="vertical-align: central;">
+                        <input type="submit" name="ctl00$ActivateBtn" value="一键清零"
+                               onclick=" return ActivateConfirm(this);" id="ActivateBtn" class="btn-primary"
+                               style="margin-top: 5px;">
                     </span>
-                </div>
-                <ul class="nav navbar-top-links navbar-right">
-
-                    
-                    <li>
-                        <marquee id="noticeId" style="width: 580px; color: red; margin-left: 40px;" loop="-1" direction="left" scrollamount="8" onmouseover="this.stop()" onmouseout="this.start()">【通知】操作订单不允许自动化出票，请各位代售点人员注意一下。</marquee>
-                    </li>
-                    <li><span style="margin-right: 10px;"></span>声音： 
-                        <span id="VoiceLabel" style="color:Red;">开启</span></li>
-                    <li><span style="margin-right: 10px;"></span>取票号配置： 
-                        <span id="TicketNoLabel" style="color:Red;">EKW</span></li>
-                    
-
-                    <li>用户名：EP213|深圳市健行天下票务代理有限公司|EP213<span style="margin-right: 10px;"></span>当前状态： 
-                        <span id="StatusLabel">在线</span>
-                    </li>
-
-                    <li style="margin-left: 10px; margin-right: 10px;">
-                        
-                        <input type="submit" name="ctl00$OfflineBtn" value="下线" onclick=" return OfflineConfirm();" id="OfflineBtn" class="btn btn-danger">
-                    </li>
-
-                    <li class="dropdown">
-                        <a class="dropdown-toggle" data-toggle="dropdown" href="https://lian-tie.com/agentadmin/offline/SupplierBookingEPay.aspx#">
-                            <i class="fa fa-user fa-fw"></i><i class="fa fa-caret-down"></i>
-                        </a>
-                        <ul class="dropdown-menu dropdown-user">
-
-
-                            
-
-                            <li>
-                                <a onclick="SetSupplierSetting(&#39;开启&#39;,&#39;EKW&#39;)"><i class="fa fa-user fa-fw"></i>用户配置</a>
-
-                            </li>
-
-                            
-
-                            <li class="divider"></li>
-                            <li><a href="https://lian-tie.com/agentadmin/Logout.aspx"><i class="fa fa-sign-out fa-fw"></i>退出</a>
-                            </li>
-                        </ul>
-                    </li>
-                </ul>
-
-                <div class="navbar-default sidebar" role="navigation">
-                    <div class="sidebar-nav navbar-collapse">
-                        <ul class="nav" id="side-menu" style="font-size: 20px;">
-
-                            
-                            <li>
-                                <a href="https://lian-tie.com/agentadmin/offline/SupplierBookingEPay.aspx?id="><i class="fa fa-bars fa-fw"></i>订单处理<span class="badge bg-red" id="TicketingCount" style="">1</span></a>
-
-                            </li>
-                            <li>
-                                <a href="https://lian-tie.com/agentadmin/offline/SupplierOrderList.aspx?id="><i class="fa fa-search nav-icon" style="margin-left: 4px; padding-right: 2px;"></i>订单查询</a>
-                            </li>
-
-                            <li>
-                                <a href="https://lian-tie.com/agentadmin/offline/TicketErrorList.aspx?id="><i class="fa fa-question-circle nav-icon" style="margin-left: 6px; padding-right: 3px;"></i>问题订单<span class="badge bg-red" id="TicketErrorCount" style="display: none;"></span></a>
-                            </li>
-                            <li>
-                                <a href="https://lian-tie.com/agentadmin/offline/CompareOrder.aspx?id="><i class="fa fa-warning" style="margin-left: 4px; padding-right: 2px;"></i>智能检查 </a>
-                            </li>
-                            <li>
-                                <a href="https://lian-tie.com/agentadmin/offline/NoticeList.aspx?id="><i class="fa fa-bell nav-icon" style="margin-left: 4px; padding-right: 2px;"></i>公告通知<span class="badge bg-red" id="NoticeListCount"></span></a>
-                            </li>
-
-
-                            
-                            <li>
-                                <a href="https://lian-tie.com/agentadmin/offline/Bill.aspx?id="><i class="fa fa-bars fa-fw"></i>结算查询</a>
-                            </li>
-                            <li>
-                                <a href="https://lian-tie.com/agentadmin/offline/ExceptionBill.aspx?id="><i class="fa fa-bars fa-fw"></i>异常查询</a>
-                            </li>
-                            
-                              
-                             <li>
-                                <a href="https://lian-tie.com/agentadmin/offline/UserInfo.aspx?id="><i class="fa fa-user fa-1x" style="margin-left: 5px; padding-right: 5px;"></i>账号管理</a>
-                            </li>
-
-                             
-                        </ul>
-                    </div>
-                    <!-- /.sidebar-collapse -->
-                </div>
-                <!-- /.navbar-static-side -->
-            </nav>
-
-            <div class="modal fade" id="loadingModal">
-                <div style="width: 200px; height: 20px; z-index: 20000; position: absolute; text-align: center; left: 50%; top: 50%; margin-left: -100px; margin-top: -10px">
-                    <div class="progress progress-striped active" style="margin-bottom: 0;">
-                        <div class="progress-bar" style="width: 100%;"></div>
-                    </div>
-                    <h5>正在查询请稍后...</h5>
-                </div>
             </div>
-
-            <div>
-                
-
-    <audio controls="controls" id="audioMp" preload="" hidden="">
-        <source src="../video/audioMp.mp3">
-    </audio>
+            <ul class="nav navbar-top-links navbar-right">
 
 
-    <div id="page-wrapper" style="font-size: 18px;">
+                <li>
+                    <marquee id="noticeId" style="width: 580px; color: red; margin-left: 40px;" loop="-1"
+                             direction="left" scrollamount="8" onmouseover="this.stop()" onmouseout="this.start()">
+                        【通知】操作订单不允许自动化出票，请各位代售点人员注意一下。
+                    </marquee>
+                </li>
+                <li><span style="margin-right: 10px;"></span>声音：
+                    <span id="VoiceLabel" style="color:Red;">开启</span></li>
+                <li><span style="margin-right: 10px;"></span>取票号配置：
+                    <span id="TicketNoLabel" style="color:Red;">EKW</span></li>
 
 
-        <!-- /.row -->
-        <div id="barcon" name="barcon" style="display: none"></div>
+                <li>用户名：EP213|深圳市健行天下票务代理有限公司|EP213<span style="margin-right: 10px;"></span>当前状态：
+                    <span id="StatusLabel">在线</span>
+                </li>
 
-        
-        <div class="row" style="margin-left: 3px; margin-right: 3px; font-size: 18px; margin-top: 10px;">
-            <table class="table   table-bordered">
-                <thead>
-                    <tr class="success" style="display: none;">
-                        <td>序号</td>
-                        <td>订单号</td>
-                        <td>发车日期</td>
-                        <td>车次</td>
-                        <td>发到站</td>
-                        <td>坐席</td>
-                        <td>总票款</td>
-                    </tr>
-                </thead>
-                <tbody id="PreBookSucOrderTable"></tbody>
-            </table>
-        </div>
-        
+                <li style="margin-left: 10px; margin-right: 10px;">
 
-        <div class="row" style="margin-left: 3px; margin-right: 3px; font-size: 18px;">
-            <table class="table   table-bordered">
-                <thead>
-                    <tr class="success">
-                        <td>序号</td>
-                        <td>订单号</td>
-                        <td>发车日期</td>
-                        <td>车次</td>
-                        <td>发到站</td>
-                        <td>坐席</td>
-                        <td>总票款</td>
-                    </tr>
-                </thead>
-                <tbody id="BookingOrderTable">
-                <tr data-toggle="collapse" href="#26286937" aria-expanded="false" aria-controls="collapseOne" style="height:80px;" class=""><td>1【占座票】</td><td style=" word-wrap:break-word; word-break:break-all; width:250px;max-width:250px;  " name="orderNumberTd">HT20230819184809OH63YOGY1426</td><td class="maxRedFont">2023-08-20</td><td class="maxRedFont">G6477</td> <td class="maxFont">长沙南(CWQ 07:05)-&gt;娄底南(UOQ)</td><td class="maxRedFont">二等座</td><td>57.5</td></tr><tr id="26286937" class="panel-collapse collapse bg-grey in"><td colspan="9" style="padding:20px;padding-bottom:30px"><table class="table  table-bordered maxFont"><thead><tr style="background-color: #dff0f8 "><td>证件类型</td><td>姓名</td><td>证件号码</td><td>票类型</td><td>坐席</td><td>车厢</td><td>座位号</td><td>票价</td></tr></thead><tbody id="BookSucTBodyHT20230819184809OH63YOGY1426"><tr><td colspan="8" style="padding:5px;"><span class="maxRedFont" id="SelectSeatInfoTip_HT20230819184809OH63YOGY1426">优先1张F座</span><span style="float:right;"> </span></td></tr><tr id="27211213_1" expectupseat="0" expectdownseat="0" expectmidseat="0" style="height:60px;"><td>ED 二代</td><td>刘飞</td><td><span class="black">430902</span> <span class="maxRedFont ">19900713 </span><span class="black">8807</span>&nbsp;&nbsp;&nbsp;&nbsp;<a id="copy430902199007138807" class="copy" onclick="CopypassengerNo(&quot;430902199007138807&quot;,&quot;刘飞&quot;)">复制<!-- a--></a></td><td class="">成人票</td><td><input type="text" class="  inputlength " name="seatType" value="二等座"></td><td> <input type="text" class="  inputlengtha" name="coachNo" value="">车厢</td><td> <input type="text" class="  inputlengtha" name="seatNo" value="">号</td><td><input type="text" class="inputlengthPrice maxRedFont " name="ticketPrice" id="TicketPriceHT20230819184809OH63YOGY14261" value="57.5"><a onclick="SetTicketPrice(this,&quot;HT20230819184809OH63YOGY14261&quot;)" class="maxRedFont">57.5</a>元</td></tr><tr><td colspan="8"><div style="width:100%;height:50px;"><span style="margin-left:10%;">手机号：<span class="redMobile">188-7377-8893</span><a id="copyHT20230819184809OH63YOGY142618873778893" class="copy" onclick="CopyMobie(&quot;18873778893&quot;)"> 复制 </a></span></div><div style="width:100%;"><span style="float:right; margin-right:100px;"><input type="button" onclick="SetPreBookSuc(&quot;HT20230819184809OH63YOGY1426&quot;)" class="btn btn-success btn-lg" value="占座成功锁单"> <input type="button" onclick="SetPreBookFail(&quot;HT20230819184809OH63YOGY1426&quot;)" class="btn btn-danger btn-lg" value="占座失败"></span></div></td></tr></tbody></table></td></tr>
-</tbody>
-            </table>
-        </div>
+                    <input type="submit" name="ctl00$OfflineBtn" value="下线" onclick=" return OfflineConfirm();"
+                           id="OfflineBtn" class="btn btn-danger">
+                </li>
+
+                <li class="dropdown">
+                    <a class="dropdown-toggle" data-toggle="dropdown"
+                       href="https://lian-tie.com/agentadmin/offline/SupplierBookingEPay.aspx#">
+                        <i class="fa fa-user fa-fw"></i><i class="fa fa-caret-down"></i>
+                    </a>
+                    <ul class="dropdown-menu dropdown-user">
 
 
-        <!-- /.row -->
-    </div>
-    <div class="modal fade form-horizontal" id="SetSupplierSetting" tabindex="-1" role="dialog" aria-labelledby="ActionLabel" style="font-size: 18px;">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">×</span>
-                    </button>
-                    <h4 class="modal-title" id="myModalLabel">常用设置</h4>
+                        <li>
+                            <a onclick="SetSupplierSetting(&#39;开启&#39;,&#39;EKW&#39;)"><i
+                                    class="fa fa-user fa-fw"></i>用户配置</a>
+
+                        </li>
+
+
+                        <li class="divider"></li>
+                        <li><a href="https://lian-tie.com/agentadmin/Logout.aspx"><i class="fa fa-sign-out fa-fw"></i>退出</a>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+
+            <div class="navbar-default sidebar" role="navigation">
+                <div class="sidebar-nav navbar-collapse">
+                    <ul class="nav" id="side-menu" style="font-size: 20px;">
+
+
+                        <li>
+                            <a href="https://lian-tie.com/agentadmin/offline/SupplierBookingEPay.aspx?id="><i
+                                    class="fa fa-bars fa-fw"></i>订单处理<span class="badge bg-red" id="TicketingCount"
+                                                                               style="">1</span></a>
+
+                        </li>
+                        <li>
+                            <a href="https://lian-tie.com/agentadmin/offline/SupplierOrderList.aspx?id="><i
+                                    class="fa fa-search nav-icon" style="margin-left: 4px; padding-right: 2px;"></i>订单查询</a>
+                        </li>
+
+                        <li>
+                            <a href="https://lian-tie.com/agentadmin/offline/TicketErrorList.aspx?id="><i
+                                    class="fa fa-question-circle nav-icon"
+                                    style="margin-left: 6px; padding-right: 3px;"></i>问题订单<span class="badge bg-red"
+                                                                                                    id="TicketErrorCount"
+                                                                                                    style="display: none;"></span></a>
+                        </li>
+                        <li>
+                            <a href="https://lian-tie.com/agentadmin/offline/CompareOrder.aspx?id="><i
+                                    class="fa fa-warning" style="margin-left: 4px; padding-right: 2px;"></i>智能检查
+                            </a>
+                        </li>
+                        <li>
+                            <a href="https://lian-tie.com/agentadmin/offline/NoticeList.aspx?id="><i
+                                    class="fa fa-bell nav-icon" style="margin-left: 4px; padding-right: 2px;"></i>公告通知<span
+                                    class="badge bg-red" id="NoticeListCount"></span></a>
+                        </li>
+
+
+                        <li>
+                            <a href="https://lian-tie.com/agentadmin/offline/Bill.aspx?id="><i
+                                    class="fa fa-bars fa-fw"></i>结算查询</a>
+                        </li>
+                        <li>
+                            <a href="https://lian-tie.com/agentadmin/offline/ExceptionBill.aspx?id="><i
+                                    class="fa fa-bars fa-fw"></i>异常查询</a>
+                        </li>
+
+
+                        <li>
+                            <a href="https://lian-tie.com/agentadmin/offline/UserInfo.aspx?id="><i
+                                    class="fa fa-user fa-1x" style="margin-left: 5px; padding-right: 5px;"></i>账号管理</a>
+                        </li>
+
+
+                    </ul>
                 </div>
-                <div class="modal-body">
-                    <div class="form-group">
-                        <label for="txtOldTicketPrice" class="col-sm-4 control-label">是否开启语音提醒</label>
-                        <div class="col-sm-5">
-                            <label class="checkbox-inline">
-                                <input id="Already" type="radio" name="ActivateStatus" value="开启">
-                                开启
-                            </label>
-                            <label class="checkbox-inline">
-                                <input id="No" type="radio" name="ActivateStatus" value="关闭">
-                                关闭
-                            </label>
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="txtTouristSubName" class="col-sm-4 control-label">取票号配置</label>
-                        <div class="col-sm-5">
-
-                            <input type="text" class="form-control" id="TicketNoId" maxlength="3" placeholder="设置前三位取票号">
-                        </div>
-                    </div>
-                    
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-                    <button type="button" class="btn btn-primary" onclick="SetSupplietSetting()">保存</button>
-                </div>
+                <!-- /.sidebar-collapse -->
             </div>
-        </div>
-    </div>
-
-
-    <div class="modal fade" id="ChangeSupplierPanel" tabindex="-1" role="dialog" aria-labelledby="ActionLabel" style="font-size: 18px;">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">×</span></button>
-                    <h4 class="modal-title" id="H2">转单到其他代售点，转单后此单你不再处理</h4>
-                </div>
-                <div class="modal-body" style="margin: 20px; padding: 10px;">
-                    <div class="row">
-                        <div class="col-lg-12">
-                            <div class="form-group " style="font-weight: bold">
-                                <label> <input type="radio" style="transform: scale(1.2,1.2); margin-left: 20px;" name="ChangeSupplierReasonRadios" value="未采集联系方式">
-                                1.未采集联系方式   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                 <label> <input type="radio" style="transform: scale(1.2,1.2); margin-left: 20px;" name="ChangeSupplierReasonRadios" value="身份信息未核验">
-                                2.身份信息未核验 
-                                <br>
-
-                                <label> <input type="radio" style="transform: scale(1.2,1.2); margin-left: 20px;" name="ChangeSupplierReasonRadios" value="网络中心出错，有票">
-                                3.网络中心出错，有票  
-                                <label> <input type="radio" style="transform: scale(1.2,1.2); margin-left: 20px;" name="ChangeSupplierReasonRadios" value="代售点问题临时转单">
-                                4.代售点问题临时转单 
-                                   <br>
-                                <label> <input type="radio" style="transform: scale(1.2,1.2); margin-left: 20px;" name="ChangeSupplierReasonRadios" value="其他">
-                                5.其他 
-                            </label></label></label></label></label></div>
-                        </div>
-                    </div>
-                    <div class="row" style="text-align: center">
-                        <div class="col-lg-11" id="ChangeSupplierReason">
-                            <input type="hidden" id="ChangeSupplierOrderNumber">
-                            <input type="text" class="form-control" id="ChangeSupplierReasonText" placeholder="其他原因">
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-                    <button type="button" onclick="ConfirmChangeSupplier()" class="btn btn-primary">确认</button>
-                </div>
-            </div>
-        </div>
-
-
-
-
-
-
-        
-        
-    </div>
-
-    <div class="modal fade" id="SetBookFailPanel" tabindex="-1" role="dialog" aria-labelledby="ActionLabel" style="font-size: 18px; display: none;">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">×</span></button>
-                    <h4 class="modal-title" id="H2">设置占座失败</h4>
-                    <span>可以点击对应数字或字母快捷键，选择具体原因，如0，1，2...,按Ctrl+Enter确认。</span>
-                </div>
-                <div class="modal-body" style="margin-top: 10px; margin-left: 20px; margin-bottom: 20px; padding: 5px;">
-                    <div class="row">
-                        <div class="col-lg-12">
-                            <div class="form-group " id="FailResonGroup" style="font-weight: bold">
-                                <span class="FailReasonA radio-inline">
-                                   <label> <label> <input type="radio" id="aaaa" style="transform: scale(1.2,1.2);" name="optionsRadios" value="车次已无票">
-                                    1车次已无票 </label> </label></span>
-
-                                <span class="FailReasonA radio-inline">
-                                    <label> <input type="radio" id="B" style="transform: scale(1.2,1.2);" name="optionsRadios" value="第二程无票">
-                                    第二程无票 </label>  </span>
-
-                                <span class="FailReasonA radio-inline" id="seatTypeNotMatchRadio">
-                                    <label> <input type="radio" style="transform: scale(1.2,1.2);" name="optionsRadios" value="坐席无法满足" onclick="seatTypeNotMatch()">
-                                    2坐席无法满足</label> </span>
-
-                                <div class="collapse in" id="seatTypeNotMatch" aria-expanded="true" style="">
-                                    <div class="well">
-                                        <div class="form-group " style="font-weight: bold">
-                                            <span class="FailReasonA radio-inline">
-                                                <label> <input type="radio" style="transform: scale(1.2,1.2);" name="SubFailReason" value="无上铺">
-                                                无上铺</label> </span>
-                                            <span class="FailReasonA radio-inline">
-                                                <label> <input type="radio" style="transform: scale(1.2,1.2);" name="SubFailReason" value="无中铺">
-                                                无中铺</label> </span>
-                                            <span class="FailReasonA radio-inline">
-                                                <label> <input type="radio" style="transform: scale(1.2,1.2);" name="SubFailReason" value="无下铺">
-                                                无下铺</label> </span>
-                                            <br>
-                                            <span class="FailReasonA radio-inline">
-                                                <label> <input type="radio" style="transform: scale(1.2,1.2);" name="SubFailReason" value="有上铺">
-                                                有上铺</label> </span>
-                                            <span class="FailReasonA radio-inline">
-                                                <label> <input type="radio" style="transform: scale(1.2,1.2);" name="SubFailReason" value="有中铺">
-                                                有中铺</label> </span>
-                                            <span class="FailReasonA radio-inline">
-                                                <label> <input type="radio" style="transform: scale(1.2,1.2);" name="SubFailReason" value="有下铺">
-                                                有下铺</label> </span>
-                                            <br>
-                                            <span class="FailReasonA radio-inline">
-                                                <label> <input type="radio" style="transform: scale(1.2,1.2);" name="SubFailReason" value="无靠窗">
-                                                无靠窗</label> </span>
-                                            <span class="FailReasonA radio-inline">
-                                                <label> <input type="radio" style="transform: scale(1.2,1.2);" name="SubFailReason" value="无过道">
-                                                无过道</label> </span>
-                                            <span class="FailReasonA radio-inline">
-                                                <label> <input type="radio" style="transform: scale(1.2,1.2);" name="SubFailReason" value="无F">
-                                                无F</label> </span>
-                                            <br>
-                                            <span class="FailReasonA radio-inline">
-                                                <label> <input type="radio" style="transform: scale(1.2,1.2);" name="SubFailReason" value="无DF">
-                                                无DF</label> </span>
-                                            <span class="FailReasonA radio-inline">
-                                                <label> <input type="radio" style="transform: scale(1.2,1.2);" name="SubFailReason" value="无连坐">
-                                                无连坐</label> </span>
-                                            <span class="FailReasonA radio-inline">
-                                                <label> <input type="radio" style="transform: scale(1.2,1.2);" name="SubFailReason" value="无同车厢">
-                                                无同车厢</label> </span>
-                                            <br>
-                                            <span class="FailReasonA radio-inline">
-                                                <label> <input type="radio" style="transform: scale(1.2,1.2);" name="SubFailReason" value="无同包厢">
-                                                无同包厢</label> </span>
-                                            <span class="FailReasonA radio-inline">
-                                                <label> <input type="radio" style="transform: scale(1.2,1.2);" name="SubFailReason" value="无指定车厢">
-                                                无指定车厢</label> </span>
-                                            <span class="FailReasonA radio-inline">
-                                                <label> <input type="radio" style="transform: scale(1.2,1.2);" name="SubFailReason" value="车厢信息有误">
-                                                车厢信息有误</label> </span>
-                                            <br>
-                                            <span class="FailReasonA radio-inline">
-                                                <label> <input type="radio" style="transform: scale(1.2,1.2);" name="SubFailReason" value="无指定车厢且无前三或后三排座位">
-                                                无指定车厢且无前三或后三排座位</label> </span>
-                                            <span class="FailReasonA radio-inline">
-                                                <label> <input type="radio" style="transform: scale(1.2,1.2);" name="SubFailReason" value="只有无座,用户不接受无座">
-                                                只有无座,用户不接受无座</label> </span>
-
-                                            <span class="FailReasonA radio-inline">
-                                                <label> <input type="radio" style="transform: scale(1.2,1.2);" name="SubFailReason" value="无靠近门坐席">
-                                                无靠近门坐席 </label>  </span>
-                                            <br>
-                                            有票日期：<input type="text" id="HasTicketDate" style="max-width: 200px;">
-
-                                        </div>
-                                    </div>
-                                </div>
-
-
-                                <br>
-
-
-                                <br>
-                                <span class="FailReasonA radio-inline">
-                                    <label> <input type="radio" style="transform: scale(1.2,1.2);" name="optionsRadios" value="行程冲突">
-                                    3行程冲突  </label>    </span>
-                                <span class="FailReasonA radio-inline">
-                                    <label> <input type="radio" style="transform: scale(1.2,1.2);" name="optionsRadios" value="存在未支付订单">
-                                    4存在未支付订单 </label>   </span>
-                                <span class="FailReasonA radio-inline">
-                                    <label> <input type="radio" style="transform: scale(1.2,1.2);" name="optionsRadios" value="限制高消费">
-                                    5限制高消费  </label> 
-                                </span>
-                                <br>
-                                <span class="FailReasonA radio-inline">
-                                    <label> <input type="radio" style="transform: scale(1.2,1.2);" name="optionsRadios" value="未采集联系方式">
-                                    6未采集联系方式</label> </span>
-                                <span class="FailReasonA radio-inline">
-                                    <label> <input type="radio" style="transform: scale(1.2,1.2);" name="optionsRadios" value="身份信息未核验">
-                                    7身份信息未核验</label> </span>
-                                <span class="FailReasonA radio-inline">
-                                    <label> <input type="radio" style="transform: scale(1.2,1.2);" name="optionsRadios" value="姓名不匹配">
-                                    8姓名不匹配</label> </span>
-
-                                <br>
-                                <span class="FailReasonA radio-inline">
-                                    <label> <input type="radio" style="transform: scale(1.2,1.2);" name="optionsRadios" value="证件号码有误">
-                                    9证件号码有误   </label>  </span>
-                                <span class="FailReasonA radio-inline">
-                                    <label> <input type="radio" id="x1" style="transform: scale(1.2,1.2);" name="optionsRadios" value="国籍有误">
-                                    国籍有误 </label>  </span>
-                                <span class="FailReasonA radio-inline">
-                                    <label> <input type="radio" style="transform: scale(1.2,1.2);" name="optionsRadios" value="不可进京">
-                                    不可进京  </label>  </span>
-                                <br>
-
-                                <span class="FailReasonA radio-inline">
-                                    <label> <input type="radio" style="transform: scale(1.2,1.2);" name="optionsRadios" value="此类证件不支持">
-                                    此类证件不支持   </label> </span>
-                                <br>
-                                 
-                                <div class="collapse" id="SubFailReasonForPassenger" aria-expanded="false">
-                                    <div class="well">
-                                        <div class="form-group " style="font-weight: bold" id="SubFailReasonForPassengerForm"><span class="FailReasonB"><input type="radio" style="transform: scale(1.2,1.2);" name="SubFailReasonForPassenger" value="刘飞"> 刘飞</span><br>票机姓名：<input type="text" id="realNameInput"></div>
-                                    </div>
-                                </div>
-
-                                <br>
-                                <span class="FailReasonA radio-inline">
-                                    <label> <input type="radio" style="transform: scale(1.2,1.2);" name="optionsRadios" value="列车停运">
-                                    列车停运 </label>   </span>
-                                <span class="FailReasonA radio-inline">
-                                    <label> <input type="radio" style="transform: scale(1.2,1.2);" name="optionsRadios" value="已停止售票">
-                                    已停止售票 </label>   </span>
-                                <span class="FailReasonA radio-inline">
-                                    <label> <input type="radio" style="transform: scale(1.2,1.2);" name="optionsRadios" value="价格不符">
-                                    价格不符 </label>   </span>
-                                <br>
-
-                                <span class="FailReasonA radio-inline">
-                                    <label> <input type="radio" id="cc" style="transform: scale(1.2,1.2);" name="optionsRadios" value="车次不存在">
-                                    车次不存在  </label> </span>
-                                <span class="FailReasonA radio-inline">
-                                    <label> <input type="radio" id="xx" style="transform: scale(1.2,1.2);" name="optionsRadios" value="未到预售期">
-                                    未到预售期 </label>  </span>
-                                <span class="FailReasonA radio-inline">
-                                    <label> <input type="radio" id="x" style="transform: scale(1.2,1.2);" name="optionsRadios" value="出到站已封">
-                                    出到站已封 </label>  </span>
-                                <br>
-
-
-                                <span class="FailReasonA radio-inline">
-                                    <label> <input type="radio" style="transform: scale(1.2,1.2);" name="optionsRadios" value="客人要求取消">
-                                    客人要求取消   </label> </span>
-                                <span class="FailReasonA radio-inline">
-                                    <label> <input type="radio" id="xxx" style="transform: scale(1.2,1.2);" name="optionsRadios" value="铁路系统异常">
-                                    铁路系统异常  </label> </span>
-                                <span class="FailReasonA radio-inline">
-                                    <label> <input type="radio" style="transform: scale(1.2,1.2);" name="optionsRadios" value="其他">
-                                    其他 </label> 
-                                </span>
-                                <br>
-
-                                <span class="FailReasonA radio-inline" style="font-size: 12px;">
-                                    <label> <input type="radio" id="xx2" style="transform: scale(1.2,1.2);" name="optionsRadios" value="儿童证件不能购买成人票">
-                                    儿童证件不能购买成人票 </label>  </span>
-
-                                <span class="FailReasonA radio-inline" style="font-size: 12px;">
-                                    <label> <input type="radio" id="xxx3" style="transform: scale(1.2,1.2);" name="optionsRadios" value="成人证件不能购买儿童票">
-                                    成人证件不能购买儿童票</label>   </span>
-
-
-                                <br>
-
-                               
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row" style="text-align: center">
-                        <div class="col-lg-11" id="SupplierBookingFailReasonOtherDIV">
-                            <input type="text" class="form-control" id="SupplierBookingFailReasonOther" placeholder="其他原因">
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-                    <button type="button" onclick="ConfirmSetBookFail()" class="btn btn-primary">确认</button>
-                </div>
-            </div>
-        </div>
+            <!-- /.navbar-static-side -->
+        </nav>
 
         <div class="modal fade" id="loadingModal">
             <div style="width: 200px; height: 20px; z-index: 20000; position: absolute; text-align: center; left: 50%; top: 50%; margin-left: -100px; margin-top: -10px">
                 <div class="progress progress-striped active" style="margin-bottom: 0;">
                     <div class="progress-bar" style="width: 100%;"></div>
                 </div>
-                <h5>正在提交...</h5>
+                <h5>正在查询请稍后...</h5>
             </div>
         </div>
-        &lt; 
-    </div>
 
-    <div class="tips"></div>
-    <input type="hidden" id="SupplierOrderNumber" value="HT20230819184809OH63YOGY1426">
-    <input type="hidden" id="PreBookFlag" value="1">
-
-    
-    <input type="hidden" id="SupplierExtendOrderNumber">
-    <script type="text/javascript">
-
-        function CheckMobileManual(tid) {
-            $("#loadingModal").modal('show');
-            $.post(
-                "SupplierHandler.ashx",
-                {
-                    "optype": "CheckMobileManual",
-                    "Tid": tid
-                },
-                function (data) {
-                    $("#loadingModal").modal('hide');
-                    alert(data);
-                },
-                "text");
-        }
+        <div>
 
 
+            <audio controls="controls" id="audioMp" preload="" hidden="">
+                <source src="../video/audioMp.mp3">
+            </audio>
 
-        $("input[name='optionsRadios']").on('click', function () {
-            var value = $(this).val();
-            if (value == "坐席无法满足") {
-                $("#seatTypeNotMatch").collapse('show');
-            }
-            else {
-                $("#seatTypeNotMatch").collapse('hide');
 
-                if (value == "未采集联系方式" || value == "身份信息未核验" || value == "姓名不匹配" || value == "证件号码有误" || value == "行程冲突" || value == "存在未支付订单" || value == "限制高消费" || value == "不可进京" || value == "此类证件不支持" || value == "国籍有误") {
-                    $("#SubFailReasonForPassenger").collapse('show');
+            <div id="page-wrapper" style="font-size: 18px;">
+
+
+                <!-- /.row -->
+                <div id="barcon" name="barcon" style="display: none"></div>
+
+
+                <div class="row" style="margin-left: 3px; margin-right: 3px; font-size: 18px; margin-top: 10px;">
+                    <table class="table   table-bordered">
+                        <thead>
+                        <tr class="success" style="display: none;">
+                            <td>序号</td>
+                            <td>订单号</td>
+                            <td>发车日期</td>
+                            <td>车次</td>
+                            <td>发到站</td>
+                            <td>坐席</td>
+                            <td>总票款</td>
+                        </tr>
+                        </thead>
+                        <tbody id="PreBookSucOrderTable"></tbody>
+                    </table>
+                </div>
+
+
+                <div class="row" style="margin-left: 3px; margin-right: 3px; font-size: 18px;">
+                    <table class="table   table-bordered">
+                        <thead>
+                        <tr class="success">
+                            <td>序号</td>
+                            <td>订单号</td>
+                            <td>发车日期</td>
+                            <td>车次</td>
+                            <td>发到站</td>
+                            <td>坐席</td>
+                            <td>总票款</td>
+                        </tr>
+                        </thead>
+                        <tbody id="BookingOrderTable">
+                        <!-- 自定义 -->
+
+                        <!-- 自定义-end -->
+
+                        </tbody>
+                    </table>
+                </div>
+
+
+                <!-- /.row -->
+            </div>
+            <div class="modal fade form-horizontal" id="SetSupplierSetting" tabindex="-1" role="dialog"
+                 aria-labelledby="ActionLabel" style="font-size: 18px;">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">×</span>
+                            </button>
+                            <h4 class="modal-title" id="myModalLabel">常用设置</h4>
+                        </div>
+                        <div class="modal-body">
+                            <div class="form-group">
+                                <label for="txtOldTicketPrice" class="col-sm-4 control-label">是否开启语音提醒</label>
+                                <div class="col-sm-5">
+                                    <label class="checkbox-inline">
+                                        <input id="Already" type="radio" name="ActivateStatus" value="开启">
+                                        开启
+                                    </label>
+                                    <label class="checkbox-inline">
+                                        <input id="No" type="radio" name="ActivateStatus" value="关闭">
+                                        关闭
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="txtTouristSubName" class="col-sm-4 control-label">取票号配置</label>
+                                <div class="col-sm-5">
+
+                                    <input type="text" class="form-control" id="TicketNoId" maxlength="3"
+                                           placeholder="设置前三位取票号">
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                            <button type="button" class="btn btn-primary" onclick="SetSupplietSetting()">保存</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="modal fade" id="ChangeSupplierPanel" tabindex="-1" role="dialog" aria-labelledby="ActionLabel"
+                 style="font-size: 18px;">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">×</span></button>
+                            <h4 class="modal-title" id="H2">转单到其他代售点，转单后此单你不再处理</h4>
+                        </div>
+                        <div class="modal-body" style="margin: 20px; padding: 10px;">
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <div class="form-group " style="font-weight: bold">
+                                        <label> <input type="radio"
+                                                       style="transform: scale(1.2,1.2); margin-left: 20px;"
+                                                       name="ChangeSupplierReasonRadios" value="未采集联系方式">
+                                            1.未采集联系方式 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                            <label> <input type="radio"
+                                                           style="transform: scale(1.2,1.2); margin-left: 20px;"
+                                                           name="ChangeSupplierReasonRadios" value="身份信息未核验">
+                                                2.身份信息未核验
+                                                <br>
+
+                                                <label> <input type="radio"
+                                                               style="transform: scale(1.2,1.2); margin-left: 20px;"
+                                                               name="ChangeSupplierReasonRadios"
+                                                               value="网络中心出错，有票">
+                                                    3.网络中心出错，有票
+                                                    <label> <input type="radio"
+                                                                   style="transform: scale(1.2,1.2); margin-left: 20px;"
+                                                                   name="ChangeSupplierReasonRadios"
+                                                                   value="代售点问题临时转单">
+                                                        4.代售点问题临时转单
+                                                        <br>
+                                                        <label> <input type="radio"
+                                                                       style="transform: scale(1.2,1.2); margin-left: 20px;"
+                                                                       name="ChangeSupplierReasonRadios" value="其他">
+                                                            5.其他
+                                                        </label></label></label></label></label></div>
+                                </div>
+                            </div>
+                            <div class="row" style="text-align: center">
+                                <div class="col-lg-11" id="ChangeSupplierReason">
+                                    <input type="hidden" id="ChangeSupplierOrderNumber">
+                                    <input type="text" class="form-control" id="ChangeSupplierReasonText"
+                                           placeholder="其他原因">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                            <button type="button" onclick="ConfirmChangeSupplier()" class="btn btn-primary">确认
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
+
+            <div class="modal fade" id="SetBookFailPanel" tabindex="-1" role="dialog" aria-labelledby="ActionLabel"
+                 style="font-size: 18px; display: none;">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">×</span></button>
+                            <h4 class="modal-title" id="H2">设置占座失败</h4>
+                            <span>可以点击对应数字或字母快捷键，选择具体原因，如0，1，2...,按Ctrl+Enter确认。</span>
+                        </div>
+                        <div class="modal-body"
+                             style="margin-top: 10px; margin-left: 20px; margin-bottom: 20px; padding: 5px;">
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <div class="form-group " id="FailResonGroup" style="font-weight: bold">
+                                <span class="FailReasonA radio-inline">
+                                   <label> <label> <input type="radio" id="aaaa" style="transform: scale(1.2,1.2);"
+                                                          name="optionsRadios" value="车次已无票">
+                                    1车次已无票 </label> </label></span>
+
+                                        <span class="FailReasonA radio-inline">
+                                    <label> <input type="radio" id="B" style="transform: scale(1.2,1.2);"
+                                                   name="optionsRadios" value="第二程无票">
+                                    第二程无票 </label>  </span>
+
+                                        <span class="FailReasonA radio-inline" id="seatTypeNotMatchRadio">
+                                    <label> <input type="radio" style="transform: scale(1.2,1.2);" name="optionsRadios"
+                                                   value="坐席无法满足" onclick="seatTypeNotMatch()">
+                                    2坐席无法满足</label> </span>
+
+                                        <div class="collapse in" id="seatTypeNotMatch" aria-expanded="true" style="">
+                                            <div class="well">
+                                                <div class="form-group " style="font-weight: bold">
+                                            <span class="FailReasonA radio-inline">
+                                                <label> <input type="radio" style="transform: scale(1.2,1.2);"
+                                                               name="SubFailReason" value="无上铺">
+                                                无上铺</label> </span>
+                                                    <span class="FailReasonA radio-inline">
+                                                <label> <input type="radio" style="transform: scale(1.2,1.2);"
+                                                               name="SubFailReason" value="无中铺">
+                                                无中铺</label> </span>
+                                                    <span class="FailReasonA radio-inline">
+                                                <label> <input type="radio" style="transform: scale(1.2,1.2);"
+                                                               name="SubFailReason" value="无下铺">
+                                                无下铺</label> </span>
+                                                    <br>
+                                                    <span class="FailReasonA radio-inline">
+                                                <label> <input type="radio" style="transform: scale(1.2,1.2);"
+                                                               name="SubFailReason" value="有上铺">
+                                                有上铺</label> </span>
+                                                    <span class="FailReasonA radio-inline">
+                                                <label> <input type="radio" style="transform: scale(1.2,1.2);"
+                                                               name="SubFailReason" value="有中铺">
+                                                有中铺</label> </span>
+                                                    <span class="FailReasonA radio-inline">
+                                                <label> <input type="radio" style="transform: scale(1.2,1.2);"
+                                                               name="SubFailReason" value="有下铺">
+                                                有下铺</label> </span>
+                                                    <br>
+                                                    <span class="FailReasonA radio-inline">
+                                                <label> <input type="radio" style="transform: scale(1.2,1.2);"
+                                                               name="SubFailReason" value="无靠窗">
+                                                无靠窗</label> </span>
+                                                    <span class="FailReasonA radio-inline">
+                                                <label> <input type="radio" style="transform: scale(1.2,1.2);"
+                                                               name="SubFailReason" value="无过道">
+                                                无过道</label> </span>
+                                                    <span class="FailReasonA radio-inline">
+                                                <label> <input type="radio" style="transform: scale(1.2,1.2);"
+                                                               name="SubFailReason" value="无F">
+                                                无F</label> </span>
+                                                    <br>
+                                                    <span class="FailReasonA radio-inline">
+                                                <label> <input type="radio" style="transform: scale(1.2,1.2);"
+                                                               name="SubFailReason" value="无DF">
+                                                无DF</label> </span>
+                                                    <span class="FailReasonA radio-inline">
+                                                <label> <input type="radio" style="transform: scale(1.2,1.2);"
+                                                               name="SubFailReason" value="无连坐">
+                                                无连坐</label> </span>
+                                                    <span class="FailReasonA radio-inline">
+                                                <label> <input type="radio" style="transform: scale(1.2,1.2);"
+                                                               name="SubFailReason" value="无同车厢">
+                                                无同车厢</label> </span>
+                                                    <br>
+                                                    <span class="FailReasonA radio-inline">
+                                                <label> <input type="radio" style="transform: scale(1.2,1.2);"
+                                                               name="SubFailReason" value="无同包厢">
+                                                无同包厢</label> </span>
+                                                    <span class="FailReasonA radio-inline">
+                                                <label> <input type="radio" style="transform: scale(1.2,1.2);"
+                                                               name="SubFailReason" value="无指定车厢">
+                                                无指定车厢</label> </span>
+                                                    <span class="FailReasonA radio-inline">
+                                                <label> <input type="radio" style="transform: scale(1.2,1.2);"
+                                                               name="SubFailReason" value="车厢信息有误">
+                                                车厢信息有误</label> </span>
+                                                    <br>
+                                                    <span class="FailReasonA radio-inline">
+                                                <label> <input type="radio" style="transform: scale(1.2,1.2);"
+                                                               name="SubFailReason"
+                                                               value="无指定车厢且无前三或后三排座位">
+                                                无指定车厢且无前三或后三排座位</label> </span>
+                                                    <span class="FailReasonA radio-inline">
+                                                <label> <input type="radio" style="transform: scale(1.2,1.2);"
+                                                               name="SubFailReason" value="只有无座,用户不接受无座">
+                                                只有无座,用户不接受无座</label> </span>
+
+                                                    <span class="FailReasonA radio-inline">
+                                                <label> <input type="radio" style="transform: scale(1.2,1.2);"
+                                                               name="SubFailReason" value="无靠近门坐席">
+                                                无靠近门坐席 </label>  </span>
+                                                    <br>
+                                                    有票日期：<input type="text" id="HasTicketDate"
+                                                                    style="max-width: 200px;">
+
+                                                </div>
+                                            </div>
+                                        </div>
+
+
+                                        <br>
+
+
+                                        <br>
+                                        <span class="FailReasonA radio-inline">
+                                    <label> <input type="radio" style="transform: scale(1.2,1.2);" name="optionsRadios"
+                                                   value="行程冲突">
+                                    3行程冲突  </label>    </span>
+                                        <span class="FailReasonA radio-inline">
+                                    <label> <input type="radio" style="transform: scale(1.2,1.2);" name="optionsRadios"
+                                                   value="存在未支付订单">
+                                    4存在未支付订单 </label>   </span>
+                                        <span class="FailReasonA radio-inline">
+                                    <label> <input type="radio" style="transform: scale(1.2,1.2);" name="optionsRadios"
+                                                   value="限制高消费">
+                                    5限制高消费  </label> 
+                                </span>
+                                        <br>
+                                        <span class="FailReasonA radio-inline">
+                                    <label> <input type="radio" style="transform: scale(1.2,1.2);" name="optionsRadios"
+                                                   value="未采集联系方式">
+                                    6未采集联系方式</label> </span>
+                                        <span class="FailReasonA radio-inline">
+                                    <label> <input type="radio" style="transform: scale(1.2,1.2);" name="optionsRadios"
+                                                   value="身份信息未核验">
+                                    7身份信息未核验</label> </span>
+                                        <span class="FailReasonA radio-inline">
+                                    <label> <input type="radio" style="transform: scale(1.2,1.2);" name="optionsRadios"
+                                                   value="姓名不匹配">
+                                    8姓名不匹配</label> </span>
+
+                                        <br>
+                                        <span class="FailReasonA radio-inline">
+                                    <label> <input type="radio" style="transform: scale(1.2,1.2);" name="optionsRadios"
+                                                   value="证件号码有误">
+                                    9证件号码有误   </label>  </span>
+                                        <span class="FailReasonA radio-inline">
+                                    <label> <input type="radio" id="x1" style="transform: scale(1.2,1.2);"
+                                                   name="optionsRadios" value="国籍有误">
+                                    国籍有误 </label>  </span>
+                                        <span class="FailReasonA radio-inline">
+                                    <label> <input type="radio" style="transform: scale(1.2,1.2);" name="optionsRadios"
+                                                   value="不可进京">
+                                    不可进京  </label>  </span>
+                                        <br>
+
+                                        <span class="FailReasonA radio-inline">
+                                    <label> <input type="radio" style="transform: scale(1.2,1.2);" name="optionsRadios"
+                                                   value="此类证件不支持">
+                                    此类证件不支持   </label> </span>
+                                        <br>
+
+                                        <div class="collapse" id="SubFailReasonForPassenger" aria-expanded="false">
+                                            <div class="well">
+                                                <div class="form-group " style="font-weight: bold"
+                                                     id="SubFailReasonForPassengerForm"><span class="FailReasonB"><input
+                                                        type="radio" style="transform: scale(1.2,1.2);"
+                                                        name="SubFailReasonForPassenger" value="刘飞"> 刘飞</span><br>票机姓名：<input
+                                                        type="text" id="realNameInput"></div>
+                                            </div>
+                                        </div>
+
+                                        <br>
+                                        <span class="FailReasonA radio-inline">
+                                    <label> <input type="radio" style="transform: scale(1.2,1.2);" name="optionsRadios"
+                                                   value="列车停运">
+                                    列车停运 </label>   </span>
+                                        <span class="FailReasonA radio-inline">
+                                    <label> <input type="radio" style="transform: scale(1.2,1.2);" name="optionsRadios"
+                                                   value="已停止售票">
+                                    已停止售票 </label>   </span>
+                                        <span class="FailReasonA radio-inline">
+                                    <label> <input type="radio" style="transform: scale(1.2,1.2);" name="optionsRadios"
+                                                   value="价格不符">
+                                    价格不符 </label>   </span>
+                                        <br>
+
+                                        <span class="FailReasonA radio-inline">
+                                    <label> <input type="radio" id="cc" style="transform: scale(1.2,1.2);"
+                                                   name="optionsRadios" value="车次不存在">
+                                    车次不存在  </label> </span>
+                                        <span class="FailReasonA radio-inline">
+                                    <label> <input type="radio" id="xx" style="transform: scale(1.2,1.2);"
+                                                   name="optionsRadios" value="未到预售期">
+                                    未到预售期 </label>  </span>
+                                        <span class="FailReasonA radio-inline">
+                                    <label> <input type="radio" id="x" style="transform: scale(1.2,1.2);"
+                                                   name="optionsRadios" value="出到站已封">
+                                    出到站已封 </label>  </span>
+                                        <br>
+
+
+                                        <span class="FailReasonA radio-inline">
+                                    <label> <input type="radio" style="transform: scale(1.2,1.2);" name="optionsRadios"
+                                                   value="客人要求取消">
+                                    客人要求取消   </label> </span>
+                                        <span class="FailReasonA radio-inline">
+                                    <label> <input type="radio" id="xxx" style="transform: scale(1.2,1.2);"
+                                                   name="optionsRadios" value="铁路系统异常">
+                                    铁路系统异常  </label> </span>
+                                        <span class="FailReasonA radio-inline">
+                                    <label> <input type="radio" style="transform: scale(1.2,1.2);" name="optionsRadios"
+                                                   value="其他">
+                                    其他 </label> 
+                                </span>
+                                        <br>
+
+                                        <span class="FailReasonA radio-inline" style="font-size: 12px;">
+                                    <label> <input type="radio" id="xx2" style="transform: scale(1.2,1.2);"
+                                                   name="optionsRadios" value="儿童证件不能购买成人票">
+                                    儿童证件不能购买成人票 </label>  </span>
+
+                                        <span class="FailReasonA radio-inline" style="font-size: 12px;">
+                                    <label> <input type="radio" id="xxx3" style="transform: scale(1.2,1.2);"
+                                                   name="optionsRadios" value="成人证件不能购买儿童票">
+                                    成人证件不能购买儿童票</label>   </span>
+
+
+                                        <br>
+
+
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row" style="text-align: center">
+                                <div class="col-lg-11" id="SupplierBookingFailReasonOtherDIV">
+                                    <input type="text" class="form-control" id="SupplierBookingFailReasonOther"
+                                           placeholder="其他原因">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                            <button type="button" onclick="ConfirmSetBookFail()" class="btn btn-primary">确认</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal fade" id="loadingModal">
+                    <div style="width: 200px; height: 20px; z-index: 20000; position: absolute; text-align: center; left: 50%; top: 50%; margin-left: -100px; margin-top: -10px">
+                        <div class="progress progress-striped active" style="margin-bottom: 0;">
+                            <div class="progress-bar" style="width: 100%;"></div>
+                        </div>
+                        <h5>正在提交...</h5>
+                    </div>
+                </div>
+                &lt;
+            </div>
+
+            <div class="tips"></div>
+            <input type="hidden" id="SupplierOrderNumber" value="HT20230819184809OH63YOGY1426">
+            <input type="hidden" id="PreBookFlag" value="1">
+
+
+            <input type="hidden" id="SupplierExtendOrderNumber">
+            <script type="text/javascript">
+
+                function CheckMobileManual(tid) {
+                    $("#loadingModal").modal('show');
+                    $.post(
+                        "SupplierHandler.ashx",
+                        {
+                            "optype": "CheckMobileManual",
+                            "Tid": tid
+                        },
+                        function (data) {
+                            $("#loadingModal").modal('hide');
+                            alert(data);
+                        },
+                        "text");
                 }
-                else {
+
+
+                $("input[name='optionsRadios']").on('click', function () {
+                    var value = $(this).val();
+                    if (value == "坐席无法满足") {
+                        $("#seatTypeNotMatch").collapse('show');
+                    } else {
+                        $("#seatTypeNotMatch").collapse('hide');
+
+                        if (value == "未采集联系方式" || value == "身份信息未核验" || value == "姓名不匹配" || value == "证件号码有误" || value == "行程冲突" || value == "存在未支付订单" || value == "限制高消费" || value == "不可进京" || value == "此类证件不支持" || value == "国籍有误") {
+                            $("#SubFailReasonForPassenger").collapse('show');
+                        } else {
+                            $("#SubFailReasonForPassenger").collapse('hide');
+                        }
+                    }
+                });
+
+
+                $("#SetBookFailPanel").keydown(function (event) {
+                    var checkedList = document.getElementsByName('optionsRadios');
+                    $("#seatTypeNotMatch").collapse('hide');
                     $("#SubFailReasonForPassenger").collapse('hide');
+                    if (event.keyCode == 49 || event.keyCode == 97) {
+                        checkedList[0].checked = true;
+                    }
+                    if (event.keyCode == 50 || event.keyCode == 98) { // 2
+                        checkedList[2].checked = true;
+                        $("#seatTypeNotMatch").collapse('show');
+                    }
+                    if (event.keyCode == 51 || event.keyCode == 99) { // 3
+                        $("#SubFailReasonForPassenger").collapse('show');
+                        checkedList[3].checked = true;
+
+                    }
+                    if (event.keyCode == 52 || event.keyCode == 100) { // 4
+
+                        $("#SubFailReasonForPassenger").collapse('show');
+                        checkedList[4].checked = true;
+                    }
+                    if (event.keyCode == 53 || event.keyCode == 101) { // 5
+                        checkedList[5].checked = true;
+                        $("#SubFailReasonForPassenger").collapse('show');
+                    }
+                    if (event.keyCode == 54 || event.keyCode == 102) { // 6
+                        checkedList[6].checked = true;
+                        $("#SubFailReasonForPassenger").collapse('show');
+                    }
+                    if (event.keyCode == 55 || event.keyCode == 103) {  // 7
+                        checkedList[7].checked = true;
+                        $("#SubFailReasonForPassenger").collapse('show');
+                    }
+                    if (event.keyCode == 56 || event.keyCode == 104) { // 8
+                        checkedList[8].checked = true;
+                        $("#SubFailReasonForPassenger").collapse('show');
+                    }
+                    if (event.keyCode == 57 || event.keyCode == 105) { // 9
+                        checkedList[9].checked = true;
+                        $("#SubFailReasonForPassenger").collapse('show');
+                    }
+                    //if (event.keyCode == 58 || event.keyCode == 106) {
+                    //    checkedList[9].checked = true;
+                    //}
+                    //if (event.keyCode == 57 || event.keyCode == 105) {
+                    //    checkedList[8].checked = true;
+                    //}
+                    //if (event.keyCode == 65 || event.keyCode == 97) {
+                    //    checkedList[9].checked = true;
+                    //}
+                    //if (event.keyCode == 66 || event.keyCode == 98) {
+                    //    checkedList[10].checked = true;
+                    //}
+                    //if (event.keyCode == 67 || event.keyCode == 99) {
+                    //    checkedList[11].checked = true;
+                    //}
+                    //if (event.keyCode == 68 || event.keyCode == 100) {
+                    //    checkedList[12].checked = true;
+                    //}
+                    //if (event.keyCode == 69 || event.keyCode == 101) {
+                    //    checkedList[13].checked = true;
+                    //}
+                    //if (event.keyCode == 70 || event.keyCode == 102) {
+                    //    checkedList[14].checked = true;
+                    //}
+
+                    //if (event.keyCode == 48 || event.keyCode == 96) { // 0
+                    //    checkedList[16].checked = true;
+                    //}
+                    if (event.ctrlKey && event.keyCode === 13) {
+                        ConfirmSetBookFail();
+                    }
+                });
+                $('#StartDate').datetimepicker({
+                    format: 'yyyy-mm-dd hh:ii:ss',
+                    language: 'zh-CN',
+                    weekStart: 1,
+                    todayBtn: 1,
+                    autoclose: 1,
+                    todayHighlight: 1,
+                    startView: 2,
+                    minView: 0,
+                    forceParse: 0
+                });
+
+                $('#ToDate').datetimepicker({
+                    format: 'yyyy-mm-dd hh:ii:ss',
+                    language: 'zh-CN',
+                    weekStart: 1,
+                    todayBtn: 1,
+                    autoclose: 1,
+                    todayHighlight: 1,
+                    startView: 2,
+                    minView: 0,
+                    forceParse: 0
+                });
+
+
+                $('#HasTicketDate').datetimepicker({
+                    format: 'yyyy-mm-dd',
+                    language: 'zh-CN',
+                    weekStart: 1,
+                    todayBtn: 1,
+                    autoclose: 1,
+                    todayHighlight: 1,
+                    startView: 2,
+                    minView: 2,
+                    forceParse: 0
+                });
+
+
+                BookingOrder()
+
+                setInterval(BookingOrder, 10000);
+
+
+                function PlayVideo() {
+                    //var second = new Date().getSeconds();
+
+                    //if ((second > 0 && second < 15) || (second > 20 && second < 35) || (second > 40 && second < 55)) {
+
+                    var audio = $("#audioMp");
+                    audio[0].play();
+                    //}
                 }
-            }
-        });
 
+            </script>
 
+            <iframe width="60" height="60" id="qidian_wpa_2885768689_2958" scrolling="no" frameborder="0"
+                    allowtransparency="true"
+                    src="./lian-tie.com_agentadmin_offline_SupplierBookingEPay.aspx_files/saved_resource(1).html"
+                    class="class_qidian_wpa"
+                    style="right: 20px; bottom: 200px; position: fixed; z-index: 2000000000;"></iframe>
+            <script id="qd28857686894ee75fd0d9dbb47dda60fd26edc6e487"
+                    src="./lian-tie.com_agentadmin_offline_SupplierBookingEPay.aspx_files/4ee75fd0d9dbb47dda60fd26edc6e487"
+                    charset="utf-8" async="" defer=""></script>
 
-        $("#SetBookFailPanel").keydown(function (event) {
-            var checkedList = document.getElementsByName('optionsRadios');
-            $("#seatTypeNotMatch").collapse('hide');
-            $("#SubFailReasonForPassenger").collapse('hide');
-            if (event.keyCode == 49 || event.keyCode == 97) {
-                checkedList[0].checked = true;
-            }
-            if (event.keyCode == 50 || event.keyCode == 98) { // 2
-                checkedList[2].checked = true;
-                $("#seatTypeNotMatch").collapse('show');
-            }
-            if (event.keyCode == 51 || event.keyCode == 99) { // 3
-                $("#SubFailReasonForPassenger").collapse('show');
-                checkedList[3].checked = true;
-
-            }
-            if (event.keyCode == 52 || event.keyCode == 100) { // 4
-
-                $("#SubFailReasonForPassenger").collapse('show');
-                checkedList[4].checked = true;
-            }
-            if (event.keyCode == 53 || event.keyCode == 101) { // 5
-                checkedList[5].checked = true;
-                $("#SubFailReasonForPassenger").collapse('show');
-            }
-            if (event.keyCode == 54 || event.keyCode == 102) { // 6
-                checkedList[6].checked = true;
-                $("#SubFailReasonForPassenger").collapse('show');
-            }
-            if (event.keyCode == 55 || event.keyCode == 103) {  // 7
-                checkedList[7].checked = true;
-                $("#SubFailReasonForPassenger").collapse('show');
-            }
-            if (event.keyCode == 56 || event.keyCode == 104) { // 8
-                checkedList[8].checked = true;
-                $("#SubFailReasonForPassenger").collapse('show');
-            }
-            if (event.keyCode == 57 || event.keyCode == 105) { // 9
-                checkedList[9].checked = true;
-                $("#SubFailReasonForPassenger").collapse('show');
-            }
-            //if (event.keyCode == 58 || event.keyCode == 106) {
-            //    checkedList[9].checked = true;
-            //}
-            //if (event.keyCode == 57 || event.keyCode == 105) {
-            //    checkedList[8].checked = true;
-            //}
-            //if (event.keyCode == 65 || event.keyCode == 97) {
-            //    checkedList[9].checked = true;
-            //}
-            //if (event.keyCode == 66 || event.keyCode == 98) {
-            //    checkedList[10].checked = true;
-            //}
-            //if (event.keyCode == 67 || event.keyCode == 99) {
-            //    checkedList[11].checked = true;
-            //}
-            //if (event.keyCode == 68 || event.keyCode == 100) {
-            //    checkedList[12].checked = true;
-            //}
-            //if (event.keyCode == 69 || event.keyCode == 101) {
-            //    checkedList[13].checked = true;
-            //}
-            //if (event.keyCode == 70 || event.keyCode == 102) {
-            //    checkedList[14].checked = true;
-            //}
-
-            //if (event.keyCode == 48 || event.keyCode == 96) { // 0
-            //    checkedList[16].checked = true;
-            //}
-            if (event.ctrlKey && event.keyCode === 13) {
-                ConfirmSetBookFail();
-            }
-        });
-        $('#StartDate').datetimepicker({
-            format: 'yyyy-mm-dd hh:ii:ss',
-            language: 'zh-CN',
-            weekStart: 1,
-            todayBtn: 1,
-            autoclose: 1,
-            todayHighlight: 1,
-            startView: 2,
-            minView: 0,
-            forceParse: 0
-        });
-
-        $('#ToDate').datetimepicker({
-            format: 'yyyy-mm-dd hh:ii:ss',
-            language: 'zh-CN',
-            weekStart: 1,
-            todayBtn: 1,
-            autoclose: 1,
-            todayHighlight: 1,
-            startView: 2,
-            minView: 0,
-            forceParse: 0
-        });
-
-
-        $('#HasTicketDate').datetimepicker({
-            format: 'yyyy-mm-dd',
-            language: 'zh-CN',
-            weekStart: 1,
-            todayBtn: 1,
-            autoclose: 1,
-            todayHighlight: 1,
-            startView: 2,
-            minView: 2,
-            forceParse: 0
-        });
-
-
-        BookingOrder()
-
-        setInterval(BookingOrder, 10000);
-
-
-
-        function PlayVideo() {
-            //var second = new Date().getSeconds();
-
-            //if ((second > 0 && second < 15) || (second > 20 && second < 35) || (second > 40 && second < 55)) {
-
-            var audio = $("#audioMp");
-            audio[0].play();
-            //}
-        }
-
-    </script>
-
-    <iframe width="60" height="60" id="qidian_wpa_2885768689_2958" scrolling="no" frameborder="0" allowtransparency="true" src="./lian-tie.com_agentadmin_offline_SupplierBookingEPay.aspx_files/saved_resource(1).html" class="class_qidian_wpa" style="right: 20px; bottom: 200px; position: fixed; z-index: 2000000000;"></iframe><script id="qd28857686894ee75fd0d9dbb47dda60fd26edc6e487" src="./lian-tie.com_agentadmin_offline_SupplierBookingEPay.aspx_files/4ee75fd0d9dbb47dda60fd26edc6e487" charset="utf-8" async="" defer=""></script>
-
-            </div>
         </div>
-    </form><div class="datetimepicker datetimepicker-dropdown-bottom-right dropdown-menu" style="left: 0px; z-index: 100009;"><div class="datetimepicker-minutes" style="display: none;"><table class=" table-condensed"><thead><tr><th class="prev" style="visibility: visible;"><i class="glyphicon icon-arrow-left"></i></th><th colspan="5" class="switch">19 八月 2023</th><th class="next" style="visibility: visible;"><i class="glyphicon icon-arrow-right"></i></th></tr></thead><tbody><tr><td colspan="7"><span class="minute">18:00</span><span class="minute">18:05</span><span class="minute">18:10</span><span class="minute">18:15</span><span class="minute">18:20</span><span class="minute">18:25</span><span class="minute">18:30</span><span class="minute">18:35</span><span class="minute">18:40</span><span class="minute active">18:45</span><span class="minute">18:50</span><span class="minute">18:55</span></td></tr></tbody><tfoot><tr><th colspan="7" class="today">今天</th></tr></tfoot></table></div><div class="datetimepicker-hours" style="display: none;"><table class=" table-condensed"><thead><tr><th class="prev" style="visibility: visible;"><i class="glyphicon icon-arrow-left"></i></th><th colspan="5" class="switch">19 八月 2023</th><th class="next" style="visibility: visible;"><i class="glyphicon icon-arrow-right"></i></th></tr></thead><tbody><tr><td colspan="7"><span class="hour">0:00</span><span class="hour">1:00</span><span class="hour">2:00</span><span class="hour">3:00</span><span class="hour">4:00</span><span class="hour">5:00</span><span class="hour">6:00</span><span class="hour">7:00</span><span class="hour">8:00</span><span class="hour">9:00</span><span class="hour">10:00</span><span class="hour">11:00</span><span class="hour">12:00</span><span class="hour">13:00</span><span class="hour">14:00</span><span class="hour">15:00</span><span class="hour">16:00</span><span class="hour">17:00</span><span class="hour active">18:00</span><span class="hour">19:00</span><span class="hour">20:00</span><span class="hour">21:00</span><span class="hour">22:00</span><span class="hour">23:00</span></td></tr></tbody><tfoot><tr><th colspan="7" class="today">今天</th></tr></tfoot></table></div><div class="datetimepicker-days" style="display: block;"><table class=" table-condensed"><thead><tr><th class="prev" style="visibility: visible;"><i class="glyphicon icon-arrow-left"></i></th><th colspan="5" class="switch">八月 2023</th><th class="next" style="visibility: visible;"><i class="glyphicon icon-arrow-right"></i></th></tr><tr><th class="dow">一</th><th class="dow">二</th><th class="dow">三</th><th class="dow">四</th><th class="dow">五</th><th class="dow">六</th><th class="dow">日</th></tr></thead><tbody><tr><td class="day old">31</td><td class="day">1</td><td class="day">2</td><td class="day">3</td><td class="day">4</td><td class="day">5</td><td class="day">6</td></tr><tr><td class="day">7</td><td class="day">8</td><td class="day">9</td><td class="day">10</td><td class="day">11</td><td class="day">12</td><td class="day">13</td></tr><tr><td class="day">14</td><td class="day">15</td><td class="day">16</td><td class="day">17</td><td class="day">18</td><td class="day today active">19</td><td class="day">20</td></tr><tr><td class="day">21</td><td class="day">22</td><td class="day">23</td><td class="day">24</td><td class="day">25</td><td class="day">26</td><td class="day">27</td></tr><tr><td class="day">28</td><td class="day">29</td><td class="day">30</td><td class="day">31</td><td class="day new">1</td><td class="day new">2</td><td class="day new">3</td></tr><tr><td class="day new">4</td><td class="day new">5</td><td class="day new">6</td><td class="day new">7</td><td class="day new">8</td><td class="day new">9</td><td class="day new">10</td></tr></tbody><tfoot><tr><th colspan="7" class="today">今天</th></tr></tfoot></table></div><div class="datetimepicker-months" style="display: none;"><table class="table-condensed"><thead><tr><th class="prev" style="visibility: visible;"><i class="glyphicon icon-arrow-left"></i></th><th colspan="5" class="switch">2023</th><th class="next" style="visibility: visible;"><i class="glyphicon icon-arrow-right"></i></th></tr></thead><tbody><tr><td colspan="7"><span class="month">一月</span><span class="month">二月</span><span class="month">三月</span><span class="month">四月</span><span class="month">五月</span><span class="month">六月</span><span class="month">七月</span><span class="month active">八月</span><span class="month">九月</span><span class="month">十月</span><span class="month">十一月</span><span class="month">十二月</span></td></tr></tbody><tfoot><tr><th colspan="7" class="today">今天</th></tr></tfoot></table></div><div class="datetimepicker-years" style="display: none;"><table class="table-condensed"><thead><tr><th class="prev" style="visibility: visible;"><i class="glyphicon icon-arrow-left"></i></th><th colspan="5" class="switch">2020-2029</th><th class="next" style="visibility: visible;"><i class="glyphicon icon-arrow-right"></i></th></tr></thead><tbody><tr><td colspan="7"><span class="year old">2019</span><span class="year">2020</span><span class="year">2021</span><span class="year">2022</span><span class="year active">2023</span><span class="year">2024</span><span class="year">2025</span><span class="year">2026</span><span class="year">2027</span><span class="year">2028</span><span class="year">2029</span><span class="year old">2030</span></td></tr></tbody><tfoot><tr><th colspan="7" class="today">今天</th></tr></tfoot></table></div></div>
+    </div>
+</form>
+<div class="datetimepicker datetimepicker-dropdown-bottom-right dropdown-menu" style="left: 0px; z-index: 100009;">
+    <div class="datetimepicker-minutes" style="display: none;">
+        <table class=" table-condensed">
+            <thead>
+            <tr>
+                <th class="prev" style="visibility: visible;"><i class="glyphicon icon-arrow-left"></i></th>
+                <th colspan="5" class="switch">19 八月 2023</th>
+                <th class="next" style="visibility: visible;"><i class="glyphicon icon-arrow-right"></i></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td colspan="7"><span class="minute">18:00</span><span class="minute">18:05</span><span class="minute">18:10</span><span
+                        class="minute">18:15</span><span class="minute">18:20</span><span
+                        class="minute">18:25</span><span class="minute">18:30</span><span
+                        class="minute">18:35</span><span class="minute">18:40</span><span
+                        class="minute active">18:45</span><span class="minute">18:50</span><span
+                        class="minute">18:55</span></td>
+            </tr>
+            </tbody>
+            <tfoot>
+            <tr>
+                <th colspan="7" class="today">今天</th>
+            </tr>
+            </tfoot>
+        </table>
+    </div>
+    <div class="datetimepicker-hours" style="display: none;">
+        <table class=" table-condensed">
+            <thead>
+            <tr>
+                <th class="prev" style="visibility: visible;"><i class="glyphicon icon-arrow-left"></i></th>
+                <th colspan="5" class="switch">19 八月 2023</th>
+                <th class="next" style="visibility: visible;"><i class="glyphicon icon-arrow-right"></i></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td colspan="7"><span class="hour">0:00</span><span class="hour">1:00</span><span
+                        class="hour">2:00</span><span class="hour">3:00</span><span class="hour">4:00</span><span
+                        class="hour">5:00</span><span class="hour">6:00</span><span class="hour">7:00</span><span
+                        class="hour">8:00</span><span class="hour">9:00</span><span class="hour">10:00</span><span
+                        class="hour">11:00</span><span class="hour">12:00</span><span class="hour">13:00</span><span
+                        class="hour">14:00</span><span class="hour">15:00</span><span class="hour">16:00</span><span
+                        class="hour">17:00</span><span class="hour active">18:00</span><span
+                        class="hour">19:00</span><span class="hour">20:00</span><span class="hour">21:00</span><span
+                        class="hour">22:00</span><span class="hour">23:00</span></td>
+            </tr>
+            </tbody>
+            <tfoot>
+            <tr>
+                <th colspan="7" class="today">今天</th>
+            </tr>
+            </tfoot>
+        </table>
+    </div>
+    <div class="datetimepicker-days" style="display: block;">
+        <table class=" table-condensed">
+            <thead>
+            <tr>
+                <th class="prev" style="visibility: visible;"><i class="glyphicon icon-arrow-left"></i></th>
+                <th colspan="5" class="switch">八月 2023</th>
+                <th class="next" style="visibility: visible;"><i class="glyphicon icon-arrow-right"></i></th>
+            </tr>
+            <tr>
+                <th class="dow">一</th>
+                <th class="dow">二</th>
+                <th class="dow">三</th>
+                <th class="dow">四</th>
+                <th class="dow">五</th>
+                <th class="dow">六</th>
+                <th class="dow">日</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td class="day old">31</td>
+                <td class="day">1</td>
+                <td class="day">2</td>
+                <td class="day">3</td>
+                <td class="day">4</td>
+                <td class="day">5</td>
+                <td class="day">6</td>
+            </tr>
+            <tr>
+                <td class="day">7</td>
+                <td class="day">8</td>
+                <td class="day">9</td>
+                <td class="day">10</td>
+                <td class="day">11</td>
+                <td class="day">12</td>
+                <td class="day">13</td>
+            </tr>
+            <tr>
+                <td class="day">14</td>
+                <td class="day">15</td>
+                <td class="day">16</td>
+                <td class="day">17</td>
+                <td class="day">18</td>
+                <td class="day today active">19</td>
+                <td class="day">20</td>
+            </tr>
+            <tr>
+                <td class="day">21</td>
+                <td class="day">22</td>
+                <td class="day">23</td>
+                <td class="day">24</td>
+                <td class="day">25</td>
+                <td class="day">26</td>
+                <td class="day">27</td>
+            </tr>
+            <tr>
+                <td class="day">28</td>
+                <td class="day">29</td>
+                <td class="day">30</td>
+                <td class="day">31</td>
+                <td class="day new">1</td>
+                <td class="day new">2</td>
+                <td class="day new">3</td>
+            </tr>
+            <tr>
+                <td class="day new">4</td>
+                <td class="day new">5</td>
+                <td class="day new">6</td>
+                <td class="day new">7</td>
+                <td class="day new">8</td>
+                <td class="day new">9</td>
+                <td class="day new">10</td>
+            </tr>
+            </tbody>
+            <tfoot>
+            <tr>
+                <th colspan="7" class="today">今天</th>
+            </tr>
+            </tfoot>
+        </table>
+    </div>
+    <div class="datetimepicker-months" style="display: none;">
+        <table class="table-condensed">
+            <thead>
+            <tr>
+                <th class="prev" style="visibility: visible;"><i class="glyphicon icon-arrow-left"></i></th>
+                <th colspan="5" class="switch">2023</th>
+                <th class="next" style="visibility: visible;"><i class="glyphicon icon-arrow-right"></i></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td colspan="7"><span class="month">一月</span><span class="month">二月</span><span
+                        class="month">三月</span><span class="month">四月</span><span class="month">五月</span><span
+                        class="month">六月</span><span class="month">七月</span><span
+                        class="month active">八月</span><span class="month">九月</span><span
+                        class="month">十月</span><span class="month">十一月</span><span class="month">十二月</span></td>
+            </tr>
+            </tbody>
+            <tfoot>
+            <tr>
+                <th colspan="7" class="today">今天</th>
+            </tr>
+            </tfoot>
+        </table>
+    </div>
+    <div class="datetimepicker-years" style="display: none;">
+        <table class="table-condensed">
+            <thead>
+            <tr>
+                <th class="prev" style="visibility: visible;"><i class="glyphicon icon-arrow-left"></i></th>
+                <th colspan="5" class="switch">2020-2029</th>
+                <th class="next" style="visibility: visible;"><i class="glyphicon icon-arrow-right"></i></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td colspan="7"><span class="year old">2019</span><span class="year">2020</span><span
+                        class="year">2021</span><span class="year">2022</span><span class="year active">2023</span><span
+                        class="year">2024</span><span class="year">2025</span><span class="year">2026</span><span
+                        class="year">2027</span><span class="year">2028</span><span class="year">2029</span><span
+                        class="year old">2030</span></td>
+            </tr>
+            </tbody>
+            <tfoot>
+            <tr>
+                <th colspan="7" class="today">今天</th>
+            </tr>
+            </tfoot>
+        </table>
+    </div>
+</div>
 
-    <!-- WPA start -->
-    <!-- WPA end -->
-
+<!-- WPA start -->
+<!-- WPA end -->
 
 
 <script type="text/javascript">
@@ -1930,6 +2374,7 @@
         }
     }
     QuerySupplierNotice();
+
     //代售点通知查询
     function QuerySupplierNotice() {
         $.post(
@@ -1947,8 +2392,7 @@
                     if (data != "失败" && data != "请求异常" && data != "用户未登录") {
                         $("#noticeId").text(data);
                         return;
-                    }
-                    else if (data == noticeOldInfo) {
+                    } else if (data == noticeOldInfo) {
                         return;
                     }
                     $("#noticeId").text("");
@@ -1956,6 +2400,7 @@
             },
             "text");
     }
+
     setInterval(QuerySupplierNotice, 180000);
 </script>
 
@@ -2047,8 +2492,7 @@
                 if (data == "0") {
                     $("#CountTrainShutDownOrder").css("display", "none");
                     $("#TrainShutDownOrderCount").text("");
-                }
-                else {
+                } else {
                     $("#CountTrainShutDownOrder").css("display", "");
                     $("#TrainShutDownOrderCount").text(data);
                 }
@@ -2066,8 +2510,7 @@
                 if (data == "0") {
                     $("#QueryLeftTicketCount").css("display", "none");
                     $("#QueryLeftTicketCount").text("");
-                }
-                else {
+                } else {
                     $("#QueryLeftTicketCount").css("display", "");
 
                     $("#QueryLeftTicketCount").text(data);
@@ -2086,8 +2529,7 @@
                 if (data == "0") {
                     $("#CheckTicketSucCount").css("display", "none");
                     $("#CheckTicketSucCount").text("");
-                }
-                else {
+                } else {
                     $("#CheckTicketSucCount").css("display", "");
                     $("#CheckTicketSucCount").text(data);
                 }
@@ -2105,8 +2547,7 @@
                 if (data == "0") {
                     $("#TicketErrorCount").css("display", "none");
                     $("#TicketErrorCount").text("");
-                }
-                else {
+                } else {
                     $("#TicketErrorCount").css("display", "");
                     $("#TicketErrorCount").text(data);
                 }
@@ -2114,7 +2555,6 @@
             "text");
     }
 
-        
 
     CountDealingTicket();
     setInterval(CountDealingTicket, 60000);
@@ -2122,31 +2562,44 @@
     CountTicketError();
     setInterval(CountTicketError, 300000);
 
-    
-
-
 
 </script>
 
-<iframe width="1628" height="452" id="_QIDIAN_WEB_IM_IFRAME_2885768689" scrolling="no" frameborder="0" allowtransparency="true" src="./lian-tie.com_agentadmin_offline_SupplierBookingEPay.aspx_files/pc.html" allow="camera *; microphone *" style="position: fixed; z-index: 2000000010; width: 300px; height: 50px; bottom: 0px; right: 10px; box-shadow: rgba(0, 0, 0, 0.16) 0px 5px 40px; border-radius: 6px 6px 0px 0px; display: none;" data-isopen="0"></iframe><iframe width="0" height="0" id="_QD_STATUS_MANAGE_SOCKET_IFRAME_2885768689" scrolling="no" frameborder="0" allowtransparency="true" src="./lian-tie.com_agentadmin_offline_SupplierBookingEPay.aspx_files/index.html" style="width: 0px; height: 0px; position: fixed; right: 0px; bottom: 0px;"></iframe><div style="position: fixed; bottom: 0px; left: 0px; width: 250px; height: 260px; background: rgb(255, 255, 255); border: 1px solid rgb(204, 204, 204); padding: 10px; z-index: 9999;"><h3>辅助窗口</h3><h5 id="PrinceSetAutoMode">当前自动化模式：全自动</h5><span>1.自动化模式(按Esc键切换)<br>2.自动化模式:全自动、半自动分段</span><p><hr></p><table>
-		<thead>
-			<tr>
-			  <th>按键</th>
-			  <th>仅在"半自动分段"模式有效</th>
-			</tr>
-		</thead>
-		<tbody>
-		  <tr>
-			<td>f1</td>
-			<td>根据订单选票</td>
-		  </tr>
-		  <tr>
-			<td>f2</td>
-			<td>输入乘客信息</td>
-		  </tr>
-		  <tr>
-			<td>f3</td>
-			<td>开始扣款</td>
-		  </tr>
-		</tbody>
-	</table></div></body></html>
+<iframe width="1628" height="452" id="_QIDIAN_WEB_IM_IFRAME_2885768689" scrolling="no" frameborder="0"
+        allowtransparency="true" src="./lian-tie.com_agentadmin_offline_SupplierBookingEPay.aspx_files/pc.html"
+        allow="camera *; microphone *"
+        style="position: fixed; z-index: 2000000010; width: 300px; height: 50px; bottom: 0px; right: 10px; box-shadow: rgba(0, 0, 0, 0.16) 0px 5px 40px; border-radius: 6px 6px 0px 0px; display: none;"
+        data-isopen="0"></iframe>
+<iframe width="0" height="0" id="_QD_STATUS_MANAGE_SOCKET_IFRAME_2885768689" scrolling="no" frameborder="0"
+        allowtransparency="true" src="./lian-tie.com_agentadmin_offline_SupplierBookingEPay.aspx_files/index.html"
+        style="width: 0px; height: 0px; position: fixed; right: 0px; bottom: 0px;"></iframe>
+<div style="position: fixed; bottom: 0px; left: 0px; width: 250px; height: 260px; background: rgb(255, 255, 255); border: 1px solid rgb(204, 204, 204); padding: 10px; z-index: 9999;">
+    <h3>辅助窗口</h3><h5 id="PrinceSetAutoMode">当前自动化模式：全自动</h5><span>1.自动化模式(按Esc键切换)<br>2.自动化模式:全自动、半自动分段</span>
+    <p>
+    <hr>
+    </p>
+    <table>
+        <thead>
+        <tr>
+            <th>按键</th>
+            <th>仅在"半自动分段"模式有效</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td>f1</td>
+            <td>根据订单选票</td>
+        </tr>
+        <tr>
+            <td>f2</td>
+            <td>输入乘客信息</td>
+        </tr>
+        <tr>
+            <td>f3</td>
+            <td>开始扣款</td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+</body>
+</html>

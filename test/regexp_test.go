@@ -1,12 +1,16 @@
 package test
 
 import (
+	"fmt"
 	"github.com/leeprince/goinfra/perror"
 	"github.com/leeprince/goinfra/plog"
+	"github.com/leeprince/goinfra/test/constants"
+	"github.com/leeprince/goinfra/test/message"
 	"github.com/spf13/cast"
 	"regexp"
 	"strings"
 	"sync"
+	"testing"
 )
 
 /**
@@ -14,6 +18,146 @@ import (
  * @Date:   2023/8/19 18:20
  * @Desc:
  */
+
+func TestMatchRequired(t *testing.T) {
+	type args struct {
+		logID    string
+		str      string
+		seatType message.SeatType
+	}
+	var tests = []struct {
+		name string
+		args args
+	}{
+		{
+			name: "",
+			args: args{
+				logID:    "",
+				str:      "连座1,1F,选座不满足,可出其他坐席",
+				seatType: message.SeatTypeHard,
+			},
+		},
+		{
+			name: "",
+			args: args{
+				str:      "1B,选座不满足,可出其他坐席",
+				seatType: message.SeatTypeHard,
+			},
+		},
+		{
+			name: "",
+			args: args{
+				str:      "不接受其它坐席，不接受无座",
+				seatType: message.SeatTypeHard,
+			},
+		},
+		{
+			name: "",
+			args: args{
+				str:      "邻座，1张D座，1张F座",
+				seatType: message.SeatTypeHard,
+			},
+		},
+		{
+			name: "",
+			args: args{
+				str:      "靠窗，条件不满足，直接失败",
+				seatType: message.SeatTypeHard,
+			},
+		},
+		{
+			name: "",
+			args: args{
+				str:      "在线选座1F,条件不满足直接失败",
+				seatType: message.SeatTypeHard,
+			},
+		},
+		{
+			name: "",
+			args: args{
+				str:      "2张下铺，条件不满足，直接失败",
+				seatType: message.SeatTypeHardSleeper,
+			},
+		},
+		{
+			name: "",
+			args: args{
+				str:      "1张下铺，条件不满足，直接失败",
+				seatType: message.SeatTypeHardSleeper,
+			},
+		},
+		{
+			name: "",
+			args: args{
+				str:      "1张中铺，条件不满足，直接失败",
+				seatType: message.SeatTypeHardSleeper,
+			},
+		},
+		{
+			name: "",
+			args: args{
+				str:      "1张中铺，条件不满足，可出票",
+				seatType: message.SeatTypeHard,
+			},
+		},
+		{
+			name: "",
+			args: args{
+				str:      "1张下铺，条件不满足，直接失败  >>> 三个人的硬卧票，只要求必须有一个下铺",
+				seatType: message.SeatTypeHardSleeper,
+			},
+		},
+		{
+			name: "",
+			args: args{
+				str:      "中下铺1人,条件不满足直接失败;",
+				seatType: message.SeatTypeHardSleeper,
+			},
+		},
+		{
+			name: "",
+			args: args{
+				str:      "必须：10车厢",
+				seatType: message.SeatTypeSecond,
+			},
+		},
+		{
+			name: "",
+			args: args{
+				str:      "必须：01车厢",
+				seatType: message.SeatTypeSecond,
+			},
+		},
+		{
+			name: "",
+			args: args{
+				str:      "1张A座，1张B座，1张C座",
+				seatType: message.SeatTypeSecond,
+			},
+		},
+		{
+			name: "",
+			args: args{
+				str:      "1张A座，2张B座，3张C座",
+				seatType: message.SeatTypeSecond,
+			},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			
+			personNumber := int32(2)
+			seatPositionType, matchPositionSuffix, positionList, err := MatchRequired(tt.args.logID, personNumber, tt.args.str, tt.args.seatType)
+			if err != nil {
+				fmt.Println("err:", err)
+				return
+			}
+			fmt.Printf("seatPositionType:%+v \n", seatPositionType)
+			fmt.Printf("matchPositionSuffix:%+v \n", matchPositionSuffix)
+			fmt.Printf("positionList:%+v \n", positionList)
+		})
+	}
+}
 
 var (
 	onceMatchRequired sync.Once
@@ -220,4 +364,11 @@ func MatchRequired(logID string, personNumber int32, str string, seatType messag
 	err = perror.NewBizErr(constants.WinErrSeatMatch.Key(), constants.WinErrSeatMatch.Value())
 	plogEntry.WithError(err).Error("不符合上面所有的规则，请联系运营商！")
 	return
+}
+
+func IsSleeperSeatType(seatType message.SeatType) bool {
+	if strings.Contains(string(seatType), "Sleeper") {
+		return true
+	}
+	return false
 }
