@@ -11,6 +11,9 @@ import (
  * @Desc:
  */
 
+// 注意：
+// 	- yaml文件字段对应golang结构体中不指定yaml的标签使用的字段时默认全小写！
+//  - config：需要传递地址指针的值过来
 func ParseYaml(file string, config interface{}) {
 	content, err := os.ReadFile(file)
 	if err != nil {
