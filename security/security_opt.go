@@ -43,6 +43,13 @@ const (
 	OutputTypeHex
 )
 
+type PKCSPaddingType int32
+
+const (
+	PKCSPaddingType5 PKCSPaddingType = iota
+	PKCSPaddingType7
+)
+
 type Option struct {
 	outputType       OutInputType     // 加密输出的字符串类型：base64/十六字符串。默认：base64
 	inputType        OutInputType     // 解密输入的字符串类型：base64/十六字符串。默认：base64
@@ -50,6 +57,7 @@ type Option struct {
 	aesIV            string           // AES iv
 	aesBlockModeType AESBlockModeType // AES的加密模式
 	bcryptCost       int              // bcrypt 的工作因子
+	pkcsPaddingType  PKCSPaddingType  // pkcs Padding: 5/7
 }
 
 type OptionFunc func(opt *Option)
@@ -85,6 +93,7 @@ func initOption(opts ...OptionFunc) *Option {
 		aesIV:            aesDefaultIV,
 		aesBlockModeType: AESBlockModeTypeCBC,
 		bcryptCost:       bcrypt.MinCost,
+		pkcsPaddingType:  PKCSPaddingType7,
 	}
 	for _, optFunc := range opts {
 		optFunc(opt)
@@ -128,5 +137,11 @@ func WithBcryptCost(v int) OptionFunc {
 			v = bcrypt.MinCost
 		}
 		opt.bcryptCost = v
+	}
+}
+
+func WithPKCSPaddingType(v PKCSPaddingType) OptionFunc {
+	return func(opt *Option) {
+		opt.pkcsPaddingType = v
 	}
 }

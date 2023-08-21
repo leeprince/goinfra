@@ -146,8 +146,8 @@ func AESEncrypt(src, key string, opts ...OptionFunc) (string, error) {
 		// 加密模式
 		blockModeCBCFunc := cipher.NewCBCEncrypter(block, []byte(opt.aesIV))
 		content := []byte(src)
-		// 填充
-		content = aesPKCS5Padding(content, block.BlockSize())
+		// 填充：当前只有这个padding
+		content = aesPKCS7Padding(content, block.BlockSize())
 		cryptByte = make([]byte, len(content))
 		// 执行加密
 		blockModeCBCFunc.CryptBlocks(cryptByte, content)
@@ -194,18 +194,20 @@ func AESDecrypt(crypt, key string, opts ...OptionFunc) (string, error) {
 	}
 	
 	// 取出
-	return string(aesPKCS5UnPadding(decryptByte)), nil
+	return string(aesPKCS7UnPadding(decryptByte)), nil
 }
 
 // AES填充函数
-func aesPKCS5Padding(ciphertext []byte, blockSize int) []byte {
+func aesPKCS7Padding(ciphertext []byte, blockSize int) []byte {
+	// 判断缺少几位长度。最少1，最多 blockSize
 	padding := blockSize - len(ciphertext)%blockSize
 	padtext := bytes.Repeat([]byte{byte(padding)}, padding)
+	// 补足位数。把切片[]byte{byte(padding)}复制padding个
 	return append(ciphertext, padtext...)
 }
 
 // AES去填充函数
-func aesPKCS5UnPadding(encrypt []byte) []byte {
+func aesPKCS7UnPadding(encrypt []byte) []byte {
 	padding := encrypt[len(encrypt)-1]
 	return encrypt[:len(encrypt)-int(padding)]
 }
