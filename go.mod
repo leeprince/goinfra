@@ -56,6 +56,7 @@ require (
 
 require (
 	github.com/elastic/go-sysinfo v1.11.0
+	github.com/robfig/cron/v3 v3.0.1
 	github.com/zcalusic/sysinfo v1.0.1
 )
 

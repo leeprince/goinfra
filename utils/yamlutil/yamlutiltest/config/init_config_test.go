@@ -42,6 +42,7 @@ func InitConfig(confPath ...string) {
 	plog.WithField("configPath", configPath).WithField("Config", Config).Info("initConfigLocal:")
 }
 
+// 结构体中不指定yaml的标签使用的字段时默认全小写！
 type conf struct {
 	Env          string `yaml:"Env"`
 	AppName      string `yaml:"AppName"`
@@ -67,9 +68,11 @@ type listenNetwork struct {
 	Order order `yaml:"Order"`
 }
 type order struct {
-	Url                  string   `yaml:"Url"`
-	NewOrderBodyContains string   `yaml:"NewOrderBodyContains"` // 新订单时的响应包含内容
-	SaveNewOrderInfo     fileInfo `yaml:"SaveNewOrderInfo"`     // 新订单的保存信息
+	Url                  string `yaml:"Url"`
+	NewOrderBodyContains string `yaml:"NewOrderBodyContains"` // 新订单时的响应包含内容
+
+	//SaveNewOrderInfo     fileInfo `yaml:"SaveNewOrderInfo"`     // 新订单的保存信息
+	SaveNewOrderInfo fileInfo // 新订单的保存信息//
 }
 type fileInfo struct {
 	FilePath string `yaml:"FilePath"` // 文件路径
