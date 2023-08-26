@@ -41,6 +41,10 @@ func main() {
 	
 	fmt.Printf("Server listening on port:%d ...\n", *port)
 	err := http.ListenAndServe(fmt.Sprintf(":%d", *port), nil)
+	if err != nil {
+		log.Fatal("ListenAndServe err:", err)
+	}
+	
 	/*
 		如果在第一次访问默认路由时一切正常，但在第二次访问时浏览器报错“与服务器的连接被重置”，可能是由于服务器没有正确处理HTTP Keep-Alive 连接导致的。
 		HTTP-Alive 是一种机制，它允许客户端和服务器在同一 TCP 连接上进行多个 HTTP 请求和响应。默认情况下， 的 http.Server 是启用 Keep-Alive 的，但在某些情况下，可能会出现连接被重置的问题。
@@ -62,9 +66,8 @@ func main() {
 			}
 		},
 	}
-	err := server.ListenAndServe()*/
-	
+	err := server.ListenAndServe()
 	if err != nil {
 		log.Fatal("ListenAndServe err:", err)
-	}
+	}*/
 }
