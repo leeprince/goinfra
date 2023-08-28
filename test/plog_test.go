@@ -122,6 +122,7 @@ func TestPlogEntry(t *testing.T) {
 	
 	plogEntry.Info("response")
 	
+	plog.Info("hello world")
 }
 
 func TestPanicLog(t *testing.T) {

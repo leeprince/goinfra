@@ -5,9 +5,11 @@ import (
 	"context"
 	"crypto/tls"
 	jsoniter "github.com/json-iterator/go"
+	"github.com/leeprince/goinfra/consts"
 	"github.com/leeprince/goinfra/perror"
 	"github.com/leeprince/goinfra/plog"
 	"github.com/leeprince/goinfra/trace/opentracing/jaegerclient"
+	"github.com/leeprince/goinfra/utils/contextutil"
 	"github.com/leeprince/goinfra/utils/idutil"
 	"github.com/leeprince/goinfra/utils/stringutil"
 	"github.com/pkg/errors"
@@ -47,20 +49,25 @@ type HttpClient struct {
 	requestBody   interface{}
 	skipVerify    bool // 是否跳过安全校验
 	notLogging    bool // 不打印日志标记
-	isHttpTrace   bool // 是否注入调用链跟踪标记到请求头中 能开启的必要条件是：s.isHttpTrace && jaeger_client.SpanFromContext(ctx) != nil，也就是需要初始化jaeger获得span的context后才能正常开启链路追踪
+	isHttpTrace   bool // 是否使用jaeger中间件进行链路追踪：注入调用链跟踪标记到请求头中 能开启的必要条件是：s.isHttpTrace && jaeger_client.SpanFromContext(ctx) != nil，也就是需要初始化jaeger获得span的context后才能正常开启链路追踪
 	proxyURL      *url.URL
 	checkRedirect func(req *http.Request, via []*http.Request) error // 检查重定向的方法
 }
 
+//
+// NewHttpClient
+//  @Description: http 客户端
+//  @return *HttpClient
+//
 func NewHttpClient() *HttpClient {
 	hc := &HttpClient{
 		url:           "",
 		timeout:       HttpDefaultTimeout,
 		method:        http.MethodGet,
-		logID:         idutil.UniqIDV1(),
+		logID:         "",
 		header:        nil,
 		requestBody:   nil,
-		ctx:           context.Background(),
+		ctx:           nil,
 		skipVerify:    false,
 		notLogging:    false,
 		isHttpTrace:   false,
@@ -71,6 +78,7 @@ func NewHttpClient() *HttpClient {
 	return hc
 }
 
+// WithURL 请求的主机地址+路由前缀(http://xxx.xx.xx/api-route-prefix)
 func (s *HttpClient) WithURL(url string) *HttpClient {
 	s.url = url
 	return s
@@ -154,8 +162,20 @@ func (s *HttpClient) do() ([]byte, *http.Response, error) {
 		return nil, nil, errors.New("无效的URL")
 	}
 	
+	if s.ctx != nil {
+		if s.logID == "" {
+			s.logID = contextutil.LogIdByContext(&s.ctx)
+		}
+	} else {
+		s.ctx = context.Background()
+		s.logID = idutil.UniqIDV3()
+	}
+	
 	if s.header == nil {
 		s.header = defaultHeader
+	}
+	if _, ok := s.header[consts.HeaderXLogID]; !ok {
+		s.header[consts.HeaderXLogID] = s.logID
 	}
 	
 	var (

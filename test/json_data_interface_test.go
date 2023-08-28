@@ -3,6 +3,7 @@ package test
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/leeprince/goinfra/test/message"
 	"log"
 	"testing"
 	"time"
@@ -77,14 +78,14 @@ func TestJsonDataInterface(t *testing.T) {
 	                "carriage": "03",
 	                "seatNumber": "02A",
 	                "sleeper": "Down",
-	                "seatPrice": "该乘客一程票价格（单位角）"
+	                "seatPrice": 1000
 	            }
 	        ]
 	    }
 	}`
 	
 	// 解析数据
-	var result CallbackOrderTaskResult
+	var result message.CallbackOrderTaskResponse
 	err := json.Unmarshal([]byte(data), &result)
 	if err != nil {
 		log.Fatal("解析data为CallbackOrderTaskResult错误:", err)
@@ -93,32 +94,46 @@ func TestJsonDataInterface(t *testing.T) {
 	fmt.Println("result:", result)
 	
 	// 开始输入
-	if result.ResultType == string(ResultTypeSuccess) {
+	if result.ResultType == message.ResultTypeSuccess {
 		// must be a pointer to an interface or to a type implementing the interface
-		// 注意 result.Data 是接口类型，所以必须用指针类型进行赋值才可以断言类型得到正确结果即：&ResultTypeSuccessData{}
+		// 注意 result.Data 是接口类型，所以必须用指针类型进行赋值才可以断言类型得到正确结果即：&SuccessData{},且 &message.CallbackOrderTaskResponse
 		// 正确
-		result.Data = &ResultTypeSuccessData{}
+		result.Data = &message.SuccessData{}
 		err = json.Unmarshal([]byte(data), &result)
 		if err != nil {
-			log.Fatal("解析data为CallbackOrderTaskResult.resultTypeSuccessData错误:", err)
+			log.Fatal("解析data为 CallbackOrderTaskResponse.SuccessData 错误:", err)
 		}
-		resultTypeSuccessData, resultTypeSuccessDataOk := result.Data.(*ResultTypeSuccessData)
+		resultTypeSuccessData, resultTypeSuccessDataOk := result.Data.(*message.SuccessData)
 		if !resultTypeSuccessDataOk {
-			log.Fatal("断言ResultTypeSuccessData错误:", resultTypeSuccessDataOk)
+			log.Fatal("断言 SuccessData 错误:", resultTypeSuccessDataOk)
 		}
 		fmt.Println("resultTypeSuccessData:", resultTypeSuccessData)
 		
-		// 错误：原因 result.Data 是接口类型，所以必须用指针类型进行赋值才可以断言类型得到正确结果即：&ResultTypeSuccessData{}
-		result.Data = ResultTypeSuccessData{}
+		/*// 错误：原因 result.Data 是接口类型，所以必须用指针类型进行赋值才可以断言类型得到正确结果即：&SuccessData{},且 &message.CallbackOrderTaskResponse
+		result.Data = &message.SuccessData{}
+		err = json.Unmarshal([]byte(data), result)
+		if err != nil {
+			log.Fatal("解析 data CallbackOrderTaskResponse.SuccessData 1 错误:", err)
+		}
+		resultTypeSuccessData1, resultTypeSuccessDataOk := result.Data.(message.SuccessData)
+		if !resultTypeSuccessDataOk {
+			log.Println("断言 SuccessData 1 result:", result)
+			log.Fatal("断言 SuccessData 1 错误:", resultTypeSuccessDataOk)
+		}
+		fmt.Println("SuccessData 1:", resultTypeSuccessData1)*/
+		
+		// 错误：原因 result.Data 是接口类型，所以必须用指针类型进行赋值才可以断言类型得到正确结果即：&SuccessData{},且 &message.CallbackOrderTaskResponse
+		result.Data = message.SuccessData{}
 		err = json.Unmarshal([]byte(data), &result)
 		if err != nil {
-			log.Fatal("解析data为CallbackOrderTaskResult.resultTypeSuccessData错误:", err)
+			log.Fatal("解析 data CallbackOrderTaskResponse.SuccessData 2 错误:", err)
 		}
-		resultTypeSuccessData1, resultTypeSuccessDataOk := result.Data.(ResultTypeSuccessData)
+		resultTypeSuccessData2, resultTypeSuccessDataOk := result.Data.(message.SuccessData)
 		if !resultTypeSuccessDataOk {
-			log.Fatal("断言ResultTypeSuccessData1错误:", resultTypeSuccessDataOk)
+			log.Println("断言 SuccessData 2 result:", result)
+			log.Fatal("断言 SuccessData 2 错误:", resultTypeSuccessDataOk)
 		}
-		fmt.Println("resultTypeSuccessData1:", resultTypeSuccessData1)
+		fmt.Println("SuccessData 2:", resultTypeSuccessData2)
 	}
 	
 	time.Sleep(time.Second * 20)

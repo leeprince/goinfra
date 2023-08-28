@@ -2,6 +2,8 @@
 // Use of this resource code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
+// 复制自github.com/golang/protobuf@v1.4.3/jsonpb/encoder.go
+
 package jsonpbutil
 
 import (
