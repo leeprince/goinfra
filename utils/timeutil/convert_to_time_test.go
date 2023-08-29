@@ -16,23 +16,23 @@ func TestToTimeUnix(t *testing.T) {
 	var v string
 	v = "2023-05-18 16:17:18"
 	fmt.Println(">>>")
-	fmt.Println(ToTimeUnix(v, consts.TimeLayoutV1))
+	fmt.Println(ToTimeUnix(v, consts.TimeYYmdHis))
 
 	v = "2023-05-18 16:17"
 	fmt.Println(">>>")
-	fmt.Println(ToTimeUnix(v, consts.TimeLayoutV2))
+	fmt.Println(ToTimeUnix(v, consts.TimeYYmdHi))
 
 	v = "2023-05-18 16"
 	fmt.Println(">>>")
-	fmt.Println(ToTimeUnix(v, consts.TimeLayoutV3))
+	fmt.Println(ToTimeUnix(v, consts.TimeYYmdH))
 
 	v = "2023-05-18"
 	fmt.Println(">>>")
-	fmt.Println(ToTimeUnix(v, consts.TimeLayoutV4))
+	fmt.Println(ToTimeUnix(v, consts.TimeYYmd))
 
 	v = "202308"
 	fmt.Println(">>>")
-	fmt.Println(ToTimeUnix(v, consts.TimeLayoutV71))
+	fmt.Println(ToTimeUnix(v, consts.TimeYYmm))
 }
 
 func TestToLocalUnix(t *testing.T) {
@@ -50,7 +50,7 @@ func TestToLocalUnix(t *testing.T) {
 			name: "",
 			args: args{
 				timeStr:    "2023-05-18 16:17:18",
-				timeLayout: consts.TimeLayoutV1,
+				timeLayout: consts.TimeYYmdHis,
 			},
 			wantTimeUnix: 0,
 			wantErr:      false,
@@ -59,7 +59,7 @@ func TestToLocalUnix(t *testing.T) {
 			name: "",
 			args: args{
 				timeStr:    "2023-05-18 16:17",
-				timeLayout: consts.TimeLayoutV2,
+				timeLayout: consts.TimeYYmdHi,
 			},
 			wantTimeUnix: 0,
 			wantErr:      false,
@@ -68,7 +68,7 @@ func TestToLocalUnix(t *testing.T) {
 			name: "",
 			args: args{
 				timeStr:    "2023-05-18 16",
-				timeLayout: consts.TimeLayoutV3,
+				timeLayout: consts.TimeYYmdH,
 			},
 			wantTimeUnix: 0,
 			wantErr:      false,
@@ -77,7 +77,7 @@ func TestToLocalUnix(t *testing.T) {
 			name: "",
 			args: args{
 				timeStr:    "2023-05-18",
-				timeLayout: consts.TimeLayoutV4,
+				timeLayout: consts.TimeYYmd,
 			},
 			wantTimeUnix: 0,
 			wantErr:      false,
@@ -86,7 +86,7 @@ func TestToLocalUnix(t *testing.T) {
 			name: "",
 			args: args{
 				timeStr:    "05-18-2023",
-				timeLayout: consts.TimeLayoutV5,
+				timeLayout: consts.TimeMdyy,
 			},
 			wantTimeUnix: 0,
 			wantErr:      false,
@@ -95,7 +95,7 @@ func TestToLocalUnix(t *testing.T) {
 			name: "",
 			args: args{
 				timeStr:    "05-18-23",
-				timeLayout: consts.TimeLayoutV6,
+				timeLayout: consts.TimeMdy,
 			},
 			wantTimeUnix: 0,
 			wantErr:      false,
@@ -104,7 +104,7 @@ func TestToLocalUnix(t *testing.T) {
 			name: "",
 			args: args{
 				timeStr:    "2023-05-18",
-				timeLayout: consts.TimeLayoutV4,
+				timeLayout: consts.TimeYYmd,
 			},
 			wantTimeUnix: 0,
 			wantErr:      false,
@@ -113,7 +113,7 @@ func TestToLocalUnix(t *testing.T) {
 			name: "",
 			args: args{
 				timeStr:    "05-18-23",
-				timeLayout: consts.TimeLayoutV6,
+				timeLayout: consts.TimeMdy,
 			},
 			wantTimeUnix: 0,
 			wantErr:      false,
@@ -122,7 +122,7 @@ func TestToLocalUnix(t *testing.T) {
 			name: "",
 			args: args{
 				timeStr:    "2023/05/18",
-				timeLayout: consts.TimeLayoutV41,
+				timeLayout: consts.TimeYymd,
 			},
 			wantTimeUnix: 0,
 			wantErr:      false,
@@ -145,17 +145,17 @@ func TestUnixToTime(t *testing.T) {
 }
 
 func TestGetMonthFirthDay(t *testing.T) {
-	d1 := GetMonthFirthDayTime()
+	d1 := MonthFirthDayTime()
 	fmt.Println(d1)
 }
 
 func TestGetYearFirthMonthTime(t *testing.T) {
-	m1 := GetYearFirthMonthTime()
+	m1 := YearFirthMonthTime()
 	fmt.Println(m1)
 }
 
 func TestGetPreMonthUnixTimeRange(t *testing.T) {
-	gotStartTime, gotEndTime := GetPreMonthUnixTimeRange()
+	gotStartTime, gotEndTime := PreMonthUnixTimeRange()
 
 	fmt.Println(gotStartTime.Unix())
 	fmt.Println(gotEndTime.Unix())

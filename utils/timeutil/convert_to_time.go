@@ -47,7 +47,7 @@ func ToTimeByUnix(unixTime int64) (t time.Time) {
 }
 
 // 计算当前月1日的时间
-func GetMonthFirthDayTime() time.Time {
+func MonthFirthDayTime() time.Time {
 	// 获取当前时间
 	currentTime := time.Now()
 
@@ -55,7 +55,7 @@ func GetMonthFirthDayTime() time.Time {
 }
 
 // 计算当前年1月的时间
-func GetYearFirthMonthTime() time.Time {
+func YearFirthMonthTime() time.Time {
 	// 获取当前时间
 	currentTime := time.Now()
 
@@ -63,11 +63,11 @@ func GetYearFirthMonthTime() time.Time {
 }
 
 // 计算当前年1月~当前月
-func GetCurrentYearMonthList() []int64 {
+func CurrentYearMonthList() []int64 {
 	// 当前年1月
-	firstMonth := cast.ToInt64(GetYearFirthMonthTime().Format(consts.TimeLayoutV71))
+	firstMonth := cast.ToInt64(YearFirthMonthTime().Format(consts.TimeYYmm))
 	// 当前月
-	endMonth := cast.ToInt64(GetMonthFirthDayTime().Format(consts.TimeLayoutV71))
+	endMonth := cast.ToInt64(MonthFirthDayTime().Format(consts.TimeYYmm))
 
 	var monthList []int64
 	for firstMonth <= endMonth {
@@ -78,7 +78,7 @@ func GetCurrentYearMonthList() []int64 {
 }
 
 // 获取当前时间的上一个月开始时间&结束时间
-func GetPreMonthUnixTimeRange() (startTime, endTime time.Time) {
+func PreMonthUnixTimeRange() (startTime, endTime time.Time) {
 	// 获取当前时间
 	currentTime := time.Now()
 

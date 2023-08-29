@@ -13,60 +13,66 @@ import (
 
 /*
 const (
-	TimeLayoutV1  = "2006-01-02 15:04:05"
+	TimeYYmdHis  = "2006-01-02 15:04:05"
 	TimeLayoutV11 = "2006-01-02 15:04:05.999999999 -0700 MST"
-	TimeLayoutV12 = "2006-01-02 15:04:05.999999999" // 机器原因，基本值都等于"2006-01-02 15:04:05.999999"
-	TimeLayoutV13 = "2006-01-02 15:04:05.999999"
-	TimeLayoutV14 = "2006-01-02 15:04:05.999"
-	TimeLayoutV15 = "06-01-02 15:04:05"
-	TimeLayoutV2  = "2006-01-02 15:04"
-	TimeLayoutV3  = "2006-01-02 15"
-	TimeLayoutV4  = "2006-01-02"
-	TimeLayoutV41 = "2006/01/02"
-	TimeLayoutV5  = "01-02-2006"
-	TimeLayoutV6  = "01-02-06"
-	TimeLayoutV7  = "2006-01"
-	TimeLayoutV71 = "200601"
-	TimeLayoutV8  = "2006"
+	TimeFYmdHisNano = "2006-01-02 15:04:05.999999999" // 机器原因，基本值都等于"2006-01-02 15:04:05.999999"
+	TimeFYmdHisMicro = "2006-01-02 15:04:05.999999"
+	TimeFYmdHisMill = "2006-01-02 15:04:05.999"
+	TimeYmdHis = "06-01-02 15:04:05"
+	TimeYYmdHi  = "2006-01-02 15:04"
+	TimeYYmdH  = "2006-01-02 15"
+	TimeYYmd  = "2006-01-02"
+	TimeYymd = "2006/01/02"
+	TimeMdyy  = "01-02-2006"
+	TimeMdy  = "01-02-06"
+	TimeYYm  = "2006-01"
+	TimeYYmm = "200601"
+	TimeYY  = "2006"
 )
 */
 
+// DataTime "2006-01-02 15:04:05"
 func DataTime() string {
-	return time.Now().Format(consts.TimeLayoutV1)
+	return time.Now().Format(consts.TimeYYmdHis)
 }
+
+// DataTimeT "2006-01-02 15:04:05"
 func DataTimeT(t time.Time) string {
-	return t.Format(consts.TimeLayoutV1)
+	return t.Format(consts.TimeYYmdHis)
 }
-func DataTimeNanosecond() string {
-	return time.Now().Format(consts.TimeLayoutV12)
-}
+
+// DataTimeMicrosecond "2006-01-02 15:04:05.999999"
 func DataTimeMicrosecond() string {
-	return time.Now().Format(consts.TimeLayoutV13)
+	return time.Now().Format(consts.TimeFYmdHisMicro)
 }
+
+// DataTimeMillisecond "2006-01-02 15:04:05.999"
 func DataTimeMillisecond() string {
-	return time.Now().Format(consts.TimeLayoutV14)
+	return time.Now().Format(consts.TimeFYmdHisMill)
 }
+
+// DataTimeDataSecond "06-01-02 15:04:05"
 func DataTimeDataSecond() string {
-	return time.Now().Format(consts.TimeLayoutV15)
+	return time.Now().Format(consts.TimeYmdHis)
 }
 func Year() string {
-	return time.Now().Format(consts.TimeLayoutV8)
+	return time.Now().Format(consts.TimeYY)
 }
 func Month() string {
-	return time.Now().Format(consts.TimeLayoutV7)
+	return time.Now().Format(consts.TimeYYm)
 }
 func MonthT(t time.Time) string {
-	return t.Format(consts.TimeLayoutV7)
+	return t.Format(consts.TimeYYm)
 }
 func MonthNum() string {
-	return time.Now().Format(consts.TimeLayoutV71)
+	return time.Now().Format(consts.TimeYYmm)
 }
 func MonthNumT(t time.Time) string {
-	return t.Format(consts.TimeLayoutV71)
+	return t.Format(consts.TimeYYmm)
 }
 func MonthNumUnixTime(unixTime int64) string {
 	return MonthNumT(ToTimeByUnix(unixTime))
 }
 func Data() string {
-	return time.Now().Format(consts.TimeLayoutV4)
+	return time.Now().Format(consts.TimeYYmd)
 }

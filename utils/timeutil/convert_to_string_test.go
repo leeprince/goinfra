@@ -29,9 +29,6 @@ func TestFormat(t *testing.T) {
 	ts = DataTimeT(time.Now())
 	fmt.Println("DataTimeT", ts)
 
-	ts = DataTimeNanosecond()
-	fmt.Println("DataTimeNanosecond", ts)
-
 	ts = DataTimeMicrosecond()
 	fmt.Println("DataTimeMicrosecond", ts)
 
