@@ -1,6 +1,7 @@
 package moneyutil
 
 import (
+	"fmt"
 	"testing"
 )
 
@@ -43,14 +44,14 @@ func TestYuanToJiao(t *testing.T) {
 	tests := []struct {
 		name     string
 		args     args
-		wantJiao string
+		wantJiao int64
 	}{
 		{
 			name: "",
 			args: args{
 				yuan: 1234,
 			},
-			wantJiao: "12340",
+			wantJiao: 12340,
 		},
 	}
 	for _, tt := range tests {
@@ -91,6 +92,40 @@ func TestFenToYuan(t *testing.T) {
 			if gotYuan := FenToYuan(tt.args.fen); gotYuan != tt.wantYuan {
 				t.Errorf("FenToYuan() = %v, want %v", gotYuan, tt.wantYuan)
 			}
+		})
+	}
+}
+
+func TestYuanToFen(t *testing.T) {
+	type args struct {
+		yuan string
+	}
+	tests := []struct {
+		name    string
+		args    args
+		wantFen int64
+	}{
+
+		{
+			name: "",
+			args: args{
+				yuan: "101",
+			},
+			wantFen: 10100,
+		},
+
+		{
+			name: "",
+			args: args{
+				yuan: "10.1",
+			},
+			wantFen: 10100,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			fen, err := YuanToFen(tt.args.yuan)
+			fmt.Printf("fen:%+v---err:%+v \n", fen, err)
 		})
 	}
 }

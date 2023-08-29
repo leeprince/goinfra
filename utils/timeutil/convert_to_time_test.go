@@ -153,3 +153,13 @@ func TestGetYearFirthMonthTime(t *testing.T) {
 	m1 := GetYearFirthMonthTime()
 	fmt.Println(m1)
 }
+
+func TestGetPreMonthUnixTimeRange(t *testing.T) {
+	gotStartTime, gotEndTime := GetPreMonthUnixTimeRange()
+
+	fmt.Println(gotStartTime.Unix())
+	fmt.Println(gotEndTime.Unix())
+
+	fmt.Println(gotStartTime.Format("2006-01-02 15:04:05"))
+	fmt.Println(gotEndTime.Format("2006-01-02 15:04:05"))
+}

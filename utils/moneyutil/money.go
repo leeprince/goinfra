@@ -22,16 +22,19 @@ func FenToYuan(fen int64) (yuan string) {
 	return toInt.String()
 }
 
-func YuanToJiao(yuan int64) (jiao string) {
+func YuanToJiao(yuan int64) (jiao int64) {
 	from := decimal.NewFromInt(yuan)
 	toInt := from.Mul(decimal.NewFromInt(10))
 
-	return toInt.String()
+	return toInt.IntPart()
 }
 
-func YuanToFen(yuan int64) (jiao string) {
-	from := decimal.NewFromInt(yuan)
+func YuanToFen(yuan string) (fen int64, err error) {
+	from, err := decimal.NewFromString(yuan)
+	if err != nil {
+		return
+	}
 	toInt := from.Mul(decimal.NewFromInt(100))
 
-	return toInt.String()
+	return toInt.IntPart(), nil
 }

@@ -76,3 +76,15 @@ func GetCurrentYearMonthList() []int64 {
 	}
 	return monthList
 }
+
+// 获取当前时间的上一个月开始时间&结束时间
+func GetPreMonthUnixTimeRange() (startTime, endTime time.Time) {
+	// 获取当前时间
+	currentTime := time.Now()
+
+	startTime = time.Date(currentTime.Year(), currentTime.Month()-1, 1, 0, 0, 0, 0, currentTime.Location())
+
+	currentMonthTime := time.Date(currentTime.Year(), currentTime.Month(), 1, 0, 0, 0, 0, currentTime.Location())
+	endTime = currentMonthTime.Add(-time.Second * 1)
+	return
+}
