@@ -1,4 +1,4 @@
-package pgorm
+package pmysql
 
 import (
 	"context"
@@ -16,7 +16,7 @@ import (
  * @Desc:
  */
 
-func initLooger() {
+func initLoger() {
 	// err := plog.SetOutputFile("./logs", "gorm.log", false)
 	err := plog.SetOutputFile("./gorm_test_log", "gorm.log", true)
 	if err != nil {
@@ -26,7 +26,7 @@ func initLooger() {
 }
 
 func TestInitMysqlClient(t *testing.T) {
-	initLooger()
+	initLoger()
 	// var logWriterStdout = log.New(os.Stdout, "\r\n", log.LstdFlags) // io writer（日志输出的目标，前缀和日志包含的内容——译者注）
 	var DBLogger = logger.New(
 		// logWriterStdout, // 标准输出
@@ -38,9 +38,9 @@ func TestInitMysqlClient(t *testing.T) {
 			Colorful:                  true,        // 彩色打印
 		},
 	)
-
+	
 	tmpMysql := "tmp"
-
+	
 	type args struct {
 		confs MysqlConfs
 	}
@@ -53,7 +53,7 @@ func TestInitMysqlClient(t *testing.T) {
 			args: args{
 				confs: MysqlConfs{
 					tmpMysql: MysqlConf{
-						Dsn:     "root:leeprince@tcp(127.0.0.1:3306)/tmp?charset=utf8&parseTime=true&loc=Local&interpolateParams=True",
+						Dsn:     "root:leeprince@tcp(127.0.0.1:3306)/tmp?charset=utf8mb4&parseTime=true&loc=Local&interpolateParams=True",
 						IsDebug: true,
 						Logger:  DBLogger,
 					},
@@ -65,20 +65,20 @@ func TestInitMysqlClient(t *testing.T) {
 			if err := InitMysqlClientMap(tt.args.confs); (err != nil) != tt.wantErr {
 				t.Errorf("InitMysqlClientMap() error = %v, wantErr %v", err, tt.wantErr)
 			}
-
+			
 			tmpDB := GetMysqlClientDB(tmpMysql)
 			if tmpDB == nil {
 				fmt.Println(" GetMysqlClientDB(tmpMysql)")
 				return
 			}
-
+			
 			userDao := gorm_test_model.NewUsersDao(context.Background(), tmpDB)
 			user, err := userDao.GetByOption(userDao.WithID(1))
 			fmt.Println("GetByOption:", user, err)
 			findName := "name01"
 			users, err := userDao.GetByOptions(userDao.WithName(&findName))
 			fmt.Println("GetByOptions:", users, err)
-
+			
 		})
 	}
 }

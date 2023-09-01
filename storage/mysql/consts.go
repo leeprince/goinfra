@@ -1,4 +1,4 @@
-package pgorm
+package pmysql
 
 import "time"
 
@@ -9,7 +9,7 @@ import "time"
  */
 
 const (
-    MaxIdleConns = 10
-    MaxOpenConns = 100
-    ConnMaxLifetime = time.Hour
+	MaxIdleConns    = 10
+	MaxOpenConns    = 100
+	ConnMaxLifetime = time.Hour
 )

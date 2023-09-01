@@ -217,25 +217,25 @@ func RSASignVerifyWithSha256(src, sign, publicKey string, opts ...OptionFunc) (b
 	opt := initOption(opts...)
 	signByte, err := InputFormat(sign, opt.inputType)
 	if err != nil {
-		return false, perror.BizErrSignVerify.WithError(err, "InputFormat")
+		return false, perror.BizErrSecuritySignVerify.WithError(err, "InputFormat")
 	}
 	if len(signByte) == 0 {
-		return false, perror.BizErrSignVerify.WithError(perror.BizErrLen)
+		return false, perror.BizErrSecuritySignVerify.WithError(perror.BizErrLen)
 	}
 	
 	block, _ := pem.Decode([]byte(publicKey))
 	if block == nil {
-		return false, perror.BizErrSignVerify.WithError(errors.New("block == nil"))
+		return false, perror.BizErrSecuritySignVerify.WithError(errors.New("block == nil"))
 	}
 	pubInterface, err := x509.ParsePKIXPublicKey(block.Bytes)
 	if err != nil {
-		return false, perror.BizErrSignVerify.WithError(err)
+		return false, perror.BizErrSecuritySignVerify.WithError(err)
 	}
 	
 	hashed := sha256.Sum256([]byte(src))
 	err = rsa.VerifyPKCS1v15(pubInterface.(*rsa.PublicKey), crypto.SHA256, hashed[:], signByte)
 	if err != nil {
-		return false, perror.BizErrSignVerify.WithError(err)
+		return false, perror.BizErrSecuritySignVerify.WithError(err)
 	}
 	return true, nil
 }
