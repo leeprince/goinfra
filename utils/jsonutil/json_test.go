@@ -1,4 +1,4 @@
-package test
+package jsonutil
 
 import (
 	"encoding/json"
@@ -44,6 +44,11 @@ func TestJsonList(t *testing.T) {
 	  }
 	}`
 	
+	// 错误，因为传值到 json.Unmarshal 的第二个参数时是空指针
+	/*var resp *message.QueryBankListMonthBalanceResp
+	err := json.Unmarshal([]byte(jsonStr), resp)*/
+	
+	// 正确，因为传值到 json.Unmarshal 的第二个参数时不会是空指针
 	var resp message.QueryBankListMonthBalanceResp
 	err := json.Unmarshal([]byte(jsonStr), &resp)
 	if err != nil {
