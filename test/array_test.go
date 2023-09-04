@@ -38,6 +38,7 @@ func TestTwoArray(t *testing.T) {
 	dumputil.Println("personListList:%+v", personListList)
 }
 
+// 因为golang的函数、方法的所有参数都是传值，所以就是是引用类型类型，需要方法中修改到外部变量时需要传递变量地址
 func TestRequestParamHaveArray(t *testing.T) {
 	var strArray []string
 	var strArrayQute []string
@@ -75,4 +76,20 @@ func RequestParamHaveArray(strArray []string) {
 
 func RequestParamHaveArrayQuote(strArray *[]string) {
 	*strArray = append(*strArray, "aaa")
+}
+
+func TestArrCutting(t *testing.T) {
+	a1 := 1
+	a2 := 2
+	a3 := 3
+	arr := []*int{&a1, &a2, &a3}
+
+	fmt.Println(arr)
+
+	arrNew := arr[:2]
+	fmt.Println(arrNew)
+	fmt.Println(arr)
+
+	fmt.Println(arr[:2])
+	fmt.Println(arr)
 }
