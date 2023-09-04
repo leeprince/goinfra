@@ -43,7 +43,7 @@ func (sf *Snowflake) NextId() int64 {
 	sf.mutex.Lock()         // 加锁
 	defer sf.mutex.Unlock() // 解锁
 	
-	divInt := int64(10)
+	divInt := int64(1)
 	nowUnixNano := time.Now().UnixNano() / divInt // 获取当前时间，单位看出除于的值
 	if sf.timestamp == nowUnixNano {              // 如果当前时间戳与上一次生成ID的时间戳相同
 		sf.sequence = (sf.sequence + 1) & sequenceMask // 序列号递增，并与序列号的最大值进行按位与运算

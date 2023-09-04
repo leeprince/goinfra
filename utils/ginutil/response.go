@@ -32,7 +32,7 @@ func ResponseSuccess(ctx *gin.Context, logID string, data any) {
 }
 
 func ResponseError(ctx *gin.Context, logID string, err error) {
-	plog.WithError(err).WithField("method", "ResponseError").Error(logID, "request")
+	plog.LogID(logID).WithError(err).WithField("method", "ResponseError").Error("request")
 	
 	code := perror.Fail.GetCode()
 	codeMessage := perror.Success.GetMessage()
