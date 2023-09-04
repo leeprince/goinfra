@@ -75,6 +75,7 @@ require (
 	github.com/leodido/go-urn v1.2.0 // indirect
 	github.com/pierrec/lz4/v4 v4.1.2 // indirect
 	github.com/prometheus/procfs v0.8.0 // indirect
+	github.com/speps/go-hashids v2.0.0+incompatible // indirect
 	github.com/spf13/pflag v1.0.5 // indirect
 	github.com/tarm/serial v0.0.0-20180830185346-98f6abe2eb07 // indirect
 	github.com/ugorji/go/codec v1.1.7 // indirect

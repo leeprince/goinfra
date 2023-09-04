@@ -65,7 +65,7 @@ func InitMysqlClient(conf MysqlConf) (db *gorm.DB, err error) {
 	}
 	
 	if conf.IsDebug {
-		db.Debug()
+		db = db.Debug()
 	}
 	
 	if err = setSqlConf(db, conf); err != nil {

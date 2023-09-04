@@ -18,7 +18,7 @@ import (
  */
 
 const (
-	dataHeadLen = 4
+	SerialDataHeadLen = 4
 )
 
 func main() {
@@ -39,7 +39,7 @@ func main() {
 	// 接收数据
 	go func() {
 		for {
-			buflen := make([]byte, dataHeadLen) // 调整缓冲区大小
+			buflen := make([]byte, SerialDataHeadLen) // 调整缓冲区大小
 			n, err := port.Read(buflen)
 			log.Println("读取到长度:" + strconv.Itoa(n))
 			if err != nil {
@@ -49,8 +49,8 @@ func main() {
 			if n == 0 {
 				continue
 			}
-			for n < dataHeadLen {
-				needCount := dataHeadLen - n
+			for n < SerialDataHeadLen {
+				needCount := SerialDataHeadLen - n
 				readBody := make([]byte, needCount)
 				count, err := port.Read(readBody)
 				if err != nil {
@@ -63,7 +63,7 @@ func main() {
 				copy(buflen[n:], readBody)
 				n += count
 			}
-			if n != dataHeadLen {
+			if n != SerialDataHeadLen {
 				log.Println("读取到字节数不对")
 			}
 			// 将字节数组转换为 uint32
@@ -114,18 +114,28 @@ func main() {
 		for scanner.Scan() {
 			line := scanner.Text()
 			bodyByte := []byte(line)
+			
+			// 报文请求体内容的长度
 			bodyLen := len(line)
 			
-			// 请求内容:dataHeadLen(存放报文长度)+报文内容
-			reqByte := make([]byte, dataHeadLen+bodyLen)
-			bodyLenByte := make([]byte, dataHeadLen)
+			// 请求内容:报文请求头的长度+报文请求体内容的长度
+			reqByte := make([]byte, SerialDataHeadLen+bodyLen)
 			
+			// 设置报文的请求头的内容
+			bodyLenByte := make([]byte, SerialDataHeadLen)
 			binary.BigEndian.PutUint32(bodyLenByte, uint32(bodyLen))
 			copy(reqByte, bodyLenByte)
 			
-			copy(reqByte[dataHeadLen:], bodyByte)
+			// 设置报文的请求体的内容
+			copy(reqByte[SerialDataHeadLen:], bodyByte)
 			
-			port.Write(reqByte)
+			n, err := port.Write(reqByte)
+			fmt.Println("n:", n)
+			fmt.Println("err:", err)
+			if err != nil {
+				return
+			}
+			
 			time.Sleep(3 * time.Second)
 		}
 	}()
