@@ -93,3 +93,125 @@ func TestArrCutting(t *testing.T) {
 	fmt.Println(arr[:2])
 	fmt.Println(arr)
 }
+
+type ReadInvoiceListReq struct {
+	OrderSnInvoiceIdList []*OrderSnInvoiceId `json:"order_sn_invoice_id_list,omitempty"`
+	HasRed               string              `json:"has_red,omitempty"`          // 红票标记
+	ReimburseStatus      string              `json:"reimburse_status,omitempty"` // 报账状态
+}
+
+// 订单编号&发票id
+type OrderSnInvoiceId struct {
+	OrderSn   string `json:"order_sn,omitempty"`   // 订单编号
+	InvoiceId string `json:"invoice_id,omitempty"` // 发票id
+}
+
+// 需要注意：指针变量的赋值
+func TestReadInvoiceListReq(t *testing.T) {
+	req := &ReadInvoiceListReq{
+		OrderSnInvoiceIdList: []*OrderSnInvoiceId{
+			{
+				OrderSn:   "01",
+				InvoiceId: "01",
+			},
+			{
+				OrderSn:   "02",
+				InvoiceId: "02",
+			},
+			{
+				OrderSn:   "03",
+				InvoiceId: "03",
+			},
+			{
+				OrderSn:   "04",
+				InvoiceId: "04",
+			},
+			{
+				OrderSn:   "05",
+				InvoiceId: "05",
+			},
+			{
+				OrderSn:   "06",
+				InvoiceId: "06",
+			},
+			{
+				OrderSn:   "07",
+				InvoiceId: "07",
+			},
+			{
+				OrderSn:   "08",
+				InvoiceId: "08",
+			},
+			{
+				OrderSn:   "09",
+				InvoiceId: "09",
+			},
+			{
+				OrderSn:   "10",
+				InvoiceId: "10",
+			},
+		},
+		HasRed:          "HasRed",
+		ReimburseStatus: "ReimburseStatus",
+	}
+
+	ReadInvoiceList(req)
+}
+
+func ReadInvoiceList(req *ReadInvoiceListReq) {
+	fmt.Println(req)
+
+	fmt.Println(req.OrderSnInvoiceIdList)
+	fmt.Println(req.OrderSnInvoiceIdList[1:])
+	fmt.Println(req.OrderSnInvoiceIdList)
+
+	fmt.Println("-------------1")
+	// 错误赋值
+	newReq := req
+	newReq.OrderSnInvoiceIdList = req.OrderSnInvoiceIdList[1:]
+	newReq.ReimburseStatus = "ReimburseStatus1"
+	fmt.Println(newReq)
+	fmt.Println(req)
+	for i, id := range req.OrderSnInvoiceIdList {
+		fmt.Println(i, ":", id)
+	}
+
+	fmt.Println("-------------2")
+	// 错误赋值
+	newReq2 := req
+	newReqIdList2 := req.OrderSnInvoiceIdList[1:]
+	newReq2.OrderSnInvoiceIdList = newReqIdList2
+	newReq2.ReimburseStatus = "ReimburseStatus2"
+	fmt.Println(newReq2)
+	fmt.Println(req)
+	for i, id := range req.OrderSnInvoiceIdList {
+		fmt.Println(i, ":", id)
+	}
+
+	fmt.Println("-------------3")
+	// 错误赋值
+	var newReq3 *ReadInvoiceListReq
+	newReq3 = req
+	newReqIdList3 := req.OrderSnInvoiceIdList[1:]
+	newReq3.OrderSnInvoiceIdList = newReqIdList3
+	fmt.Println(newReq3)
+	fmt.Println(req)
+	for i, id := range req.OrderSnInvoiceIdList {
+		fmt.Println(i, ":", id)
+	}
+
+	fmt.Println("-------------4")
+
+	// 正确赋值
+	var newReq4 ReadInvoiceListReq
+	newReq4 = *req
+	newReqIdList4 := req.OrderSnInvoiceIdList[1:]
+	newReq4.OrderSnInvoiceIdList = newReqIdList4
+	fmt.Println(newReq4)
+	fmt.Println(req)
+	for i, id := range req.OrderSnInvoiceIdList {
+		fmt.Println(i, ":", id)
+	}
+	fmt.Println("-------------5")
+
+}
