@@ -22,9 +22,13 @@ const (
 	DESAESKey24Str = "DESAESK3DESAESK3DESAESK3"
 	DESAESKey32Str = "DESAESK4DESAESK4DESAESK4DESAESK4"
 	
-	DESAESKeyAppTicketStr = "LHZZXW---AA:BB:CC:中国---1692507180"
+	/*DESAESKeyAppTicketStr = "LHZZXW---AA:BB:CC:中国---1692507180"
 	DESAESKeyAppTicketKey = "zz2023082000yyds"
-	DESAESKeyAppTicketIv  = "yyds2023082000zz"
+	DESAESKeyAppTicketIv  = "yyds2023082000zz"*/
+	
+	DESAESKeyAppTicketStr = "AA:BB:CC:中国---1692507180"
+	DESAESKeyAppTicketKey = "ApplyCodeKey-xxx"
+	DESAESKeyAppTicketIv  = "ApplyCodeIv-xxxx"
 	
 	AESIv   = "1000000000011111"
 	AESIvv  = "abcdef0000000000"

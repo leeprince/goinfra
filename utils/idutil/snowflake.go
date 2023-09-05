@@ -56,6 +56,16 @@ func (sf *Snowflake) NextId() int64 {
 		sf.sequence = 0 // 序列号重置0
 	}
 	
-	sf.timestamp = nowUnixNano                                                             // 更新上一次生成ID的时间戳
-	return (sf.timestamp << timestampShift) | (sf.workerId << workerShift) | (sf.sequence) // 组合时间戳、工作ID和序列号，生成唯ID并返回
+	sf.timestamp = nowUnixNano // 更新上一次生成ID的时间戳
+	
+	timestampleft := sf.timestamp << timestampShift
+	// fmt.Println("sf.timestamp:", sf.timestamp, "timestampShift:", timestampShift, "timestampleft:", timestampleft)
+	
+	workerIdleft := sf.workerId << workerShift
+	// fmt.Println("sf.workerId", sf.workerId, "workerShift", workerShift, "workerIdleft:", workerIdleft)
+	
+	sequence := sf.sequence
+	// fmt.Println("sequence:", sequence)
+	
+	return timestampleft | workerIdleft | sequence // 组合时间戳、工作ID和序列号，生成唯ID并返回
 }
