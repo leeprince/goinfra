@@ -18,6 +18,7 @@ type option struct {
 	CUserId        string
 	OrderSn        string
 	AfterUpdatedAt string
+	IsUpdate       bool
 }
 
 func New() *cobra.Command {
@@ -27,6 +28,7 @@ func New() *cobra.Command {
 		RunE:  findReatInvoiceAndDelete,
 	}
 
+	rootCmd.PersistentFlags().Bool("is_update", false, "是否执行更新sql")
 	rootCmd.PersistentFlags().String("org_id", "", "租户ID")
 	rootCmd.PersistentFlags().String("eid", "", "企业ID")
 	rootCmd.PersistentFlags().String("c_user_id", "", "c端用户ID")
@@ -39,6 +41,11 @@ func initFlags(c *cobra.Command) (opt *option, err error) {
 	env, err := c.Parent().PersistentFlags().GetString("env")
 	if err != nil {
 		fmt.Println("env err:", err)
+		return
+	}
+	isUpdate, err := c.PersistentFlags().GetBool("is_update")
+	if err != nil {
+		fmt.Println("after_updated_at err:", err)
 		return
 	}
 	orgId, err := c.PersistentFlags().GetString("org_id")
@@ -69,6 +76,7 @@ func initFlags(c *cobra.Command) (opt *option, err error) {
 
 	opt = &option{
 		Env:            env,
+		IsUpdate:       isUpdate,
 		OrgId:          orgId,
 		EId:            eid,
 		CUserId:        cUserId,
