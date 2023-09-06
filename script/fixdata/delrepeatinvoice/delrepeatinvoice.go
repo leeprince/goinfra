@@ -2,6 +2,7 @@ package delrepeatinvoice
 
 import (
 	"fmt"
+	"github.com/leeprince/goinfra/script/fixdata/initconfig"
 	"github.com/spf13/cobra"
 )
 
@@ -28,7 +29,7 @@ func New() *cobra.Command {
 		RunE:  findReatInvoiceAndDelete,
 	}
 
-	rootCmd.PersistentFlags().Bool("is_update", false, "是否执行更新sql")
+	rootCmd.PersistentFlags().Bool("is_update", false, "是否执行更新sql.默认：false")
 	rootCmd.PersistentFlags().String("org_id", "", "租户ID")
 	rootCmd.PersistentFlags().String("eid", "", "企业ID")
 	rootCmd.PersistentFlags().String("c_user_id", "", "c端用户ID")
@@ -38,7 +39,7 @@ func New() *cobra.Command {
 }
 
 func initFlags(c *cobra.Command) (opt *option, err error) {
-	env, err := c.Parent().PersistentFlags().GetString("env")
+	env, err := c.Root().PersistentFlags().GetString("env")
 	if err != nil {
 		fmt.Println("env err:", err)
 		return
@@ -94,6 +95,11 @@ func findReatInvoiceAndDelete(c *cobra.Command, _ []string) (err error) {
 		return
 	}
 	fmt.Printf("opt:%+v \n", opt)
+
+	err = initconfig.Init(opt.Env)
+	if err != nil {
+		return
+	}
 
 	// 检查 option
 	if opt.OrgId == "" &&

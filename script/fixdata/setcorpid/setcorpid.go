@@ -2,6 +2,7 @@ package setcorpid
 
 import (
 	"fmt"
+	"github.com/leeprince/goinfra/script/fixdata/initconfig"
 	"github.com/spf13/cobra"
 	"strings"
 )
@@ -35,7 +36,7 @@ func New() *cobra.Command {
 }
 
 func initFlags(c *cobra.Command) (opt *option, err error) {
-	env, err := c.Parent().PersistentFlags().GetString("env")
+	env, err := c.Root().PersistentFlags().GetString("env")
 	if err != nil {
 		fmt.Println("env err:", err)
 		return
@@ -78,6 +79,11 @@ func findUserDcacheDataAndSetCorpId(c *cobra.Command, _ []string) (err error) {
 	opt, err := initFlags(c)
 	if err != nil {
 		fmt.Println("initFlags err:", err)
+		return
+	}
+
+	err = initconfig.Init(opt.Env)
+	if err != nil {
 		return
 	}
 
