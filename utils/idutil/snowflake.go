@@ -43,7 +43,7 @@ func (sf *Snowflake) NextId() int64 {
 	sf.mutex.Lock()         // 加锁
 	defer sf.mutex.Unlock() // 解锁
 	
-	divInt := int64(10000)
+	divInt := int64(1)
 	nowUnixNano := time.Now().UnixNano() / divInt // 获取当前时间，单位看出除于的值
 	if sf.timestamp == nowUnixNano {              // 如果当前时间戳与上一次生成ID的时间戳相同
 		sf.sequence = (sf.sequence + 1) & sequenceMask // 序列号递增，并与序列号的最大值进行按位与运算
@@ -56,6 +56,16 @@ func (sf *Snowflake) NextId() int64 {
 		sf.sequence = 0 // 序列号重置0
 	}
 	
-	sf.timestamp = nowUnixNano                                                             // 更新上一次生成ID的时间戳
-	return (sf.timestamp << timestampShift) | (sf.workerId << workerShift) | (sf.sequence) // 组合时间戳、工作ID和序列号，生成唯ID并返回
+	sf.timestamp = nowUnixNano // 更新上一次生成ID的时间戳
+	
+	timestampleft := sf.timestamp << timestampShift
+	// fmt.Println("sf.timestamp:", sf.timestamp, "timestampShift:", timestampShift, "timestampleft:", timestampleft)
+	
+	workerIdleft := sf.workerId << workerShift
+	// fmt.Println("sf.workerId", sf.workerId, "workerShift", workerShift, "workerIdleft:", workerIdleft)
+	
+	sequence := sf.sequence
+	// fmt.Println("sequence:", sequence)
+	
+	return timestampleft | workerIdleft | sequence // 组合时间戳、工作ID和序列号，生成唯ID并返回
 }

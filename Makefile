@@ -83,7 +83,7 @@ complete: fmt cmt  ## [formatting]: 运行代码格式化: fmt, cmt
 fmt: ## [formatting]: gofumpt 代码格式化
 	$(call logInfo,gofumpt)
 	@hash gofumpt 2>&- || go install mvdan.cc/gofumpt@latest
-	gofumpt -l -w ./internal/grpc/grpccontrollers/organizationcontrollers
+	gofumpt -l -w .
 	$(call logInfo,gofumpt: done)
 
 .PHONY: cmt

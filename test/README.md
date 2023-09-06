@@ -21,7 +21,24 @@
 [go标准库`testing`](https://studygolang.com/pkgdoc)
 
 ## （一）`go test` 的使用
+### 0. 介绍
+在 Go 语言中，可以使用 `go test` 命令来运行单元测试。
+默认情况下，`go test` 会运行所有以 `_test.go` 结尾的测试文件中的测试方法。
+如果您只想运行某个特定的测试方法，可以使用 -run 标志来指定要运行的测试方法的正则表达式。
+只有与该正则表达式匹配的测试方法才会被运行。
+
+以下是一个示例：
+```
+go test -run TestMyFunction
+```
+
+
+上述命令将运行所有包含 TestMyFunction 的测试方法。
+如果您想要更精确地指定要运行的测试方法，可以使用正则表达式的更多功能。
+例如，您可以使用 ^ 和 $ 来匹配测试方法的开头和结尾，或者使用 | 来指定多个测试方法。
+
 ### 1. 帮助命令
+
 ```
 go help test
 
@@ -30,10 +47,13 @@ go help test
         `-v`、`-run regexp`、`-bench regexp`、`-cover`、`-fuzz`、` -count n`、`-benchtime t`、`-timeout d`、`-cpu 1,2,4`、`-fuzztime t`、`-json`、`-list regexp`、`-coverpkg pattern1,pattern2,pattern3`等
     - `go test`命令可识别的标志，可用于在执行过程中对测试进行配置：
         `-benchmem`、`-blockprofile block.out`、`-coverprofile cover.out`、`-cpuprofile cpu.out`、`-outputdir directory`、`-trace trace.out`、
-go help testflag
-```
 
 ```
+
+
+```
+go help testflag
+
   -test.bench regexp
     	run only benchmarks matching regexp
   -test.benchmem
