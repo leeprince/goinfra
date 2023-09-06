@@ -1,8 +1,11 @@
 package main
 
 import (
-	"github.com/leeprince/goinfra/script/fixdatatest/setcorpid"
+	"fmt"
+	"github.com/leeprince/goinfra/script/fixdata/delrepeatinvoice"
+	"github.com/leeprince/goinfra/script/fixdata/setcorpid"
 	"github.com/spf13/cobra"
+	"log"
 )
 
 /**
@@ -38,19 +41,38 @@ func main() {
 	}
 }
 
-func init() {
-	// 配置
-
-}
-
 func New() *cobra.Command {
 	rootCmd := &cobra.Command{
 		Use:   "fixdata",
-		Short: "修复数据",
+		Short: "修复 mysql/dcache 数据脚本",
 	}
 
-	rootCmd.PersistentFlags().StringP("env", "e", "dev", "environment: dev, test, prod")
+	rootCmd.PersistentFlags().StringP("env", "e", "test", "environment: dev, test, prod")
 	rootCmd.AddCommand(setcorpid.New())
+	rootCmd.AddCommand(delrepeatinvoice.New())
+
+	// 初始化
+	Init(rootCmd)
 
 	return rootCmd
+}
+
+func Init(c *cobra.Command) {
+	// 根据环境变量初始化
+	env, err := c.PersistentFlags().GetString("env")
+	if err != nil {
+		fmt.Println("env err:", err)
+		return
+	}
+	var isEnvVaild bool
+	for _, e := range []string{"dev", "test", "prod"} {
+		if env == e {
+			isEnvVaild = true
+			break
+		}
+	}
+	if !isEnvVaild {
+		log.Fatal("env 不符合配置项")
+	}
+
 }
