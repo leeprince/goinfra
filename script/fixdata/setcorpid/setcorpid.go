@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/leeprince/goinfra/script/fixdata/base"
 	"github.com/spf13/cobra"
+	"log"
 	"strings"
 )
 
@@ -84,6 +85,7 @@ func findUserDcacheDataAndSetCorpId(c *cobra.Command, _ []string) (err error) {
 
 	err = base.Init(opt.Env)
 	if err != nil {
+		log.Fatal("Init err:", err)
 		return
 	}
 
