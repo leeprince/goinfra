@@ -2,7 +2,7 @@ package delrepeatinvoice
 
 import (
 	"fmt"
-	"github.com/leeprince/goinfra/script/fixdata/initconfig"
+	"github.com/leeprince/goinfra/script/fixdata/base"
 	"github.com/spf13/cobra"
 )
 
@@ -96,7 +96,7 @@ func findReatInvoiceAndDelete(c *cobra.Command, _ []string) (err error) {
 	}
 	fmt.Printf("opt:%+v \n", opt)
 
-	err = initconfig.Init(opt.Env)
+	err = base.Init(opt.Env)
 	if err != nil {
 		return
 	}

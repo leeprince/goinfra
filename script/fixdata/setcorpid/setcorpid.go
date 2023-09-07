@@ -2,7 +2,7 @@ package setcorpid
 
 import (
 	"fmt"
-	"github.com/leeprince/goinfra/script/fixdata/initconfig"
+	"github.com/leeprince/goinfra/script/fixdata/base"
 	"github.com/spf13/cobra"
 	"strings"
 )
@@ -82,7 +82,7 @@ func findUserDcacheDataAndSetCorpId(c *cobra.Command, _ []string) (err error) {
 		return
 	}
 
-	err = initconfig.Init(opt.Env)
+	err = base.Init(opt.Env)
 	if err != nil {
 		return
 	}
