@@ -35,7 +35,7 @@ func ResponseError(ctx *gin.Context, logID string, err error) {
 	plog.LogID(logID).WithError(err).WithField("method", "ResponseError").Error("request")
 	
 	code := perror.Fail.GetCode()
-	codeMessage := perror.Success.GetMessage()
+	codeMessage := perror.Fail.GetMessage()
 	
 	bizErr, ok := err.(perror.BizErr)
 	if ok {

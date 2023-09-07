@@ -23,9 +23,16 @@ var bufferPool = sync.Pool{
 	New: func() interface{} { return new(bytes.Buffer) },
 }
 
+// respWriter 定义一个存储响应内容的结构体:在结构体中封装了gin的 ResponseWriter，然后在重写的Write方法中，首先向bytes.Buffer中写数据，然后响应
 type respWriter struct {
 	gin.ResponseWriter
 	buf *bytes.Buffer
+}
+
+// Write 读取响应数据
+func (w *respWriter) Write(b []byte) (int, error) {
+	w.buf.Write(b)
+	return w.ResponseWriter.Write(b)
 }
 
 // 访问日志中间件
@@ -77,6 +84,7 @@ func MiddlewareAccessLogAndLogId() gin.HandlerFunc {
 		buf.Reset()
 		defer bufferPool.Put(buf)
 		
+		// 重新将请求参数放到 gin.Context 的 Request.Body 中
 		buf.Write(reqBytes)
 		c.Request.Body = io.NopCloser(buf)
 		

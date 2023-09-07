@@ -21,11 +21,24 @@ func GetOsUniqueId() (mark string, err error) {
 	}
 	
 	info := sysInfo.Info()
+	hostname := info.Hostname
 	uniqueId := info.UniqueID
 	kernelVersion := info.KernelVersion
-	hostname := info.Hostname
 	
-	mark = fmt.Sprintf("%s;%s;%s;", uniqueId, kernelVersion, hostname)
+	mark = fmt.Sprintf("%s;%s;%s;", hostname, uniqueId, kernelVersion)
+	
+	return
+}
+
+func GetOsHostname() (hostname string, err error) {
+	// 获取系统信息
+	sysInfo, err := sysinfo.Host()
+	if err != nil {
+		return
+	}
+	
+	info := sysInfo.Info()
+	hostname = info.Hostname
 	
 	return
 }
