@@ -12,6 +12,6 @@ import (
  */
 
 func TestGetenvIsMock(t *testing.T) {
-	isMock := GetenvIsMock()
+	isMock := EnvIsMock()
 	fmt.Println("isMock:", isMock)
 }

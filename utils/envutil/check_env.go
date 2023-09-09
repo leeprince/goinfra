@@ -31,7 +31,7 @@ func IsLocal(env string) (is bool) {
 	return
 }
 
-func GetenvIsMock() (is bool) {
+func EnvIsMock() (is bool) {
 	if os.Getenv("IsMock") == "True" ||
 		os.Getenv("ismock") == "true" ||
 		os.Getenv("IsMock") == "true" ||
