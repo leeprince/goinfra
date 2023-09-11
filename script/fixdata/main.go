@@ -40,7 +40,8 @@ go run main.go setcorpid --user_id 16007312,23935025,16702494,15896309,24621220 
 go run main.go delrepeatinvoice -e test
 go run main.go delrepeatinvoice --env test
 
-
+# 注意：--after_updated_at 参数是有空格的，所以flag必须要用括号""包起来
+go run main.go delrepeatinvoice -e test --after_updated_at "2023-08-19 00:00:00"
 go run main.go delrepeatinvoice -e test --after_updated_at="2023-08-19 00:00:00"
 go run main.go delrepeatinvoice -e test --after_updated_at="2023-08-19 00:00:00" --is_update=false
 go run main.go delrepeatinvoice -e test --after_updated_at="2023-08-19 00:00:00" --is_update=true
@@ -49,7 +50,10 @@ go run main.go delrepeatinvoice -e test --after_updated_at="2023-08-19 00:00:00"
 go run main.go delrepeatinvoice -e test --after_updated_at="2023-08-19 00:00:00" --order_sn xxxz
 go run main.go delrepeatinvoice -e test --after_updated_at="2023-08-19 00:00:00" --c_user_id 1
 
+
 go run main.go delrepeatinvoice -e test
+
+# 注意：--is_update 参数是是bool值，所以必须要用等号=的方式传参
 go run main.go delrepeatinvoice -e test --is_update=true
 
 
