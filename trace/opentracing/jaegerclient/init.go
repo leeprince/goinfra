@@ -20,7 +20,7 @@ type pTracer struct {
 var ptracer pTracer
 
 const (
-	packageName = "github.com/leeprince/goinfra/trace/opentracing/jaeger_client"
+	packageName = "github.com/leeprince/goinfra/trace/opentracing/jaegerclient"
 )
 
 // 初始化 Jaeger 客户端，并设置全局分布式链路追踪实例：opentracing.SetGlobalTracer

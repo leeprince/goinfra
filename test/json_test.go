@@ -4,6 +4,8 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/leeprince/goinfra/test/message"
+	"github.com/leeprince/goinfra/utils/jsonutil"
+	"github.com/spf13/cast"
 	"log"
 	"testing"
 	"time"
@@ -15,6 +17,7 @@ import (
  * @Desc:
  */
 
+// 当结构体中定义 Any 类型时，需要根据不同的场景，解析称不同的结构体
 func TestJsonDataInterface(t *testing.T) {
 	// 开始 rpa操作
 	/*
@@ -24,7 +27,7 @@ func TestJsonDataInterface(t *testing.T) {
 		    "message": "resultType的简要说明",
 		    "data":"订单任务处理结果不同，data对应不同结构体-object"
 		}
-	
+
 		---
 		# 购票成功(Success)的data结构体
 		{
@@ -45,14 +48,14 @@ func TestJsonDataInterface(t *testing.T) {
 		        }
 		    ]
 		}
-	
-	
+
+
 		# 无满足车票(NoTicket)的data结构体
 		{
 		    "noTicketType": "无满足车票的占座失败类型：Other(其他)、TrainNoTicket(车次无票)、SeatNo(坐席无法满足)、UserNameNoMatch(姓名不匹配)、TrainNoExist(车次不存在)、TrainShutdown(列车停运)、TrainStopped(已停止售票)、-string(20)",
 		    "otherTypeContext":"'其他'占座失败类型的原因说明-string(255)"
 		}
-	
+
 		# 任务暂停(Suspend)的data结构体
 		{
 		    "reasonType":"暂停原因类型: WaitUserPay(占座票等待用户付款，后web端继续发起继续扣款任务)、NoOneTicket(等待单人单程有要求甩票后无满足条件订单，需操作员手动操作)-string(18)"
@@ -83,16 +86,16 @@ func TestJsonDataInterface(t *testing.T) {
 	        ]
 	    }
 	}`
-	
+
 	// 解析数据
 	var result message.CallbackOrderTaskResponse
 	err := json.Unmarshal([]byte(data), &result)
 	if err != nil {
 		log.Fatal("解析data为CallbackOrderTaskResult错误:", err)
 	}
-	
+
 	fmt.Println("result:", result)
-	
+
 	// 开始输入
 	if result.ResultType == message.ResultTypeSuccess {
 		// must be a pointer to an interface or to a type implementing the interface
@@ -108,7 +111,7 @@ func TestJsonDataInterface(t *testing.T) {
 			log.Fatal("断言 SuccessData 错误:", resultTypeSuccessDataOk)
 		}
 		fmt.Println("resultTypeSuccessData:", resultTypeSuccessData)
-		
+
 		/*// 错误：原因 result.Data 是接口类型，所以必须用指针类型进行赋值才可以断言类型得到正确结果即：&SuccessData{},且 &message.CallbackOrderTaskResponse
 		result.Data = &message.SuccessData{}
 		err = json.Unmarshal([]byte(data), result)
@@ -121,7 +124,7 @@ func TestJsonDataInterface(t *testing.T) {
 			log.Fatal("断言 SuccessData 1 错误:", resultTypeSuccessDataOk)
 		}
 		fmt.Println("SuccessData 1:", resultTypeSuccessData1)*/
-		
+
 		// 错误：原因 result.Data 是接口类型，所以必须用指针类型进行赋值才可以断言类型得到正确结果即：&SuccessData{},且 &message.CallbackOrderTaskResponse
 		result.Data = message.SuccessData{}
 		err = json.Unmarshal([]byte(data), &result)
@@ -135,6 +138,66 @@ func TestJsonDataInterface(t *testing.T) {
 		}
 		fmt.Println("SuccessData 2:", resultTypeSuccessData2)
 	}
-	
+
 	time.Sleep(time.Second * 20)
+}
+
+func TestToMapList(t *testing.T) {
+	/*jsonData := `
+		[
+	      {
+	        "audit_status": 1,
+	        "corp_id": "",
+	        "created_at": 1636387643,
+	        "del_status": 0,
+	        "exclusive_time": 0,
+	        "invoice_id": "6863507238099358784"
+	      }
+	    ]
+		`*/
+	jsonData := `[{"audit_status":1,"corp_id":"","created_at":1636387643,"del_status":0,"exclusive_time":0,"invoice_id":"6863507238099358784"}]`
+
+	// 如果数组元素的字段类型不是string, 则会报错
+	resp, err := convertToMap1([]byte(jsonData))
+	fmt.Println("convertToMap1:", err)
+	fmt.Println("convertToMap1:", resp)
+
+	fmt.Println("-------------:")
+	// > 成功
+	resp, err = convertToMap2([]byte(jsonData))
+	fmt.Println("convertToMap2:", err)
+	fmt.Println("convertToMap2:", resp)
+}
+
+// 将 json 数组数据 转为 []map[string]string
+// > 如果数组元素的字段类型不是string, 则会报错
+func convertToMap1(data []byte) ([]map[string]string, error) {
+	var invoiceMapList []map[string]string
+
+	err := json.Unmarshal(data, &invoiceMapList)
+	if err != nil {
+		return nil, err
+	}
+	return invoiceMapList, nil
+}
+
+// 将 json 数组数据 转为 []map[string]string
+// > 成功
+func convertToMap2(data []byte) ([]map[string]string, error) {
+	var invoiceMapListValueAny []map[string]interface{}
+	err := jsonutil.JsoniterCompatible.Unmarshal(data, &invoiceMapListValueAny)
+	if err != nil {
+		return nil, err
+	}
+
+	var invoiceMapList []map[string]string
+	for _, mapList := range invoiceMapListValueAny {
+		item := make(map[string]string)
+		for key, value := range mapList {
+			item[key] = cast.ToString(value)
+		}
+		invoiceMapList = append(invoiceMapList, item)
+	}
+
+	return invoiceMapList, nil
 }
