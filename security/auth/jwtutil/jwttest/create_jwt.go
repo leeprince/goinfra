@@ -33,13 +33,13 @@ func CreateJwtNew() {
 
 	key = []byte(SignedStringKey)
 	t = jwt.New(jwt.SigningMethodHS256)
-	fmt.Printf("t: %+v \n", t)
+	fmt.Printf("t: %+v\n", t)
 
 	s, err = t.SignedString(key)
 	if err != nil {
 		log.Fatal(err)
 	}
-	fmt.Printf("s: %+v \n", s)
+	fmt.Printf("s: %+v\n", s)
 }
 
 func CreateJwtByNewWithClaims() (tokenString string, err error) {
@@ -61,14 +61,14 @@ func CreateJwtByNewWithClaims() (tokenString string, err error) {
 			ID:        "",
 		},
 	)
-	fmt.Printf("t: %+v \n", t)
+	fmt.Printf("t: %+v\n", t)
 
 	tokenString, err = t.SignedString(key)
 	if err != nil {
 		fmt.Println("SignedString err:", err)
 		return
 	}
-	fmt.Printf("tokenString: %+v \n", tokenString)
+	fmt.Printf("tokenString: %+v\n", tokenString)
 
 	return
 }
@@ -89,7 +89,7 @@ func ParseWithClaims(tokenString string) (b bool, err error) {
 	}
 
 	if claims, ok := token.Claims.(*jwt.RegisteredClaims); ok && token.Valid {
-		fmt.Printf("token.Claims.(*jwt.RegisteredClaims) claims：%v", claims)
+		fmt.Printf("token.Claims.(*jwt.RegisteredClaims) claims：%v\n", claims)
 		b = true
 	} else {
 		fmt.Println("token.Claims.(*jwt.RegisteredClaims) err:", err)
@@ -159,7 +159,7 @@ func ExampleParseWithClaims_customClaimsType() {
 	})
 
 	if claims, ok := token.Claims.(*MyCustomClaims); ok && token.Valid {
-		fmt.Printf("%v %v", claims.Foo, claims.RegisteredClaims.Issuer)
+		fmt.Printf("%v %v\n", claims.Foo, claims.RegisteredClaims.Issuer)
 	} else {
 		fmt.Println(err)
 	}

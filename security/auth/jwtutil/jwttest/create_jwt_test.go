@@ -26,7 +26,7 @@ func TestCreateJwtByNewWithClaims(t *testing.T) {
 }
 
 func TestParseWithClaims(t *testing.T) {
-	tokenString := "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJwcmluY2UiLCJzdWIiOiJsZWUiLCJleHAiOjE2OTY3NDU0NzZ9.SjI8s5AcLnfr8J39fOlnbiuA3yLFeZy_qvGnYvdnuFg"
+	tokenString := "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJwcmluY2UiLCJzdWIiOiJsZWUiLCJleHAiOjE2OTY3NDU5MDd9.E2PyS09MmGEd9TpWoxJMJZ5kfwmePzB8LYA8wtcqyE8"
 	b, err := ParseWithClaims(tokenString)
 	if err != nil {
 		log.Fatal("ParseWithClaims err:", err)
