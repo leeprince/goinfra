@@ -55,10 +55,15 @@ func InitMysqlClient(conf MysqlConf) (db *gorm.DB, err error) {
 		return
 	}
 
-	db, err = gorm.Open(mysql.Open(conf.Dsn), &gorm.Config{
+	gormConfig := &gorm.Config{
 		PrepareStmt: false,
-		Logger:      conf.Logger,
-	})
+		Logger:      nil,
+	}
+	if conf.Logger != nil {
+		gormConfig.Logger = conf.Logger
+	}
+
+	db, err = gorm.Open(mysql.Open(conf.Dsn), gormConfig)
 	if err != nil {
 		err = errors.Wrap(err, "gorm.Open error")
 		return
@@ -67,9 +72,6 @@ func InitMysqlClient(conf MysqlConf) (db *gorm.DB, err error) {
 	if conf.IsDebug {
 		// 默认使用：Logger: db.Logger.LogMode(logger.Info)
 		db = db.Debug()
-	} else {
-		// prince@TODO: plog 实现 gorm 接口 logger.Interface，仅需添加 2023/9/7 17:05
-		//db.Logger = plog.NewDefaultLogger()
 	}
 
 	if err = setSqlConf(db, conf); err != nil {
