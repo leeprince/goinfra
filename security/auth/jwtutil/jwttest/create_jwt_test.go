@@ -1,6 +1,11 @@
 package main
 
-import "testing"
+import (
+	"fmt"
+	"log"
+	"testing"
+	"time"
+)
 
 /**
  * @Author: prince.lee <leeprince@foxmail.com>
@@ -12,6 +17,42 @@ func TestCreateJwt(t *testing.T) {
 	CreateJwtNew()
 }
 
-func TestCreateJwtNewWithClaims(t *testing.T) {
-	CreateJwtNewWithClaims()
+func TestCreateJwtByNewWithClaims(t *testing.T) {
+	tokenString, err := CreateJwtByNewWithClaims()
+	if err != nil {
+		log.Fatal("tokenString err:", err)
+	}
+	fmt.Println("tokenString:", tokenString)
+}
+
+func TestParseWithClaims(t *testing.T) {
+	tokenString := "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJwcmluY2UiLCJzdWIiOiJsZWUiLCJleHAiOjE2OTY3NDU0NzZ9.SjI8s5AcLnfr8J39fOlnbiuA3yLFeZy_qvGnYvdnuFg"
+	b, err := ParseWithClaims(tokenString)
+	if err != nil {
+		log.Fatal("ParseWithClaims err:", err)
+	}
+	fmt.Println("b:", b)
+}
+
+func TestCreateJwtByNewWithClaimsAndParse(t *testing.T) {
+	tokenString, err := CreateJwtByNewWithClaims()
+	if err != nil {
+		log.Fatal("CreateJwtByNewWithClaims tokenString err:", err)
+	}
+	fmt.Println("CreateJwtByNewWithClaims tokenString:", tokenString)
+
+	b, err := ParseWithClaims(tokenString)
+	if err != nil {
+		log.Fatal("ParseWithClaims err:", err)
+	}
+	fmt.Println("ParseWithClaims b:", b)
+
+	time.Sleep(time.Second * 1)
+}
+
+func TestExampleNewWithClaims_customClaimsType(t *testing.T) {
+	ExampleNewWithClaims_customClaimsType()
+}
+func TestExampleParseWithClaims_customClaimsType(t *testing.T) {
+	ExampleParseWithClaims_customClaimsType()
 }
