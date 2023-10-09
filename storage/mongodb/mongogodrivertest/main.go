@@ -28,8 +28,14 @@ const (
 
 // 结构体必须定义 bson 标签
 type dataStruct struct {
-	Name  string  `bson:"name" json:"name"`
-	Value float64 `bson:"value" json:"value"`
+	Name         string     `bson:"name" json:"name"`
+	Value        float64    `bson:"value" json:"value"`
+	CreatedAt    time.Time  `bson:"created_at" json:"created_at"`
+	UpdatedAt    *time.Time `bson:"updated_at" json:"updated_at"`
+	DeletedAt    *time.Time `bson:"deleted_at" json:"deleted_at"`
+	CreatedAtInt int64      `bson:"created_at_int" json:"created_at_int"`
+	UpdatedAtInt int64      `bson:"updated_at_int" json:"updated_at_int"`
+	DeletedAtInt int64      `bson:"deleted_at_int" json:"deleted_at_int"`
 }
 
 var mongoClient *mongo.Client
@@ -82,8 +88,14 @@ func InsertOne() {
 	fmt.Printf("InsertOne res:%+v\n", res)
 
 	insertOne1 := dataStruct{
-		Name:  "prince",
-		Value: 1314.520,
+		Name:         "prince",
+		Value:        1314.520,
+		CreatedAt:    time.Now(),
+		UpdatedAt:    nil,
+		DeletedAt:    nil,
+		CreatedAtInt: time.Now().Unix(),
+		UpdatedAtInt: 0,
+		DeletedAtInt: 0,
 	}
 	res, err = collection.InsertOne(ctx, insertOne1)
 	if err != nil {
