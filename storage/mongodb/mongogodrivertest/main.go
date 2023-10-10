@@ -86,6 +86,7 @@ func InsertOne() {
 	}
 
 	fmt.Printf("InsertOne res:%+v\n", res)
+	fmt.Println("res.InsertedID:", res.InsertedID)
 
 	insertOne1 := dataStruct{
 		Name:         "prince",
