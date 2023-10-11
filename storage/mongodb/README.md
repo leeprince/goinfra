@@ -24,13 +24,16 @@ MongoDB的固定集合（Fixed Collection）是一种特殊类型的集合，它
 mongoDB 存储time.Time是跟时区有关的。即存储是会转为默认时区，读取时转为当前时区
 
 ## bson
-在 Go 语言中，使用 bson 标签可以为结构体字段提供与 MongoDB 文档的映射关系。以下是 bson 标签中常用的选项及其作用：
-1. inline：bson:",inline" 表示将嵌入的结构体字段展开，将其字段直接嵌入到当前结构体中，而不是作为嵌入结构体的子文档。这样可以避免在 MongoDB 中创建额外的嵌入文档。
-2. minsize：bson:"fieldname,minsize" 表示在序列化时，如果字段的值为空或零值，则不将其包含在生成的 BSON 文档中。这可以减小文档的大小，节省存储空间。
-3. omitempty：bson:"fieldname,omitempty" 表示在序列化时，如果字段的值为空或零值，则不将其包含在生成的 BSON 文档中。与 minsize 类似，这也可以减小文档的大小，节省存储空间。
+> 说明：空或零值代表：false、0、""、nil指针、nil接口、长度为0的数组、切片、映射。
+
+在 Go 语言中，使用 bson 标签可以为结构体字段提供与 MongoDB 文档的映射关系。以下是 bson 标签中常用的选项(,inline ,minsize ,omitempty)及其作用：
+1. ,inline：bson:",inline" 表示将嵌入的结构体字段展开，将其字段直接嵌入到当前结构体中，而不是作为嵌入结构体的子文档。这样可以避免在 MongoDB 中创建额外的嵌入文档。
+2. ,minsize：bson:"fieldname,minsize" 表示在序列化时，如果字段的值为空或零值，则不将其包含在生成的 BSON 文档中。这可以减小文档的大小，节省存储空间。
+3. ,omitempty：bson:"fieldname,omitempty" 表示在序列化时，如果字段的值为空或零值，则不将其包含在生成的 BSON 文档中。与 minsize 类似，这也可以减小文档的大小，节省存储空间。
+> 注意：以上选项存在前导的逗号,
 
 这些选项可以根据需要进行组合使用，以满足定的需求。注意，bson 标签只对使用 MongoDB 官方库进行序列化和反序列化时起作用，对于其他库可能有不同的标签或选项。
 
-> 注：json 标签只有 omitempty 选项，但是默认是：inline
+> 说明：json 标签只有 omitempty 选项，但是默认是：inline
 
 
