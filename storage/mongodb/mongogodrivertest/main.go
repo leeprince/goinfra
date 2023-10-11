@@ -178,13 +178,22 @@ func FindFilter() {
 	fmt.Println("-----------------------------------------")
 	/*通过结构体作为查询条件，并查询到结构体*/
 	// 注意：使用结构体当作过滤条件时，filter 中不会忽略零值和nil。下面是解决办法
+	// 解决方法1：可以使用新的结构体当作过滤条件
+	// 解决方法2：在结构体的字段 bson 标签中添加忽略空或零值
 	/*filterStruct := dataStruct{
 		Name:  "pi",
 		Value: 3.14159,
 	}*/
 	// 解决方法1：可以使用新的结构体当作过滤条件
+	/*filterStruct := struct {
+		Name  string `bson:"name" json:"name"`
+	}{
+		Name: "pi",
+	}*/
+	// 解决方法2：在结构体的字段 bson 标签中添加忽略空或零值
 	filterStruct := struct {
-		Name string `bson:"name" json:"name"`
+		Name  string `bson:"name" json:"name"`
+		Value string `bson:"value,omitempty" json:"value"`
 	}{
 		Name: "pi",
 	}
@@ -300,20 +309,10 @@ func FindOne() {
 
 	/*通过结构体作为查询条件，并查询到结构体*/
 	result1 := dataStruct{}
-	// 注意：使用结构体当作过滤条件时，filter 中不会忽略零值和nil。下面是解决办法
-	/*filterStruct := dataStruct{
-		Name:  "pi",
-		Value: 3.14159,
-	}*/
-	// 解决方法1：可以使用新的结构体当作过滤条件
-	filterStruct := struct {
-		Name string `bson:"name" json:"name"`
-	}{
-		Name: "pi",
-	}
+	filter = bson.D{{"name", "pi"}}
 	ctx, cancel = context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
-	err = collection.FindOne(ctx, filterStruct).Decode(&result1)
+	err = collection.FindOne(ctx, filter).Decode(&result1)
 	if err == mongo.ErrNoDocuments {
 		// Do something when no record was found
 		fmt.Println("record does not exist")
