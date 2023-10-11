@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"testing"
 )
 
@@ -22,9 +21,25 @@ func TestInsertOne(t *testing.T) {
 
 func TestFind(t *testing.T) {
 	Find()
+}
 
-	fmt.Println("--------------------------------------------------------------------")
+func TestFindFilter(t *testing.T) {
+	FindFilter()
+}
 
+func TestFindAndSort(t *testing.T) {
+	FindAndSort()
+}
+
+func TestCount(t *testing.T) {
+	Count()
+}
+
+func TestPage(t *testing.T) {
+	Page()
+}
+
+func TestFindOne(t *testing.T) {
 	FindOne()
 }
 
