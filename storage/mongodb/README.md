@@ -24,6 +24,9 @@ MongoDB的固定集合（Fixed Collection）是一种特殊类型的集合，它
 mongoDB 存储time.Time是跟时区有关的。即存储是会转为默认时区，读取时转为当前时区
 
 ## bson
+> 使用场景
+mongDB官网库支持嵌入字段(通过嵌入结构体的方式直接嵌入字段)，但是必须要添加`bson:"bson:,inline`
+
 > 说明：空或零值代表：false、0、""、nil指针、nil接口、长度为0的数组、切片、映射。
 
 在 Go 语言中，使用 bson 标签可以为结构体字段提供与 MongoDB 文档的映射关系。以下是 bson 标签中常用的选项(,inline ,minsize ,omitempty)及其作用：

@@ -1,6 +1,6 @@
 package model
 
-// 查询模型(mongDB官网库支持嵌套结构体，但是必须要添加`bson:"bson:,inline`)：包含默认主键_id; 用于查询时能够返回默认主键_id
+// 查询模型(mongDB官网库支持嵌入字段，但是必须要添加`bson:"bson:,inline`)：包含默认主键_id; 用于查询时能够返回默认主键_id
 type QueryOperationLogModel struct {
 	Id                      string `bson:"_id" json:"_id"` // 租户ID
 	InsertOperationLogModel `bson:",inline"`
