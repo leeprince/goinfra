@@ -51,9 +51,9 @@ func initRedisClient() (redisClient redis.RedisClient) {
 	var err error
 
 	// Goredis 客户端
-	err = redis.InitGoredis(RedisConfs)
+	err = redis.InitGoredisList(RedisConfs)
 	if err != nil {
-		panic(fmt.Sprintf("[redis.InitGoredis] err:%v \n", err))
+		panic(fmt.Sprintf("[redis.InitGoredisList] err:%v \n", err))
 	}
 	redisClient = redis.GetGoredis(RedisName)
 

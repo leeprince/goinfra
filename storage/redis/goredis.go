@@ -31,29 +31,15 @@ type Goredis struct {
 }
 
 // 初始化
-func InitGoredis(confs RedisConfs) error {
-	ctx := context.Background()
+func InitGoredisList(confs RedisConfs) error {
 	clients := make(map[string]*Goredis, len(confs))
-	for name, conf := range confs {
-		if conf.PoolSize <= 0 {
-			conf.PoolSize = RedisClientDefautlPoolSize
-		}
-		if conf.DB < RedisClientMinDB || conf.DB > RedisClientMaxDB {
-			conf.DB = RedisClientMinDB
-		}
-		client := redis.NewClient(&redis.Options{
-			Network:  conf.Network,
-			Addr:     conf.Addr,
-			Username: conf.Username,
-			Password: conf.Password,
-			DB:       conf.DB,
-			PoolSize: conf.PoolSize,
-		})
-		pong, pingErr := client.Ping(ctx).Result()
-		if pingErr != nil {
-			return fmt.Errorf("[InitGoredis] name:%s-pong:%s-err:%v", name, pong, pingErr)
-		}
 
+	ctx := context.Background()
+	for name, conf := range confs {
+		client, err := initGoredis(ctx, conf)
+		if err != nil {
+			return err
+		}
 		clients[name] = &Goredis{
 			ctx: ctx,
 			cli: client,
@@ -63,6 +49,28 @@ func InitGoredis(confs RedisConfs) error {
 	goredis = clients
 
 	return nil
+}
+
+func initGoredis(ctx context.Context, conf RedisConf) (*redis.Client, error) {
+	if conf.PoolSize <= 0 {
+		conf.PoolSize = RedisClientDefautlPoolSize
+	}
+	if conf.DB < RedisClientMinDB || conf.DB > RedisClientMaxDB {
+		conf.DB = RedisClientMinDB
+	}
+	client := redis.NewClient(&redis.Options{
+		Network:  conf.Network,
+		Addr:     conf.Addr,
+		Username: conf.Username,
+		Password: conf.Password,
+		DB:       conf.DB,
+		PoolSize: conf.PoolSize,
+	})
+	pong, pingErr := client.Ping(ctx).Result()
+	if pingErr != nil {
+		return nil, fmt.Errorf("[InitGoredisList] pong:%s-err:%v", pong, pingErr)
+	}
+	return client, nil
 }
 
 func GetGoredis(name string) *Goredis {
