@@ -7,13 +7,12 @@ package gostreaming_test
 
 import (
 	"fmt"
+	"github.com/leeprince/goinfra/utils/flowutil/gd/gostreaming"
+	"github.com/leeprince/goinfra/utils/flowutil/gd/redishelper"
 	"math/rand"
 
 	"testing"
 	"time"
-
-	"gitlab.yewifi.com/risk-control/risk-common/pkg/gostreaming"
-	"gitlab.yewifi.com/risk-control/risk-common/pkg/redishelper"
 )
 
 func TestRedisStatusStorage(t *testing.T) {

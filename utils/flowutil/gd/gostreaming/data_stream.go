@@ -2,7 +2,7 @@ package gostreaming
 
 /*
  * @Date: 2020-07-06 13:57:20
- * @LastEditors: aiden.deng (Zhenpeng Deng)
+ * @LastEditors: aiden.deng(Zhenpeng Deng)
  * @LastEditTime: 2020-09-02 16:33:53
  */
 

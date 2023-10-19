@@ -7,9 +7,8 @@ package wordcount
  */
 
 import (
+	"github.com/leeprince/goinfra/utils/flowutil/gd/gostreaming"
 	"time"
-
-	"gitlab.yewifi.com/risk-control/risk-common/pkg/gostreaming"
 )
 
 var _ gostreaming.DataStreamInterface = (*WordCounter)(nil)

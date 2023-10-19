@@ -7,10 +7,10 @@ package wordcount
  */
 import (
 	"fmt"
+	"github.com/leeprince/goinfra/utils/flowutil/gd/gostreaming"
 	"time"
 
 	"github.com/emirpasic/gods/sets/treeset"
-	"gitlab.yewifi.com/risk-control/risk-common/pkg/gostreaming"
 )
 
 var _ gostreaming.DataStreamInterface = (*WordCountPrinter)(nil)

@@ -7,14 +7,14 @@ package main
  */
 
 import (
-	"gitlab.yewifi.com/risk-control/risk-common/cmd/examples/word-count/wordcount"
-	"gitlab.yewifi.com/risk-control/risk-common/pkg/gostreaming"
+	"github.com/leeprince/goinfra/utils/flowutil/gd/examples/word-count/wordcount"
+	"github.com/leeprince/goinfra/utils/flowutil/gd/gostreaming"
 )
 
 func main() {
-	// wordCountExample1()
+	wordCountExample1()
 	// wordCountExample2()
-	wordCountExample3()
+	//wordCountExample3()
 }
 
 func wordCountExample1() {

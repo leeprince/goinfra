@@ -2,15 +2,14 @@ package gostreaming_test
 
 /*
  * @Date: 2020-07-17 10:20:35
- * @LastEditors: aiden.deng (Zhenpeng Deng)
+ * @LastEditors: aiden.deng(Zhenpeng Deng)
  * @LastEditTime: 2020-07-23 15:09:27
  */
 
 import (
 	"fmt"
+	"github.com/leeprince/goinfra/utils/flowutil/gd/gostreaming"
 	"testing"
-
-	"gitlab.yewifi.com/risk-control/risk-common/pkg/gostreaming"
 )
 
 func TestTimeUtils_GetTodayLatestTime(t *testing.T) {

@@ -2,8 +2,7 @@ package gostreaming
 
 /*
  * @Date: 2020-07-06 12:35:58
- * @LastEditors: aiden.deng (Zhenpeng Deng)
- * @LastEditTime: 2020-07-06 17:29:07
+ * @LastEditors: aiden.deng(Zhenpeng Deng) 2020-07-06 17:29:07
  */
 
 type DataStreamInterface interface {
