@@ -304,24 +304,6 @@ func FindOne() {
 	// Do something with result...
 
 	dumputil.Println("result result", result)
-
-	fmt.Println("-----------------------------------------")
-
-	/*通过结构体作为查询条件，并查询到结构体*/
-	result1 := dataStruct{}
-	filter = bson.D{{"name", "pi"}}
-	ctx, cancel = context.WithTimeout(context.Background(), 5*time.Second)
-	defer cancel()
-	err = collection.FindOne(ctx, filter).Decode(&result1)
-	if err == mongo.ErrNoDocuments {
-		// Do something when no record was found
-		fmt.Println("record does not exist")
-	} else if err != nil {
-		log.Fatal(err)
-	}
-	// Do something with result...
-
-	dumputil.Println("result result1", result1)
 }
 
 func UpdateOne() {
@@ -331,7 +313,7 @@ func UpdateOne() {
 	var id primitive.ObjectID
 	id, _ = primitive.ObjectIDFromHex("6523a11ff3dd4f5270f5f5ec")
 
-	// 不存在时是否查询
+	// 不存在时是否插入
 	// find the document for which the _id field matches id and set the email to "newemail@example.com"
 	// specify the Upsert option to insert a new document if a document matching the filter isn't found
 	//opts := options.Update().SetUpsert(true)
