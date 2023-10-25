@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/leeprince/goinfra/consts"
 	"testing"
+	"time"
 )
 
 /**
@@ -162,4 +163,59 @@ func TestGetPreMonthUnixTimeRange(t *testing.T) {
 
 	fmt.Println(gotStartTime.Format("2006-01-02 15:04:05"))
 	fmt.Println(gotEndTime.Format("2006-01-02 15:04:05"))
+}
+
+func TestToCurrDayTimeByUnix(t *testing.T) {
+	type args struct {
+		unixTime int64
+	}
+	tests := []struct {
+		name          string
+		args          args
+		wantStartTime time.Time
+		wantEndTime   time.Time
+	}{
+		{
+			name: "1",
+			args: args{
+				unixTime: 1698202800, // 2023-10-25 11:00:00
+			},
+		},
+		{
+			name: "2",
+			args: args{
+				unixTime: 1698166800, // 2023-10-25 01:00:00
+			},
+		},
+		{
+			name: "3",
+			args: args{
+				unixTime: 1698246000, // 2023-10-25 23:00:00
+			},
+		},
+		{
+			name: "11",
+			args: args{
+				unixTime: 1698116400, // 2023-10-24 11:00:00
+			},
+		},
+		{
+			name: "12",
+			args: args{
+				unixTime: 1698080400, // 2023-10-24 01:00:00
+			},
+		},
+		{
+			name: "13",
+			args: args{
+				unixTime: 1698159600, // 2023-10-24 23:00:00
+			},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			gotStartTime, gotEndTime := ToCurrDayTimeByUnix(tt.args.unixTime)
+			fmt.Println(gotStartTime.Format(consts.TimeYYmdHis), gotEndTime.Format(consts.TimeYYmdHis))
+		})
+	}
 }
