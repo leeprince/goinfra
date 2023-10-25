@@ -107,8 +107,16 @@ func (c *Goredis) GetAndDel(key string, value interface{}) error {
 	return nil
 }
 
+func (c *Goredis) Eval(script string, keys []string, args ...interface{}) (resutl interface{}, err error) {
+	return c.cli.Eval(c.ctx, script, keys, args...).Result()
+}
+
 func (c *Goredis) GetString(key string) string {
 	return c.cli.Get(c.ctx, key).String()
+}
+
+func (c *Goredis) GetInt64(key string) (int64, error) {
+	return c.cli.Get(c.ctx, key).Int64()
 }
 
 func (c *Goredis) GetBytes(key string) ([]byte, error) {
@@ -214,12 +222,35 @@ func (c *Goredis) ZRangeByScore(key string, opt *ZRangeBy) (data []string, err e
 	return
 }
 
+// 移除有序集合中的一个或多个成员
 func (c *Goredis) ZRem(key string, members ...interface{}) error {
 	if len(members) == 0 {
 		return errors.New("(c *Goredis) ZAdd len(members) == 0")
 	}
 
 	return c.cli.ZRem(c.ctx, key, members...).Err()
+}
+
+// 将 key 中储存的数字值增一。
+func (c *Goredis) Incr(key string) (int64, error) {
+	cmd := c.cli.Incr(c.ctx, key)
+	return cmd.Val(), cmd.Err()
+}
+
+func (c *Goredis) Decr(key string) (int64, error) {
+	cmd := c.cli.Decr(c.ctx, key)
+	return cmd.Val(), cmd.Err()
+}
+
+// 将 key 所储存的值加上给定的增量值（increment） 。
+func (c *Goredis) IncrBy(key string, value int64) (int64, error) {
+	cmd := c.cli.IncrBy(c.ctx, key, value)
+	return cmd.Val(), cmd.Err()
+}
+
+func (c *Goredis) DecrBy(key string, value int64) (int64, error) {
+	cmd := c.cli.DecrBy(c.ctx, key, value)
+	return cmd.Val(), cmd.Err()
 }
 
 func (c *Goredis) Publish(channel string, message interface{}) error {
@@ -258,18 +289,44 @@ func (r *Goredis) GetSetIncrLua(key string, expiration time.Duration) (int64, er
 	expirationSecond := int64(expiration / 1e9)
 
 	// lua 索引从1开始
+	// 第一次设置值时就开始给该键名设置过期时间
 	value, err := r.cli.Eval(r.ctx, `
-	local i = redis.call("INCR", KEYS[1])
-	if i == 1 then
-		redis.call("EXPIRE", KEYS[1], ARGV[1])
-	end
-	return i`,
+		local i = redis.call("INCR", KEYS[1])
+		if i == 1 then
+			redis.call("EXPIRE", KEYS[1], ARGV[1])
+		end
+		return i
+	`,
 		[]string{key}, expirationSecond).Int64()
 	if err != nil {
 		return 0, err
 	}
 
 	return value, nil
+}
+
+// 增量值增加
+func (r *Goredis) GetSetIncrByLua(key string, value int64, expiration time.Duration) (int64, error) {
+	// 纳秒转为秒
+	expirationSecond := int64(expiration / 1e9)
+
+	// lua 索引从1开始
+	// 第一次设置值时就开始给该键名设置过期时间
+	cmd := r.cli.Eval(r.ctx, `
+	local i = redis.call("INCRBY", KEYS[1], ARGV[1])
+	-- 注意必须将：ARGV[1] 转为数字后再比较
+	if i == tonumber(ARGV[1]) then
+		redis.call("EXPIRE", KEYS[1], ARGV[2])
+	end
+	return i
+	-- return {ARGV[1], type(ARGV[1]), tonumber(ARGV[1]), i, ARGV[2]}
+`,
+		[]string{key}, value, expirationSecond)
+	if cmd.Err() != nil {
+		return 0, cmd.Err()
+	}
+
+	return cmd.Int64()
 }
 
 // 不存在则创建值等于1；存在则+1并且返回+1后的结果。

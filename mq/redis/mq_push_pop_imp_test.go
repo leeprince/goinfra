@@ -63,7 +63,7 @@ func initRedisClient() (redisClient redis.RedisClient) {
 	      panic(fmt.Sprintf("[redis.InitRedigo] err:%v \n", err))
 	      return
 	  }
-	  redisClient = redis.GetRedigo(RedisName)*/
+	  redisClient = redis.GetRedigo(redisName)*/
 
 	// --- redis 客户端-end
 

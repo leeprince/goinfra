@@ -21,7 +21,7 @@ func initGoredisClient() *Goredis {
 	if err != nil {
 		panic(fmt.Sprintf("[goinfraRedis.InitGoredisList] err:%v \n", err))
 	}
-	return GetGoredis(RedisName)
+	return GetGoredis(redisName)
 }
 
 type ValueStruct struct {
@@ -31,6 +31,46 @@ type ValueStruct struct {
 
 func (s ValueStruct) MarshalBinary() ([]byte, error) {
 	return json.Marshal(s)
+}
+
+func TestDebugLuaScript1(t *testing.T) {
+	script := `
+		local name = "John"
+		local age = 30
+
+		print("Name:", name)
+		print("Age:", age)
+		
+		return {name, age}
+	`
+
+	result, err := initGoredisClient().Eval(script, nil)
+	if err != nil {
+		fmt.Println("执行 Lua 脚本失败:", err)
+
+	}
+
+	fmt.Println("脚本执行结果", result)
+}
+
+func TestDebugLuaScript2(t *testing.T) {
+	script := `
+		local name = "John"
+		local age = 30
+
+		print("Name:", name)
+		print("Age:", age)
+		
+		return "OK"
+	`
+
+	result, err := initGoredisClient().Eval(script, nil)
+	if err != nil {
+		fmt.Println("执行 Lua 脚本失败:", err)
+
+	}
+
+	fmt.Println("脚本执行结果", result)
 }
 
 func TestGoredis_SetNx(t *testing.T) {
@@ -81,7 +121,55 @@ func TestGoredis_SetNx(t *testing.T) {
 	}
 }
 
-func TestGoredis_GetAndDel(t *testing.T) {
+func TestGoredis_GetInt64(t *testing.T) {
+
+	type fields struct {
+		ctx    context.Context
+		Client *redis.Client
+	}
+	type args struct {
+		key        string
+		value      interface{}
+		expiration time.Duration
+	}
+	tests := []struct {
+		name    string
+		fields  fields
+		args    args
+		want    bool
+		wantErr bool
+	}{
+		{
+			args: args{
+				key:        "k001",
+				value:      "v001",
+				expiration: time.Second * 10,
+			},
+		},
+		{
+			args: args{
+				key:        "k002",
+				value:      "v002",
+				expiration: time.Second * 10,
+			},
+		},
+		{
+			args: args{
+				key:        "k002",
+				value:      "v002",
+				expiration: time.Second * 10,
+			},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got, err := initGoredisClient().GetInt64(tt.args.key)
+			fmt.Println("got:", got, "--err:", err)
+		})
+	}
+}
+
+func TestGoredis_GetSetIncrLua(t *testing.T) {
 
 	type fields struct {
 		ctx    context.Context
@@ -370,6 +458,7 @@ func TestGoredis_Publish(t *testing.T) {
 		args    args
 		wantErr bool
 	}{
+
 		{
 			args: args{
 				channel: "k",
@@ -432,6 +521,123 @@ func TestGoredis_Subscribe(t *testing.T) {
 
 				go callbackFunc(got)
 			}
+		})
+	}
+}
+
+func TestGoredis_GetAndDel(t *testing.T) {
+
+	type fields struct {
+		ctx    context.Context
+		Client *redis.Client
+	}
+	type args struct {
+		key        string
+		expiration time.Duration
+	}
+	tests := []struct {
+		name    string
+		fields  fields
+		args    args
+		wantErr bool
+	}{
+		{
+			args: args{
+				key:        "GetSetIncrLua",
+				expiration: time.Second * 10,
+			},
+		},
+		{
+			args: args{
+				key:        "GetSetIncrLua",
+				expiration: time.Second * 10,
+			},
+		},
+		{
+			args: args{
+				key:        "GetSetIncrLua",
+				expiration: time.Second * 10,
+			},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			i, err := initGoredisClient().GetSetIncrLua(tt.args.key, tt.args.expiration)
+			fmt.Println("GetSetIncrLua>>>>>>>>", i, err)
+		})
+	}
+}
+
+func TestGoredis_GetSetIncrTxPipeline(t *testing.T) {
+	type fields struct {
+		ctx    context.Context
+		Client *redis.Client
+	}
+	type args struct {
+		key        string
+		expiration time.Duration
+	}
+	tests := []struct {
+		name    string
+		fields  fields
+		args    args
+		wantErr bool
+	}{
+		{
+			args: args{
+				key:        "GetSetIncrTxPipeline",
+				expiration: time.Second * 10,
+			},
+		},
+		{
+			args: args{
+				key:        "GetSetIncrTxPipeline",
+				expiration: time.Second * 10,
+			},
+		},
+		{
+			args: args{
+				key:        "GetSetIncrTxPipeline",
+				expiration: time.Second * 10,
+			},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			i, err := initGoredisClient().GetSetIncrTxPipeline(tt.args.key, tt.args.expiration)
+			fmt.Println("GetSetIncrTxPipeline>>>>>>>>", i, err)
+		})
+	}
+}
+
+func TestGoredis_GetSetIncrByLua(t *testing.T) {
+	type fields struct {
+		ctx    context.Context
+		Client *redis.Client
+	}
+	type args struct {
+		key        string
+		value      int64
+		expiration time.Duration
+	}
+	tests := []struct {
+		name    string
+		fields  fields
+		args    args
+		wantErr bool
+	}{
+		{
+			args: args{
+				key:        "GetSetIncrByLua",
+				value:      100,
+				expiration: time.Second * 10,
+			},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			i, err := initGoredisClient().GetSetIncrByLua(tt.args.key, tt.args.value, tt.args.expiration)
+			fmt.Println("GetSetIncrByLua>>>>>>>>", i, err)
 		})
 	}
 }

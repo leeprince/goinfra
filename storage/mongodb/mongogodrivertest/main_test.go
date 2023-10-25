@@ -50,6 +50,10 @@ func TestFindOne(t *testing.T) {
 	FindOne()
 }
 
+func TestFindOneOfMoreFilter(t *testing.T) {
+	FindOneOfMoreFilter()
+}
+
 func TestUpdateOne(t *testing.T) {
 	UpdateOne()
 }

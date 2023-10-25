@@ -298,6 +298,28 @@ func FindOne() {
 	if err == mongo.ErrNoDocuments {
 		// Do something when no record was found
 		fmt.Println("record does not exist")
+		return
+	} else if err != nil {
+		log.Fatal(err)
+	}
+	// Do something with result...
+
+	dumputil.Println("result result", result)
+}
+
+func FindOneOfMoreFilter() {
+	collection := mongoClient.Database(Database).Collection(Collection)
+
+	/*通过bson.D作为查询条件，并查询到结构体*/
+	var result dataStruct
+	filter := bson.D{{"name", "pi"}, {"created_at_int", 2696842422}}
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+	err := collection.FindOne(ctx, filter).Decode(&result)
+	if err == mongo.ErrNoDocuments {
+		// Do something when no record was found
+		fmt.Println("record does not exist")
+		return
 	} else if err != nil {
 		log.Fatal(err)
 	}

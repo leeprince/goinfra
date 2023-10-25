@@ -48,7 +48,7 @@ func TestNewTryLock(t *testing.T) {
 	      fmt.Printf("[goinfraRedis.InitGoredisList] err:%v \n", err)
 	      return
 	  }
-	  redisClient := goinfraRedis.GetRedigo(RedisName)*/
+	  redisClient := goinfraRedis.GetRedigo(redisName)*/
 
 	// --- redis 客户端-end
 

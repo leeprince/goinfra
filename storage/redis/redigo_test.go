@@ -14,27 +14,13 @@ import (
  * @Desc:
  */
 
-var (
-	RedisName  = "local"
-	redisConfs = RedisConfs{
-		RedisName: RedisConf{
-			Network:  "tcp",
-			Addr:     "127.0.0.1:6379",
-			Username: "",
-			Password: "",
-			DB:       0,
-			PoolSize: 2,
-		},
-	}
-)
-
 func initRedigoClient() *Redigo {
 	// Redigo 客户端
 	err := InitRedigo(redisConfs)
 	if err != nil {
 		panic(fmt.Sprintf("[goinfraRedis.InitGoredisList] err:%v \n", err))
 	}
-	return GetRedigo(RedisName)
+	return GetRedigo(redisName)
 }
 
 func TestRedigo_SetNx(t *testing.T) {

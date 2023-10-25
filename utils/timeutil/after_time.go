@@ -9,8 +9,8 @@ import "time"
  */
 
 // 当前时间N秒后的时间
-func AfterSecond(second time.Duration) time.Time {
-	return time.Now().Add(time.Second * second)
+func AfterSecond(second int64) time.Time {
+	return time.Now().Add(time.Second * time.Duration(second))
 }
 
 // 当前时间N分钟后的时间
@@ -24,8 +24,8 @@ func AfterHours(hour time.Duration) time.Time {
 }
 
 // 当前时间N天后的时间
-func AfterDate(date int) time.Time {
-	return time.Now().AddDate(0, 0, date)
+func AfterDay(day int) time.Time {
+	return time.Now().AddDate(0, 0, day)
 }
 
 // 当前时间N月后的时间
