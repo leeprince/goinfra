@@ -9,6 +9,10 @@ MongoDB
 2. 让驱动程序自动生成唯一的ObjectId值。驱动程序为您未显式指定_id的文档生成唯一的ObjectId值。
 除非你提供强有力的唯一性保证，否则MongoDB建议你让驱动程序自动生成_id值。
 
+### 依靠驱动程序自动维护_id的应用
+插入模型：不包含默认主键_id（MongoDB驱动程序mongDB默认会自动维护主键_id）
+查询模型(mongDB官网库支持嵌入字段，但是必须要添加`bson:"bson:,inline`)：包含默认主键_id; 用于查询时能够返回默认主键_id
+
 ## 固定集合
 MongoDB的固定集合（Fixed Collection）是一种特殊类型的集合，它有以下影响：
 

@@ -1,26 +1,24 @@
 package app
 
 import (
+	"context"
 	"fmt"
-	"github.com/leeprince/goinfra/storage/mongodb"
+	"github.com/leeprince/goinfra/storage/mongodb/mongogodrivertest/gd/config"
 	"github.com/pkg/errors"
 	"go.mongodb.org/mongo-driver/mongo"
+	"go.mongodb.org/mongo-driver/mongo/options"
+	"go.mongodb.org/mongo-driver/mongo/readpref"
 	"golang.org/x/sync/errgroup"
 )
 
 /**
  * @Author: prince.lee <leeprince@foxmail.com>
  * @Date:   2023/10/9 16:37
- * @Desc:
+ * @Desc:	初始化mongDB客户端
  */
 
 var (
 	LogMongoClient *mongo.Client
-)
-
-const (
-	// 注意：27017后面是斜杠后跟着问号！
-	mongoUri = "mongodb://mongoadmin:TB5i9K2jD1SAasdr@10.21.32.14:27017/?connect=direct"
 )
 
 // InitMongoDBClient 初始化MongoDB客户端
@@ -28,14 +26,17 @@ func InitMongoDBClient() {
 	errg := errgroup.Group{}
 	errg.Go(func() (err error) {
 		// 连接  mongoDB 服务端
-		config := mongodb.MongoDBConfig{
-			Uri: mongoUri,
-		}
-		LogMongoClient, err = mongodb.InitMongoDBClient(config)
+		ctx := context.Background()
+		LogMongoClient, err = mongo.Connect(ctx, options.Client().ApplyURI(config.Config.MongoDB.Log.Uri))
 		if err != nil {
 			return errors.New("InitMongoDBClient Connect Log 失败" + err.Error())
 		}
 
+		// 验证连接
+		err = LogMongoClient.Ping(ctx, readpref.Primary())
+		if err != nil {
+			return errors.New("InitMongoDBClient Ping Log 失败" + err.Error())
+		}
 		return
 	})
 

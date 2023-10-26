@@ -86,8 +86,29 @@ func InsertOne() {
 		panic(err)
 	}
 
-	fmt.Printf("InsertOne res:%+v\n", res)
-	fmt.Println("res.InsertedID:", res.InsertedID)
+	fmt.Println("InsertOne res:", res)
+
+	fmt.Println("----------------")
+
+	fmt.Printf("InsertOne res InsertedID1:%+v\n", res.InsertedID)
+	fmt.Println("InsertOne res InsertedID2:", res.InsertedID)
+	insertedID, ok := res.InsertedID.(primitive.ObjectID)
+	fmt.Println("InsertOne res InsertedID3 primitive.ObjectID1:", insertedID, ok)
+	insertedID = res.InsertedID.(primitive.ObjectID)
+	fmt.Println("InsertOne res InsertedID3 primitive.ObjectID2:", insertedID)
+	fmt.Println("InsertOne res InsertedID3 primitive.ObjectID3:", insertedID.IsZero(), insertedID.String(), insertedID.Hex())
+
+	fmt.Println("||||||||||||||||||||||||||||||||||")
+
+	dumputil.Println("dumputil InsertOne res:", res)
+	dumputil.Println("dumputil InsertOne res:", res.InsertedID)
+	dumputil.Println("dumputil InsertOne res primitive.ObjectID:", res.InsertedID.(primitive.ObjectID))
+
+}
+
+func InsertOneByStruct() {
+	ctx := context.Background()
+	collection := mongoClient.Database(Database).Collection(Collection)
 
 	ctime := time.Now()
 	ctimeU := ctime.Unix()
@@ -104,12 +125,72 @@ func InsertOne() {
 		UpdatedAtInt: 0,
 		DeletedAtInt: 0,
 	}
-	res, err = collection.InsertOne(ctx, insertOne1)
+	res, err := collection.InsertOne(ctx, insertOne1)
 	if err != nil {
 		panic(err)
 	}
-	fmt.Printf("InsertOne res:%+v\n", res)
+	fmt.Println("InsertOne res:", res)
 
+	fmt.Println("----------------")
+
+	fmt.Printf("InsertOne res InsertedID1:%+v\n", res.InsertedID)
+	fmt.Println("InsertOne res InsertedID2:", res.InsertedID)
+	insertedID, ok := res.InsertedID.(primitive.ObjectID)
+	fmt.Println("InsertOne res InsertedID3 primitive.ObjectID1:", insertedID, ok)
+	insertedID = res.InsertedID.(primitive.ObjectID)
+	fmt.Println("InsertOne res InsertedID3 primitive.ObjectID2:", insertedID)
+	fmt.Println("InsertOne res InsertedID3 primitive.ObjectID3:", insertedID.IsZero(), insertedID.String(), insertedID.Hex())
+
+	fmt.Println("||||||||||||||||||||||||||||||||||")
+
+	dumputil.Println("dumputil InsertOne res:", res)
+	dumputil.Println("dumputil InsertOne res:", res.InsertedID)
+	dumputil.Println("dumputil InsertOne res primitive.ObjectID:", res.InsertedID.(primitive.ObjectID))
+}
+
+func FindOne() {
+	collection := mongoClient.Database(Database).Collection(Collection)
+
+	/*通过bson.D作为查询条件，并查询到结构体*/
+	var result dataStruct
+	filter := bson.D{{"name", "pi"}}
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+	err := collection.FindOne(ctx, filter).Decode(&result)
+	if err == mongo.ErrNoDocuments {
+		// Do something when no record was found
+		fmt.Println("record does not exist")
+		return
+	} else if err != nil {
+		log.Fatal(err)
+	}
+	// Do something with result...
+
+	dumputil.Println("result result", result)
+}
+
+func FindOneById() {
+	collection := mongoClient.Database(Database).Collection(Collection)
+
+	var id primitive.ObjectID
+	id, _ = primitive.ObjectIDFromHex("6523a11ff3dd4f5270f5f5ec")
+
+	/*通过bson.D作为查询条件，并查询到结构体*/
+	var result dataStruct
+	filter := bson.D{{"_id", id}}
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+	err := collection.FindOne(ctx, filter).Decode(&result)
+	if err == mongo.ErrNoDocuments {
+		// Do something when no record was found
+		fmt.Println("record does not exist")
+		return
+	} else if err != nil {
+		log.Fatal(err)
+	}
+	// Do something with result...
+
+	dumputil.Println("result result", result)
 }
 
 // 批量查询
@@ -286,27 +367,6 @@ func Page() {
 	dumputil.Println("result result created_at_in=1", result2)
 }
 
-func FindOne() {
-	collection := mongoClient.Database(Database).Collection(Collection)
-
-	/*通过bson.D作为查询条件，并查询到结构体*/
-	var result dataStruct
-	filter := bson.D{{"name", "pi"}}
-	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
-	defer cancel()
-	err := collection.FindOne(ctx, filter).Decode(&result)
-	if err == mongo.ErrNoDocuments {
-		// Do something when no record was found
-		fmt.Println("record does not exist")
-		return
-	} else if err != nil {
-		log.Fatal(err)
-	}
-	// Do something with result...
-
-	dumputil.Println("result result", result)
-}
-
 func FindOneOfMoreFilter() {
 	collection := mongoClient.Database(Database).Collection(Collection)
 
@@ -343,9 +403,60 @@ func UpdateOne() {
 
 	// 查询条件和设置的值可以参考插入和查询时使用的结构体方式
 	filter := bson.D{{"_id", id}}
-	update := bson.D{{"$set", bson.D{{"value", "1314.53"}}}}
+	update := bson.D{{"$set", bson.D{{"value", 1314.53}}}}
 
 	result, err := coll.UpdateOne(context.Background(), filter, update, opts)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	if result.MatchedCount != 0 {
+		fmt.Println("matched and replaced an existing document")
+		return
+	}
+	if result.UpsertedCount != 0 {
+		fmt.Printf("inserted a new document with ID %v\n", result.UpsertedID)
+	}
+}
+
+func InsertOneAndUpdateOne() {
+	ctx := context.Background()
+	collection := mongoClient.Database(Database).Collection(Collection)
+
+	// ------------插入-end
+
+	res, err := collection.InsertOne(ctx, bson.D{{"name", "pii"}, {"value", 3.14159}})
+	if err != nil {
+		panic(err)
+	}
+
+	fmt.Println("res:", res)
+	// ------------插入-end
+
+	// ------------更新
+
+	var id primitive.ObjectID
+	// 常规断言判断是否为true
+	//id, ok := res.InsertedID.(primitive.ObjectID)
+	//if !ok {
+	//	panic("id不匹配")
+	//}
+	// 确定肯定是 primitive.ObjectID
+	id = res.InsertedID.(primitive.ObjectID)
+	fmt.Println("---id", id)
+	fmt.Printf("---id:%s\n", id)
+
+	// 不存在时是否插入
+	// find the document for which the _id field matches id and set the email to "newemail@example.com"
+	// specify the Upsert option to insert a new document if a document matching the filter isn't found
+	//opts := options.Update().SetUpsert(true)
+	opts := options.Update().SetUpsert(false)
+
+	// 查询条件和设置的值可以参考插入和查询时使用的结构体方式
+	filter := bson.D{{"_id", id}}
+	update := bson.D{{"$set", bson.D{{"value", 1314.53}}}}
+
+	result, err := collection.UpdateOne(context.Background(), filter, update, opts)
 	if err != nil {
 		log.Fatal(err)
 	}
