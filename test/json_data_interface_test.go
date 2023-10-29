@@ -138,3 +138,17 @@ func TestJsonDataInterface(t *testing.T) {
 	
 	time.Sleep(time.Second * 20)
 }
+
+func TestJson(t *testing.T) {
+	dataJson := `{
+	    "code":0,
+	    "message":"说明-string",
+	    "log_id":"日志ID",
+	    "data":null
+	}`
+	
+	data := message.VerifyAuthResp{}
+	err := json.Unmarshal([]byte(dataJson), &data)
+	fmt.Println("err", err)
+	fmt.Println("data", data)
+}
