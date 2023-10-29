@@ -46,6 +46,16 @@ func ToTimeByUnix(unixTime int64) (t time.Time) {
 	return time.Unix(unixTime, 0)
 }
 
+// 将时间戳转换为当日的开始时间&结束时间 time.Time 类型
+func ToCurrDayTimeByUnix(unixTime int64) (startTime, endTime time.Time) {
+	t := time.Unix(unixTime, 0)
+
+	startTime = time.Date(t.Year(), t.Month(), t.Day(), 0, 0, 0, 0, t.Location())
+	endTime = time.Date(t.Year(), t.Month(), t.Day(), 23, 59, 59, 0, t.Location())
+
+	return
+}
+
 // 计算当前月1日的时间
 func MonthFirthDayTime() time.Time {
 	// 获取当前时间

@@ -2,7 +2,7 @@ package main
 
 import (
 	"context"
-	"github.com/leeprince/goinfra/trace/opentracing/jaeger_client"
+	"github.com/leeprince/goinfra/trace/opentracing/jaegerclient"
 	"os"
 	"testing"
 )
@@ -66,6 +66,7 @@ func TestLocalRemoteTraceRPCFormatter(t *testing.T) {
 	// 通过 span 继续链路跟踪
 	localRemoteTraceRPCFormatter(spanCtx)
 }
+
 func TestLocalRemoteTraceRPCFormatterV1(t *testing.T) {
 	// 初始化链路跟踪
 	initTrace("TestLocalRemoteTraceRPCFormatterV1")

@@ -35,7 +35,7 @@ func TestNewTryLock(t *testing.T) {
 	// --- redis 客户端
 	
 	// Goredis 客户端
-	err := goinfraRedis.InitGoredis(RedisConfs)
+	err := goinfraRedis.InitGoredisList(RedisConfs)
 	if err != nil {
 		fmt.Printf("[goinfraRedis.InitGoredis] err:%v \n", err)
 		return

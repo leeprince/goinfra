@@ -215,3 +215,34 @@ func ReadInvoiceList(req *ReadInvoiceListReq) {
 	fmt.Println("-------------5")
 
 }
+
+func modify(array []int) {
+	array[0] = 10 // 对入参slice的元素修改会影响原始数据
+}
+
+func add(array []int) {
+	array = append(array, 100)
+}
+
+func addPointer(array *[]int) {
+	*array = append(*array, 100)
+}
+
+// 【推荐】不使用slice作为函数入参
+/*
+slice在作为函数入参时，函数内对slice的修改可能会影响原始数据。
+优化：数组作为函数入参，而不是slice
+*/
+func TestArrayModify(t *testing.T) {
+	array := []int{1, 2, 3, 4, 5}
+
+	modify(array)
+	fmt.Println(array) // output：[10 2 3 4 5]
+
+	add(array)
+	fmt.Println(array) // output：[10 2 3 4 5]
+
+	addPointer(&array)
+	fmt.Println(array) // output：[10 2 3 4 5 100]
+
+}

@@ -35,9 +35,9 @@ type jaegerOption struct {
 	// isStdLogger == true 时才检查 logger
 	logger jaeger.Logger
 
-	// localAgentHostPort 指示 reporter 将 spans 发送到此地址的 jaeger 代理
+	// reporterAgentUrl 指示 reporter 将 spans 发送到此地址的 jaeger 代理
 	//      默认：fmt.Sprintf("%s:%d", jaeger.DefaultUDPSpanServerHost, jaeger.DefaultUDPSpanServerPort),
-	localAgentHostPort string
+	reporterAgentUrl string
 }
 
 type JaegerOptions func(opt *jaegerOption)
@@ -63,9 +63,9 @@ func WithJaegerOptionLogger(logger jaeger.Logger) JaegerOptions {
 		opt.logger = logger
 	}
 }
-func WithJaegerLocalAgentHostPort(url string) JaegerOptions {
+func WithReporterAgentUrl(url string) JaegerOptions {
 	return func(opt *jaegerOption) {
-		opt.localAgentHostPort = url
+		opt.reporterAgentUrl = url
 	}
 }
 
@@ -90,8 +90,8 @@ func initTracer(opt *jaegerOption) (opentracing.Tracer, io.Closer, error) {
 		cfg.Reporter.LogSpans = false
 	}
 
-	if opt.localAgentHostPort != "" {
-		cfg.Reporter.LocalAgentHostPort = opt.localAgentHostPort
+	if opt.reporterAgentUrl != "" {
+		cfg.Reporter.LocalAgentHostPort = opt.reporterAgentUrl
 	}
 
 	// jaeger 内置的日志输出方式

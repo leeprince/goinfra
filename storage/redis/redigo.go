@@ -45,7 +45,7 @@ func InitRedigo(confs RedisConfs) error {
 				redis.DialWriteTimeout(redigoDialWriteTimeout),
 			)
 			if connErr != nil {
-				return nil, fmt.Errorf("[InitGoredis] name:%s-err:%v", name, connErr)
+				return nil, fmt.Errorf("[InitGoredisList] name:%s-err:%v", name, connErr)
 			}
 			return conn, nil
 		}

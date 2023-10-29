@@ -15,7 +15,7 @@ import (
 
 func TestAfterSecond(t *testing.T) {
 	type args struct {
-		second time.Duration
+		second int64
 	}
 	tests := []struct {
 		name string

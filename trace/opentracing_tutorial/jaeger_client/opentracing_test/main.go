@@ -11,10 +11,14 @@ import (
 )
 
 const (
-	serviceName = "jaeger_client@opentracing_test"
+	serviceName = "jaegerclient@opentracing_test"
 	env         = consts.ENV_LOCAL
 	logDir      = "./"
 	logFileName = "application.log"
+
+	// gd
+	//reporterAgentUrl = "jaeger-agent.monitoring.svc.cluster.local:6831"
+	reporterAgentUrl = "10.20.64.11:6831"
 )
 
 // 初始化日志
@@ -26,12 +30,13 @@ func initLog() {
 	plog.SetReportCaller(true)
 }
 
-// 初始化链路跟踪。注意：程序最后一定要关闭`defer jaeger_client.Close()`
+// 初始化链路跟踪。注意：程序最后一定要关闭`defer jaegerclient.Close()`
 func initTrace(serviceName string) {
 	jaegerclient.InitTracer(
 		serviceName,
 		jaegerclient.WithJaegerOptionEnv(env),
 		jaegerclient.WithJaegerOptionIsStdLogger(true),
+		jaegerclient.WithReporterAgentUrl(reporterAgentUrl),
 		jaegerclient.WithJaegerReporterLogSpans(true))
 }
 
@@ -76,7 +81,7 @@ func spanTrace(spanCtx context.Context) {
 
 // span 日志
 func spanTraceLog(spanCtx context.Context) {
-	// 使用 jaeger_client.Plog(...)、 jaeger_client.Plogf(...) 代替, 或者基于这两个函数的具体函数实现
+	// 使用 jaegerclient.Plog(...)、 jaegerclient.Plogf(...) 代替, 或者基于这两个函数的具体函数实现
 	plog.LogID(jaegerclient.TraceID(spanCtx)).Infof("spanTraceLog TraceID")
 
 	jaegerclient.Plog(spanCtx, plog.InfoLevel, "spanTraceLog Plog")
@@ -232,7 +237,7 @@ func localRemoteTraceRPCFormatter(ctx context.Context) {
 	// 当前服务与远程调用服务组成一个完整调用链追踪
 	err = jaegerclient.InjectTraceHTTPClient(spanCtx, urlPath, http.MethodGet, req.Header)
 	if err != nil {
-		jaegerclient.PlogError(spanCtx, "localRemoteTraceRPCFormatter jaeger_client.InjectTraceHTTPClient err:", err)
+		jaegerclient.PlogError(spanCtx, "localRemoteTraceRPCFormatter jaegerclient.InjectTraceHTTPClient err:", err)
 		return
 	}
 	jaegerclient.PlogInfo(ctx, "localRemoteTraceRPCFormatter req:", req)
@@ -262,7 +267,10 @@ func localRemoteTraceRPCFormatterV1(ctx context.Context) {
 		"helloTo": []string{"prince"},
 	}
 	hosturl := "http://127.0.0.1:8111/format?" + params.Encode()
-	httpClient := httpcli.NewHttpClient().WithIsHttpTrace(true, ctx).
+	httpClient := httpcli.NewHttpClient().
+		//WithIsHttpTrace(true). // logID=重新生成的
+		//WithIsHttpTrace(true, ctx). // logID=调用链ID
+		WithIsHttpTrace(true, spanCtx). // logID=调用链ID
 		WithLogID(jaegerclient.TraceID(spanCtx)).
 		WithMethod(http.MethodGet).
 		WithURL(hosturl)
@@ -299,7 +307,7 @@ func localRemoteTracePublisher(ctx context.Context) {
 	// 当前服务与远程调用服务组成一个完整调用链追踪
 	err = jaegerclient.InjectTraceHTTPClient(spanCtx, urlPath, http.MethodGet, req.Header)
 	if err != nil {
-		jaegerclient.PlogError(spanCtx, "localRemoteTraceRPCFormatter jaeger_client.InjectTraceHTTPClient err:", err)
+		jaegerclient.PlogError(spanCtx, "localRemoteTraceRPCFormatter jaegerclient.InjectTraceHTTPClient err:", err)
 		return
 	}
 
@@ -336,7 +344,7 @@ func localRemoteBaggageTraceRPCFormatter(ctx context.Context) {
 	// 当前服务与远程调用服务组成一个完整调用链追踪
 	err = jaegerclient.InjectTraceHTTPClient(spanCtx, urlPath, http.MethodGet, req.Header)
 	if err != nil {
-		jaegerclient.PlogError(spanCtx, "localRemoteTraceRPCFormatter jaeger_client.InjectTraceHTTPClient err:", err)
+		jaegerclient.PlogError(spanCtx, "localRemoteTraceRPCFormatter jaegerclient.InjectTraceHTTPClient err:", err)
 		return
 	}
 
@@ -373,7 +381,7 @@ func localRemoteBaggageTraceRPCPublisher(ctx context.Context) {
 	// 当前服务与远程调用服务组成一个完整调用链追踪
 	err = jaegerclient.InjectTraceHTTPClient(spanCtx, urlPath, http.MethodGet, req.Header)
 	if err != nil {
-		jaegerclient.PlogError(spanCtx, "localRemoteTraceRPCFormatter jaeger_client.InjectTraceHTTPClient err:", err)
+		jaegerclient.PlogError(spanCtx, "localRemoteTraceRPCFormatter jaegerclient.InjectTraceHTTPClient err:", err)
 		return
 	}
 
