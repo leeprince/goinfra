@@ -38,26 +38,32 @@ func MonitorHttpV1() {
 	// --- 创建无头浏览器：默认-end ---
 	
 	// 监听指定的URL的HTTP请求
-	url := "http://localhost:8090/prince/post"
+	url := "http://localhost:18999/postFormHandler"
 	log.Println("监听指定的URL的HTTP请求 url:", url)
 	
 	// 这将用于捕获匹配网络事件的请求id
 	var requestID network.RequestID
 	// 设置一个缓冲区为1的channel，用于异步接收等待监听指定url事件的结果通知
 	listenChan := make(chan struct{}, 1)
+	// 在 ListenTarget 中不要存在任何阻塞！如果需要暂存数据，必须考虑并发安全，建议使用 sync.Map
 	chromedp.ListenTarget(ctx, func(ev interface{}) {
 		switch ev := ev.(type) {
 		case *network.EventRequestWillBeSent:
-			log.Println("--- *network.EventRequestWillBeSent ---")
-			if ev.Request.URL == url {
-				log.Printf("Request URL: %s\nRequest Headers: %v\nRequest Body: %s\n", ev.Request.URL, ev.Request.Headers, ev.Request.PostData)
-				requestID = ev.RequestID
-			}
+			go func() {
+				log.Println("--- *network.EventRequestWillBeSent ---")
+				if ev.Request.URL == url {
+					log.Printf("Request URL: %s\nRequest Headers: %v\nRequest Body: %s\n", ev.Request.URL, ev.Request.Headers, ev.Request.PostData)
+					requestID = ev.RequestID
+				}
+			}()
 		case *network.EventResponseReceived:
-			log.Println("--- *network.EventResponseReceived ---")
-			if ev.RequestID == requestID {
-				listenChan <- struct{}{}
-			}
+			// 注意：有些请求是没有响应的
+			go func() {
+				log.Println("--- *network.EventResponseReceived ---")
+				if ev.RequestID == requestID {
+					listenChan <- struct{}{}
+				}
+			}()
 		}
 	})
 	

@@ -7,7 +7,7 @@
 
 64 位
 ```
-GOOS=windows GOARCH=amd64 go build -o sysinfo.exe main.go
+GOOS=windows GOARCH=amd64 go build -o sysinfo_64.exe main.go
 ```
 
 32 位

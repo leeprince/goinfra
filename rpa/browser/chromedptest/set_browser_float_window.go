@@ -48,10 +48,22 @@ func SetBrowserFloatWindow() {
 	}
 	
 	// 弹窗
+	/*
+		注意：如果需要通过 innerHTML 添加html内容则需要使用`或者""包含起来，但是由于 golang 不能嵌套`符，所以
+		var popup = document.createElement("table");
+		popup.innerHTML = %s%s%s;
+		popup.appendChild(tableEl);
+	
+		说明：
+			第一个%s：`
+			第二个%s：html 内容
+			第三个%s：`
+	*/
 	err = chromedp.Run(ctx,
 		chromedp.EvaluateAsDevTools(`
             // 创建弹窗元素
 			var popup = document.createElement('div');
+			popup.id = "popupId";
 			popup.innerHTML = '这是一个自动关闭的弹窗';
 			
 			// 设置弹窗的位置
@@ -108,6 +120,18 @@ func SetBrowserFloatWindow() {
 	)
 	if err != nil {
 		fmt.Println(err)
+	}
+	
+	time.Sleep(time.Second * 5)
+	
+	// 移除弹窗
+	expresion := fmt.Sprintf(`document.getElementById("%s").remove()`, "popupId")
+	err = chromedp.Run(ctx,
+		chromedp.EvaluateAsDevTools(expresion, nil),
+	)
+	if err != nil {
+		log.Fatal("")
+		return
 	}
 	
 	time.Sleep(time.Second * 2000)

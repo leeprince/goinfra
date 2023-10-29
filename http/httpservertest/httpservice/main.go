@@ -21,7 +21,7 @@ var (
 )
 
 func main() {
-	port = flag.Int("port", 19999, "port")
+	port = flag.Int("port", 18999, "port")
 	flag.Parse()
 	
 	// 路由定义

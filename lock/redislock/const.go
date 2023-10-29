@@ -1,4 +1,4 @@
-package lock
+package redislock
 
 import "time"
 
@@ -9,10 +9,10 @@ import "time"
  */
 
 const (
-    DefaultTickerTime = time.Millisecond * 200
-    DefaultTimeOut    = time.Second * 1 // 相当于总共尝试获取1(默认执行一次)+(DefaultTimeOut/DefaultTickerTime)=1+5次锁
+	DefaultTickerTime = time.Millisecond * 200
+	DefaultTimeOut    = time.Second * 1 // 相当于总共尝试获取1(默认执行一次)+(DefaultTimeOut/DefaultTickerTime)=1+5次锁
 )
 
 const (
-    DefaultLockExpireTime = time.Second * 2 // 默认的锁过期时间
+	DefaultLockExpireTime = time.Second * 2 // 默认的锁过期时间
 )

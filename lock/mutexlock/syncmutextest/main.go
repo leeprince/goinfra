@@ -40,6 +40,13 @@ func (m *MutexWithTimeout) Lock() bool {
 }
 
 func (m *MutexWithTimeout) Unlock() {
+	defer func() {
+		if r := recover(); r != nil {
+			// 忽略解锁错误
+			fmt.Println("忽略解锁错误")
+			// fmt.Println("Recovered from panic:", r)
+		}
+	}()
 	m.mu.Unlock()
 }
 
@@ -51,26 +58,53 @@ func main() {
 	
 	if mu.Lock() {
 		fmt.Println("Lock acquired---")
-		time.Sleep(5 * time.Second)
+		time.Sleep(4 * time.Second)
 		mu.Unlock()
 		fmt.Println("Lock released---")
 	} else {
 		fmt.Println("Failed to acquire the lock---")
 	}
 	
-	go func() {
-		for i := 0; i < 3; i++ {
+	wg := sync.WaitGroup{}
+	for i := 0; i < 3; i++ {
+		time.Sleep(time.Second * 1)
+		wg.Add(1)
+		go func(i int) {
+			defer wg.Done()
+			
 			if mu.Lock() {
 				fmt.Println("Lock acquired---", i)
-				time.Sleep(3 * time.Second)
+				time.Sleep(5 * time.Second)
 				mu.Unlock()
 				fmt.Println("Lock released---", i)
 			} else {
 				fmt.Println("Failed to acquire the lock---", i)
 			}
-		}
-		
-	}()
+		}(i)
+	}
+	wg.Wait()
 	
-	select {}
+	wg1 := sync.WaitGroup{}
+	for i := 0; i < 3; i++ {
+		wg1.Add(1)
+		go func(i int) {
+			defer wg1.Done()
+			
+			if mu.Lock() {
+				fmt.Println("wg1 Lock acquired---", i)
+			} else {
+				fmt.Println("wg1 Failed to acquire the lock---", i)
+			}
+		}(i)
+		
+		wg1.Add(1)
+		go func(i int) {
+			defer wg1.Done()
+			fmt.Println("wg1 Lock released...", i)
+			mu.Unlock()
+			fmt.Println("wg1 Lock released---", i)
+		}(i)
+	}
+	wg1.Wait()
+	
 }

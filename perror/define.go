@@ -46,7 +46,7 @@ var (
 	BizErrSecuritySignGenerate = NewBizErr(100009005, "生成签名失败!")
 	BizErrSecuritySignVerify   = NewBizErr(100009006, "验证签名失败!")
 	BizErrSecurityAuthGenerate = NewBizErr(100009006, "生成授权失败!")
-	BizErrSecurityAuthVerify   = NewBizErr(100009006, "验证授权失败!")
+	BizErrSecurityAuthVerify   = NewBizErr(100009006, "未授权，请联系运营商!")
 	BizErrSecurityAuthing      = NewBizErr(100009006, "授权中，请联系运营商!")
 	BizErrSecurityAuthExpired  = NewBizErr(100009006, "授权已过期，请联系运营商!")
 	

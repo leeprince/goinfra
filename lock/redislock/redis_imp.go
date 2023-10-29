@@ -1,9 +1,9 @@
-package lock
+package redislock
 
 import (
-    "context"
-    "github.com/leeprince/goinfra/storage/redis"
-    "time"
+	"context"
+	"github.com/leeprince/goinfra/storage/redis"
+	"time"
 )
 
 /**
@@ -12,24 +12,23 @@ import (
  * @Desc:
  */
 
-
 // RedisClient 实现 LockClientInterface 接口
 var _ LockClientInterface = (*RedisClient)(nil)
 
 type RedisClient struct {
-    redis.RedisClient
+	redis.RedisClient
 }
 
 func NewRedisClient(redis redis.RedisClient) *RedisClient {
-    return &RedisClient{
-        RedisClient: redis,
-    }
+	return &RedisClient{
+		RedisClient: redis,
+	}
 }
 
 func (r *RedisClient) Lock(ctx context.Context, key string, value interface{}, expirtime time.Duration) (bool, error) {
-    return r.WithContext(ctx).SetNx(key, value, expirtime)
+	return r.WithContext(ctx).SetNx(key, value, expirtime)
 }
 
 func (r *RedisClient) UnLock(ctx context.Context, key string, value interface{}) error {
-    return r.WithContext(ctx).GetAndDel(key, value)
+	return r.WithContext(ctx).GetAndDel(key, value)
 }
