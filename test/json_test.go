@@ -201,3 +201,17 @@ func convertToMap2(data []byte) ([]map[string]string, error) {
 
 	return invoiceMapList, nil
 }
+
+func TestJson(t *testing.T) {
+	dataJson := `{
+	    "code":0,
+	    "message":"说明-string",
+	    "log_id":"日志ID",
+	    "data":null
+	}`
+	
+	data := message.VerifyAuthResp{}
+	err := json.Unmarshal([]byte(dataJson), &data)
+	fmt.Println("err", err)
+	fmt.Println("data", data)
+}

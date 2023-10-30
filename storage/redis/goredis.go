@@ -33,10 +33,10 @@ type Goredis struct {
 // 初始化
 func InitGoredisList(confs RedisConfs) error {
 	clients := make(map[string]*Goredis, len(confs))
-
+	
 	ctx := context.Background()
 	for name, conf := range confs {
-		client, err := initGoredis(ctx, conf)
+		client, err := InitGoredis(ctx, conf)
 		if err != nil {
 			return err
 		}
@@ -45,13 +45,13 @@ func InitGoredisList(confs RedisConfs) error {
 			cli: client,
 		}
 	}
-
+	
 	goredis = clients
-
+	
 	return nil
 }
 
-func initGoredis(ctx context.Context, conf RedisConf) (*redis.Client, error) {
+func InitGoredis(ctx context.Context, conf RedisConf) (*redis.Client, error) {
 	if conf.PoolSize <= 0 {
 		conf.PoolSize = RedisClientDefautlPoolSize
 	}
@@ -155,7 +155,7 @@ func (c *Goredis) BPop(key string, timeout time.Duration, isLeft ...bool) (data 
 	}
 	// fmt.Printf("(c *Goredis) BPop error = %v, keyValueSlice=%v, keyValueSlice Type=%T \n", err, keyValueSlice, keyValueSlice)
 	// fmt.Println(cast.ToString(keyValueSlice[0]), cast.ToString(keyValueSlice[1]))
-
+	
 	if err != nil {
 		return
 	}
@@ -175,7 +175,7 @@ func (c *Goredis) ZAdd(key string, members ...*Z) error {
 	if len(members) == 0 {
 		return errors.New("(c *Goredis) ZAdd len(members) == 0")
 	}
-
+	
 	var redisMembers []*redis.Z
 	for _, i2 := range members {
 		redisMembers = append(redisMembers, &redis.Z{
@@ -200,7 +200,7 @@ func (c *Goredis) ZRangeByScore(key string, opt *ZRangeBy) (data []string, err e
 		Offset: opt.Offset,
 		Count:  opt.Count,
 	}
-
+	
 	// 返回分数的格式为：[]string{成员1 分数1 成员2 分数2}。
 	//  []string 返回的顺序与 redigo 兼容。
 	if opt.isReturnScore {
@@ -210,7 +210,7 @@ func (c *Goredis) ZRangeByScore(key string, opt *ZRangeBy) (data []string, err e
 		if err != nil {
 			return
 		}
-
+		
 		for _, i2 := range zSlice {
 			data = append(data, cast.ToString(i2.Member), cast.ToString(i2.Score))
 		}
@@ -218,7 +218,7 @@ func (c *Goredis) ZRangeByScore(key string, opt *ZRangeBy) (data []string, err e
 	}
 	data, err = c.cli.ZRangeByScore(c.ctx, key, ZRangeBy).Result()
 	// fmt.Printf("data type:%T data:%v \n", data, data)
-
+	
 	return
 }
 
@@ -227,7 +227,7 @@ func (c *Goredis) ZRem(key string, members ...interface{}) error {
 	if len(members) == 0 {
 		return errors.New("(c *Goredis) ZAdd len(members) == 0")
 	}
-
+	
 	return c.cli.ZRem(c.ctx, key, members...).Err()
 }
 
@@ -259,7 +259,7 @@ func (c *Goredis) Publish(channel string, message interface{}) error {
 
 func (c *Goredis) Subscribe(channels ...string) *SubscribeMessage {
 	subscribeChannel := c.cli.Subscribe(c.ctx, channels...).Channel()
-
+	
 	// for 与 select...case... 都能接收通道（channel）的数据
 	// for 通道（channel）只有一个参数, 并且需要返回时外面也需要 return
 	/*for channel := range subscribeChannel {
@@ -271,7 +271,7 @@ func (c *Goredis) Subscribe(channels ...string) *SubscribeMessage {
 	      }
 	  }
 	  return nil*/
-
+	
 	select {
 	case msg := <-subscribeChannel:
 		return &SubscribeMessage{
@@ -287,7 +287,7 @@ func (c *Goredis) Subscribe(channels ...string) *SubscribeMessage {
 func (r *Goredis) GetSetIncrLua(key string, expiration time.Duration) (int64, error) {
 	// 纳秒转为秒
 	expirationSecond := int64(expiration / 1e9)
-
+	
 	// lua 索引从1开始
 	// 第一次设置值时就开始给该键名设置过期时间
 	value, err := r.cli.Eval(r.ctx, `
@@ -301,7 +301,7 @@ func (r *Goredis) GetSetIncrLua(key string, expiration time.Duration) (int64, er
 	if err != nil {
 		return 0, err
 	}
-
+	
 	return value, nil
 }
 
@@ -309,7 +309,7 @@ func (r *Goredis) GetSetIncrLua(key string, expiration time.Duration) (int64, er
 func (r *Goredis) GetSetIncrByLua(key string, value int64, expiration time.Duration) (int64, error) {
 	// 纳秒转为秒
 	expirationSecond := int64(expiration / 1e9)
-
+	
 	// lua 索引从1开始
 	// 第一次设置值时就开始给该键名设置过期时间
 	cmd := r.cli.Eval(r.ctx, `
@@ -325,7 +325,7 @@ func (r *Goredis) GetSetIncrByLua(key string, value int64, expiration time.Durat
 	if cmd.Err() != nil {
 		return 0, cmd.Err()
 	}
-
+	
 	return cmd.Int64()
 }
 
@@ -333,28 +333,28 @@ func (r *Goredis) GetSetIncrByLua(key string, value int64, expiration time.Durat
 func (r *Goredis) GetSetIncrTxPipeline(key string, expiration time.Duration) (int64, error) {
 	// 支持原子性的pipeline
 	pipeliner := r.cli.TxPipeline()
-
+	
 	// pipeliner.Exec()执行完之后可以通过incrCmd获取到返回的值
 	incrCmd := pipeliner.Incr(r.ctx, key)
-
+	
 	// 支持纳秒
 	pipeliner.Expire(r.ctx, key, expiration)
-
+	
 	// cmders, err := pipeliner.Exec()
-	//fmt.Println(cmders)
-	//// 按pipeliner执行的顺序放入数组中，即：Incr =》 Expire
-	//for _, cmder := range cmders {
+	// fmt.Println(cmders)
+	// // 按pipeliner执行的顺序放入数组中，即：Incr =》 Expire
+	// for _, cmder := range cmders {
 	//	if cmder.Err() != nil {
 	//		return 0, err
 	//	}
 	//	fmt.Println(cmder.Name())
 	//	fmt.Println(cmder.Args())
-	//}
-
+	// }
+	
 	_, err := pipeliner.Exec(r.ctx)
 	if err != nil {
 		return 0, err
 	}
-
+	
 	return incrCmd.Val(), nil
 }

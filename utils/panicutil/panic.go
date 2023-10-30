@@ -12,10 +12,10 @@ import (
  * @Desc:
  */
 
-func PanicRecover(recover interface{}, logIDs ...string) error {
+func PanicRecover(recover interface{}, logIdList ...string) error {
 	var plogEntry *logrus.Entry
-	if len(logIDs) > 0 && logIDs[0] != "" {
-		plogEntry = plog.LogID(logIDs[0]).WithField("method", "PanicRecover")
+	if len(logIdList) > 0 && logIdList[0] != "" {
+		plogEntry = plog.LogID(logIdList[0]).WithField("method", "PanicRecover")
 	} else {
 		plogEntry = plog.WithField("method", "PanicRecover")
 	}
