@@ -311,7 +311,7 @@ $ go tool cover -func=fib.out
 $ go tool cover -html=fib.out -o fib.html
 ```
 
-### 3. Main
+### 3. main
 测试程序有时需要在测试之前或之后进行额外的设置（setup）或拆卸（teardown）。有时, 测试还需要控制在主线程上运行的代码。为了支持这些和其他一些情况, 如果测试文件包含函数:
 ```
 func TestMain(m *testing.M)
@@ -597,6 +597,124 @@ Go 官方有一个 `github.com/golang/mock/gomock` 和 `https://github.com/travi
 # 六、数据库测试
 
 ## （一）`github.com/DATA-DOG/go-sqlmock`
+
+
+# 七、压力测试
+## wrk
+
+### （一）命令
+```
+$ wrk --help
+Usage: wrk <options> <url>                            
+  Options:                                            
+    -c, --connections <N>  Connections to keep open   
+    -d, --duration    <T>  Duration of test           
+    -t, --threads     <N>  Number of threads to use   
+                                                      
+    -s, --script      <S>  Load Lua script file       
+    -H, --header      <H>  Add header to request      
+        --latency          Print latency statistics   
+        --timeout     <T>  Socket/request timeout     
+    -v, --version          Print version details      
+                                                      
+  Numeric arguments may include a SI unit (1k, 1M, 1G)
+  Time arguments may include a time unit (2s, 2m, 2h)
+  
+  使用方法: wrk <选项> <被测HTTP服务的URL>                            
+  Options:                                            
+    -c, --connections <N>  跟服务器建立并保持的TCP连接数量  
+    -d, --duration    <T>  压测时间           
+    -t, --threads     <N>  使用多少个线程进行压测   
+                                                      
+    -s, --script      <S>  指定Lua脚本路径       
+    -H, --header      <H>  为每一个HTTP请求添加HTTP头      
+        --latency          在压测结束后，打印延迟统计信息   
+        --timeout     <T>  超时时间     
+    -v, --version          打印正在使用的wrk的详细版本信息
+                                                      
+  <N>代表数字参数，支持国际单位 (1k, 1M, 1G)
+  <T>代表时间参数，支持时间单位 (2s, 2m, 2h)
+
+```
+
+### （二）关于线程数
+PS: 关于线程数，并不是设置的越大，压测效果越好，线程设置过大，反而会导致线程切换过于频繁，效果降低，一般来说，推荐设置成压测机器 CPU 核心数的 2 倍到 4 倍就行了。
+
+### （三）结果说明
+```
+Running 30s test @ http://www.baidu.com （压测时间30s）
+  12 threads and 400 connections （共12个测试线程，400个连接）
+              （平均值） （标准差）  （最大值）（正负一个标准差所占比例）
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    （延迟）
+    Latency   386.32ms  380.75ms   2.00s    86.66%
+    (每秒请求数)
+    Req/Sec    17.06     13.91   252.00     87.89%
+  Latency Distribution （延迟分布）
+     50%  218.31ms
+     75%  520.60ms
+     90%  955.08ms
+     99%    1.93s 
+  4922 requests in 30.06s, 73.86MB read (30.06s内处理了4922个请求，耗费流量73.86MB)
+  Socket errors: connect 0, read 0, write 0, timeout 311 (发生错误数)
+Requests/sec:    163.76 (QPS 163.76,即平均每秒处理请求数为163.76)
+Transfer/sec:      2.46MB (平均每秒流量2.46MB)
+```
+
+### （四）关于使用lua 脚本
+#### 1. lua版本
+
+wrk 默认使用的是 lua 5.1 版本，不过当前版本（2023-10-31）已经到了：lua-5.4.6.tar.gz
+```
+curl -R -O http://www.lua.org/ftp/lua-5.1.5.tar.gz
+tar zxf lua-5.1.5.tar.gz
+cd lua-5.1.5
+make all test
+
+# 说明： 如果 mak all test 报错：可以尝试：make linux test,再执行：make install
+
+```
+
+#### 2. lua插件管理luarocks
+```
+$ wget https://luarocks.org/releases/luarocks-3.9.2.tar.gz
+$ tar zxpf luarocks-3.9.2.tar.gz
+$ cd luarocks-3.9.2
+$ ./configure && make && sudo make install
+
+# 通过 luarocks 安装 luasocket 模块，模块名为：socket
+$ sudo luarocks install luasocket
+
+# 测试"socket"模块是否能成功引入
+# luarocks install luasocket 可能安装成功了，但是lua 脚本找不到 socket 模块，所以会报错。
+#     解决：1.这是确定socket安装的时候安装的路径(~/prince.lee/luarocks-3.9.2/lua_modules/lib/5.1)；
+#            2. 创建软连接到报错时会查找路径（/usr/local/lib/lua）下：sudo ln -s ~/prince.lee/luarocks-3.9.2/lua_modules/lib/5.1 /usr/local/lib/5.1
+$ lua
+Lua 5.1.1 Copyright (C) 1994-2018 Lua.org, PUC-Rio
+> require "socket"
+```
+
+### （五）windows使用wrk
+#### 1. 问题
+wrk支持mac和linux，不支持windows
+
+### 2. 解决与使用
+使用docker
+
+拉取镜像:该镜像为一次性镜像，无法挂起，容器运行即停。
+
+因为每次都需要构建这个一次性容器，有点浪费时间
+```
+docker pull williamyeh/wrk
+```
+
+
+开始压测
+```
+docker run -e MYSQL_ROOT_PASSWORD=xxx --rm -v `pwd`:/data williamyeh/wrk -c 300 -t 2 -d 5 http://localhost:19999/ping
+```
+
+
 
 
 
