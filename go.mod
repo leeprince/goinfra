@@ -8,7 +8,7 @@ require (
 	github.com/chromedp/chromedp v0.9.1
 	github.com/elastic/go-elasticsearch/v8 v8.3.0
 	github.com/getsentry/sentry-go v0.13.0
-	github.com/gin-gonic/gin v1.7.7
+	github.com/gin-gonic/gin v1.9.1
 	github.com/go-redis/redis/v8 v8.11.5
 	//github.com/go-vgo/robotgo v1.0.0-rc1
 	github.com/go-vgo/robotgo v1.0.0-rc1.0.20230706172004-af321105215d
@@ -30,7 +30,7 @@ require (
 	github.com/progrium/macdriver v0.2.0
 	github.com/radovskyb/watcher v1.0.7
 	github.com/robotn/gohook v0.40.0
-	github.com/sirupsen/logrus v1.9.0
+	github.com/sirupsen/logrus v1.9.3
 	github.com/smartystreets/goconvey v1.8.0
 	github.com/spf13/cast v1.5.0
 	github.com/spf13/cobra v1.2.1
@@ -44,11 +44,11 @@ require (
 	go.opentelemetry.io/otel/exporters/stdout/stdouttrace v1.6.3
 	go.opentelemetry.io/otel/sdk v1.6.3
 	go.opentelemetry.io/otel/trace v1.6.3
-	golang.org/x/crypto v0.5.0
-	golang.org/x/net v0.10.0
-	golang.org/x/sync v0.2.0
-	golang.org/x/text v0.9.0
-	google.golang.org/protobuf v1.30.0
+	golang.org/x/crypto v0.12.0
+	golang.org/x/net v0.14.0
+	golang.org/x/sync v0.3.0
+	golang.org/x/text v0.12.0
+	google.golang.org/protobuf v1.31.0
 	gopkg.in/yaml.v3 v3.0.1
 	gorm.io/driver/mysql v1.3.4
 	gorm.io/gorm v1.23.6
@@ -56,43 +56,54 @@ require (
 
 require (
 	github.com/elastic/go-sysinfo v1.11.0
+	github.com/emirpasic/gods v1.18.1
+	github.com/globalsign/mgo v0.0.0-20181015135952-eeefdecb41b8
+	github.com/go-redis/redis v6.15.9+incompatible
 	github.com/golang-jwt/jwt/v5 v5.0.0
+	github.com/mariomac/gostream v0.8.1
 	github.com/robfig/cron/v3 v3.0.1
+	github.com/sashabaranov/go-openai v1.16.0
 	github.com/speps/go-hashids v2.0.0+incompatible
 	github.com/tarm/serial v0.0.0-20180830185346-98f6abe2eb07
 	github.com/zcalusic/sysinfo v1.0.1
+	gitlab.yewifi.com/golden-cloud/common v0.8.48-0.20231019082256-6a5843e02c67
+	gitlab.yewifi.com/golden-cloud/transaction-risk-control v0.0.0-20231106095017-3b32ef3c0d5d
+	go.mongodb.org/mongo-driver v1.12.1
 )
 
 require (
 	github.com/andybalholm/brotli v1.0.1 // indirect
+	github.com/bytedance/sonic v1.10.0-rc3 // indirect
+	github.com/chenzhuoyu/base64x v0.0.0-20230717121745-296ad89f973d // indirect
+	github.com/chenzhuoyu/iasm v0.9.0 // indirect
 	github.com/elastic/go-windows v1.0.0 // indirect
-	github.com/emirpasic/gods v1.18.1 // indirect
+	github.com/gabriel-vasile/mimetype v1.4.2 // indirect
 	github.com/gin-contrib/sse v0.1.0 // indirect
-	github.com/globalsign/mgo v0.0.0-20181015135952-eeefdecb41b8 // indirect
-	github.com/go-playground/locales v0.13.0 // indirect
-	github.com/go-playground/universal-translator v0.17.0 // indirect
-	github.com/go-playground/validator/v10 v10.4.1 // indirect
-	github.com/go-redis/redis v6.15.9+incompatible // indirect
-	github.com/golang/snappy v0.0.2 // indirect
+	github.com/go-playground/locales v0.14.1 // indirect
+	github.com/go-playground/universal-translator v0.18.1 // indirect
+	github.com/go-playground/validator/v10 v10.15.0 // indirect
+	github.com/goccy/go-json v0.10.2 // indirect
+	github.com/golang/snappy v0.0.3 // indirect
 	github.com/inconshreveable/mousetrap v1.0.0 // indirect
 	github.com/joeshaw/multierror v0.0.0-20140124173710-69b34d4ec901 // indirect
 	github.com/klauspost/compress v1.13.6 // indirect
-	github.com/leodido/go-urn v1.2.0 // indirect
-	github.com/mariomac/gostream v0.8.1 // indirect
+	github.com/klauspost/cpuid/v2 v2.2.5 // indirect
+	github.com/leodido/go-urn v1.2.4 // indirect
 	github.com/montanaflynn/stats v0.0.0-20171201202039-1bf9dbcd8cbe // indirect
+	github.com/pelletier/go-toml/v2 v2.0.9 // indirect
 	github.com/pierrec/lz4/v4 v4.1.2 // indirect
-	github.com/prometheus/procfs v0.8.0 // indirect
-	github.com/sashabaranov/go-openai v1.16.0 // indirect
+	github.com/prometheus/procfs v0.11.1 // indirect
 	github.com/spf13/pflag v1.0.5 // indirect
-	github.com/ugorji/go/codec v1.1.7 // indirect
+	github.com/twitchyliquid64/golang-asm v0.15.1 // indirect
+	github.com/ugorji/go/codec v1.2.11 // indirect
 	github.com/xdg-go/pbkdf2 v1.0.0 // indirect
 	github.com/xdg-go/scram v1.1.2 // indirect
 	github.com/xdg-go/stringprep v1.0.4 // indirect
 	github.com/youmark/pkcs8 v0.0.0-20181117223130-1be2e3e5546d // indirect
-	go.mongodb.org/mongo-driver v1.12.1 // indirect
+	golang.org/x/arch v0.4.0 // indirect
 	golang.org/x/exp v0.0.0-20220328175248-053ad81199eb // indirect
-	gopkg.in/check.v1 v1.0.0-20200227125254-8fa46927fb4f // indirect
-	gopkg.in/yaml.v2 v2.4.0 // indirect
+	google.golang.org/genproto/googleapis/api v0.0.0-20230807174057-1744710a1577 // indirect
+	google.golang.org/genproto/googleapis/rpc v0.0.0-20230807174057-1744710a1577 // indirect
 	howett.net/plist v0.0.0-20181124034731-591f970eefbb // indirect
 )
 
@@ -126,22 +137,19 @@ require (
 	github.com/jinzhu/inflection v1.0.0 // indirect
 	github.com/jinzhu/now v1.1.5 // indirect
 	github.com/jmespath/go-jmespath v0.0.0-20180206201540-c2b33e8439af // indirect
-	github.com/jonboulle/clockwork v0.2.2 // indirect
 	github.com/josharian/intern v1.0.0 // indirect
 	github.com/jtolds/gls v4.20.0+incompatible // indirect
 	github.com/kbinani/screenshot v0.0.0-20210720154843-7d3a670d8329 // indirect
 	github.com/klauspost/pgzip v1.2.5 // indirect
-	github.com/lestrrat-go/strftime v1.0.5 // indirect
+	github.com/lestrrat-go/strftime v1.0.6 // indirect
 	github.com/lufia/plan9stats v0.0.0-20230110061619-bbe2e5e100de // indirect
 	github.com/lxn/win v0.0.0-20210218163916-a377121e959e // indirect
 	github.com/mailru/easyjson v0.7.7 // indirect
-	github.com/mattn/go-isatty v0.0.18 // indirect
-	github.com/micmonay/keybd_event v1.1.1
+	github.com/mattn/go-isatty v0.0.19 // indirect
 	github.com/mitchellh/mapstructure v1.5.0 // indirect
 	github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd // indirect
 	github.com/modern-go/reflect2 v1.0.2 // indirect
 	github.com/mozillazg/go-httpheader v0.2.1 // indirect
-	github.com/niemeyer/pretty v0.0.0-20200227124842-a10e7caefd8e // indirect
 	github.com/nwaples/rardecode v1.1.0 // indirect
 	github.com/onsi/gomega v1.26.0 // indirect
 	github.com/otiai10/gosseract v2.2.1+incompatible // indirect
@@ -169,8 +177,8 @@ require (
 	go.uber.org/zap v1.24.0 // indirect
 	golang.org/x/image v0.5.0 // indirect
 	golang.org/x/sys v0.11.0 // indirect
-	google.golang.org/genproto v0.0.0-20230410155749-daa745c078e1 // indirect
-	google.golang.org/grpc v1.54.0
+	google.golang.org/genproto v0.0.0-20230807174057-1744710a1577 // indirect
+	google.golang.org/grpc v1.57.0
 	gopkg.in/ini.v1 v1.67.0 // indirect
 	gopkg.in/natefinch/lumberjack.v2 v2.0.0 // indirect
 )

@@ -74,10 +74,10 @@ package-lock.json
 .vscode
 __debug_bin
 */logs/*
-**/*.log
+*.log
 experiments
 go.sum
 build
 cover.html
 .rdb
-consts/test_config.go
+config/config.yaml
