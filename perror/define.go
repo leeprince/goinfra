@@ -63,5 +63,8 @@ var (
 	BizErrUpdateList = NewBizErr(100010008, "更新列表失败!")
 	BizErrFindList   = NewBizErr(100010009, "查询列表失败!")
 
+	BizErrPub     = NewBizErr(100011001, "发布失败!")
+	BizErrConsume = NewBizErr(100011002, "消费失败!")
+
 	BizErrPanic = NewBizErr(101099999, "处理异常!")
 )
