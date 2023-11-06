@@ -24,7 +24,8 @@
 ## sentry
 
 # 六、动态配置管理
-> manage_config
+> 调试需要的敏感信息配置需要将：config.bak.yaml 重命名为 config.yaml，并修改配置
+
 ## Nacos
 
 # 七、服务管理
@@ -119,3 +120,7 @@ GOOS=darwin GOARCH=amd64 go build -o main.exe main.go
 ```
 GOOS=darwin GOARCH=amd64 go build -o network_devices monitor/traffic/gopackettest/main.go monitor/traffic/gopackettest/network_devices.go
 ```
+
+# 二二、ai
+
+## openai
