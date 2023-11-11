@@ -20,13 +20,13 @@ func init() {
 }
 
 func main() {
-	fmt.Println("config.C.AI.OpenAIChatGPT.Token:", config.C.AI.OpenAIChatGPT.Token)
+	fmt.Println("config.C.AI.OpenAIChatGPT.SecretKey:", config.C.AI.OpenAIChatGPT.SecretKey)
 	
 	// 无代理
-	// client := openai.NewClient(config.C.AI.OpenAIChatGPT.Token)
+	// client := openai.NewClient(config.C.AI.OpenAIChatGPT.SecretKey)
 	
 	// 配置代理
-	config := openai.DefaultConfig(config.C.AI.OpenAIChatGPT.Token)
+	config := openai.DefaultConfig(config.C.AI.OpenAIChatGPT.SecretKey)
 	proxyUrl, err := url.Parse("http://localhost:7890")
 	if err != nil {
 		panic(err)

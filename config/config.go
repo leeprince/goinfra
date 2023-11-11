@@ -7,13 +7,13 @@ package config
  */
 
 type Config struct {
-	AI
+	AI `yaml:"AI"`
 }
 
 type AI struct {
-	OpenAIChatGPT OpenAIChatGPT
+	OpenAIChatGPT OpenAIChatGPT `yaml:"OpenAIChatGPT"`
 }
 
 type OpenAIChatGPT struct {
-	Token string
+	SecretKey string `yaml:"SecretKey"`
 }
