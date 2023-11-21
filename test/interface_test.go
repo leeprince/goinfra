@@ -2,6 +2,7 @@ package test
 
 import (
 	"fmt"
+	"github.com/leeprince/goinfra/utils/jsonutil"
 	"testing"
 )
 
@@ -70,4 +71,37 @@ func TestShapeInterface(t *testing.T) {
 
 	// 调用接口方法
 	fmt.Println("shape Area:", shape.Area())
+}
+
+func TestInterfaceLen(t *testing.T) {
+	var i interface{}
+
+	i = struct {
+		Code    int
+		Message string
+		Data    interface{}
+	}{
+		Code:    0,
+		Message: "success",
+		Data:    "data",
+	}
+
+	iBytes, err := jsonutil.JsoniterCompatible.Marshal(i)
+	if err != nil {
+		panic(err)
+	}
+
+	fmt.Println("iBytes:", iBytes)
+	fmt.Printf("iBytes:%+v \n", string(iBytes))
+
+	iBytesPart := iBytes[:10]
+	fmt.Println("iBytesPart:", iBytesPart)
+	fmt.Printf("iBytesPart:%+v \n", string(iBytesPart))
+
+	fmt.Println("iBytes 1:", iBytes)
+	fmt.Printf("iBytes 1:%+v \n", string(iBytes))
+
+	iBytes = iBytes[:10]
+	fmt.Println("iBytes 2:", iBytes)
+	fmt.Printf("iBytes 2:%+v \n", string(iBytes))
 }

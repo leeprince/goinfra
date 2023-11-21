@@ -27,7 +27,7 @@ func ReturnErr01() (err error) {
 		fmt.Println("ReturnErr02 err:", err)
 		return
 	}
-	
+
 	fmt.Println(s)
 	return
 }
@@ -42,7 +42,7 @@ func ReturnErr03() (s string, err error) {
 func TestReturnForScopeErr(t *testing.T) {
 	err := ReturnForScopeErr01()
 	fmt.Println("ReturnForScopeErr01:", err)
-	
+
 	// 会报错：因为在其他作用域的使用了返回参数的变量，进行了重新声明赋值，导致报错。
 	// 解决：在其他作用域的使用了返回参数的变量时，不要重新声明，只需赋值。
 	//	如：var s string; s, err = xxx();
@@ -74,7 +74,7 @@ func ReturnForScopeErr0101() (err error) {
 		fmt.Println(s)
 		return
 	}*/
-	
+
 	// 解决：方式一；var s string; s, err = xxx();
 	for i := 0; i < 3; i++ {
 		var s string
@@ -86,7 +86,7 @@ func ReturnForScopeErr0101() (err error) {
 		fmt.Println(s)
 		return
 	}
-	
+
 	// 解决：方式二；s, serr := xxx(); err = serr;
 	for i := 0; i < 3; i++ {
 		s, serr := ReturnErr02()
@@ -98,7 +98,7 @@ func ReturnForScopeErr0101() (err error) {
 		fmt.Println(s)
 		return
 	}
-	
+
 	// 解决：方式三 如：_, err = xxx();
 	for i := 0; i < 3; i++ {
 		_, err = ReturnErr02()
@@ -108,16 +108,16 @@ func ReturnForScopeErr0101() (err error) {
 		}
 		return
 	}
-	
+
 	return
 }
 
 func TestReturnIfScopeErr(t *testing.T) {
 	var err error
-	
+
 	err = ReturnIfScopeErr01()
 	fmt.Println("ReturnForScopeErr01:", err)
-	
+
 	err = ReturnIfScopeErr02()
 	fmt.Println("ReturnIfScopeErr02:", err)
 }
@@ -128,12 +128,12 @@ func ReturnIfScopeErr01() (err error) {
 			报错：
 			.\return_error_test.go:112:3: result parameter err not in scope at return
 				.\return_error_test.go:109:6: inner declaration of var err error
-		
+
 			解决：在其他作用域的使用了返回参数的变量时，不要重新声明，只需赋值。
 				如：var s string; s, err = xxx();
 				如：s, serr := xxx(); err = serr;
 				如：_, err = xxx();
-		
+
 		*/
 		_, err = ReturnErr02()
 		if err != nil {
@@ -142,7 +142,7 @@ func ReturnIfScopeErr01() (err error) {
 		}
 		return
 	}
-	
+
 	return
 }
 
@@ -153,6 +153,6 @@ func ReturnIfScopeErr02() (err error) {
 		return
 	}
 	fmt.Println("ReturnIfScopeErr02 s:", s)
-	
+
 	return
 }
