@@ -30,7 +30,7 @@ func TestWriteHeaderContext(t *testing.T) {
 					UberTraceID: "",
 					XRealIp:     "",
 					LogId:       "LogId-01",
-					Token:       "Token-01",
+					Token:       "SecretKey-01",
 					AccessToken: "AccessToken-01",
 				},
 			},
