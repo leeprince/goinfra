@@ -129,3 +129,176 @@ func TestYuanToFen(t *testing.T) {
 		})
 	}
 }
+
+func TestFenFloat64ToYuan(t *testing.T) {
+	type args struct {
+		fen float64
+	}
+	tests := []struct {
+		name     string
+		args     args
+		wantYuan string
+	}{
+		{
+			name: "",
+			args: args{
+				fen: 10000,
+			},
+			wantYuan: "100",
+		},
+		{
+			name: "",
+			args: args{
+				fen: 12345,
+			},
+			wantYuan: "123.45",
+		},
+		{
+			name: "",
+			args: args{
+				fen: 12345678,
+			},
+			wantYuan: "123456.78",
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if gotYuan := FenFloat64ToYuan(tt.args.fen); gotYuan != tt.wantYuan {
+				t.Errorf("FenFloat64ToYuan() = %v, want %v", gotYuan, tt.wantYuan)
+			}
+		})
+	}
+}
+
+func TestFenFloat64ToCeilYuan(t *testing.T) {
+	type args struct {
+		fen float64
+	}
+	tests := []struct {
+		name     string
+		args     args
+		wantYuan string
+	}{
+		{
+			name: "",
+			args: args{
+				fen: 10000,
+			},
+			wantYuan: "100",
+		},
+		{
+			name: "",
+			args: args{
+				fen: 12345,
+			},
+			wantYuan: "124",
+		},
+		{
+			name: "",
+			args: args{
+				fen: 12345678,
+			},
+			wantYuan: "123457",
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if gotYuan := FenFloat64ToCeilYuan(tt.args.fen); gotYuan != tt.wantYuan {
+				t.Errorf("FenFloat64ToYuan() = %v, want %v", gotYuan, tt.wantYuan)
+			}
+		})
+	}
+}
+func TestFenFloat64ToFloorYuan(t *testing.T) {
+	type args struct {
+		fen float64
+	}
+	tests := []struct {
+		name     string
+		args     args
+		wantYuan string
+	}{
+		{
+			name: "",
+			args: args{
+				fen: 10000,
+			},
+			wantYuan: "100",
+		},
+		{
+			name: "",
+			args: args{
+				fen: 12345,
+			},
+			wantYuan: "123",
+		},
+		{
+			name: "",
+			args: args{
+				fen: 12345678,
+			},
+			wantYuan: "123456",
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if gotYuan := FenFloat64ToFloorYuan(tt.args.fen); gotYuan != tt.wantYuan {
+				t.Errorf("FenFloat64ToYuan() = %v, want %v", gotYuan, tt.wantYuan)
+			}
+		})
+	}
+}
+
+func TestFenFloat64ToRoundYuan(t *testing.T) {
+	type args struct {
+		fen float64
+	}
+	tests := []struct {
+		name     string
+		args     args
+		wantYuan string
+	}{
+		{
+			name: "",
+			args: args{
+				fen: 10000,
+			},
+			wantYuan: "100",
+		},
+		{
+			name: "",
+			args: args{
+				fen: 12345,
+			},
+			wantYuan: "123.45",
+		},
+		{
+			name: "",
+			args: args{
+				fen: 12345678,
+			},
+			wantYuan: "123456.78",
+		},
+		{
+			name: "",
+			args: args{
+				fen: 123.45678,
+			},
+			wantYuan: "1.23",
+		},
+		{
+			name: "",
+			args: args{
+				fen: 1234.5678,
+			},
+			wantYuan: "12.35",
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if gotYuan := FenFloat64ToRoundYuan(tt.args.fen); gotYuan != tt.wantYuan {
+				t.Errorf("FenFloat64ToYuan() = %v, want %v", gotYuan, tt.wantYuan)
+			}
+		})
+	}
+}

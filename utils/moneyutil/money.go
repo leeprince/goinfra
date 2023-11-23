@@ -22,6 +22,35 @@ func FenToYuan(fen int64) (yuan string) {
 	return toInt.String()
 }
 
+func FenFloat64ToYuan(fen float64) (yuan string) {
+	from := decimal.NewFromFloat(fen)
+	toInt := from.Div(decimal.NewFromInt(100))
+
+	return toInt.String()
+}
+
+func FenFloat64ToCeilYuan(fen float64) (yuan string) {
+	from := decimal.NewFromFloat(fen)
+	toInt := from.Div(decimal.NewFromInt(100))
+
+	return toInt.Ceil().String()
+}
+
+func FenFloat64ToFloorYuan(fen float64) (yuan string) {
+	from := decimal.NewFromFloat(fen)
+	toInt := from.Div(decimal.NewFromInt(100))
+
+	return toInt.Floor().String()
+}
+
+func FenFloat64ToRoundYuan(fen float64) (yuan string) {
+	from := decimal.NewFromFloat(fen)
+	// 保留两位小数点，并且四舍五入
+	toInt := from.DivRound(decimal.NewFromInt(100), 2)
+
+	return toInt.String()
+}
+
 func YuanToJiao(yuan int64) (jiao int64) {
 	from := decimal.NewFromInt(yuan)
 	toInt := from.Mul(decimal.NewFromInt(10))

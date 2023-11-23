@@ -714,6 +714,9 @@ docker pull williamyeh/wrk
 docker run -e MYSQL_ROOT_PASSWORD=xxx --rm -v `pwd`:/data williamyeh/wrk -c 300 -t 2 -d 5 http://localhost:19999/ping
 ```
 
+### （六）linux 中的应用
+> ./benchmark/wrk/*
+
 
 
 
