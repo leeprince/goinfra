@@ -21,14 +21,14 @@ projectName := $(notdir ${PWD})
 
 .PHONY: build
 build: ## go build
-	$(call logInfo,building $(projectName))
+	$(call logInfo, building $(projectName))
 	@go build -o $(projectName)
-	$(call logInfo,build done)
+	$(call logInfo, build done)
 
 
 .PHONY: run
 run: ## go run
-	$(call logInfo,starting $(projectName))
+	$(call logInfo, starting $(projectName))
 	./$(projectName) -conf conf/conf.yaml
 
 
@@ -42,33 +42,33 @@ sa: vet errcheck revive lint build  ## [static analysis]: vet, errcheck, revive,
 
 .PHONY: vet
 vet: ## [static analysis]: go vet ./... 
-	$(call logInfo,go vet ./...)
-	@go vet ./... || ($(call logErrorP,go vet: not pass) && exit 1) 
-	$(call logInfo,go vet: pass)
+	$(call logInfo, go vet ./...)
+	@go vet ./... || ($(call logErrorP, go vet: not pass) && exit 1)
+	$(call logInfo, go vet: pass)
 
 
 .PHONY: errcheck
 errcheck: ## [static analysis]: errcheck
-	$(call logInfo,errcheck ./...)
+	$(call logInfo, errcheck ./...)
 	@hash errcheck 2>&- || go get -u -v github.com/kisielk/errcheck
-	@errcheck ./... || ($(call logErrorP,errcheck: not pass) && exit 1)
-	$(call logInfo,errcheck: pass)
+	@errcheck ./... || ($(call logErrorP, errcheck: not pass) && exit 1)
+	$(call logInfo, errcheck: pass)
 
 
 .PHONY: revive
 revive: ## [static analysis]: revive
-	$(call logInfo,revive)
+	$(call logInfo, revive)
 	@hash revive 2>&- || go get -u -v github.com/mgechev/revive
-	revive -formatter stylish ./... || ($(call logErrorP,revive: not pass) && exit 1)
-	$(call logInfo,revive: pass)
+	revive -formatter stylish ./... || ($(call logErrorP, revive: not pass) && exit 1)
+	$(call logInfo, revive: pass)
 
 
 .PHONY: lint
 lint: ## [static analysis]: golangci-lint
-	$(call logInfo,golangci-lint)
+	$(call logInfo, golangci-lint)
 	@hash golangci-lint 2>&- || go get -u -v github.com/golangci/golangci-lint/cmd/golangci-lint
-	@golangci-lint run || ($(call logErrorP,golangci-lint: not pass) && exit 1)
-	$(call logInfo,golangci-lint: pass)
+	@golangci-lint run || ($(call logErrorP, golangci-lint: not pass) && exit 1)
+	$(call logInfo, golangci-lint: pass)
 
 
 
@@ -81,19 +81,19 @@ complete: fmt cmt  ## [formatting]: 运行代码格式化: fmt, cmt
 
 .PHONY: fmt
 fmt: ## [formatting]: gofumpt 代码格式化
-	$(call logInfo,gofumpt)
+	$(call logInfo, gofumpt)
 	@hash gofumpt 2>&- || go install mvdan.cc/gofumpt@latest
 	gofumpt -l -w .
-	$(call logInfo,gofumpt: done)
+	$(call logInfo, gofumpt: done)
 
 .PHONY: cmt
 cmt: ## [formatting]: 添加函数/结构体头部注释
-	$(call logInfo,gocmt)
+	$(call logInfo, gocmt)
 	@hash gocmt 2>&- || go get -u github.com/cuonglm/gocmt
 	gocmt -i -t "TODO: comments" `find . -name '*.go' | grep -v _test.go`
 	@grep -R "TODO: comments" * | grep -v makefile
 	ag "TODO: comments"
-	$(call logInfo,gocmt: done)
+	$(call logInfo, gocmt: done)
 
 
 
