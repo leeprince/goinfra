@@ -1,18 +1,40 @@
+# FAQ:
+## level=error msg=“Running error: can’t combine options --enable-all and --enable errcheck”
+#这个错误信息表示你不能同时使用--enable-all和--enable errcheck这两个选项。
+#--enable-all选项会启用所有的linters，包括默认启用的linters和默认禁用的linters。--enable errcheck选项会启用errcheck这个linter。
+#
+#如果你同时使用了这两个选项，golangci-lint会产生冲突，因为--enable-all已经启用了所有的linters，包括errcheck，再使用--enable errcheck就没有意义了。
+#你可以选择只使用--enable-all选项，或者只使用--enable errcheck选项，但不能同时使用这两个选项。例如，你可以使用以下命令来运行golangci-lint：
+#
+#golangci-lint run --enable-all
+#或者：
+#golangci-lint run --enable errcheck
 linters:
-  disable-all: true
+  disable-all: false
+  enable-all: false
   enable:
     - errcheck
-    - gosimple
     - govet
     - ineffassign
-    - staticcheck
     - typecheck
-    - unused
     - goimports
-    - bodyclose
     - dogsled
     - dupl
     - errorlint
+  disable:
+    # 启用是会报错：level=warning msg="[linters context] bodyclose is disabled because of go1.18.
+    # bodyclose是一个用于检查HTTP响应体是否被正确关闭的linter。在Go 1.18及以后的版本中，如果你使用了io.ReadAll、ioutil.ReadAll或json.Decoder等函数来读取HTTP响应体，那么Go的垃圾回收器会自动关闭响应体，你不需要手动关闭它。因此，bodyclose在这些版本中被禁用了。
+    - bodyclose
+    # 启用是会报错：level=warning msg="[linters context] gosimple is disabled because of go1.18.
+    # gosimple是一个专注于简化Go代码的linter，它会提出一些可以使代码更简洁的建议。然而，由于Go语言的更新和变化，一些linter可能会在新的Go版本中被禁用，因为它们的检查规则可能已经不再适用，或者已经被Go语言的新特性取代。
+    - gosimple
+    # 启用是会报错：level=warning msg="[linters context] staticcheck is disabled because of go1.18.
+    #staticcheck是一个非常强大的Go语言静态分析工具，它可以检查出代码中的许多潜在问题，包括错误的API使用，不正确的条件，无效的操作，未使用的变量，冗余的代码等等。
+    #然而，由于Go语言的更新和变化，一些linter可能会在新的Go版本中被禁用，因为它们的检查规则可能已经不再适用，或者已经被Go语言的新特性取代。
+    - staticcheck
+    #unused是一个检查Go代码中未使用的常量、变量、函数和类型的linter。然而，由于Go语言的更新和变化，一些linter可能会在新的Go版本中被禁用，因为它们的检查规则可能已经不再适用，或者已经被Go语言的新特性取代。
+    #在你遇到的这个情况中，unused在Go 1.18版本中被禁用。这可能是因为Go 1.18引入了一些新的语言特性，使得unused的一些检查规则不再适用。
+    - unused
 
 linters-settings:
   govet:
