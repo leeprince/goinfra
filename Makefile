@@ -279,11 +279,11 @@ gocmt: ## [formatting]: 添加函数/结构体头部注释
 #
 #这仅在支持ANSI转义序列的终端中有效。
 define logInfo
-	@echo ["\033[32mINFO\033[0m" [`date +'%Y-%m-%d %H:%M:%S'`] $(1)
+	@echo -e "\033[32mINFO\033[0m" [`date +'%Y-%m-%d %H:%M:%S'`] $(1)
 endef
 
 define logErrorP
-	@echo ["\033[31mERROR\033[0m" [`date +'%Y-%m-%d %H:%M:%S'`] $(1)
+	@echo -e "\033[31mERROR\033[0m" [`date +'%Y-%m-%d %H:%M:%S'`] $(1)
 endef
 
 # --------------------

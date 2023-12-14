@@ -144,7 +144,7 @@ golangci-lint: ## [static analysis]: golangci-lint run
 #    golint的检查可能会比较耗时，特别是在大型项目中。你可以考虑在提交代码之前或者定期运行golint，而不是在每次编译时都运行。
 golint: ## [static analysis]: golint ./...
 	$(call logInfo, golint)
-	@hash golint 2>&- || go install golang.org/x/lint/golint
+	@hash golint 2>&- || go get golang.org/x/lint/golint || go install golang.org/x/lint/golint
 	@golint ./... || ($(call logErrorP, golint: not pass) && exit 1)
 	$(call logInfo, golint: pass)
 
