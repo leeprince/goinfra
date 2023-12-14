@@ -81,4 +81,4 @@ build
 cover.html
 .rdb
 config/config.yaml
-*/tmp/*
+**/tmp/*
