@@ -1,4 +1,4 @@
-package test
+package testdata
 
 import (
 	"encoding/json"
@@ -209,7 +209,7 @@ func TestJson(t *testing.T) {
 	    "log_id":"日志ID",
 	    "data":null
 	}`
-	
+
 	data := message.VerifyAuthResp{}
 	err := json.Unmarshal([]byte(dataJson), &data)
 	fmt.Println("err", err)

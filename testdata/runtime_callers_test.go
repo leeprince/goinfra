@@ -1,4 +1,4 @@
-package test
+package testdata
 
 import (
 	"fmt"
@@ -14,20 +14,20 @@ import (
 
 func TestCallersFunc(t *testing.T) {
 	var s string
-	
+
 	s = runtimeutil.CallersFunc(0)
 	fmt.Printf("CallersFunc 0: %+v \n", s)
-	
+
 	s = runtimeutil.CallersFunc(1)
 	fmt.Printf("CallersFunc 1: %+v \n", s)
-	
+
 	s = runtimeutil.CallersFunc(2)
 	fmt.Printf("CallersFunc 2: %+v \n", s)
-	
+
 	s = runtimeutil.CallersFunc(3)
 	fmt.Printf("CallersFunc 3: %+v \n", s)
-	
+
 	s = runtimeutil.CallersFunc(4)
 	fmt.Printf("CallersFunc 3: %+v \n", s)
-	
+
 }

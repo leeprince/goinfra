@@ -1,4 +1,4 @@
-package test
+package testdata
 
 import (
 	"fmt"
@@ -22,19 +22,19 @@ func TestSyncPool(t *testing.T) {
 			return &Object{}
 		},
 	}
-	
+
 	// 从对象池获取对象
 	obj1 := pool.Get().(*Object)
 	obj1.ID = 1
 	fmt.Println("TestSyncPool 1", obj1)
-	
+
 	// 将对象放回对象池
 	pool.Put(obj1)
-	
+
 	// 从对象池获取对象
 	obj2 := pool.Get().(*Object)
 	fmt.Println("TestSyncPool 2", obj2)
-	
+
 	// 清空对象池
 	pool.New = nil
 	pool.Put(&Object{ID: 2})
@@ -42,7 +42,7 @@ func TestSyncPool(t *testing.T) {
 	pool.Put(&Object{ID: 4})
 	pool.Put(&Object{ID: 5})
 	pool.Put(&Object{ID: 6})
-	
+
 	// 对象池中的对象可能会被清除，所以需要检查是否为 nil
 	for {
 		obj := pool.Get()
