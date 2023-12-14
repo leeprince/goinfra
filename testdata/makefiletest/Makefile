@@ -286,6 +286,28 @@ define logErrorP
 	@echo -e ["\033[31mERROR\033[0m" [`date +'%Y-%m-%d %H:%M:%S'`] $(1)
 endef
 
+# --------------------
+# 一键安装所有工具
+# --------------------
+.PHONY: tool
+tool: ## tool
+	$(call logInfo, errcheck)
+	@go install github.com/kisielk/errcheck@latest
+
+	$(call logInfo, golangci-lint)
+	@go install github.com/golangci/golangci-lint/cmd/golangci-lint@latest
+
+	$(call logInfo, golint)
+	@go install golang.org/x/lint/golint@latest
+
+	$(call logInfo, revive)
+	@go install github.com/mgechev/revive@latest
+
+	$(call logInfo, gofumpt)
+	@go install mvdan.cc/gofumpt@latest
+
+	$(call logInfo, gocmt)
+	@go install github.com/cuonglm/gocmt
 
 # --------------------
 # 其他

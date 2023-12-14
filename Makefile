@@ -279,13 +279,36 @@ gocmt: ## [formatting]: 添加函数/结构体头部注释
 #
 #这仅在支持ANSI转义序列的终端中有效。
 define logInfo
-	@echo -e ["\033[32mINFO\033[0m" [`date +'%Y-%m-%d %H:%M:%S'`] $(1)
+	@echo ["\033[32mINFO\033[0m" [`date +'%Y-%m-%d %H:%M:%S'`] $(1)
 endef
 
 define logErrorP
-	@echo -e ["\033[31mERROR\033[0m" [`date +'%Y-%m-%d %H:%M:%S'`] $(1)
+	@echo ["\033[31mERROR\033[0m" [`date +'%Y-%m-%d %H:%M:%S'`] $(1)
 endef
 
+# --------------------
+# 一键安装所有工具
+# --------------------
+.PHONY: tools
+tools: ## 一键安装所有工具
+	$(call logInfo, errcheck)
+	@go install github.com/kisielk/errcheck@latest
+
+	$(call logInfo, golangci-lint)
+	@go install github.com/golangci/golangci-lint/cmd/golangci-lint@latest
+
+	$(call logInfo, golint)
+	@go install golang.org/x/lint/golint@latest
+
+	$(call logInfo, revive)
+	@go install github.com/mgechev/revive@latest
+
+	$(call logInfo, gofumpt)
+	@go install mvdan.cc/gofumpt@latest
+
+	$(call logInfo, gocmt)
+	@go get github.com/cuonglm/gocmt
+	@go install github.com/cuonglm/gocmt
 
 # --------------------
 # 其他
