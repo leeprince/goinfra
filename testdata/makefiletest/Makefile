@@ -14,7 +14,6 @@ notdir函数可以方便地将文件路径转换为文件名，常用于Makefile
 
 projectName := $(notdir ${PWD})
 
-
 # --------------------
 # 构建与运行
 # --------------------
@@ -144,7 +143,7 @@ golangci-lint: ## [static analysis]: golangci-lint run
 #    golint的检查可能会比较耗时，特别是在大型项目中。你可以考虑在提交代码之前或者定期运行golint，而不是在每次编译时都运行。
 golint: ## [static analysis]: golint ./...
 	$(call logInfo, golint)
-	@hash golint 2>&- || go get golang.org/x/lint/golint || go install golang.org/x/lint/golint
+	@hash golint 2>&- || go install golang.org/x/lint/golint
 	@golint ./... || ($(call logErrorP, golint: not pass) && exit 1)
 	$(call logInfo, golint: pass)
 
@@ -279,18 +278,18 @@ gocmt: ## [formatting]: 添加函数/结构体头部注释
 #
 #这仅在支持ANSI转义序列的终端中有效。
 define logInfo
-	@echo -e ["\033[32mINFO\033[0m" [`date +'%Y-%m-%d %H:%M:%S'`] $(1)
+	@echo -e "\033[32mINFO\033[0m" [`date +'%Y-%m-%d %H:%M:%S'`] $(1)
 endef
 
 define logErrorP
-	@echo -e ["\033[31mERROR\033[0m" [`date +'%Y-%m-%d %H:%M:%S'`] $(1)
+	@echo -e "\033[31mERROR\033[0m" [`date +'%Y-%m-%d %H:%M:%S'`] $(1)
 endef
 
 # --------------------
 # 一键安装所有工具
 # --------------------
-.PHONY: tool
-tool: ## tool
+.PHONY: tools
+tools: ## 一键安装所有工具
 	$(call logInfo, errcheck)
 	@go install github.com/kisielk/errcheck@latest
 
@@ -307,6 +306,7 @@ tool: ## tool
 	@go install mvdan.cc/gofumpt@latest
 
 	$(call logInfo, gocmt)
+	@go get github.com/cuonglm/gocmt
 	@go install github.com/cuonglm/gocmt
 
 # --------------------
