@@ -15,6 +15,7 @@ import (
  * @Desc:	pdf 转图片 待解决本地环境问题：windows、linux、mac
  */
 
+// PdfToImageV1
 /*
 - windows 环境依赖 pkg-config 和 libvips。
 
@@ -32,7 +33,6 @@ import (
 	#15 44.06 /go/pkg/mod/github.com/h2non/bimg@v1.1.9/resize.go:11:27: undefined: Options
 	#15 44.06 /go/pkg/mod/github.com/h2non/bimg@v1.1.9/resize.go:11:27: too many errors
 */
-
 func PdfToImageV1(pdfUrl string) (imagePath string, err error) {
 	fileInfo := fileutil.GetFileInfoByUrl(pdfUrl)
 	if fileInfo.Ext != ".pdf" {
