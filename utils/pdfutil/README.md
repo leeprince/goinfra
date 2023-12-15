@@ -1,7 +1,7 @@
 # pdf操作
 ---
 
-# 使用“gopkg.in/gographics/imagick.v2/imagick”
+# 使用“gopkg.in/gographics/imagick.v2/imagick” 库
 
 ## 下载并编译安装 leptonica，用于处理图片
 leptonica是一个开源的图像处理库，它提供了一系列用于图像处理和分析的函数和工具。它可以在Linux系统中用于处理和操作图像，包括图像的读取、写入、转换、缩放、旋转、滤波、分割等操作。
