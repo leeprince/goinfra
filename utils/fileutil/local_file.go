@@ -29,7 +29,7 @@ func Write(dirPath, filename string, data []byte, isAppend bool) (err error) {
 // 写入数据到文件
 func WriteFile(dirPath, filename string, data []byte, isAppend bool) (ok bool, err error) {
 	filePath := filepath.Join(dirPath, filename)
-	if _, ok = CheckFileExist(filePath); !ok {
+	if _, ok = CheckFileDirExist(filePath); !ok {
 		// 创建目录
 		err = os.MkdirAll(dirPath, os.ModePerm)
 		if ok = os.IsNotExist(err); ok {
@@ -72,7 +72,7 @@ func WriteFile(dirPath, filename string, data []byte, isAppend bool) (ok bool, e
 // 读取文件
 func ReadFile(filePath, filename string) (data []byte, err error) {
 	fileSrc := filepath.Join(filePath, filename)
-	if _, ok := CheckFileExist(fileSrc); !ok {
+	if _, ok := CheckFileDirExist(fileSrc); !ok {
 		return nil, FileNoExistErr
 	}
 	data, err = os.ReadFile(fileSrc)

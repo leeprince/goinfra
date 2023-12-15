@@ -15,16 +15,16 @@ func CheckFileSizeByUrl(url string, byteSize int64) (isLimit bool, err error) {
 	if err != nil {
 		return
 	}
-
+	
 	if fileByteSize > byteSize {
 		return true, nil
 	}
-
+	
 	return false, nil
 }
 
-// 检查文件是否存在
-func CheckFileExist(filePath string) (os.FileInfo, bool) {
+// 检查文件/目录是否存在
+func CheckFileDirExist(filePath string) (os.FileInfo, bool) {
 	finfo, err := os.Stat(filePath)
 	if os.IsNotExist(err) {
 		return nil, false

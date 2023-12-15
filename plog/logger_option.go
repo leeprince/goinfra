@@ -47,9 +47,9 @@ func SetFormatterJsonInter(jsoniterAPI jsoniter.API) {
 func SetOutputFile(dirPath, filename string, isBothStdout bool) error {
 	var writer io.Writer
 	var err error
-
+	
 	filePath := filepath.Join(dirPath, filename)
-	if _, ok := fileutil.CheckFileExist(filePath); ok {
+	if _, ok := fileutil.CheckFileDirExist(filePath); ok {
 		writer, err = os.OpenFile(filePath, os.O_APPEND|os.O_WRONLY, os.ModeAppend)
 	} else {
 		// 创建目录
@@ -62,16 +62,16 @@ func SetOutputFile(dirPath, filename string, isBothStdout bool) error {
 	if err != nil {
 		return err
 	}
-
+	
 	logger.outFileInfo = FileInfo{
 		dirPath:  dirPath,
 		filename: filename,
 	}
-
+	
 	if logger.Out == nil {
 		SetOutput(writer)
 	}
-
+	
 	if isBothStdout {
 		// 支持 logger.Out 和 *io.file(可用于io) 的记录日志方式
 		// MultiWriter同时接受了3种数据类型，分别是io.Writer、*os.File、io.WriteCloser
@@ -79,7 +79,7 @@ func SetOutputFile(dirPath, filename string, isBothStdout bool) error {
 	} else {
 		SetOutput(writer)
 	}
-
+	
 	return nil
 }
 
@@ -90,16 +90,16 @@ func SetOutputFile(dirPath, filename string, isBothStdout bool) error {
 func SetOutputRotateFile(dirPath, filename string, isBothStdout bool, rotationFilePathChangeFunc func(string) (string, error), rotateOptions ...rotatelogs.Option) error {
 	var writer io.Writer
 	var err error
-
+	
 	defaultRotationFilePathChangeFunc := func(filePath string) (string, error) {
 		// filePath 修改: /path/to/your.log => /path/to/your.2020-09-27.log
 		ext := filepath.Ext(filePath)
-
+		
 		// 支持的格式示例：%Y%m%d%H%M%S
 		timeFormat := ".%Y-%m-%d"
 		// timeFormat := ".%Y-%m-%d %H%M"
 		// timeFormat := ".%Y-%m-%d %H%M%S"
-
+		
 		if ext == "" {
 			filePath = filePath + timeFormat
 		} else {
@@ -107,7 +107,7 @@ func SetOutputRotateFile(dirPath, filename string, isBothStdout bool, rotationFi
 		}
 		return filePath, nil
 	}
-
+	
 	originFilePath := filepath.Join(dirPath, filename)
 	if rotationFilePathChangeFunc == nil {
 		rotationFilePathChangeFunc = defaultRotationFilePathChangeFunc
@@ -117,19 +117,19 @@ func SetOutputRotateFile(dirPath, filename string, isBothStdout bool, rotationFi
 		err = cErr
 		return err
 	}
-
+	
 	// 默认配置
 	if rotateOptions == nil || len(rotateOptions) == 0 {
 		rotateOptions = []rotatelogs.Option{
 			// 当前时区
 			rotatelogs.WithClock(rotatelogs.Local),
-
+			
 			// 按时间的切割方式。默认按天
 			// 与文件名的格式不冲突。这里是切割日志（旋转日志）的时间间隔。
 			rotatelogs.WithRotationTime(time.Hour * 24),
 			// rotatelogs.WithRotationTime(time.Minute * 1),
 			// rotatelogs.WithRotationTime(time.Second * 2),
-
+			
 			// 设置指定文件名（支持多级），会自动软链接到当前使用的文件名（切割后当前使用的文件名）。
 			//  默认当前路径的文件
 			//   application.2022-05-16 172255.log
@@ -137,12 +137,12 @@ func SetOutputRotateFile(dirPath, filename string, isBothStdout bool, rotationFi
 			//   application.log
 			//  注意：有些日志采集系统无法读取软链接的文件。如：filebeat 默认无法读取软链接的文件，需单独配置
 			rotatelogs.WithLinkName(originFilePath),
-
+			
 			// 最大保存的文件数。自动删除过期的历史文件
 			rotatelogs.WithRotationCount(7),
 		}
 	}
-
+	
 	writer, err = rotatelogs.New(
 		filePath,
 		rotateOptions...,
@@ -150,7 +150,7 @@ func SetOutputRotateFile(dirPath, filename string, isBothStdout bool, rotationFi
 	if err != nil {
 		return err
 	}
-
+	
 	if isBothStdout {
 		// 支持 logger.Out 和 *io.file(可用于io) 的记录日志方式
 		// MultiWriter同时接受了3种数据类型，分别是io.Writer、*os.File、io.WriteCloser
@@ -158,7 +158,7 @@ func SetOutputRotateFile(dirPath, filename string, isBothStdout bool, rotationFi
 	} else {
 		SetOutput(writer)
 	}
-
+	
 	return nil
 }
 
