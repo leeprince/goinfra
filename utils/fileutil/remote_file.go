@@ -21,18 +21,18 @@ func ReadFileBytesByUrl(url string) ([]byte, error) {
 		return nil, err
 	}
 	defer resp.Body.Close()
-	
+
 	if resp.StatusCode != http.StatusOK {
 		err = errors2.Errorf("resp.StatusCode != http.StatusOK")
 		return nil, err
 	}
-	
+
 	contentLength := resp.Header.Get("Content-Length")
 	if contentLength == "0" {
 		err = errors2.Errorf("contentLength == 0")
 		return nil, err
 	}
-	
+
 	fileBytes, err := io.ReadAll(resp.Body)
 	if err != nil {
 		err = errors2.Wrap(err, "ioutil.ReadAll")
@@ -42,12 +42,8 @@ func ReadFileBytesByUrl(url string) ([]byte, error) {
 		err = errors2.Errorf("fileBytes len 0")
 		return nil, err
 	}
-	
-	return fileBytes, nil
-}
 
-func GetFileBytesByUrl(url string) ([]byte, error) {
-	return ReadFileBytesByUrl(url)
+	return fileBytes, nil
 }
 
 func GetFileByteSizeByUrl(url string) (byteSize int64, err error) {
@@ -55,21 +51,17 @@ func GetFileByteSizeByUrl(url string) (byteSize int64, err error) {
 	if err != nil {
 		return
 	}
-	
+
 	return resp.ContentLength, nil
 }
 
 func ReadFileReaderByUrl(url string) (io.Reader, []byte, error) {
-	fileBytes, err := GetFileBytesByUrl(url)
+	fileBytes, err := ReadFileBytesByUrl(url)
 	if err != nil {
 		return nil, nil, err
 	}
-	
-	return bytes.NewReader(fileBytes), fileBytes, nil
-}
 
-func GetFileReaderByUrl(url string) (io.Reader, []byte, error) {
-	return ReadFileReaderByUrl(url)
+	return bytes.NewReader(fileBytes), fileBytes, nil
 }
 
 // 将io.Reader类型的数据转换为.File类型的数据
@@ -79,14 +71,14 @@ func WriteFileByIoReader(data io.Reader, fileName string, filePath ...string) (p
 		path = filePath[0]
 	}
 	pathFile = fmt.Sprintf("%s%s", path, fileName) // 本地环境中当前项目是在F:盘中，所以使用根路径/即指向的根路径就是F:盘
-	
+
 	// 创建文件
 	if _, err := os.Stat(pathFile); err != nil {
 		if err = os.MkdirAll(path, 0777); err != nil {
 			return "", err
 		}
 	}
-	
+
 	tmpPathFile, err := os.Create(pathFile)
 	if err != nil {
 		return
@@ -104,7 +96,7 @@ func WriteFileByIoReader(data io.Reader, fileName string, filePath ...string) (p
 		err = errors2.Errorf("io.Copy 0")
 		return
 	}
-	
+
 	return
 }
 
@@ -114,12 +106,12 @@ func SaveLocalFileByIoReader(data io.Reader, fileName string, filePath ...string
 }
 
 func WriteFileByUrl(url, fileName string, filePath ...string) (pathFile string, err error) {
-	readerData, _, err := GetFileReaderByUrl(url)
+	readerData, _, err := ReadFileReaderByUrl(url)
 	if err != nil {
-		err = errors2.Wrap(err, "GetFileReaderByUrl")
+		err = errors2.Wrap(err, "ReadFileReaderByUrl")
 		return
 	}
-	
+
 	return SaveLocalFileByIoReader(readerData, fileName, filePath...)
 }
 

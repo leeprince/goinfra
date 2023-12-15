@@ -108,6 +108,7 @@ require (
 	golang.org/x/tools v0.16.1 // indirect
 	google.golang.org/genproto/googleapis/api v0.0.0-20230807174057-1744710a1577 // indirect
 	google.golang.org/genproto/googleapis/rpc v0.0.0-20230807174057-1744710a1577 // indirect
+	gopkg.in/gographics/imagick.v2 v2.6.3 // indirect
 	howett.net/plist v0.0.0-20181124034731-591f970eefbb // indirect
 )
 
