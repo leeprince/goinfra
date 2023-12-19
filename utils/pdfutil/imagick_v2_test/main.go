@@ -1,11 +1,13 @@
 package main
 
 import (
+	"bufio"
 	"fmt"
-	errors2 "github.com/pkg/errors"
+	"github.com/pkg/errors"
 	"gopkg.in/gographics/imagick.v2/imagick"
 	"io"
 	"net/http"
+	"os"
 	"path/filepath"
 	"time"
 )
@@ -18,7 +20,8 @@ import (
 
 func main() {
 	//pdfBytes, err := ReadFileBytesByUrl("https://kpserverdev-1251506165.cos.ap-shanghai.myqcloud.com/e-document-import-ctl/test/0001.pdf")
-	pdfBytes, err := ReadFileBytesByUrl("https://kpserverprod-1251506165.cos.ap-shanghai.myqcloud.com/invoice/jammy/dependency/client_ofd.pdf")
+	//pdfBytes, err := ReadFileBytesByUrl("https://kpserverprod-1251506165.cos.ap-shanghai.myqcloud.com/invoice/jammy/dependency/client_ofd.pdf")
+	pdfBytes, err := ReadFile(".", "0001.pdf")
 	if err != nil {
 		fmt.Println("ReadFileBytesByUrl err:", err)
 		return
@@ -28,25 +31,37 @@ func main() {
 	fileName := fmt.Sprintf("pdf_to_jpg_%d.jpg", time.Now().Unix())
 	filePath := filepath.Join(dirPath, fileName)
 
-	_, ok := CreateImage(pdfBytes, "jpg", filePath)
+	//imageByte, ok := CreateImage(pdfBytes, "jpg", filePath)
+	imageByte, ok := CreateImage(pdfBytes, "jpg")
 	if !ok {
 		fmt.Println("CreateImage !ok")
 		return
 	}
 
+	ok, err = WriteFile(dirPath, filePath, imageByte, false)
+	if !ok {
+		fmt.Println("fileutil.WriteFile !ok")
+		return
+	}
+	checkError(err)
 	fmt.Println("successful, filepath:", filePath)
 }
 
-func CreateImage(data []byte, toImageType string, coverFilePath string) ([]byte, bool) {
+func CreateImage(data []byte, toImageType string) ([]byte, bool) {
+	imagick.Initialize()
+	// Schedule cleanup
+	defer imagick.Terminate()
+	var err error
+
 	//sourceImagePath := getSourceImageForCover(filepath.Dir(pathNoExtension))
 	mw := imagick.NewMagickWand()
-	defer clearImagickWand(mw)
+	//defer clearImagickWand(mw)
 
 	mw.SetResolution(192, 192)
 	//mw.SetResolution(350, 350)
 	//mw.SetImageResolution(350, 350)
 	//mw.SetImageCompressionQuality(100)
-	err := mw.ReadImageBlob(data)
+	err = mw.ReadImageBlob(data)
 	if err != nil {
 		fmt.Println("[CreateImage] ReadImageBlob err:", err)
 		return nil, false
@@ -87,11 +102,12 @@ func CreateImage(data []byte, toImageType string, coverFilePath string) ([]byte,
 	//mw.GetImageDepth()
 	//mw.SetImageDepth(16)
 
-	err = mw.WriteImage(coverFilePath)
+	/*err = mw.WriteImage(coverFilePath)
 	if err != nil {
 		fmt.Println("[CreateImage] WriteImage failed:", err)
 		return nil, false
-	}
+	}*/
+
 	content := mw.GetImageBlob()
 
 	return content, true
@@ -116,25 +132,98 @@ func ReadFileBytesByUrl(url string) ([]byte, error) {
 	defer resp.Body.Close()
 
 	if resp.StatusCode != http.StatusOK {
-		err = errors2.Errorf("resp.StatusCode != http.StatusOK")
+		err = errors.Errorf("resp.StatusCode != http.StatusOK")
 		return nil, err
 	}
 
 	contentLength := resp.Header.Get("Content-Length")
 	if contentLength == "0" {
-		err = errors2.Errorf("contentLength == 0")
+		err = errors.Errorf("contentLength == 0")
 		return nil, err
 	}
 
 	fileBytes, err := io.ReadAll(resp.Body)
 	if err != nil {
-		err = errors2.Wrap(err, "ioutil.ReadAll")
+		err = errors.Wrap(err, "ioutil.ReadAll")
 		return nil, err
 	}
 	if fileLen := len(fileBytes); fileLen <= 0 {
-		err = errors2.Errorf("fileBytes len 0")
+		err = errors.Errorf("fileBytes len 0")
 		return nil, err
 	}
 
 	return fileBytes, nil
+}
+
+// 写入数据到文件
+func WriteFile(dirPath, filename string, data []byte, isAppend bool) (ok bool, err error) {
+	filePath := filepath.Join(dirPath, filename)
+	if _, ok = CheckFileDirExist(filePath); !ok {
+		// 创建目录
+		err = os.MkdirAll(dirPath, os.ModePerm)
+		if ok = os.IsNotExist(err); ok {
+			err = errors.New("创建文件目录错误")
+			return
+		}
+	}
+
+	flag := os.O_CREATE | os.O_RDWR
+	if isAppend {
+		flag = flag | os.O_APPEND
+	}
+	fs, fErr := os.OpenFile(filePath, flag, 0666)
+	if fErr != nil {
+		err = fErr
+		return
+	}
+	defer fs.Close()
+
+	// 创建带有缓冲区的Writer对象
+	writer := bufio.NewWriter(fs)
+	// 写入数据
+	if _, err = writer.Write(data); err != nil {
+		return
+	}
+	// 自动添加换行符
+	if isAppend {
+		if _, err = writer.Write([]byte("\n")); err != nil {
+			return
+		}
+	}
+
+	// 刷新缓冲区
+	writer.Flush()
+
+	ok = true
+	return
+}
+
+// 检查文件/目录是否存在
+func CheckFileDirExist(filePath string) (os.FileInfo, bool) {
+	finfo, err := os.Stat(filePath)
+	if os.IsNotExist(err) {
+		return nil, false
+	}
+	return finfo, true
+}
+
+func checkError(err error) {
+	if err != nil {
+		fmt.Println("error:", err)
+		os.Exit(1)
+	}
+}
+
+var (
+	FileNoExistErr = errors.New("file not exist")
+)
+
+// 读取文件
+func ReadFile(filePath, filename string) (data []byte, err error) {
+	fileSrc := filepath.Join(filePath, filename)
+	if _, ok := CheckFileDirExist(fileSrc); !ok {
+		return nil, FileNoExistErr
+	}
+	data, err = os.ReadFile(fileSrc)
+	return
 }

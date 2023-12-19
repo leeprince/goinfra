@@ -1,10 +1,8 @@
-module leeprince/pdftest
+module leeprince/imagick_v2_test
 
 go 1.19
 
-require (
-	gopkg.in/gographics/imagick.v2 v2.6.3
-)
+require gopkg.in/gographics/imagick.v2 v2.6.3
 
 require (
 	github.com/SebastiaanKlippert/go-wkhtmltopdf v1.9.2 // indirect
@@ -21,4 +19,5 @@ require (
 	github.com/pkg/errors v0.9.1 // indirect
 	github.com/tencentyun/cos-go-sdk-v5 v0.7.41 // indirect
 	golang.org/x/image v0.5.0 // indirect
+	gopkg.in/gographics/imagick.v3 v3.5.0 // indirect
 )
