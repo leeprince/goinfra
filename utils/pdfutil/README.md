@@ -542,3 +542,9 @@ func main() {
 	fmt.Println("successful, filepath:", filePath)
 }
 ```
+
+
+# imagick_v3 与 govips 对比
+在生成速度、生成质量、占用空间上 govips 更优！
+
+imagick_v3 的优势是很灵活，方便自定义一些属性！
