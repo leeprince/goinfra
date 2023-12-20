@@ -9,6 +9,7 @@ import (
 	"net/http"
 	"os"
 	"path/filepath"
+	"sync"
 	"time"
 
 	"gopkg.in/gographics/imagick.v3/imagick"
@@ -19,32 +20,70 @@ func main() {
 	//OfficeDockerMain()
 
 	// 自定义pdf转图片
-	startTime := time.Now().UnixMilli()
+	// 功能测试
+	/*startTime := time.Now().UnixMilli()
 	CustomerPdfToImagesByImagickV3()
-	fmt.Printf("cost mill time: %dms\n", time.Now().UnixMilli()-startTime)
+	fmt.Printf("cost mill time: %dms\n", time.Now().UnixMilli()-startTime)*/
+
+	// 性能测试
+	var i int
+	//maxI := 1
+	// 1、2、4、8、16
+	maxI := 16
+	wg := sync.WaitGroup{}
+
+	imagick.Initialize()
+	// Schedule cleanup
+	defer imagick.Terminate()
+
+	for {
+		i++
+		if i > maxI {
+			break
+		}
+
+		wg.Add(1)
+
+		go func() {
+			defer wg.Done()
+
+			startTime := time.Now().UnixMilli()
+			CustomerPdfToImagesByImagickV3()
+			fmt.Printf("cost mill time: %dms\n", time.Now().UnixMilli()-startTime)
+		}()
+	}
+	fmt.Println("...wg.wait...")
+	wg.Wait()
 }
 
 func CustomerPdfToImagesByImagickV3() {
 	//pdfBytes, err := ReadFileBytesByUrl("https://kpserverdev-1251506165.cos.ap-shanghai.myqcloud.com/e-document-import-ctl/test/0001.pdf")
 	//pdfBytes, err := ReadFileBytesByUrl("https://kpserverprod-1251506165.cos.ap-shanghai.myqcloud.com/invoice/jammy/dependency/client_ofd.pdf")
-	//pdfBytes, err := ReadFile(".", "0001.pdf")
+	pdfBytes, err := ReadFile(".", "0001.pdf")
 	//pdfBytes, err := ReadFile(".", "0001-more-page.pdf")
-	pdfBytes, err := ReadFile(".", "0001-more-page-01.pdf")
+	//pdfBytes, err := ReadFile(".", "0001-more-page-01.pdf")
 	if err != nil {
 		fmt.Println("ReadFileBytesByUrl err:", err)
 		return
 	}
 
-	dirPath := "."
+	/*dirPath := "."
 	fileName := fmt.Sprintf("pdf_to_jpg_%d.jpg", time.Now().Unix())
 	filePath := filepath.Join(dirPath, fileName)
 
-	//imageByte, ok := CreateImage(pdfBytes, "jpg", filePath)
+	// 多一个 filePath，则在 CreateImage 里面可以实现保存功能
+	imageByte, ok := CreateImage(pdfBytes, "jpg", filePath)*/
+
 	imageByte, ok := CreateImage(pdfBytes, "jpg")
 	if !ok {
 		fmt.Println("CreateImage !ok")
 		return
 	}
+
+	// 压力测试，暂时先不用保存图片到本地
+	dirPath := "."
+	fileName := fmt.Sprintf("pdf_to_jpg_%d.jpg", time.Now().Unix())
+	filePath := filepath.Join(dirPath, fileName)
 
 	ok, err = WriteFile(dirPath, filePath, imageByte, false)
 	if !ok {
@@ -57,9 +96,13 @@ func CustomerPdfToImagesByImagickV3() {
 
 func CreateImage(data []byte, toImageType string) ([]byte, bool) {
 	//func CreateImage(data []byte, toImageType string, coverFilePath string) ([]byte, bool) {
-	imagick.Initialize()
-	// Schedule cleanup
-	defer imagick.Terminate()
+
+	// 使用的时候都放到外面去初始化了
+	/*
+		imagick.Initialize()
+		// Schedule cleanup
+		defer imagick.Terminate()
+	*/
 	var err error
 
 	//sourceImagePath := getSourceImageForCover(filepath.Dir(pathNoExtension))
@@ -70,6 +113,7 @@ func CreateImage(data []byte, toImageType string) ([]byte, bool) {
 	//mw.SetResolution(350, 350)
 	//mw.SetImageResolution(350, 350)
 	//mw.SetImageCompressionQuality(100)
+
 	err = mw.ReadImageBlob(data)
 	if err != nil {
 		fmt.Println("[CreateImage] ReadImageBlob err:", err)
@@ -104,12 +148,12 @@ func CreateImage(data []byte, toImageType string) ([]byte, bool) {
 	//pix := imagick.NewPixelWand()
 	//pix.SetColor("white")
 	//mw.SetBackgroundColor(pix)
-	mw.SetImageAlphaChannel(imagick.ALPHA_CHANNEL_REMOVE)
-	//mw.SetImageFormat("jpeg")
-	mw.SetImageFormat(toImageType)
 
 	//mw.GetImageDepth()
 	//mw.SetImageDepth(16)
+
+	mw.SetImageAlphaChannel(imagick.ALPHA_CHANNEL_REMOVE)
+	mw.SetImageFormat(toImageType)
 
 	/*err = mw.WriteImage(coverFilePath)
 	if err != nil {

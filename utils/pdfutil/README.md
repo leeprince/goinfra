@@ -544,6 +544,239 @@ func main() {
 ```
 
 # imagick_v3 与 govips 对比
-在生成速度、生成质量、占用空间上 govips 更优！
+## 功能测试（一次性功能测试）
+- 在生成速度、生成质量、占用空间上 govips_v2 更优！
+- 多页PDF时，imagick_v3 处理最后一页；govips_v2 处理第一页
+- imagick_v3 的优势是很灵活，方便自定义一些属性！
 
-imagick_v3 的优势是很灵活，方便自定义一些属性！
+## 性能测试
+> 基准测试与不同之处：
+- 目的不同： 基准测试旨在评估代码或算法在标准条件下的性能，而压力测试则旨在测试系统在高负载或极限条件下的稳定性和表现。
+- 应用场景不同： 基准测试通常用于评估和改进代码、算法等实现，而压力测试主要用于验证系统在负载增加时的行为和稳定性。
+
+### 1、并发测试
+
+#### 1） 无并发
+> govips_v2 更优
+
+```
+imagick_v3            ||| govips_v2
+...wg.wait...         ||| ...wg.wait...
+cost mill time: 134ms ||| cost mill time: 117ms
+```
+
+#### 2）并发2
+> govips_v2 更优
+
+```
+imagick_v3            ||| govips_v2
+...wg.wait...         ||| ...wg.wait...
+cost mill time: 135ms ||| cost mill time: 130ms
+cost mill time: 135ms ||| cost mill time: 130ms
+```
+
+#### 3）并发4
+> 基本持平
+
+```
+imagick_v3            ||| govips_v2
+...wg.wait...         ||| ...wg.wait...
+cost mill time: 155ms ||| cost mill time: 173ms
+cost mill time: 158ms ||| cost mill time: 174ms
+cost mill time: 169ms ||| cost mill time: 177ms
+cost mill time: 176ms ||| cost mill time: 177ms
+```
+
+#### 4）并发8
+> imagick_v3 更优
+
+```
+imagick_v3            ||| govips_v2
+...wg.wait...         ||| ...wg.wait...
+cost mill time: 207ms ||| cost mill time: 321ms
+cost mill time: 227ms ||| cost mill time: 322ms
+cost mill time: 229ms ||| cost mill time: 324ms
+cost mill time: 232ms ||| cost mill time: 323ms
+cost mill time: 234ms ||| cost mill time: 324ms
+cost mill time: 238ms ||| cost mill time: 323ms
+cost mill time: 240ms ||| cost mill time: 323ms
+cost mill time: 246ms ||| cost mill time: 325ms
+```
+
+#### 5）并发16
+> imagick_v3 更优
+
+```
+imagick_v3            ||| govips_v2
+...wg.wait...         ||| ...wg.wait...
+cost mill time: 338ms ||| cost mill time: 540ms
+cost mill time: 381ms ||| cost mill time: 542ms
+cost mill time: 384ms ||| cost mill time: 544ms
+cost mill time: 397ms ||| cost mill time: 546ms
+cost mill time: 399ms ||| cost mill time: 547ms
+cost mill time: 399ms ||| cost mill time: 544ms
+cost mill time: 414ms ||| cost mill time: 545ms
+cost mill time: 437ms ||| cost mill time: 548ms
+cost mill time: 442ms ||| cost mill time: 550ms
+cost mill time: 443ms ||| cost mill time: 550ms
+cost mill time: 446ms ||| cost mill time: 553ms
+cost mill time: 446ms ||| cost mill time: 659ms
+cost mill time: 449ms ||| cost mill time: 659ms
+cost mill time: 451ms ||| cost mill time: 660ms
+cost mill time: 452ms ||| cost mill time: 661ms
+cost mill time: 452ms ||| cost mill time: 662ms
+```
+
+#### 总结
+无并发情况下，govips_v2 的性能更优，
+并发在4个左右
+小于4个：govips_v2 的性能更优
+等于4个：imagick_v3 与 govips_v2 的处理速度基本持平
+大于4个：govips_v2 的性能更优
+
+### 2、基准测试
+
+#### 1）基于时间1s
+> govips_v2 更优
+
+imagick_v3
+```
+root@b9de6110f73d:/www# go test -bench=. -run=none -benchtime=1s
+goos: linux
+goarch: amd64
+pkg: leeprince/imagick_v3_test
+cpu: Intel(R) Core(TM) i7-10700 CPU @ 2.90GHz
+BenchmarkCustomerPdfToImagesByImagickV3-16             8         137313025 ns/op
+PASS
+ok      leeprince/imagick_v3_test       1.234s
+```
+
+govips_v2
+```
+root@ec8637f12a8b:/www# go test -bench=. -run=none -benchtime=1s
+goos: linux
+goarch: amd64
+pkg: leeprince/govips
+cpu: Intel(R) Core(TM) i7-10700 CPU @ 2.90GHz
+BenchmarkCustomerPdfToImagesByGovips-16               14          77429864 ns/op
+PASS
+ok      leeprince/govips        1.884s
+```
+
+#### 2）基于时间2s
+> govips_v2 更优
+
+imagick_v3
+```
+root@b9de6110f73d:/www# go test -bench=. -run=none -benchtime=2s
+goos: linux
+goarch: amd64
+pkg: leeprince/imagick_v3_test
+cpu: Intel(R) Core(TM) i7-10700 CPU @ 2.90GHz
+BenchmarkCustomerPdfToImagesByImagickV3-16            18         125225556 ns/op
+PASS
+ok      leeprince/imagick_v3_test       2.390s
+```
+
+govips_v2
+```
+root@ec8637f12a8b:/www# go test -bench=. -run=none -benchtime=2s
+goos: linux
+goarch: amd64
+pkg: leeprince/govips
+cpu: Intel(R) Core(TM) i7-10700 CPU @ 2.90GHz
+BenchmarkCustomerPdfToImagesByGovips-16               30          80373650 ns/op
+PASS
+ok      leeprince/govips        3.981s
+```
+
+#### 3）基于时间4s
+> govips_v2 更优
+
+imagick_v3
+```
+root@b9de6110f73d:/www# go test -bench=. -run=none -benchtime=4s
+goos: linux
+goarch: amd64
+pkg: leeprince/imagick_v3_test
+cpu: Intel(R) Core(TM) i7-10700 CPU @ 2.90GHz
+BenchmarkCustomerPdfToImagesByImagickV3-16            30         141284520 ns/op
+PASS
+ok      leeprince/imagick_v3_test       4.404s
+```
+
+govips_v2
+```
+root@ec8637f12a8b:/www# go test -bench=. -run=none -benchtime=4s
+goos: linux
+goarch: amd64
+pkg: leeprince/govips
+cpu: Intel(R) Core(TM) i7-10700 CPU @ 2.90GHz
+BenchmarkCustomerPdfToImagesByGovips-16               61          84797231 ns/op
+PASS
+ok      leeprince/govips        8.200s
+```
+
+
+#### 4）基于次数1次
+> govips_v2 更优
+
+imagick_v3
+```
+root@b9de6110f73d:/www# go test -bench=. -run=none -count=1
+goos: linux
+goarch: amd64
+pkg: leeprince/imagick_v3_test
+cpu: Intel(R) Core(TM) i7-10700 CPU @ 2.90GHz
+BenchmarkCustomerPdfToImagesByImagickV3-16             9         130929433 ns/op
+PASS
+ok      leeprince/imagick_v3_test       2.330s
+```
+
+govips_v2
+```
+root@ec8637f12a8b:/www# go test -bench=. -run=none -count=1
+goos: linux
+goarch: amd64
+pkg: leeprince/govips
+cpu: Intel(R) Core(TM) i7-10700 CPU @ 2.90GHz
+BenchmarkCustomerPdfToImagesByGovips-16               15          80620080 ns/op
+PASS
+ok      leeprince/govips        1.949s
+```
+
+#### 5）基于次数2次
+> govips_v2 更优
+
+imagick_v3
+```
+root@b9de6110f73d:/www# go test -bench=. -run=none -count=2
+goos: linux
+goarch: amd64
+pkg: leeprince/imagick_v3_test
+cpu: Intel(R) Core(TM) i7-10700 CPU @ 2.90GHz
+BenchmarkCustomerPdfToImagesByImagickV3-16             9         124839256 ns/op
+BenchmarkCustomerPdfToImagesByImagickV3-16             8         129674675 ns/op
+PASS
+ok      leeprince/imagick_v3_test       3.425s
+```
+
+govips_v2
+```
+root@ec8637f12a8b:/www# go test -bench=. -run=none -count=2
+goos: linux
+goarch: amd64
+pkg: leeprince/govips
+cpu: Intel(R) Core(TM) i7-10700 CPU @ 2.90GHz
+BenchmarkCustomerPdfToImagesByGovips-16               15          82978773 ns/op
+BenchmarkCustomerPdfToImagesByGovips-16               14          92253700 ns/op
+PASS
+ok      leeprince/govips        4.355s
+```
+
+
+
+
+
+
+

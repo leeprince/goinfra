@@ -7,6 +7,7 @@ import (
 	"log"
 	"os"
 	"path/filepath"
+	"sync"
 	"time"
 
 	"github.com/davidbyttow/govips/v2/vips"
@@ -30,9 +31,47 @@ func main() {
 	//OfficeDockerMain()
 
 	// 自定义pdf转图片
-	startTime := time.Now().UnixMilli()
+	// 功能测试
+	/*startTime := time.Now().UnixMilli()
 	CustomerPdfToImagesByGovips()
-	fmt.Printf("cost mill time: %dms\n", time.Now().UnixMilli()-startTime)
+	fmt.Printf("cost mill time: %dms\n", time.Now().UnixMilli()-startTime)*/
+
+	// 性能测试
+	var i int
+	// 1、2、4、8、16
+	maxI := 16
+	wg := sync.WaitGroup{}
+
+	vips.LoggingSettings(myLogger, vips.LogLevelError)
+	vips.Startup(&vips.Config{
+		ConcurrencyLevel: maxI,
+		MaxCacheFiles:    0,
+		MaxCacheMem:      0,
+		MaxCacheSize:     0,
+		ReportLeaks:      false,
+		CacheTrace:       false,
+		CollectStats:     false,
+	})
+	defer vips.Shutdown()
+
+	for {
+		i++
+		if i > maxI {
+			break
+		}
+
+		wg.Add(1)
+
+		go func() {
+			defer wg.Done()
+
+			startTime := time.Now().UnixMilli()
+			CustomerPdfToImagesByGovips()
+			fmt.Printf("cost mill time: %dms\n", time.Now().UnixMilli()-startTime)
+		}()
+	}
+	fmt.Println("...wg.wait...")
+	wg.Wait()
 }
 
 func myLogger(messageDomain string, verbosity vips.LogLevel, message string) {
@@ -56,30 +95,35 @@ func myLogger(messageDomain string, verbosity vips.LogLevel, message string) {
 }
 
 func CustomerPdfToImagesByGovips() {
-	vips.LoggingSettings(myLogger, vips.LogLevelError)
-	vips.Startup(nil)
-	defer vips.Shutdown()
+	// 使用的时候都放到外面去初始化了
+	/*
+		vips.LoggingSettings(myLogger, vips.LogLevelError)
+		vips.Startup(nil)
+		defer vips.Shutdown()
+	*/
 
-	//image1, err := vips.NewImageFromFile("0001.pdf")
+	image1, err := vips.NewImageFromFile("0001.pdf")
 	//image1, err := vips.NewImageFromFile("0001-more-page.pdf")
-	image1, err := vips.NewImageFromFile("0001-more-page-01.pdf")
+	//image1, err := vips.NewImageFromFile("0001-more-page-01.pdf")
 	checkError(err)
 
+	// 完整示例
 	// Rotate the picture upright and reset EXIF orientation tag
-	image1bytes, _, err := image1.ExportNative()
+	//image1bytes, _, err := image1.ExportNative()
+	_, _, err = image1.ExportNative()
 	checkError(err)
 
-	dirPath := "."
-	fileName := fmt.Sprintf("pdf_to_jpg_%d.jpg", time.Now().Unix())
+	// 压力测试，暂时先不用保存图片到本地
+	/*dirPath := "."
+	fileName := fmt.Sprintf("pdf_to_jpg_%d.jpg", time.Now().UnixMicro())
 	filePath := filepath.Join(dirPath, fileName)
-
 	ok, err := WriteFile(dirPath, filePath, image1bytes, false)
 	if !ok {
 		fmt.Println("fileutil.WriteFile !ok")
 		return
 	}
 	checkError(err)
-	fmt.Println("successful, filepath:", filePath)
+	fmt.Println("successful, filepath:", filePath)*/
 }
 
 func OfficeDockerMain() {
