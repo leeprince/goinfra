@@ -1,4 +1,5 @@
 FROM golang:1.19
+# 官方
 
 # Ignore APT warnings about not having a TTY
 ENV DEBIAN_FRONTEND noninteractive

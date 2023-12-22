@@ -12,7 +12,7 @@ import (
  */
 
 func TestCustomerPdfToImagesByGovips(t *testing.T) {
-	CustomerPdfToImagesByGovips()
+	CustomerPdfToImagesByGovipsOfPerformanceTest()
 }
 
 func BenchmarkCustomerPdfToImagesByGovips(b *testing.B) {
@@ -21,6 +21,6 @@ func BenchmarkCustomerPdfToImagesByGovips(b *testing.B) {
 	//defer vips.Shutdown() // 基准测试需要注释掉，否则报错。main.go 中的性能测试则不需要
 
 	for i := 0; i < b.N; i++ {
-		CustomerPdfToImagesByGovips()
+		CustomerPdfToImagesByGovipsOfPerformanceTest()
 	}
 }

@@ -22,10 +22,10 @@ func main() {
 
 	// 自定义pdf转图片
 	// 功能验证
-	//Function()
+	Function()
 
 	// 性能测试
-	PerformanceTest()
+	//PerformanceTest()
 }
 
 // 功能验证
@@ -69,8 +69,8 @@ func PerformanceTest() {
 
 func CustomerPdfToImagesByImagickV3OfFunction() {
 	//fileBytes, err := ReadFileBytesByUrl("https://kpserverdev-1251506165.cos.ap-shanghai.myqcloud.com/e-document-import-ctl/test/0001.pdf")
-	//fileBytes, err := ReadFileBytesByUrl("https://kpserverprod-1251506165.cos.ap-shanghai.myqcloud.com/invoice/jammy/dependency/client_ofd.pdf")
-	fileBytes, err := ReadFile(".", "0001.pdf")
+	fileBytes, err := ReadFileBytesByUrl("https://kpserverprod-1251506165.cos.ap-shanghai.myqcloud.com/invoice/jammy/dependency/client_ofd.pdf")
+	//fileBytes, err := ReadFile(".", "0001.pdf")
 	//fileBytes, err := ReadFile(".", "0001-more-page.pdf")
 	//fileBytes, err := ReadFile(".", "0001-more-page-01.pdf")
 	if err != nil {
@@ -189,9 +189,9 @@ func CustomerPdfToImagesByImagickV3OfPerformanceTest() {
 
 	// --- imagick v3 --------------------------------
 	// 使用的时候都放到外面去初始化了
-	/*imagick.Initialize()
+	imagick.Initialize()
 	// Schedule cleanup
-	defer imagick.Terminate()*/
+	defer imagick.Terminate()
 
 	//sourceImagePath := getSourceImageForCover(filepath.Dir(pathNoExtension))
 	mw := imagick.NewMagickWand()

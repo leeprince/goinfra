@@ -12,7 +12,7 @@ import (
  */
 
 func TestCustomerPdfToImagesByImagickV3(t *testing.T) {
-	CustomerPdfToImagesByImagickV3()
+	CustomerPdfToImagesByImagickV3OfPerformanceTest()
 }
 
 func BenchmarkCustomerPdfToImagesByImagickV3(b *testing.B) {
@@ -21,6 +21,6 @@ func BenchmarkCustomerPdfToImagesByImagickV3(b *testing.B) {
 	defer imagick.Terminate()
 
 	for i := 0; i < b.N; i++ {
-		CustomerPdfToImagesByImagickV3()
+		CustomerPdfToImagesByImagickV3OfPerformanceTest()
 	}
 }

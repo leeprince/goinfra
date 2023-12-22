@@ -13,7 +13,7 @@ RUN apt-get -q -y install libjpeg-dev libpng-dev libtiff-dev \
 
 ENV IMAGEMAGICK_VERSION=7.1.1-23
 
-RUN cd && \
+RUN set -ex && \
 	wget https://github.com/ImageMagick/ImageMagick/archive/${IMAGEMAGICK_VERSION}.tar.gz && \
 	tar xvzf ${IMAGEMAGICK_VERSION}.tar.gz && \
 	cd ImageMagick* && \
@@ -26,9 +26,11 @@ RUN cd && \
 	make -j$(nproc) && make install && \
 	ldconfig /usr/local/lib
 
+RUN go env -w GOPROXY=https://goproxy.cn,direct
+
 WORKDIR /www
 
-VOLUME ["www"]
+VOLUME ["/www"]
 
 EXPOSE 80
 

@@ -31,12 +31,22 @@ func main() {
 	//OfficeDockerMain()
 
 	// 自定义pdf转图片
-	// 功能测试
-	/*startTime := time.Now().UnixMilli()
-	CustomerPdfToImagesByGovips()
-	fmt.Printf("cost mill time: %dms\n", time.Now().UnixMilli()-startTime)*/
+	// 功能验证
+	//Function()
 
 	// 性能测试
+	PerformanceTest()
+}
+
+// 功能验证
+func Function() {
+	startTime := time.Now().UnixMilli()
+	CustomerPdfToImagesByGovipsOfFunction()
+	fmt.Printf("cost mill time: %dms\n", time.Now().UnixMilli()-startTime)
+}
+
+// 性能测试
+func PerformanceTest() {
 	var i int
 	// 1、2、4、8、16
 	maxI := 16
@@ -66,7 +76,7 @@ func main() {
 			defer wg.Done()
 
 			startTime := time.Now().UnixMilli()
-			CustomerPdfToImagesByGovips()
+			CustomerPdfToImagesByGovipsOfPerformanceTest()
 			fmt.Printf("cost mill time: %dms\n", time.Now().UnixMilli()-startTime)
 		}()
 	}
@@ -94,8 +104,8 @@ func myLogger(messageDomain string, verbosity vips.LogLevel, message string) {
 	log.Printf("[%v.%v] %v", messageDomain, messageLevelDescription, message)
 }
 
-func CustomerPdfToImagesByGovips() {
-	// 使用的时候都放到外面去初始化了
+func CustomerPdfToImagesByGovipsOfPerformanceTest() {
+	// 压力测试的时候，都放到外面去初始化了
 	/*
 		vips.LoggingSettings(myLogger, vips.LogLevelError)
 		vips.Startup(nil)
@@ -109,7 +119,6 @@ func CustomerPdfToImagesByGovips() {
 
 	// 完整示例
 	// Rotate the picture upright and reset EXIF orientation tag
-	//image1bytes, _, err := image1.ExportNative()
 	_, _, err = image1.ExportNative()
 	checkError(err)
 
@@ -124,6 +133,33 @@ func CustomerPdfToImagesByGovips() {
 	}
 	checkError(err)
 	fmt.Println("successful, filepath:", filePath)*/
+}
+
+func CustomerPdfToImagesByGovipsOfFunction() {
+	vips.LoggingSettings(myLogger, vips.LogLevelError)
+	vips.Startup(nil)
+	defer vips.Shutdown()
+
+	image1, err := vips.NewImageFromFile("0001.pdf")
+	//image1, err := vips.NewImageFromFile("0001-more-page.pdf")
+	//image1, err := vips.NewImageFromFile("0001-more-page-01.pdf")
+	checkError(err)
+
+	// 完整示例
+	// Rotate the picture upright and reset EXIF orientation tag
+	image1bytes, _, err := image1.ExportNative()
+	checkError(err)
+
+	dirPath := "."
+	fileName := fmt.Sprintf("pdf_to_jpg_%d.jpg", time.Now().UnixMicro())
+	filePath := filepath.Join(dirPath, fileName)
+	ok, err := WriteFile(dirPath, filePath, image1bytes, false)
+	if !ok {
+		fmt.Println("fileutil.WriteFile !ok")
+		return
+	}
+	checkError(err)
+	fmt.Println("successful, filepath:", filePath)
 }
 
 func OfficeDockerMain() {

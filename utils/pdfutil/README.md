@@ -4,7 +4,10 @@
 # 使用 “gopkg.in/gographics/imagick.v2/imagick” 库
 > 测试成功后已经打包的镜像：``docker pull leeprince/golang1_19:imagick_v2_test`
 
+
+
 ## 下载并编译安装 leptonica，用于处理图片
+
 leptonica是一个开源的图像处理库，它提供了一系列用于图像处理和分析的函数和工具。它可以在Linux系统中用于处理和操作图像，包括图像的读取、写入、转换、缩放、旋转、滤波、分割等操作。
 具体来说，leptonica可以用于以下方面：
 
@@ -22,15 +25,7 @@ cd leptonica-1.78.0
 make && make instal
 ```
 
-## 安装依赖其它pdf、html、图片依赖
-```
-go get github.com/SebastiaanKlippert/go-wkhtmltopdf
-go get github.com/disintegration/imaging
-go get github.com/fogleman/gg
-go get github.com/ninetwentyfour/go-wkhtmltoimage
-go get github.com/panjf2000/ants
-go get github.com/pieterclaerhout/go-html
-```
+
 
 ## 安装图片处理工具 wkhtmltopdf
 根据参考资料，我了解到：
@@ -56,7 +51,9 @@ ln -s /usr/bin/wkhtmltopdf.sh /usr/local/bin/wkhtmltopdf
 > 注：wkhtmltopdf是wkhtmltox的低版本，在ubuntu下，如果安装了wkhtmltopdf，再安装wkhtmltox，相关动态库自动忽略。故没有安装wkhtmltopdf
 
 
+
 ## 本地安装图片处理工具 wkhtmltox
+
 安装包下载地址：https://github.com/adrg/go-wkhtmltopdf/wiki/Install-on-Linux
 > 注：我是在centos下测试的，所以下载了wkhtmltox-0.12.6-1.centos7.x86_64.rpm
 > 注：ubuntu可能还需要其它依赖：https://blog.csdn.net/qq_15378385/article/details/107456644
@@ -67,7 +64,9 @@ go get github.com/adrg/go-wkhtmltopdf
 ```
 
 
+
 ## 安装 ImageMagick、ghostscript、libmagickwand-dev
+
 > ImageMagick
 ImageMagick 是一个强大的图像处理库，它可以用于创建、编辑、组合或转换各种格式的位图图像。它可以读取、转换和写入多达200种以上的图像格式，包括PNG、JPEG、JPEG-2000、GIF、WebP、Postscript、PDF等。
 ImageMagick的主要功能包括：
@@ -107,7 +106,10 @@ apt-get install  ghostscript
 apt-get install libmagickwand-dev
 ```
 
+
+
 ## 遇到的其他问题
+
 ### 关于 authorized 的问题
 ```
 ImageMagick "not authorized" PDF errors
@@ -124,7 +126,10 @@ ERROR_POLICY: attempt to perform an operation not allowed by the security policy
 在上面操作过程中`/etc/ImageMagick-6/policy.xml`会被重写，
 所以解决仅需重新将`ImageMagick-6/policy.xml`复制到`/etc/ImageMagick-6/policy.xml`。
 
+
+
 ## 基于镜像构建
+
 1. cd imagick_v2_test
 2. 构建镜像。目前已经测试成功，并上传到 docker hub，无需再构建镜像，仅需直接拉取：`docker pull leeprince/golang1_19:imagick_v2`。感兴趣可以重新在本地构建
 ```
@@ -139,7 +144,12 @@ docker run -d -v .:/www -p 8081:80 --name imagick_v2_1 leeprince/golang1_19:imag
 docker exec -it imagick_v2_1 bash
 ```
 
-# pkg-config
+
+
+# 相关概念
+
+## pkg-config
+
 pkg-config是一个在编译过程中帮助程序找到库文件的工具。当你在编译一个程序时，如果它依赖于某些库文件，那么你需要告诉编译器这些库文件的位置。这就是pkg-config的作用。
 具体来说，pkg-config可以做以下几件事：
 
@@ -149,7 +159,7 @@ pkg-config是一个在编译过程中帮助程序找到库文件的工具。当�
 
 在Linux系统中，pkg-config是一个非常重要的工具，它可以帮助你更容易地编译和安装程序。
 
-# build-essential
+## build-essential
 build-essential 是针对 Debian 和 Ubuntu 等基于 Debian 的 Linux 发行版的软件包。它实际上是一个包含了用于编译软件的基本工具集合。
 
 主要组成部分包括：
@@ -159,7 +169,10 @@ build-essential 是针对 Debian 和 Ubuntu 等基于 Debian 的 Linux 发行版
 
 这些工具的集合使得在Linux系统上进行软件开发更加方便，因为它们提供了编译和构建程序所需的基本组件。使用这些工具，开发者可以编译源代码、创建可执行文件，并将软件打包成易于分发和安装的软件包。
 
+
+
 # 使用“gopkg.in/gographics/imagick.v3/imagick”
+
 > 官方文档：https://pkg.go.dev/gopkg.in/gographics/imagick.v3@v3.5.0#section-readme
 > github仓库：https://github.com/gographics/imagick/tree/v3.5.0
 > 官方示例：https://github.com/gographics/imagick/tree/v3.5.0/examples
@@ -184,7 +197,7 @@ gopkg.in/gographics/imagick.v1/imagick
 
 ## 注意
 1. 官方示例：`https://github.com/gographics/imagick/tree/v3.5.0/examples/docker` 的示例 `Dockerfile` 文件中的<IMAGEMAGICK_VERSION>参数一定要匹配上 <## 须知> 的版本。
-- 官方原版
+> 官方原版
 ```
 FROM golang:1.11
 ...
@@ -200,7 +213,8 @@ RUN go install
 CMD /go/bin/resizer
 ```
 
-- 修改后
+> 修改后
+
 ```
 FROM golang:1.19
 
@@ -219,7 +233,119 @@ EXPOSE 80
 CMD tail -f /dev/null
 ```
 
+## 问题
+
+
+### undefined: imagick.Initialize
+
+> 问题
+```
+root@file-center-format-ctl-66f8df46c7-tw54b:/work# go run format-ctl/cmd/main.go -conf=format-ctl/configs/conf.yaml
+format-ctl/internal/domain/formatdomain/image.go:17:10: undefined: imagick.Initialize
+format-ctl/internal/domain/formatdomain/image.go:18:16: undefined: imagick.Terminate
+format-ctl/internal/domain/formatdomain/image.go:20:16: undefined: imagick.NewMagickWand
+format-ctl/internal/domain/formatdomain/image.go:34:40: undefined: imagick.ALPHA_CHANNEL_REMOVE
+```
+
+> 解决：开启 CGO_ENABLED
+
+```
+CGO_ENABLED=1 go run format-ctl/cmd/main.go -conf=format-ctl/configs/conf.yaml
+```
+
+
+
+### 在本地直接基于自己构建的镜像创建容器，或者在构建容器之上通过 Dockerfile 重新构建都正常，但是使用在构建容器之上通过 Dockerfile 重新构建并在 k8s 中创建 pod 时发现下载的 ImageMagick 的依赖丢失
+
+本地运行正常的情况下，在容器内`/usr/local/lib`下可以看到
+```
+ImageMagick-7.1.1           libMagickCore-7.Q16HDRI.so         libMagickWand-7.Q16HDRI.a   libMagickWand-7.Q16HDRI.so.10      python3.11
+libMagickCore-7.Q16HDRI.a   libMagickCore-7.Q16HDRI.so.10      libMagickWand-7.Q16HDRI.la  libMagickWand-7.Q16HDRI.so.10.0.1
+libMagickCore-7.Q16HDRI.la  libMagickCore-7.Q16HDRI.so.10.0.1  libMagickWand-7.Q16HDRI.so  pkgconfig
+```
+
+但是k8s构建之后发现没有了。
+
+> 原因：安装 ImageMagick 时所在的目录发生变更，导致通过 k8s 运行时，出现丢失的情况。问题在于使用了`cd`
+
+> 解决：
+
+```
+RUN cd && \
+	wget https://github.com/ImageMagick/ImageMagick/archive/${IMAGEMAGICK_VERSION}.tar.gz && \
+	
+---改后
+RUN set -ex && \
+	wget https://github.com/ImageMagick/ImageMagick/archive/${IMAGEMAGICK_VERSION}.tar.gz && \
+```
+
+
+
+### 在本地直接基于自己构建的镜像创建容器，或者在构建容器之上通过 Dockerfile 重新构建都正常，但是使用在构建容器之上通过 Dockerfile 重新构建并在 k8s 中创建 pod 时报错 
+
+> 观察
+```
+PS F:file-center> kubectl get pods -n test | findstr file
+format-ctl-6ff6db9c77-sb264                        1/2     CrashLoopBackOff   9          26m
+```
+
+> 查看错误信息： kubectl describe -n test format-ctl-6ff6db9c77-sb264
+```
+Events:
+  Type     Reason     Age                  From               Message
+  ----     ------     ----                 ----               -------
+  Normal   Scheduled  18m                  default-scheduler  Successfully assigned test/file-center-format-ctl-6ff6db9c77-sb264 to cloud-k8s-node04-test
+  Normal   Pulled     17m                  kubelet            Successfully pulled image "ccr.ccs.tencentyun.com/golden-cloud/file-center-format-ctl-test:v31" in 46.322607238s
+  Normal   Pulled     17m                  kubelet            Successfully pulled image "ccr.ccs.tencentyun.com/golden-cloud/filebeat:7.10.0" in 261.117147ms
+  Normal   Created    17m                  kubelet            Created container filebeat
+  Warning  Failed     17m                  kubelet            Error: failed to start container "backend-apps": Error response from daemon: OCI runtime create failed: invalid mount {Destination:www Type:bind Source:/var/lib/docker/volumes/8a967d82b837f36c7097fc3af8db4454b3e749d0174b6972ac88aa9f6805da3d/_data Options:[rbind]}: mount destination www not absolute: unknown
+  Normal   Pulling    17m                  kubelet            Pulling image "ccr.ccs.tencentyun.com/golden-cloud/filebeat:7.10.0"
+  Normal   Started    17m                  kubelet            Started container filebeat
+  Normal   Pulled     17m                  kubelet            Successfully pulled image "ccr.ccs.tencentyun.com/golden-cloud/file-center-format-ctl-test:v31" in 192.673352ms
+  Warning  Failed     17m                  kubelet            Error: failed to start container "backend-apps": Error response from daemon: OCI runtime create failed: invalid mount {Destination:www Type:bind Source:/var/lib/docker/volumes/4b6903e9005905063bad27ab588d66e2ed13c83ef83e1418afa5ddd12542608e/_data Options:[rbind]}: mount destination www not absolute: unknown
+  Warning  Failed     16m                  kubelet            Error: failed to start container "backend-apps": Error response from daemon: OCI runtime create failed: invalid mount {Destination:www Type:bind Source:/var/lib/docker/volumes/5e779c0f01b1ebf3669fa4a66281d792039a630901164663b4b9f2b4249a8608/_data Options:[rbind]}: mount destination www not absolute: unknown
+  Normal   Pulled     16m                  kubelet            Successfully pulled image "ccr.ccs.tencentyun.com/golden-cloud/file-center-format-ctl-test:v31" in 198.731528ms
+  Normal   Pulling    16m (x4 over 18m)    kubelet            Pulling image "ccr.ccs.tencentyun.com/golden-cloud/file-center-format-ctl-test:v31"
+  Normal   Created    16m (x4 over 17m)    kubelet            Created container backend-apps
+  Normal   Pulled     16m                  kubelet            Successfully pulled image "ccr.ccs.tencentyun.com/golden-cloud/file-center-format-ctl-test:v31" in 264.153464ms
+  Warning  Failed     16m                  kubelet            Error: failed to start container "backend-apps": Error response from daemon: OCI runtime create failed: invalid mount {Destination:www Type:bind Source:/var/lib/docker/volumes/2026f1ec46f7891dff25146bc43377ed65a249c8725d05fdcbcff011542494dd/_data Options:[rbind]}: mount destination www not absolute: unknown
+```
+
+> 解决：使用 VOLUME 指令允许你在容器中创建挂载点时，使用绝对路径
+```
+VOLUME ["www"]
+
+--- 改后
+VOLUME ["/www"]
+```
+
+
+
+#### CGO_ENABLED 参数说明
+
+```
+CGO_ENABLED 是一个用于控制 Go 编译器行为的环境变量。它主要用于决定是否启用 Go 的 CGO（C Go）支持，这个支持允许 Go 代码与 C 代码进行交互。
+当 CGO_ENABLED 被设置为 1 时，Go 编译器会启用 CGO。这意味着你可以在 Go 代码中使用 cgo 包，将 Go 代码与 C 代码进行混合编程，调用 C 函数，并在 Go 中使用 C 库。
+
+例如，在使用外部 C 库或者需要与 C 代码交互的情况下，你可能需要设置 CGO_ENABLED=1。
+但是，当 CGO_ENABLED 被设置为 0 时，Go 编译器将禁用 CGO。这意味着你的 Go 代码只能使用纯 Go 实现，无法调用 C 函数或使用 C 库。
+
+在一些特定场景下，禁用 CGO 可能有好处，比如在跨平台编译、构建静态二进制文件或者在一些特定环境下提高性能等方面。
+一般来说，在不需要与 C 代码交互的情况下，禁用 CGO 可以提高构建速度并简化部署。但在需要使用 C 代码的场景下，需要将 CGO_ENABLED 设置为 1。
+设置 CGO_ENABLED 的方式可以是环境变量的方式，也可以在编译时通过命令行参数来指定。
+
+例如，在命令行中编译一个 Go 程序并指定 CGO_ENABLED：
+
+CGO_ENABLED=1 go build main.go   # 启用 CGO
+CGO_ENABLED=0 go build main.go   # 禁用 CGO
+
+这样你可以根据需要灵活地控制是否启用 CGO。
+```
+
+
+
 ## 基于镜像构建
+
 1. cd imagick_v3_test
 2. 构建镜像。目前已经测试成功，并上传到 docker hub，无需再构建镜像，仅需直接拉取：`docker pull leeprince/golang1_19:imagick_v3_7.1.1-23`。感兴趣可以重新在本地构建
 ```
@@ -234,7 +360,10 @@ docker run -d -v .:/www -p 8082:80 --name imagick_v3_1 leeprince/golang1_19:imag
 docker exec -it imagick_v3_1 bash
 ```
 
+
+
 ### 完整 Dockerfile
+
 ```
 FROM golang:1.19
 
@@ -266,14 +395,17 @@ RUN cd && \
 
 WORKDIR /www
 
-VOLUME ["www"]
+VOLUME ["/www"]
 
 EXPOSE 80
 
 CMD tail -f /dev/null
 ```
 
+
+
 # 使用 "github.com/davidbyttow/govips/v2/vips"
+
 > 官方文档：https://github.com/davidbyttow/govips
 > 关于libvips：https://github.com/libvips/libvips
 
@@ -292,7 +424,10 @@ docker run -d -v .:/www -p 8083:80 --name govips_v2_1 leeprince/golang1_19:govip
 docker exec -it govips_v2_1 bash
 ```
 
+
+
 ### 完整 Dockerfile
+
 > 官方：https://github.com/davidbyttow/govips/tree/master/build
 > 后来才发现官方有基于ubuntu构建的环境，发现原来 `libvips` 可以直接通过 `apt-get install -y libvips-dev`，并包含其他依赖，如：imagemagick、libmagickwand、
 
@@ -329,7 +464,7 @@ RUN tar -xvzf v${LIBVIPS_VERSION}.tar.gz && \
 
 WORKDIR /www
 
-VOLUME ["www"]
+VOLUME ["/www"]
 
 EXPOSE 80
 
@@ -337,7 +472,9 @@ CMD tail -f /dev/null
 ```
 
 
+
 ## 问题
+
 ### libjpeg-turbo8-dev
 `Package libjpeg-turbo8-dev is not available, but is referred to by another package.`
 
@@ -381,13 +518,20 @@ apt-get install -y fonts-arphic-uming
 apt-get -q -y install fonts-arphic-uming fonts-arphic-ukai fonts-noto-cjk  --no-install-recommends
 ```
 
+
+
 ## 语言包
+
 - fonts-noto-cjk: Noto 字体系列，包括中文、日文、韩文等各种语言的字体。
 - fonts-arphic-ukai: AR PL UKai 中文字体。
 - fonts-arphic-uming: AR PL UMing 中文字体。
 
 
-## lsb-release
+
+## 相关概念
+
+### lsb-release
+
 lsb-release 是一个 Linux Standard Base（LSB）的工具，用于显示有关 Linux 发行版的信息。它通常位于大多数基于 Linux 的系统中，并提供了一种简单的方式来确定当前系统所使用的 Linux 发行版信息。
 
 通过运行 lsb_release -a 命令，你可以获取包括发行版代号、发行版描述、发行版号码以及其他有关 Linux 发行版的信息。例如：
@@ -403,7 +547,10 @@ Release:        20.04
 Codename:       focal
 ```
 
-## devscripts
+
+
+### devscripts
+
 devscripts 是一个为 Debian 开发者设计的软件包，提供了一系列用于简化 Debian 软件包开发和维护的工具集。
 
 这些工具涵盖了各种开发任务，包括但不限于：
@@ -422,7 +569,10 @@ devscripts 是一个为 Debian 开发者设计的软件包，提供了一系列�
 
 这些信息对于脚本、安装软件包、确保软件兼容性以及识别正在运行的操作系统非常有用。LSB是一种标准化的规范，可以帮助确保不同的 Linux 发行版在某些方面保持一致性，让开发者能够更轻松地编写跨发行版兼容的代码。
 
-## dput
+
+
+### dput
+
 dput 是一个用于将本地打包好的 Debian 软件包上传到远程 Debian 软件仓库的工具。它允许开发者将他们构建好的软件包上传到合适的 Debian 软件仓库，使得其他用户可以访问并安装这些软件包。
 
 一般来说，dput 可以实现以下功能：
@@ -433,7 +583,7 @@ dput 是一个用于将本地打包好的 Debian 软件包上传到远程 Debian
 
 总的来说，dput 是 Debian 发行版中用于将本地构建好的软件包上传到远程仓库的方便工具，有助于软件包的分发和安装。
 
-## nvi
+### nvi
 nvi 是一个文本编辑器，它是 vi 编辑器的一个变种。vi 是一款经典的、强大的、使用广泛的文本编辑器，存在于许多类 Unix 系统中，而 nvi 是 vi 的改进版本。
 
 nvi 的作用与 vi 类似，主要用于在命令行界面下编辑文本文件。它具有以下特点和功能：
@@ -445,7 +595,9 @@ nvi 的作用与 vi 类似，主要用于在命令行界面下编辑文本文件
 
 总的来说，nvi 是一个面向命令行环境的文本编辑器，适合于对文本文件进行快速、高效的编辑操作，同时也保留了 vi 的许多特性和使用习惯。
 
-## add-apt-repository -y ppa:tonimelisma/ppa 的作用
+
+
+### add-apt-repository -y ppa:tonimelisma/ppa 的作用
 
 这个命令 add-apt-repository -y ppa:tonimelisma/ppa 在 Ubuntu 或基于 Debian 的系统中用于向软件源列表中添加一个 PPA（Personal Package Archive，个人软件包存档）。
 
@@ -458,7 +610,10 @@ nvi 的作用与 vi 类似，主要用于在命令行界面下编辑文本文件
 
 请注意，在使用任何 PPA 之前，确保你信任 PPA 的所有者，因为它们并非官方维护的软件源。添加不可信任或未经审核的 PPA 可能会导致系统安全问题或不稳定性。
 
+
+
 ## 示例
+
 官方示例，有些方法（2023-12-19）已经废弃，手动替换即可
 ```golang
 package main
@@ -543,6 +698,8 @@ func main() {
 }
 ```
 
+
+
 # imagick_v3 与 govips 对比
 
 ## 功能测试（一次性功能测试）
@@ -550,8 +707,11 @@ func main() {
 - 多页PDF时，imagick_v3 处理最后一页；govips_v2 处理第一页
 - imagick_v3 的优势是很灵活，方便自定义一些属性！
 
+
+
 ## 性能测试
-> 基准测试与不同之处：
+
+> 基准测试与压力测试不同之处：
 - 目的不同： 基准测试旨在评估代码或算法在标准条件下的性能，而压力测试则旨在测试系统在高负载或极限条件下的稳定性和表现。
 - 应用场景不同： 基准测试通常用于评估和改进代码、算法等实现，而压力测试主要用于验证系统在负载增加时的行为和稳定性。
 
@@ -634,6 +794,8 @@ cost mill time: 452ms ||| cost mill time: 662ms
 小于4个：govips_v2 的性能更优
 等于4个：imagick_v3 与 govips_v2 的处理速度基本持平
 大于4个：govips_v2 的性能更优
+
+
 
 ### 2、基准测试
 
