@@ -3,7 +3,6 @@ package main
 
 import (
 	"bufio"
-	"encoding/base64"
 	"fmt"
 	"github.com/pkg/errors"
 	"io"
@@ -22,10 +21,10 @@ func main() {
 
 	// 自定义pdf转图片
 	// 功能验证
-	//Function()
+	Function()
 
 	// 性能测试
-	PerformanceTest()
+	//PerformanceTest()
 }
 
 // 功能验证
@@ -70,9 +69,15 @@ func PerformanceTest() {
 func CustomerPdfToImagesByImagickV3OfFunction() {
 	//fileBytes, err := ReadFileBytesByUrl("https://kpserverdev-1251506165.cos.ap-shanghai.myqcloud.com/e-document-import-ctl/test/0001.pdf")
 	//fileBytes, err := ReadFileBytesByUrl("https://kpserverprod-1251506165.cos.ap-shanghai.myqcloud.com/invoice/jammy/dependency/client_ofd.pdf")
-	fileBytes, err := ReadFile(".", "0001.pdf")
+	//fileBytes, err := ReadFile(".", "0001.pdf")
+
+	// pdf和图片组成的pdf
 	//fileBytes, err := ReadFile(".", "0001-more-page.pdf")
 	//fileBytes, err := ReadFile(".", "0001-more-page-01.pdf")
+
+	// 多页pdf
+	//fileBytes, err := ReadFileBytesByUrl("https://kpserverdev-1251506165.cos.ap-shanghai.myqcloud.com/wbx/upload/OQgorPo0MckWeb374dae2b7e56f9ccb9a6ea1ad0d276_20201844_1703557617396552.pdf")
+	fileBytes, err := ReadFile(".", "more.pdf")
 	if err != nil {
 		fmt.Println("ReadFileBytesByUrl err:", err)
 		return
@@ -80,7 +85,7 @@ func CustomerPdfToImagesByImagickV3OfFunction() {
 	toImageType := "jpg"
 
 	dirPath := "."
-	fileName := fmt.Sprintf("pdf_to_jpg_%d.jpg", time.Now().Unix())
+	fileName := fmt.Sprintf("pdf_to_jpg_%d.jpg", time.Now().UnixMicro())
 	filePath := filepath.Join(dirPath, fileName)
 
 	// --- imagick v3 --------------------------------
@@ -100,7 +105,7 @@ func CustomerPdfToImagesByImagickV3OfFunction() {
 
 	err = mw.ReadImageBlob(fileBytes)
 	if err != nil {
-		fmt.Println("[CreateImage] ReadImageBlob err:", err)
+		fmt.Println("ReadImageBlob err:", err)
 		return
 	}
 
@@ -132,8 +137,14 @@ func CustomerPdfToImagesByImagickV3OfFunction() {
 	//pix.SetColor("white")
 	//mw.SetBackgroundColor(pix)
 
-	//mw.GetImageDepth()
-	//mw.SetImageDepth(16)
+	// 图片的深度
+	/*imageDepth := mw.GetImageDepth()
+	fmt.Println("imageDepth:", imageDepth)
+	err = mw.SetImageDepth(1)
+	if err != nil {
+		fmt.Println("SetImageDepth err:", err)
+		return
+	}*/
 
 	// 激活、停用、重置或设置alpha通道。
 	err = mw.SetImageAlphaChannel(imagick.ALPHA_CHANNEL_REMOVE)
@@ -149,22 +160,19 @@ func CustomerPdfToImagesByImagickV3OfFunction() {
 		return
 	}
 
-	// 转化后的图片字节流
-	imageByte := mw.GetImageBlob()
+	// 可选：获取转化后的图片字节流
+	//imageByte := mw.GetImageBlob()
 
 	// 可选：是否在本地保存为图片
 	err = mw.WriteImage(filePath)
 	if err != nil {
-		fmt.Println("[CreateImage] WriteImage failed:", err)
+		fmt.Println("WriteImage failed:", err)
 		return
 	}
 
 	// --- imagick v3 --------------------------------
-
-	fmt.Println("successful, filepath:", filePath)
-
-	imageBase64 := base64.StdEncoding.EncodeToString(imageByte)
-	fmt.Println("imageBase64:", imageBase64)
+	//imageBase64 := base64.StdEncoding.EncodeToString(imageByte)
+	//fmt.Println("imageBase64:", imageBase64)
 
 	fmt.Println("successful, filepath:", filePath)
 
@@ -204,7 +212,7 @@ func CustomerPdfToImagesByImagickV3OfPerformanceTest() {
 
 	err = mw.ReadImageBlob(fileBytes)
 	if err != nil {
-		fmt.Println("[CreateImage] ReadImageBlob err:", err)
+		fmt.Println("ReadImageBlob err:", err)
 		return
 	}
 
@@ -262,14 +270,12 @@ func CustomerPdfToImagesByImagickV3OfPerformanceTest() {
 	// 压力测试，暂时先不用保存图片到本地
 	/*err = mw.WriteImage(filePath)
 	if err != nil {
-		fmt.Println("[CreateImage] WriteImage failed:", err)
+		fmt.Println("WriteImage failed:", err)
 		return
 	}*/
 
 	// --- imagick v3 --------------------------------
-	/*fmt.Println("successful, filepath:", filePath)
-
-	imageBase64 := base64.StdEncoding.EncodeToString(imageByte)
+	/*imageBase64 := base64.StdEncoding.EncodeToString(imageByte)
 	fmt.Println("imageBase64:", imageBase64)
 
 	fmt.Println("successful, filepath:", filePath)*/
@@ -297,7 +303,7 @@ func CreateImage(data []byte, toImageType string) ([]byte, bool) {
 
 	err = mw.ReadImageBlob(data)
 	if err != nil {
-		fmt.Println("[CreateImage] ReadImageBlob err:", err)
+		fmt.Println("ReadImageBlob err:", err)
 		return nil, false
 	}
 
@@ -317,7 +323,7 @@ func CreateImage(data []byte, toImageType string) ([]byte, bool) {
 		// The blur factor is a float, where > 1 is blurry, < 1 is sharp
 		err = mw.ResizeImage(hWidth, hHeight, imagick.FILTER_LANCZOS, 1)
 		if err != nil {
-			log.ErrorS(seq, "[CreateImage] ResizeImage failed[%v]", err)
+			log.ErrorS(seq, "ResizeImage failed[%v]", err)
 			return nil, false
 		}*/
 
@@ -338,7 +344,7 @@ func CreateImage(data []byte, toImageType string) ([]byte, bool) {
 
 	/*err = mw.WriteImage(coverFilePath)
 	if err != nil {
-		fmt.Println("[CreateImage] WriteImage failed:", err)
+		fmt.Println("WriteImage failed:", err)
 		return nil, false
 	}*/
 

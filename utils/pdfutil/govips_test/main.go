@@ -32,10 +32,10 @@ func main() {
 
 	// 自定义pdf转图片
 	// 功能验证
-	//Function()
+	Function()
 
 	// 性能测试
-	PerformanceTest()
+	//PerformanceTest()
 }
 
 // 功能验证
@@ -140,9 +140,14 @@ func CustomerPdfToImagesByGovipsOfFunction() {
 	vips.Startup(nil)
 	defer vips.Shutdown()
 
-	image1, err := vips.NewImageFromFile("0001.pdf")
+	//image1, err := vips.NewImageFromFile("0001.pdf")
+
+	// pdf和图片组成的pdf
 	//image1, err := vips.NewImageFromFile("0001-more-page.pdf")
 	//image1, err := vips.NewImageFromFile("0001-more-page-01.pdf")
+
+	// 多页pdf
+	image1, err := vips.NewImageFromFile("more.pdf")
 	checkError(err)
 
 	// 完整示例
