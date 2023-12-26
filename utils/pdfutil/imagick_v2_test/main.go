@@ -55,6 +55,7 @@ func CreateImage(data []byte, toImageType string) ([]byte, bool) {
 
 	//sourceImagePath := getSourceImageForCover(filepath.Dir(pathNoExtension))
 	mw := imagick.NewMagickWand()
+	// 单次统一使用：defer imagick.Terminate()，而不使用：defer clearImagickWand(mw)
 	//defer clearImagickWand(mw)
 
 	mw.SetResolution(192, 192)
