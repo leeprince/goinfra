@@ -1,7 +1,6 @@
 # 测试工具
 ---
 
-
 # 一、概述
 
 ## （一）单元测试
@@ -16,9 +15,9 @@
 ## （三）代码覆盖率测试
 由单元测试的代码，触发运行到的被测试代码的代码行数占所有代码行数的比例，被称为测试覆盖率，代码覆盖率不一定完全精准，但是可以作为参考，可以帮我们测量和我们预计的覆盖率之间的差距。
 
-# 二、go标准库`testing`
+# 二、go 标准库 `testing`
 
-[go标准库`testing`](https://studygolang.com/pkgdoc)
+[go 标准库 `testing`](https://studygolang.com/pkgdoc)
 
 ## （一）`go test` 的使用
 ### 0. 介绍
@@ -44,11 +43,11 @@ go help test
 ```
 go help test
 
-# `go test`命令可识别的标志(flag)
-    - `go test`命令可识别的标志，并且控制任何测试的执行。包含：
-        `-v`、`-run regexp`、`-bench regexp`、`-cover`、`-fuzz`、` -count n`、`-benchtime t`、`-timeout d`、`-cpu 1,2,4`、`-fuzztime t`、`-json`、`-list regexp`、`-coverpkg pattern1,pattern2,pattern3`等
-    - `go test`命令可识别的标志，可用于在执行过程中对测试进行配置：
-        `-benchmem`、`-blockprofile block.out`、`-coverprofile cover.out`、`-cpuprofile cpu.out`、`-outputdir directory`、`-trace trace.out`、
+# `go test` 命令可识别的标志(flag)
+- `go test` 命令可识别的标志，并且控制任何测试的执行。包含：
+    `-v`、`-run regexp`、`-bench regexp`、`-cover`、`-fuzz`、` -count n`、`-benchtime t`、`-timeout d`、`-cpu 1,2,4`、`-fuzztime t`、`-json`、`-list regexp`、`-coverpkg pattern1,pattern2,pattern3` 等
+- `go test` 命令可识别的标志，可用于在执行过程中对测试进行配置：
+    `-benchmem`、`-blockprofile block.out`、`-coverprofile cover.out`、`-cpuprofile cpu.out`、`-outputdir directory`、`-trace trace.out`、
 
 ```
 
@@ -118,42 +117,44 @@ go help testflag
     	verbose: print additional output
 ```
 
-### 2. 命令行`flag`语法：
+### 2. 命令行 `flag` 语法：
 ```
 -flag
 -flag=x
--flag x  // 只有非bool类型的flag可以
+-flag x  // 只有非 bool 类型的 flag 可以
 ```
-可以使用1个或2个'-'号，效果是一样的。最后一种格式不能用于bool类型的flag，因为如果有文件名为0、false等时,如下命令：
+
+可以使用 1 个或 2 个'-'号，效果是一样的。最后一种格式不能用于 bool 类型的 flag，因为如果有文件名为 0、false 等时,如下命令：
 ```
 cmd -x *
 ```
-其含义会改变。你必须使用-flag=false格式来关闭一个bool类型flag。
-Flag解析在第一个非flag参数（单个"-"不是flag参数）之前停止，或者在终止符"--"之后停止。
-整数flag接受1234、0664、0x1234等类型，也可以是负数。bool类型flag可以是：
+其含义会改变。你必须使用-flag=false 格式来关闭一个 bool 类型 flag。
+Flag 解析在第一个非 flag 参数（单个"-"不是 flag 参数）之前停止，或者在终止符"--"之后停止。
+
+整数 flag 接受 1234、0664、0x1234 等类型，也可以是负数。bool 类型 flag 可以是：
 ```
 1, 0, t, f, T, F, true, false, TRUE, FALSE, True, False
 ```
 
-### 3. `go test`常用格式及示例
+### 3. `go test` 常用格式及示例
 ```
-go test [其他0个或者多个flag。如：-v、-bench、-cover、-run等, 这里的-run单独放在后面写了] [测试的go文件] [依赖的go文件] [-run=前缀匹配方法名(`TestXxx`或者`TestXxx`中的`Xxx`前缀匹配的方法)或者`none`关键字]
+go test [其他 0 个或者多个 flag。如：-v、-bench、-cover、-run 等, 这里的-run 单独放在后面写了] [测试的 go 文件] [依赖的 go 文件] [-run=前缀匹配方法名(`TestXxx` 或者 `TestXxx` 中的 `Xxx` 前缀匹配的方法)或者 `none` 关键字]
 ```
 
-### 4. 单元测试`TestXxx`示例
+### 4. 单元测试 `TestXxx` 示例
 ```
-# 测试当前包的所有`*_test.go`中的所有单元测试方法
+# 测试当前包的所有 `*_test.go` 中的所有单元测试方法
 go test
 
-# 测试当前包的所有`*_test.go`中的所有单元测试方法,并输出详情
+# 测试当前包的所有 `*_test.go` 中的所有单元测试方法,并输出详情
 go test -v
 
-# 测试当前包的`binary_search_test.go`中的所有单元测试方法
+# 测试当前包的 `binary_search_test.go` 中的所有单元测试方法
 go test -v binary_search_test.go
 
-# 测试当前包的所有`*_test.go`中符合`TestXxx`或者`TestXxx`中的`Xxx`前缀匹配的方法。需匹配的前缀推荐写`TestXxx`格式
-#   需匹配的前缀分别为`TestBinarySearchV11`、`BinarySearchV11`。 
-#   因为`TestBinarySearchV11`和`BinarySearchV11`的区别在于前面的`Test`，所以最终匹配后执行的测试方法是一致的
+# 测试当前包的所有 `*_test.go` 中符合 `TestXxx` 或者 `TestXxx` 中的 `Xxx` 前缀匹配的方法。需匹配的前缀推荐写 `TestXxx` 格式
+#   需匹配的前缀分别为 `TestBinarySearchV11`、`BinarySearchV11`。 
+#   因为 `TestBinarySearchV11` 和 `BinarySearchV11` 的区别在于前面的 `Test`，所以最终匹配后执行的测试方法是一致的
 go test -v -run=TestBinarySearchV11
 go test -v -run=BinarySearchV11
 
@@ -161,21 +162,21 @@ go test -v -run=BinarySearchV11
 go test -v -run=TestBinarySearchV1
 go test -v -run=BinarySearchV1
 
-# 不运行任何单元测试，即不运行任何`TestXxx`方法
+# 不运行任何单元测试，即不运行任何 `TestXxx` 方法
 go test -run=none
 ```
 
-### 5.基准测试`BenchmarkXxx`示例
-> `go test` 的语法上需加上`-bench`的flag，其他部分跟`单元测试`的使用方法一致
+### 5.基准测试 `BenchmarkXxx` 示例
+> `go test` 的语法上需加上 `-bench` 的 flag，其他部分跟 ` 单元测试 ` 的使用方法一致
 
->  如果不使用`-run`的flag过滤测试方法，默认都是会执行所有的测试方法
+>  如果不使用 `-run` 的 flag 过滤测试方法，默认都是会执行所有的测试方法
 
-> bench的工作原理
-基准测试函数会被一直调用直到b.N无效，它是基准测试循环的次数
-b.N从1开始，如果基准测试函数在1秒内就完成 (默认值)，则b.N增加，并再次运行基准测试函数
-b.N的值会按照序列1,2,5,10,20,50,... 增加，同时再次运行基准测测试函数
-上述结果解读代表1秒内运行了 279936765 次，每次 4.280 ns
-`{基准测试方法}-xx`的数字后缀(BenchmarkBinarySearchV1-12 中的12)和用于运行次测试的GOMAXPROCS值有关。 与GOMAXPROCS一样，此数字默认为启动时Go进程可见的CPU数。 可以使用-cpu标识更改此值，可以传入多个值以列表形式来运行基准测试
+> bench 的工作原理
+基准测试函数会被一直调用直到 b.N 无效，它是基准测试循环的次数
+b.N 从 1 开始，如果基准测试函数在 1 秒内就完成 (默认值)，则 b.N 增加，并再次运行基准测试函数
+b.N 的值会按照序列 1,2,5,10,20,50,... 增加，同时再次运行基准测测试函数
+上述结果解读代表 1 秒内运行了 279936765 次，每次 4.280 ns
+`{基准测试方法}-xx` 的数字后缀(BenchmarkBinarySearchV1-12 中的 12)和用于运行次测试的 GOMAXPROCS 值有关。 与 GOMAXPROCS 一样，此数字默认为启动时 Go 进程可见的 CPU 数。 可以使用-cpu 标识更改此值，可以传入多个值以列表形式来运行基准测试
 ```
 ➜  test git:(master) ✗ go test -v -bench=BinarySearchV1 -run=none
 goos: darwin
@@ -190,15 +191,15 @@ ok      github.com/leeprince/goinfra/test       1.793s
 
 
 ```
-# 测试当前包的所有`*_test.go`中的所有单元测试`TestXxx`方法和基准测试`BenchmarkXxx`方法
+# 测试当前包的所有 `*_test.go` 中的所有单元测试 `TestXxx` 方法和基准测试 `BenchmarkXxx` 方法
 go test -v -bench=.
 
-# 测试当前包的所有`*_test.go`中的所有基准测试`BenchmarkXxx`方法。通过`-run=none`忽略所有单元测试`TestXxx`方法
+# 测试当前包的所有 `*_test.go` 中的所有基准测试 `BenchmarkXxx` 方法。通过 `-run=none` 忽略所有单元测试 `TestXxx` 方法
 go test -v -bench=. -run=none
 
-# 测试当前包的所有`*_test.go`中符合`BenchmarkXxx`或者`BenchmarkXxx`中的`Xxx`前缀匹配的方法。。需匹配的前缀推荐写`TestXxx`格式
-#   需匹配的前缀分别为`BenchmarkBinarySearchV1`、`BinarySearchV1`。 
-#   因为`BenchmarkBinarySearchV1`和`BinarySearchV1`的区别在于前面的`Benchmark`，所以最终匹配后执行的测试方法是一致的
+# 测试当前包的所有 `*_test.go` 中符合 `BenchmarkXxx` 或者 `BenchmarkXxx` 中的 `Xxx` 前缀匹配的方法。。需匹配的前缀推荐写 `TestXxx` 格式
+#   需匹配的前缀分别为 `BenchmarkBinarySearchV1`、`BinarySearchV1`。 
+#   因为 `BenchmarkBinarySearchV1` 和 `BinarySearchV1` 的区别在于前面的 `Benchmark`，所以最终匹配后执行的测试方法是一致的
 go test -v -bench=BenchmarkBinarySearchV1 -run=none
 go test -v -bench=BinarySearchV1 -run=none 
 
@@ -209,13 +210,13 @@ go test -v -bench=BinarySearchV1 -run=none
 # 打印基准测试的内存分配统计信息
 go test -v -bench=BenchmarkBinarySearchV1 -benchmem -run=none
 
-# 使用-cpu标识更改go运行的cpu核数
+# 使用-cpu 标识更改 go 运行的 cpu 核数
 go test -v -bench=BenchmarkBinarySearchV1 -cpu=1,2,4 -run=none
 
-# 因为热缩放、内存局部性、后台处理、gc活动等等会导致单次的误差，所以一般会进行多次测试
+# 因为热缩放、内存局部性、后台处理、gc 活动等等会导致单次的误差，所以一般会进行多次测试
 go test -v -bench=BenchmarkBinarySearchV1 -count=3 -run=none
 
-# 有的函数比较慢，为了更精确的结果，可以通过-benchtime标志指定运行时间，从而使它运行更多次
+# 有的函数比较慢，为了更精确的结果，可以通过-benchtime 标志指定运行时间，从而使它运行更多次
 go test -v -bench=BenchmarkBinarySearchV1 -benchtime=2s -run=none
 ```
 
@@ -241,7 +242,7 @@ func TestTimeConsuming(t *testing.T) {
 ```
 
 ### 2. 基准测试
-基准测试常用于代码性能测试，函数需要导入testing包，并定义以Benchmark开头的函数， 参数为testing.B指针类型，在测试函数中循环调用函数多次
+基准测试常用于代码性能测试，函数需要导入 testing 包，并定义以 Benchmark 开头的函数， 参数为 testing.B 指针类型，在测试函数中循环调用函数多次
 
 基准测试主要是通过测试 CPU (`go test -bench=. -cpuprofile`) 和内存 （`go test -bench=. -benchmem`) 的分配，来展示被测试代码的性能，进而找到性能更优的解决方案。
 
@@ -249,7 +250,7 @@ func TestTimeConsuming(t *testing.T) {
 ```
 func BenchmarkXxx(*testing.B)
 ```
-被认为是基准测试，通过`go test`命令，加上`-bench flag`来执行。多个基准测试按照顺序运行。
+被认为是基准测试，通过 `go test` 命令，加上 `-bench flag` 来执行。多个基准测试按照顺序运行。
 
 testing flags 的详细描述, 参见 https://github.com/golang/go/blob/master/cmd/go/#hdr-Description_of_testing_flags.
 
@@ -328,7 +329,7 @@ func TestMain(m *testing.M) {
    // call flag.Parse() here if TestMain uses flags
    // 如果 TestMain 使用了 flags，这里应该加上 flag.Parse()
    
-   // m.Run 是调用包下面各个Test函数的入口
+   // m.Run 是调用包下面各个 Test 函数的入口
    os.Exit(m.Run())
 }
 ```
@@ -339,7 +340,7 @@ Go 的测试支持在包内优先执行一个 TestMain(m *testing.M) 函数，�
 func TestMain(m *testing.M) {
     ...
 
-    // m.Run 是调用包下面各个Test函数的入口
+    // m.Run 是调用包下面各个 Test 函数的入口
     os.Exit(m.Run())
 }
 ```
@@ -405,7 +406,7 @@ func TestBinarySearchV11(t *testing.T) {
 			1, 3, 5, 7, 9,
 		}, 3), convey.ShouldEqual, 1)
 	})
-	convey.Convey("测试二分法查找-多个So", t, func() {
+	convey.Convey("测试二分法查找-多个 So", t, func() {
 		convey.So(arrayslice.BinarySearchV1([]int{
 			1, 3, 5, 7, 9,
 		}, 3), convey.ShouldEqual, 1)
@@ -415,12 +416,12 @@ func TestBinarySearchV11(t *testing.T) {
 		}, 3), convey.ShouldEqual, 1)
 	})
 	convey.Convey("测试二分法查找-嵌套", t, func() {
-		convey.Convey("测试二分法查找-嵌套1", func() {
+		convey.Convey("测试二分法查找-嵌套 1", func() {
 			convey.So(arrayslice.BinarySearchV1([]int{
 				1, 3, 5, 7, 9,
 			}, 3), convey.ShouldEqual, 1)
 		})
-		convey.Convey("测试二分法查找-嵌套2", func() {
+		convey.Convey("测试二分法查找-嵌套 2", func() {
 			convey.So(arrayslice.BinarySearchV1([]int{
 				1, 3, 5, 7, 9,
 			}, 3), convey.ShouldEqual, 1)
@@ -430,7 +431,7 @@ func TestBinarySearchV11(t *testing.T) {
 ```
 
 ### 2. 断言类型
-[断言的wiki文档](https://github.com/smartystreets/goconvey/wiki/Assertions)
+[断言的 wiki 文档](https://github.com/smartystreets/goconvey/wiki/Assertions)
 
 General Equality
 ```
@@ -515,26 +516,26 @@ So(time.Now(), ShouldHappenWithin, duration, time.Now())
 So(time.Now(), ShouldNotHappenWithin, duration, time.Now())
 ```
 
-# 四、打桩和mock
-## （一）打桩(stub)
-桩，或称桩代码，是指用来代替关联代码或者未实现代码的代码。如果函数B用B1来代替，那么，B称为原函数，B1称为桩函数。打桩就是编写或生成桩代码。打桩的目的主要有：隔离、补齐、控制。
+# 四、打桩和 mock
+## （一）打桩（stub）
+桩，或称桩代码，是指用来代替关联代码或者未实现代码的代码。如果函数 B 用 B1 来代替，那么，B 称为原函数，B1 称为桩函数。打桩就是编写或生成桩代码。打桩的目的主要有：隔离、补齐、控制。
 
-- 隔离:隔离的基本方法就是打桩，将测试任务之外的，并且与测试任务相关的代码，用桩来代替，从而实现分离测试任务。例如函数A调用了函数B，函数B又调用了函数C和D，如果函数B用桩来代替，函数A就可以完全割断与函数C和D的关系。
-- 补齐:补齐是指用桩来代替未实现的代码，例如，函数A调用了函数B，而函数B由其他程序员编写，且未实现，那么，可以用桩来代替函数B，使函数A能够运行并测试。补齐在并行开发中很常用。
+- 隔离:隔离的基本方法就是打桩，将测试任务之外的，并且与测试任务相关的代码，用桩来代替，从而实现分离测试任务。例如函数 A 调用了函数 B，函数 B 又调用了函数 C 和 D，如果函数 B 用桩来代替，函数 A 就可以完全割断与函数 C 和 D 的关系。
+- 补齐:补齐是指用桩来代替未实现的代码，例如，函数 A 调用了函数 B，而函数 B 由其他程序员编写，且未实现，那么，可以用桩来代替函数 B，使函数 A 能够运行并测试。补齐在并行开发中很常用。
 - 控制:控制是指在测试时，人为设定相关代码的行为，使之符合测试需求。例如：
 
 一般来说，桩函数要具有与原函数完全一致的原形，仅仅是实现不同，这样测试代码才能正确链接到桩函数。用于实现隔离和补齐的桩函数一般比较简单，只需把原函数的声明拷过来，加一个空的实现，能通过编译链接就行了。比较复杂的是实现控制功能的桩函数，要根据测试的需要，输出合适的数据
 
 ### 1. `github.com/agiledragon/gomonkey` - 打桩框架
-> 如果启用了内联，gomonkey无法修补函数或成员方法，请在禁用内联的情况下运行测试，方法是添加命令行参数`-gcflags=-l`（go1.10及以上）或`-gcflags=all=-l`。
-当一个goroutine正在修补另一个gorroutine同时访问的函数或成员方法时，可能会发生死机。也就是说，gomonkey不是线程安全的。
+> 如果启用了内联，gomonkey 无法修补函数或成员方法，请在禁用内联的情况下运行测试，方法是添加命令行参数 `-gcflags=-l`（go1.10 及以上）或 `-gcflags=all=-l`。
+当一个 goroutine 正在修补另一个 gorroutine 同时访问的函数或成员方法时，可能会发生死机。也就是说，gomonkey 不是线程安全的。
 
 > 使用前的一些注意事项：
-- gomonkey框架对于内联的函数会失效（找不到函数入口），测试的时候需要关掉所有的内联，执行go test -v时加上参数-gcflags=-l（Go 1.10以下）或者-gcflags=all=-l（Go1.10及以上）。
-- gomonkey需要运行在amd64架构上。
-- gomonkey不是并发安全的。
-- gomonkey对于私有成员方法的mock在Go 1.7版本及以上会直接抛出panic。
-一般来说使用gomonkey遇到的大多数问题都可以在这四条中找到答案。
+- gomonkey 框架对于内联的函数会失效（找不到函数入口），测试的时候需要关掉所有的内联，执行 go test -v 时加上参数-gcflags=-l（Go 1.10 以下）或者-gcflags=all=-l（Go1.10 及以上）。
+- gomonkey 需要运行在 amd64 架构上。
+- gomonkey 不是并发安全的。
+- gomonkey 对于私有成员方法的 mock 在 Go 1.7 版本及以上会直接抛出 panic。
+一般来说使用 gomonkey 遇到的大多数问题都可以在这四条中找到答案。
 
 
 引入 gomonkey 有如下好处：
@@ -557,7 +558,7 @@ So(time.Now(), ShouldNotHappenWithin, duration, time.Now())
 函数打桩， 对变量的 mock 实现原理跟 `go stub` 一样都是通过 reflect 包实现的。
 除了 mock 变量，gomonkey 还可以直接 mock 导出函数/方法、mock 代码所在包的非导出函数
 
-> MacOS 中关于`Go monkey Permission Denied` 解决方案：https://github.com/eisenxp/macos-golink-wrapper
+> MacOS 中关于 `Go monkey Permission Denied` 解决方案：https://github.com/eisenxp/macos-golink-wrapper
 ```
 mv $GOROOT/pkg/tool/darwin_amd64/link $GOROOT/pkg/tool/darwin_amd64/original_link
 cp https://github.com/eisenxp/macos-golink-wrapper/link $GOROOT/pkg/tool/darwin_amd64/link
@@ -572,7 +573,6 @@ mock 的大致原理是，在编译阶段去确定要调用的对象在 runtime 
 对于接口 interface 的 mock，我们通过 gomock or mocker 库来帮我们自动生成符合接口的类并产生对应的文件，然后需要通过 gomock or mocker 约定的 API 就能够对 interface 中的函数按我们自己所需要的方式来模拟。
 
 这样，runtime 运行时其实就可以指向 mock 的 interface 实现来满足我们的单测诉求。
-
 
 ## （三）stub VS mock
 stub 和 mock 是两种单测中最常见的替身手段，它们都能够用来替换要测试的对象，从而实现对一些复杂依赖的隔离，但是它们在实现和关注点上又有所区别。参考《从头到脚说单测——谈有效的单元测试》一文和 difference-between-stub-and-mock 一文，mock 这里其实是包含了 stub，stub 可以理解为 mock 的子集，mock 更强大一些。如果我们发现自己的代码里面不能使用 mock 必须使用 stub，就是代码设计上肯定有问题，应该及时为'可测试性'做出调整。
@@ -595,7 +595,7 @@ Mock：模拟的方式。在测试用例中创建一个结构体，用例满足�
 Go 官方有一个 `github.com/golang/mock/gomock` 和 `https://github.com/travisjeffery/mocker`，但是只能模拟 interface 方法，这就要求我们业务编写代码的时候具有非常好的接口设计，这样才能顺利生成 mock 代码。
 
 # 五、http 测试
-## （一）go标准库`net/http/httptest`
+## （一）go 标准库 `net/http/httptest`
 
 # 六、数据库测试
 
@@ -655,17 +655,17 @@ Usage: wrk <options> <url>
   Numeric arguments may include a SI unit (1k, 1M, 1G)
   Time arguments may include a time unit (2s, 2m, 2h)
   
-  使用方法: wrk <选项> <被测HTTP服务的URL>                            
+  使用方法: wrk <选项> <被测 HTTP 服务的 URL>                            
   Options:                                            
-    -c, --connections <N>  跟服务器建立并保持的TCP连接数量  
+    -c, --connections <N>  跟服务器建立并保持的 TCP 连接数量  
     -d, --duration    <T>  压测时间           
     -t, --threads     <N>  使用多少个线程进行压测   
                                                       
-    -s, --script      <S>  指定Lua脚本路径       
-    -H, --header      <H>  为每一个HTTP请求添加HTTP头      
+    -s, --script      <S>  指定 Lua 脚本路径       
+    -H, --header      <H>  为每一个 HTTP 请求添加 HTTP 头      
         --latency          在压测结束后，打印延迟统计信息   
         --timeout     <T>  超时时间     
-    -v, --version          打印正在使用的wrk的详细版本信息
+    -v, --version          打印正在使用的 wrk 的详细版本信息
                                                       
   <N>代表数字参数，支持国际单位 (1k, 1M, 1G)
   <T>代表时间参数，支持时间单位 (2s, 2m, 2h)
@@ -677,8 +677,8 @@ PS: 关于线程数，并不是设置的越大，压测效果越好，线程设�
 
 ### （三）结果说明
 ```
-Running 30s test @ http://www.baidu.com （压测时间30s）
-  12 threads and 400 connections （共12个测试线程，400个连接）
+Running 30s test @ http://www.baidu.com （压测时间 30s）
+  12 threads and 400 connections （共 12 个测试线程，400 个连接）
               （平均值） （标准差）  （最大值）（正负一个标准差所占比例）
   Thread Stats   Avg      Stdev     Max   +/- Stdev
     （延迟）
@@ -690,14 +690,14 @@ Running 30s test @ http://www.baidu.com （压测时间30s）
      75%  520.60ms
      90%  955.08ms
      99%    1.93s 
-  4922 requests in 30.06s, 73.86MB read (30.06s内处理了4922个请求，耗费流量73.86MB)
+  4922 requests in 30.06s, 73.86MB read (30.06s 内处理了 4922 个请求，耗费流量 73.86MB)
   Socket errors: connect 0, read 0, write 0, timeout 311 (发生错误数)
-Requests/sec:    163.76 (QPS 163.76,即平均每秒处理请求数为163.76)
-Transfer/sec:      2.46MB (平均每秒流量2.46MB)
+Requests/sec:    163.76 (QPS 163.76,即平均每秒处理请求数为 163.76)
+Transfer/sec:      2.46MB (平均每秒流量 2.46MB)
 ```
 
-### （四）关于使用lua 脚本
-#### 1. lua版本
+### （四）关于使用 lua 脚本
+#### 1. lua 版本
 
 wrk 默认使用的是 lua 5.1 版本，不过当前版本（2023-10-31）已经到了：lua-5.4.6.tar.gz
 ```
@@ -710,31 +710,149 @@ make all test
 
 ```
 
-#### 2. lua插件管理luarocks
+#### 2. lua 插件管理 luarocks
+
+1）Ubuntu中安装：
 ```
-$ wget https://luarocks.org/releases/luarocks-3.9.2.tar.gz
-$ tar zxpf luarocks-3.9.2.tar.gz
-$ cd luarocks-3.9.2
-$ ./configure && make && sudo make install
+sudo apt-get install luarocks
+```
 
-# 通过 luarocks 安装 luasocket 模块，模块名为：socket
-$ sudo luarocks install luasocket
+2）在CentOS中安装LuaRocks的命令为：
+```
+sudo yum install luarocks
+```
 
-# 测试"socket"模块是否能成功引入
-# luarocks install luasocket 可能安装成功了，但是lua 脚本找不到 socket 模块，所以会报错。
-#     解决：1.这是确定socket安装的时候安装的路径(~/prince.lee/luarocks-3.9.2/lua_modules/lib/5.1)；
-#            2. 创建软连接到报错时会查找路径（/usr/local/lib/lua）下：sudo ln -s ~/prince.lee/luarocks-3.9.2/lua_modules/lib/5.1 /usr/local/lib/5.1
+安装LuaRocks后，你就可以使用它来安装cjson模块了。
+
+3）源码安装
+> 如：Alpine Linux 3.8（Kernel）
+
+如果你的环境中不能安装LuaRocks，你也可以尝试从源代码编译cjson。首先，从cjson的GitHub仓库下载源代码，然后按照README文件中的指示进行编译和安装。
+请注意，编译cjson可能需要一些依赖库，如gcc和make。如果你的环境中没有这些库，你需要先安装它们。
+```
+wget --no-check-certificate https://luarocks.org/releases/luarocks-3.9.2.tar.gz
+tar zxpf luarocks-3.9.2.tar.gz
+cd luarocks-3.9.2
+./configure
+make && make install
+```
+
+a. 报错：certificate has expired
+```
+/data/wrk # wget https://luarocks.org/releases/luarocks-3.9.2.tar.gz
+Connecting to luarocks.org (45.33.61.132:443)
+ssl_client: luarocks.org: certificate verification failed: certificate has expired
+```
+解决：
+```
+wget --no-check-certificate https://luarocks.org/releases/luarocks-3.9.2.tar.gz
+```
+
+b. 执行 `./configure` 报错：Lua interpreter not found in $PATH
+原环境中并没有：lua 环境
+
+解决：
+```
+# 更新你的包列表
+apk update
+
+# 然后，安装必要的依赖：
+apk add lua5.1 lua5.1-dev gcc make libc-dev
+
+apk add lua5.4 lua5.4-dev gcc make libc-dev
+```
+
+
+c. 执行 `apk update` 报错：ERROR: http://dl-cdn.alpinelinux.org/alpine/v3.8/main: Bad file descriptor
+解决：更换源
+```
+mv /etc/apk/repositories /etc/apk/repositories.bak
+vi /etc/apk/repositories
+```
+注释掉
+```text
+http://dl-cdn.alpinelinux.org/alpine/v3.8/main
+http://dl-cdn.alpinelinux.org/alpine/v3.8/community
+```
+添加阿里云镜像
+```
+# http://dl-cdn.alpinelinux.org/alpine/v3.8/main
+# http://dl-cdn.alpinelinux.org/alpine/v3.8/community
+
+http://mirrors.aliyun.com/alpine/v3.8/main
+http://mirrors.aliyun.com/alpine/v3.8/community
+```
+
+
+d. 执行 `apk update` 报错：WARNING: Ignoring APKINDEX.e3d33561.tar.gz: Bad file descriptor
+```
+# 如果路径存在，则清除缓存
+rm -rf /var/cache/apk/*
+
+# 如果路径不存在则创建
+mkdir -p /var/cache/apk/
+
+再次尝试执行apk update命令
+```
+如果还有问题，直接使用 `--no-cache` 选项来执行 `apk update` 命令。这个选项会让 apk 直接从软件源下载软件包，而不使用缓存：
+```
+apk --no-cache update
+
+# 最后在执行一次
+apk update
+```
+
+#### 3. 通过 luarocks 安装 luasocket 模块，模块名为：`socket`
+```
+sudo luarocks install luasocket
+```
+
+测试 `socket` 模块是否能成功引入
+```
 $ lua
 Lua 5.1.1 Copyright (C) 1994-2018 Lua.org, PUC-Rio
 > require "socket"
 ```
 
-### （五）windows使用wrk
-#### 1. 问题
-wrk支持mac和linux，不支持windows
+luarocks install luasocket 可能安装成功了，但是 lua 脚本找不到 socket 模块，所以会报错。
+解决：
+1. 这是确定 socket 安装的时候安装的路径(~/prince.lee/luarocks-3.9.2/lua_modules/lib/5.1)；
+2. 创建软连接到报错时会查找路径（/usr/local/lib/lua）下：sudo ln -s ~/prince.lee/luarocks-3.9.2/lua_modules/lib/5.1 /usr/local/lib/5.1
 
-### 2. 解决与使用
-使用docker
+
+#### 4. 通过 luarocks 安装 luasocket 模块，模块名为：`cjson`
+cjson 是一个用于 Lua 的快速 JSON 编码/解码库。
+
+你可以通过 LuaRocks（Lua的包管理器）来安装 cjson 模块。在命令行中输入以下命令：
+```
+luarocks install lua-cjson
+```
+
+报错：
+```
+/usr/local/luarocks-3.9.2 # luarocks install lua-cjson
+Warning: Failed searching manifest: Failed downloading https://luarocks.org/manifest-5.1 - failed downloading https://luarocks.org/manifest-5.1
+Warning: Failed searching manifest: Failed downloading https://raw.githubusercontent.com/rocks-moonscript-org/moonrocks-mirror/master/manifest-5.1 - failed downloading https://raw.githubusercontent.com/rocks-moonscript-org/moonrocks-mirror/master/manifest-5.1
+Warning: Failed searching manifest: Failed downloading https://luafr.org/luarocks/manifest-5.1 - failed downloading https://luafr.org/luarocks/manifest-5.1
+
+Error: No results matching query were found for Lua 5.1.
+To check if it is available for other Lua versions, use --check-lua-versions.
+```
+解决：
+> 参考链接：https://github.com/luarocks/luarocks/issues/952
+```
+# 就是这么神奇，因为 wget 实际上我上面已经使用过了，不过问题的发生实际上是跟 wget 的版本有关系的
+apk add wget
+```
+
+
+
+### （五）windows 使用 wrk
+#### 1. 问题
+wrk 支持 mac 和 linux，不支持 windows
+
+解决与使用
+使用 docker
 
 拉取镜像:该镜像为一次性镜像，无法挂起，容器运行即停。
 
@@ -748,8 +866,22 @@ docker pull williamyeh/wrk
 docker run -e MYSQL_ROOT_PASSWORD=xxx --rm -v `pwd`:/data williamyeh/wrk -c 300 -t 2 -d 5 http://localhost:19999/ping
 ```
 
-### （六）linux 中的应用
-> ./benchmark/wrk/*
+#### 使用构建好的镜像
+Dockerfile 文件：Dockerfile-wrk
+重新构建好的并发布的镜像：leeprince/wrk
+
+运行容器
+```
+docker run -d -v .\performancetest\:/data --name wrk leeprince/wrk
+```
+
+进入容器
+```
+docker exec -it wrk bash
+```
+
+### （六）wrk 测试文件
+> ./performancetest/wrk/*
 
 
 

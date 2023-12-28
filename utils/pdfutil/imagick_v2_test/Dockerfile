@@ -2,7 +2,7 @@ FROM golang:1.19
 
 WORKDIR /www
 
-VOLUME ["www"]
+VOLUME ["/www"]
 
 EXPOSE 80
 

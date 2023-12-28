@@ -53,6 +53,8 @@ func PerformanceTest() {
 	wg := sync.WaitGroup{}
 
 	vips.LoggingSettings(myLogger, vips.LogLevelError)
+
+	// 生产环境：务必在程序初始化时一起完成一次性初始化（加载各种Golang 的 C API 库）！无需每次请求都初始化，否则性能收到严重的影响
 	vips.Startup(&vips.Config{
 		ConcurrencyLevel: maxI,
 		MaxCacheFiles:    0,
@@ -137,6 +139,8 @@ func CustomerPdfToImagesByGovipsOfPerformanceTest() {
 
 func CustomerPdfToImagesByGovipsOfFunction() {
 	vips.LoggingSettings(myLogger, vips.LogLevelError)
+
+	// 生产环境：务必在程序初始化时一起完成一次性初始化（加载各种Golang 的 C API 库）！无需每次请求都初始化，否则性能收到严重的影响
 	vips.Startup(nil)
 	defer vips.Shutdown()
 
