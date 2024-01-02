@@ -624,6 +624,11 @@ apt-get update
 apt-get -q -y install fonts-arphic-uming fonts-arphic-ukai fonts-noto-cjk  --no-install-recommends
 ```
 
+### （五）金额模糊不清，小数点偏移
+原因：跟安装的字体包为 `fonts-arphic-uming` 有关
+
+尝试：因为他能解决中文乱码和空白的问题，更换了很多语言包无效，暂时未找到可替代的语言包
+解决方法：使用 "github.com/davidbyttow/govips/v2/vips" 库和个人的环境及测试代码可以完美解决
 
 
 #### CGO_ENABLED 参数说明
@@ -980,8 +985,6 @@ apt-get -q -y install fonts-arphic-uming fonts-arphic-ukai fonts-noto-cjk  --no-
 > - fonts-noto-cjk: Noto 字体系列，包括中文、日文、韩文等各种语言的字体。
 > - fonts-arphic-ukai: AR PL UKai 中文字体。
 > - fonts-arphic-uming: AR PL UMing 中文字体。
-
-
 
 ## 三、测试代码
 

@@ -18,7 +18,7 @@ ENV LIBVIPS_DIR_PREFIX=/etc/vips
 
 RUN wget https://github.com/libvips/libvips/archive/refs/tags/v${LIBVIPS_VERSION}.tar.gz
 
-RUN apt-get -q -y  install meson
+RUN apt-get -q -y  install meson --no-install-recommends
 
 RUN tar -xvzf v${LIBVIPS_VERSION}.tar.gz && \
     cd libvips* && \
@@ -28,11 +28,13 @@ RUN tar -xvzf v${LIBVIPS_VERSION}.tar.gz && \
     ninja test && \
     ninja install
 
-apt-get -q -y  install fonts-arphic-uming fonts-arphic-ukai fonts-noto-cjk  --no-install-recommends
+RUN apt-get -q -y  install fonts-arphic-uming fonts-arphic-ukai fonts-noto-cjk --no-install-recommends
+
+RUN go env -w GOPROXY=https://goproxy.cn,direct
 
 WORKDIR /www
 
-VOLUME ["www"]
+VOLUME ["/www"]
 
 EXPOSE 80
 

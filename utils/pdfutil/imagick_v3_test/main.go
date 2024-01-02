@@ -71,6 +71,7 @@ func CustomerPdfToImagesByImagickV3OfFunction() {
 	//fileBytes, err := ReadFileBytesByUrl("https://kpserverdev-1251506165.cos.ap-shanghai.myqcloud.com/e-document-import-ctl/test/0001.pdf")
 	//fileBytes, err := ReadFileBytesByUrl("https://kpserverprod-1251506165.cos.ap-shanghai.myqcloud.com/invoice/jammy/dependency/client_ofd.pdf")
 	//fileBytes, err := ReadFileBytesByUrl("https://upload.fapiaoer.cn/e-document-import-ctl/prod/8/2023-12-27/57fc7886181b60bc_032002200611_00051075_5211b88a24f23d4029d5b34e7a2e2d53.pdf")
+	//fileBytes, err := ReadFileBytesByUrl("https://kpserverdev-1251506165.cos.ap-shanghai.myqcloud.com/wbx/upload/FUDkFLyvTdIm4756248423cba0c700f297f15b68189d_20201844_1703840311697903.pdf") //
 	//fileBytes, err := ReadFile(".", "0001.pdf")
 
 	// pdf和图片组成的pdf
@@ -79,10 +80,11 @@ func CustomerPdfToImagesByImagickV3OfFunction() {
 
 	// 读取出是乱码
 	// 解决：apt-get -q -y install fonts-arphic-uming fonts-arphic-ukai fonts-noto-cjk  --no-install-recommends
-	fileBytes, err := ReadFile(".", "empty.pdf")
-
-	// 读取出是乱码
+	//fileBytes, err := ReadFile(".", "empty.pdf")
 	//fileBytes, err := ReadFile(".", "einvoice.pdf")
+
+	// 不清晰：金额不清晰，小数点偏移
+	fileBytes, err := ReadFile(".", "prod.pdf")
 
 	// 多页pdf：默认读取第一页
 	//fileBytes, err := ReadFileBytesByUrl("https://kpserverdev-1251506165.cos.ap-shanghai.myqcloud.com/wbx/upload/OQgorPo0MckWeb374dae2b7e56f9ccb9a6ea1ad0d276_20201844_1703557617396552.pdf")
@@ -106,7 +108,7 @@ func CustomerPdfToImagesByImagickV3OfFunction() {
 	mw := imagick.NewMagickWand()
 	defer mw.Destroy()
 
-	// 设置分辨率
+	// 设置分辨率（必须在 ReadImageBlob() 前）
 	err = mw.SetResolution(100, 100)
 	if err != nil {
 		fmt.Println("SetResolution err:", err)
@@ -119,6 +121,31 @@ func CustomerPdfToImagesByImagickV3OfFunction() {
 		return
 	}
 
+	// 对图片进行锐化处理
+	/*err = mw.AdaptiveSharpenImage(0, 1)
+	if err != nil {
+		fmt.Println("AdaptiveSharpenImage err:", err)
+		return
+	}*/
+
+	if toImageType == "jpg" {
+		toImageType = "jpeg"
+	}
+
+	// 想着放大图片解决模糊
+	width := mw.GetImageWidth()
+	height := mw.GetImageHeight()
+	// Calculate half the size
+	hWidth := uint(width * 2)
+	hHeight := uint(height * 2)
+	// Resize the image using the Lanczos filter
+	// The blur factor is a float, where > 1 is blurry, < 1 is sharp
+	err = mw.ResizeImage(hWidth, hHeight, imagick.FILTER_LANCZOS)
+	if err != nil {
+		fmt.Println("ResizeImage failed：", err)
+		return
+	}
+
 	// 设置图像分辨率：导入的文件应该是图片类型时才生效。即pdf转图片的场景下：该参数无效
 	/*err = mw.SetImageResolution(100, 100)
 	if err != nil {
@@ -126,27 +153,12 @@ func CustomerPdfToImagesByImagickV3OfFunction() {
 		return
 	}*/
 
-	// 设置图像压缩质量。
-	//mw.SetImageCompressionQuality(100)
-
-	if toImageType == "jpg" {
-		toImageType = "jpeg"
-	}
-
-	/*width := mw.GetImageWidth()
-	height := mw.GetImageHeight()
-
-	// Calculate half the size
-	hWidth := uint(width * 2)
-	hHeight := uint(height * 2)
-
-	// Resize the image using the Lanczos filter
-	// The blur factor is a float, where > 1 is blurry, < 1 is sharp
-	err = mw.ResizeImage(hWidth, hHeight, imagick.FILTER_LANCZOS)
+	// 设置图像压缩质量
+	err = mw.SetImageCompressionQuality(95)
 	if err != nil {
-		fmt.Println("ResizeImage failed：", err)
+		fmt.Println("SetImageCompressionQuality err:", err)
 		return
-	}*/
+	}
 
 	/*iterations := mw.GetImageIterations()
 	fmt.Println("GetImageIterations", iterations)*/
@@ -365,78 +377,6 @@ func CustomerPdfToImagesByImagickV3OfPerformanceTest() {
 	//fmt.Println("imageBase64:", imageBase64)
 
 	fmt.Println("successful, filepath:", filePath)
-}
-
-func CreateImage(data []byte, toImageType string) ([]byte, bool) {
-	//func CreateImage(data []byte, toImageType string, coverFilePath string) ([]byte, bool) {
-
-	// 使用的时候都放到外面去初始化了
-	/*
-		imagick.Initialize()
-		// Schedule cleanup
-		defer imagick.Terminate()
-	*/
-	var err error
-
-	//sourceImagePath := getSourceImageForCover(filepath.Dir(pathNoExtension))
-	mw := imagick.NewMagickWand()
-	//defer clearImagickWand(mw)
-
-	//mw.SetResolution(192, 192)
-	//mw.SetResolution(350, 350)
-	//mw.SetImageResolution(350, 350)
-	//mw.SetImageCompressionQuality(100)
-
-	err = mw.ReadImageBlob(data)
-	if err != nil {
-		fmt.Println("ReadImageBlob err:", err)
-		return nil, false
-	}
-
-	if toImageType == "jpg" {
-		toImageType = "jpeg"
-	}
-
-	/*
-		width := mw.GetImageWidth()
-		height := mw.GetImageHeight()
-
-		// Calculate half the size
-		hWidth := uint(width * 2)
-		hHeight := uint(height * 2)
-
-		// Resize the image using the Lanczos filter
-		// The blur factor is a float, where > 1 is blurry, < 1 is sharp
-		err = mw.ResizeImage(hWidth, hHeight, imagick.FILTER_LANCZOS, 1)
-		if err != nil {
-			log.ErrorS(seq, "ResizeImage failed[%v]", err)
-			return nil, false
-		}*/
-
-	//length := mw.GetImageIterations()
-	//fmt.Println("length", length)
-	//fmt.Println("width", mw.GetImageWidth())
-	//fmt.Println("height", mw.GetImageHeight())
-
-	//pix := imagick.NewPixelWand()
-	//pix.SetColor("white")
-	//mw.SetBackgroundColor(pix)
-
-	//mw.GetImageDepth()
-	//mw.SetImageDepth(16)
-
-	mw.SetImageAlphaChannel(imagick.ALPHA_CHANNEL_REMOVE)
-	mw.SetImageFormat(toImageType)
-
-	/*err = mw.WriteImage(coverFilePath)
-	if err != nil {
-		fmt.Println("WriteImage failed:", err)
-		return nil, false
-	}*/
-
-	content := mw.GetImageBlob()
-
-	return content, true
 }
 
 func clearImagickWand(mw *imagick.MagickWand) {
