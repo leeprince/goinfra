@@ -32,10 +32,10 @@ func main() {
 
 	// 自定义pdf转图片
 	// 功能验证
-	Function()
+	//Function()
 
 	// 性能测试
-	//PerformanceTest()
+	PerformanceTest()
 }
 
 // 功能验证
@@ -107,34 +107,73 @@ func myLogger(messageDomain string, verbosity vips.LogLevel, message string) {
 }
 
 func CustomerPdfToImagesByGovipsOfPerformanceTest() {
-	// 压力测试的时候，都放到外面去初始化了
-	/*
-		vips.LoggingSettings(myLogger, vips.LogLevelError)
-		vips.Startup(nil)
-		defer vips.Shutdown()
-	*/
+	//image1, err := vips.NewImageFromFile("0001.pdf")
 
-	image1, err := vips.NewImageFromFile("0001.pdf")
+	// pdf和图片组成的pdf
 	//image1, err := vips.NewImageFromFile("0001-more-page.pdf")
 	//image1, err := vips.NewImageFromFile("0001-more-page-01.pdf")
+
+	// 多页pdf
+	//image1, err := vips.NewImageFromFile("more.pdf")
+
+	// 不清晰：金额不清晰，字体不清晰
+	//image1, err := vips.NewImageFromFile("prod.pdf")
+
+	/*
+		ImportParams 结构体中的各个参数的作用如下：
+		    AutoRotate：这是一个布尔参数，如果设置为 true，那么在加载图像时，govips 将会自动根据图像的 EXIF 数据进行旋转，以确保图像的方向正确。
+		    FailOnError：这是一个布尔参数，如果设置为 true，那么在加载图像时，如果遇到任何错误，govips 将会立即停止加载并返回错误。如果设置为 false，那么在遇到错误时，govips 将会尽可能地加载图像。
+		    Page：这是一个整数参数，用于指定要加载的 PDF 或多页 TIFF 文件的页码。页码从 0 开始计数。
+		    NumPages：这是一个整数参数，用于指定要加载的 PDF 或多页 TIFF 文件的页数。
+		    Density：这是一个整数参数，用于指定加载 PDF 文件时的 DPI（每英寸点数）。DPI 越高，转换后的图像质量越好。
+		    JpegShrinkFactor这是一个整数参数，用于指定加载 JPEG 文件时的缩小因子。例如，如果设置为 2，那么加载的 JPEG 图像的大小将会是原始大小的一半。
+		    HeifThumbnail：这是一个布尔参数，如果设置为 true，那么在加载 HEIF 文件时，govips 将会尝试加载缩略图，而不是完整的图像。
+		    SvgUnlimited：这是一个布尔参数，如果设置为 true，那么在加载 SVG 文件时，govips 将不会限制 SVG 的大小。如果设置为 false，那么 SVG 的大小将会被限制在 10,000 x 10,000 像素以内。
+		以上就是 ImportParams 结构体中各个参数的作用。希望这个解释对你有所帮助。
+	*/
+	importParams := vips.NewImportParams()
+	// 解决：金额不清晰，字体不清晰的问题
+	importParams.Density.Set(100)
+	image1, err := vips.LoadImageFromFile("prod.pdf", importParams)
 	checkError(err)
+
+	// 图片放大：尝试解决金额不清晰，字体不清晰的问题，但是失败了。最终的解决办法是`importParams.Density.Set(100)`
+	err = image1.Resize(1.5, vips.KernelLanczos3)
+	checkError(err)
+
+	// 锐化图片：锐化图片是一种图像处理技术，主要用于增强图像的细节，使图像看起来更清晰。它的主要作用是提高图像的对比度，尤其是在图像的边缘和颜色变化的地方。
+	/*Sigma：这个参数控制锐化的强度。值越大，锐化效果越强。通常，这个值需要根据图像的具体情况和需求进行调整。
+	X1：这个参数控制锐化的阈值。只有当像素的亮度差异超过这个阈值时，才会进行锐化。这可以防止对图像的平滑区域进行过度的锐化。
+	M2：这个参数控制锐化的最大亮度增加量。这可以防止对图像的亮部进行过度的锐化。*/
+	/*err = image1.Sharpen(5.0, 1.0, 1.0)
+	checkError(err)*/
 
 	// 完整示例
-	// Rotate the picture upright and reset EXIF orientation tag
-	_, _, err = image1.ExportNative()
-	checkError(err)
+	// 简单快速生成
+	/*// Rotate the picture upright and reset EXIF orientation tag
+	image1bytes, _, err := image1.ExportNative()
+	checkError(err)*/
 
-	// 压力测试，暂时先不用保存图片到本地
-	/*dirPath := "."
-	fileName := fmt.Sprintf("pdf_to_jpg_%d.jpg", time.Now().UnixMicro())
-	filePath := filepath.Join(dirPath, fileName)
-	ok, err := WriteFile(dirPath, filePath, image1bytes, false)
-	if !ok {
-		fmt.Println("fileutil.WriteFile !ok")
-		return
-	}
-	checkError(err)
-	fmt.Println("successful, filepath:", filePath)*/
+	ep := vips.NewJpegExportParams()
+	ep.StripMetadata = true
+	ep.Quality = 85
+	ep.Interlace = true
+	ep.OptimizeCoding = true
+	ep.SubsampleMode = vips.VipsForeignSubsampleAuto
+	ep.TrellisQuant = true
+	ep.OvershootDeringing = true
+	ep.OptimizeScans = true
+	ep.QuantTable = 5
+	_, _, err = image1.ExportJpeg(ep)
+
+	/*ep := vips.NewPngExportParams()
+	ep.StripMetadata = true
+	ep.Compression = 0
+	ep.Filter = vips.PngFilterAll
+	ep.Quality = 95
+	ep.Interlace = false
+	ep.Palette = false
+	image1bytes, _, err := image1.ExportPng(ep)*/
 }
 
 func CustomerPdfToImagesByGovipsOfFunction() {
