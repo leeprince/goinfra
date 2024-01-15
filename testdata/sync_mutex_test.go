@@ -17,7 +17,7 @@ func TestSyncMutex(t *testing.T) {
 	var syncMutex sync.Mutex
 
 	syncMutex.Lock()
-	fmt.Println("1 Lock")
+	fmt.Println("1 TryLock")
 	syncMutex.Unlock()
 	fmt.Println("1 Unlock")
 
@@ -25,7 +25,7 @@ func TestSyncMutex(t *testing.T) {
 	go func() {
 		time.Sleep(time.Second * 1)
 		syncMutex.Lock()
-		fmt.Println("2 Lock")
+		fmt.Println("2 TryLock")
 	}()
 	go func() {
 		syncMutex.Unlock()
@@ -39,14 +39,14 @@ func TestSyncMutexUnlock(t *testing.T) {
 	var syncMutexUnlock sync.Mutex
 
 	syncMutexUnlock.Lock()
-	fmt.Println("1 Lock")
+	fmt.Println("1 TryLock")
 	syncMutexUnlock.Unlock()
 	fmt.Println("1 Unlock")
 
 	syncMutexUnlock.Unlock()
 	fmt.Println("1 Unlock")
 	syncMutexUnlock.Lock()
-	fmt.Println("1 Lock")
+	fmt.Println("1 TryLock")
 
 }
 
@@ -54,7 +54,7 @@ func TestSyncMutexTimeout(t *testing.T) {
 	var mutex sync.Mutex
 
 	mutex.Lock()
-	fmt.Println("1 Lock")
+	fmt.Println("1 TryLock")
 
 	isUnLockSyncMutexTimeout := false
 	go func() {
@@ -116,7 +116,7 @@ func SyncMutexTimeoutChannel1(i int) {
 		mutex.Lock()
 		mutexOfValue = i
 		unlockMutex = false
-		fmt.Println("Lock:", i)
+		fmt.Println("TryLock:", i)
 
 		go func(i int) {
 			select {
@@ -163,7 +163,7 @@ func SyncMutexTimeoutChannel2(i int) {
 	go func(i int) {
 		mutex.Lock()
 		mutexOfValue = i
-		fmt.Println("Lock:", i)
+		fmt.Println("TryLock:", i)
 	}(i)
 
 	go func(i int) {

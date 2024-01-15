@@ -1,4 +1,4 @@
-FROM leeprince/golang1_19:imagick_v3_7.1.1-23_v3
+FROM leeprince/golang1_19:imagick_v3_7.1.1-23
 
 ARG CGO=1
 ENV CGO_ENABLED=${CGO}

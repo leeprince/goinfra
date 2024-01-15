@@ -48,7 +48,7 @@ func TagString(ctx context.Context, k string, v string) {
 // 添加事件：在 Jaeger UI 中对应 Logs
 //      官方示例：
 //          span.AddEvent("Acquiring lock")
-//          mutex.Lock()
+//          mutex.TryLock()
 //          span.AddEvent("Got lock, doing work...")
 //          // do stuff
 //          span.AddEvent("Unlocking")

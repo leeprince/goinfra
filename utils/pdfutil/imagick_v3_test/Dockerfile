@@ -11,6 +11,10 @@ RUN apt-get update && \
 RUN apt-get -q -y install libjpeg-dev libpng-dev libtiff-dev \
     libgif-dev libx11-dev ghostscript --no-install-recommends
 
+# pdf 生成的图片有乱码或者存在空白
+# 发现加上 fonts-arphic-uming 依赖之后会影响处理小数点的问题，会出现小数点模糊和偏移的情况
+RUN apt-get -q -y install fonts-arphic-uming fonts-arphic-ukai fonts-noto-cjk --no-install-recommends
+
 ENV IMAGEMAGICK_VERSION=7.1.1-23
 
 RUN set -ex && \

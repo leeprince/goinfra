@@ -77,47 +77,47 @@ func (l *TryLock) Lock(key string, value interface{}, expirtime time.Duration) b
 	lock, err := l.client.Lock(l.ctx, key, value, expirtime)
 	if lock && err == nil {
 		if debug {
-			fmt.Println("[TryLock@Lock] Suucessfuly")
+			fmt.Println("[TryLock@TryLock] Suucessfuly")
 		}
 		return true
 	}
-	
+
 	if debug {
-		fmt.Println("[TryLock@Lock] false continue")
+		fmt.Println("[TryLock@TryLock] false continue")
 	}
-	
+
 	if l.timeOut <= l.tickerTime {
 		if debug {
-			fmt.Println("[TryLock@Lock] l.timeOut <= l.tickerTime false and continue end")
+			fmt.Println("[TryLock@TryLock] l.timeOut <= l.tickerTime false and continue end")
 		}
 		return false
 	}
-	
+
 	ticker := time.NewTicker(l.tickerTime)
 	timeoutAfter := time.After(l.timeOut)
 	for {
 		select {
 		case <-timeoutAfter:
 			if debug {
-				fmt.Println("[TryLock@Lock] <-time.After(l.timeOut) false. l.timeOut:", l.timeOut)
+				fmt.Println("[TryLock@TryLock] <-time.After(l.timeOut) false. l.timeOut:", l.timeOut)
 			}
 			return false
 		case <-ticker.C:
 			lock, err = l.client.Lock(l.ctx, key, value, expirtime)
 			if err != nil {
 				if debug {
-					fmt.Println("[TryLock@Lock] <-ticker.C err false. err:", err)
+					fmt.Println("[TryLock@TryLock] <-ticker.C err false. err:", err)
 				}
 				return false
 			}
 			if !lock {
 				if debug {
-					fmt.Println("[TryLock@Lock] <-ticker.C !lock continue")
+					fmt.Println("[TryLock@TryLock] <-ticker.C !lock continue")
 				}
 				continue
 			}
 			if debug {
-				fmt.Println("[TryLock@Lock] <-ticker.C Suucessfuly ")
+				fmt.Println("[TryLock@TryLock] <-ticker.C Suucessfuly ")
 			}
 			return true
 		}

@@ -48,6 +48,7 @@ func main() {
 }
 
 func CreateImage(data []byte, toImageType string) ([]byte, bool) {
+	// 生产环境：务必在程序初始化时一起完成一次性初始化（加载各种Golang 的 C API 库）！无需每次请求都初始化，否则性能收到严重的影响
 	imagick.Initialize()
 	// Schedule cleanup
 	defer imagick.Terminate()
@@ -56,7 +57,7 @@ func CreateImage(data []byte, toImageType string) ([]byte, bool) {
 	//sourceImagePath := getSourceImageForCover(filepath.Dir(pathNoExtension))
 	mw := imagick.NewMagickWand()
 	// 单次统一使用：defer imagick.Terminate()，而不使用：defer clearImagickWand(mw)
-	//defer clearImagickWand(mw)
+	defer clearImagickWand(mw)
 
 	mw.SetResolution(192, 192)
 	//mw.SetResolution(350, 350)

@@ -1,0 +1,9 @@
+FROM williamyeh/wrk
+
+ENV MYSQL_ROOT_PASSWORD=tmp
+
+# williamyeh/wrk
+# 默认的工作目录：WORKDIR /data
+# 默认的挂载目录：VOLUME ["/data"]
+
+ENTRYPOINT ["tail", "-f", "/dev/null"]
