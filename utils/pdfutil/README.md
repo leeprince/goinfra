@@ -1061,7 +1061,7 @@ go run main.go
 
 ## 功能测试（一次性功能测试）
 - 在生成速度、生成质量、占用空间上 govips_v2 更优！
-- 多页PDF时，imagick_v3 处理最后一页；govips_v2 处理第一页
+- 多页PDF时，默认imagick_v3 处理最后一页（可以设置）；govips_v2 默认处理第一页
 - imagick_v3 的优势是很灵活，方便自定义一些属性！
 
 
@@ -1145,7 +1145,10 @@ cost mill time: 452ms ||| cost mill time: 661ms
 cost mill time: 452ms ||| cost mill time: 662ms
 ```
 
+
+
 #### 总结
+
 无并发情况下，govips_v2 的性能更优，
 并发在4个左右
 小于4个：govips_v2 的性能更优
