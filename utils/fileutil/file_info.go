@@ -1,6 +1,7 @@
 package fileutil
 
 import (
+	"net/url"
 	"path/filepath"
 	"strings"
 )
@@ -42,4 +43,13 @@ func GetFileInfoByUrl(url string) (info FileInfoOfUrl) {
 		Ext:      ext,
 	}
 	return
+}
+
+// 获取URL 的文件路径和名称："https://xx-1251506165.cos.ap-shanghai.myqcloud.com/e-document-import-ctl/test/0001.pdf 结果是：e-document-import-ctl/test/0001.pdf
+func GetPathAndName(fileURL string) (string, error) {
+	u, err := url.Parse(fileURL)
+	if err != nil {
+		return "", err
+	}
+	return u.Path[1:], nil // 去掉路径前面的"/"
 }

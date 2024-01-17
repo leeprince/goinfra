@@ -219,3 +219,40 @@ func TestToCurrDayTimeByUnix(t *testing.T) {
 		})
 	}
 }
+
+func TestToDateTimeByStr(t *testing.T) {
+	type args struct {
+		timeStr    string
+		timeLayout string
+	}
+	tests := []struct {
+		name          string
+		args          args
+		wantStartTime time.Time
+		wantEndTime   time.Time
+		wantErr       bool
+	}{
+		{
+			name: "",
+			args: args{
+				timeStr:    "2024-01-10 18:07:01",
+				timeLayout: consts.TimeYYmdHis,
+			},
+			wantStartTime: time.Time{},
+			wantEndTime:   time.Time{},
+			wantErr:       false,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			gotStartTime, gotEndTime, err := ToDateTimeByStr(tt.args.timeStr, tt.args.timeLayout)
+			if err != nil {
+				fmt.Println("err:", err)
+				return
+			}
+			fmt.Println("gotStartTime:", gotStartTime.Format(consts.TimeYYmdHis))
+			fmt.Println("gotEndTime:", gotEndTime.Format(consts.TimeYYmdHis))
+
+		})
+	}
+}

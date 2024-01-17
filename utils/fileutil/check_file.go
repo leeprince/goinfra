@@ -1,6 +1,10 @@
 package fileutil
 
-import "os"
+import (
+	"os"
+	"path/filepath"
+	"strings"
+)
 
 /**
  * @Author: prince.lee <leeprince@foxmail.com>
@@ -15,11 +19,11 @@ func CheckFileSizeByUrl(url string, byteSize int64) (isLimit bool, err error) {
 	if err != nil {
 		return
 	}
-	
+
 	if fileByteSize > byteSize {
 		return true, nil
 	}
-	
+
 	return false, nil
 }
 
@@ -30,4 +34,33 @@ func CheckFileDirExist(filePath string) (os.FileInfo, bool) {
 		return nil, false
 	}
 	return finfo, true
+}
+
+func GetFileExtName(filePath string) string {
+	ext := filepath.Ext(filePath)
+	return ext
+}
+
+func CheckFileExtName(filePath string, exts []string) bool {
+	ext := GetFileExtName(filePath)
+	for _, i2 := range exts {
+		if i2 == ext {
+			return true
+		}
+	}
+	return false
+}
+
+func inSliceString(v string, dest []string) bool {
+	for _, i2 := range dest {
+		if i2 == v {
+			return true
+		}
+	}
+	return false
+}
+
+func IsPDF(url string) bool {
+	ext := filepath.Ext(url)
+	return strings.EqualFold(ext, ".pdf")
 }

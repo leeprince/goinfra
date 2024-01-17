@@ -56,6 +56,19 @@ func ToCurrDayTimeByUnix(unixTime int64) (startTime, endTime time.Time) {
 	return
 }
 
+// 将时间字符串转换为该日期的开始时间&结束时间 time.Time 类型
+func ToDateTimeByStr(timeStr, timeLayout string) (startTime, endTime time.Time, err error) {
+	t, err := ToTime(timeStr, timeLayout)
+	if err != nil {
+		return
+	}
+
+	startTime = time.Date(t.Year(), t.Month(), t.Day(), 0, 0, 0, 0, t.Location())
+	endTime = time.Date(t.Year(), t.Month(), t.Day(), 23, 59, 59, 0, t.Location())
+
+	return
+}
+
 // 计算当前月1日的时间
 func MonthFirthDayTime() time.Time {
 	// 获取当前时间

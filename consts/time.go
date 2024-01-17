@@ -8,6 +8,7 @@ package consts
 
 const (
 	TimeYYmdHis      = "2006-01-02 15:04:05"
+	TimeYYmdTHis     = "2006-01-02T15:04:05"
 	TimeFYmdHisNano  = "2006-01-02 15:04:05.999999999" // 机器原因，基本值都等于"2006-01-02 15:04:05.999999"
 	TimeFYmdHisMicro = "2006-01-02 15:04:05.999999"
 	TimeFYmdHisMill  = "2006-01-02 15:04:05.999"
