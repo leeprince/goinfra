@@ -7,7 +7,9 @@ package config
  */
 
 type Config struct {
-	AI `yaml:"AI"`
+	AI   `yaml:"AI"`
+	COS  `yaml:"COS"`
+	Host `yaml:"FileAccessHost"`
 }
 
 type AI struct {
@@ -16,4 +18,16 @@ type AI struct {
 
 type OpenAIChatGPT struct {
 	SecretKey string `yaml:"SecretKey"`
+}
+
+type COS struct {
+	SecretID  string `yaml:"SecretID"`
+	SecretKey string `yaml:"SecretKey"`
+	Bucket    string `yaml:"Bucket"`
+	AppID     string `yaml:"AppID"`
+	Region    string `yaml:"Region"`
+}
+
+type Host struct {
+	CosFileAccessHost string `yaml:"CosFileAccessHost"`
 }
