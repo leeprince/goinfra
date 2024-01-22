@@ -57,7 +57,7 @@ func DownloadFile(ctx *gin.Context) {
 	// 设置响应头以触发文件下载
 	ctx.Header("Content-Description", "File Transfer")
 	ctx.Header("Content-Transfer-Encoding", "binary")
-	ctx.Header("Content-Disposition", fmt.Sprintf("attachment; filename=%s", filePathName)) // 在这里设置文件名
+	ctx.Header("Content-Disposition", fmt.Sprintf("attachment; filename=\"%s\"", filePathName)) // 在这里设置文件名
 
 	// 将字节流写入响应体
 	ctx.Data(http.StatusOK, "application/octet-stream", data) // 设置内容类型，这里是通用二进制流
