@@ -7,6 +7,7 @@ import (
 	"io"
 	"net/http"
 	"os"
+	"strings"
 )
 
 /**
@@ -21,18 +22,18 @@ func ReadFileBytesByUrl(url string) ([]byte, error) {
 		return nil, err
 	}
 	defer resp.Body.Close()
-
+	
 	if resp.StatusCode != http.StatusOK {
 		err = errors2.Errorf("resp.StatusCode != http.StatusOK")
 		return nil, err
 	}
-
+	
 	contentLength := resp.Header.Get("Content-Length")
 	if contentLength == "0" {
 		err = errors2.Errorf("contentLength == 0")
 		return nil, err
 	}
-
+	
 	fileBytes, err := io.ReadAll(resp.Body)
 	if err != nil {
 		err = errors2.Wrap(err, "ioutil.ReadAll")
@@ -42,7 +43,7 @@ func ReadFileBytesByUrl(url string) ([]byte, error) {
 		err = errors2.Errorf("fileBytes len 0")
 		return nil, err
 	}
-
+	
 	return fileBytes, nil
 }
 
@@ -51,7 +52,7 @@ func GetFileByteSizeByUrl(url string) (byteSize int64, err error) {
 	if err != nil {
 		return
 	}
-
+	
 	return resp.ContentLength, nil
 }
 
@@ -60,7 +61,7 @@ func ReadFileReaderByUrl(url string) (io.Reader, []byte, error) {
 	if err != nil {
 		return nil, nil, err
 	}
-
+	
 	return bytes.NewReader(fileBytes), fileBytes, nil
 }
 
@@ -71,14 +72,14 @@ func WriteFileByIoReader(data io.Reader, fileName string, filePath ...string) (p
 		path = filePath[0]
 	}
 	pathFile = fmt.Sprintf("%s%s", path, fileName) // 本地环境中当前项目是在F:盘中，所以使用根路径/即指向的根路径就是F:盘
-
+	
 	// 创建文件
 	if _, err := os.Stat(pathFile); err != nil {
 		if err = os.MkdirAll(path, 0777); err != nil {
 			return "", err
 		}
 	}
-
+	
 	tmpPathFile, err := os.Create(pathFile)
 	if err != nil {
 		return
@@ -96,7 +97,7 @@ func WriteFileByIoReader(data io.Reader, fileName string, filePath ...string) (p
 		err = errors2.Errorf("io.Copy 0")
 		return
 	}
-
+	
 	return
 }
 
@@ -105,16 +106,26 @@ func SaveLocalFileByIoReader(data io.Reader, fileName string, filePath ...string
 	return WriteFileByIoReader(data, fileName, filePath...)
 }
 
+// filePath 必须包含结束符，不做兼容
 func WriteFileByUrl(url, fileName string, filePath ...string) (pathFile string, err error) {
+	if fileName == "" {
+		fileName = GetFileNameFromURL(url)
+	}
 	readerData, _, err := ReadFileReaderByUrl(url)
 	if err != nil {
 		err = errors2.Wrap(err, "ReadFileReaderByUrl")
 		return
 	}
-
+	
 	return SaveLocalFileByIoReader(readerData, fileName, filePath...)
 }
 
 func SaveLocalFileByUrl(url, fileName string, filePath ...string) (pathFile string, err error) {
 	return WriteFileByUrl(url, fileName, filePath...)
+}
+
+func GetFileNameFromURL(url string) string {
+	// 这是一个简单的函数，用于从URL中获取文件名
+	// 在实际使用中，您可能需要使用更复杂的方法来处理URL中的特殊字符
+	return url[strings.LastIndex(url, "/")+1:]
 }

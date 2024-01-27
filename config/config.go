@@ -10,6 +10,7 @@ type Config struct {
 	AI   `yaml:"AI"`
 	COS  `yaml:"COS"`
 	Host `yaml:"FileAccessHost"`
+	FTP  `yaml:"FTP"`
 }
 
 type AI struct {
@@ -30,4 +31,11 @@ type COS struct {
 
 type Host struct {
 	CosFileAccessHost string `yaml:"CosFileAccessHost"`
+}
+
+type FTP struct {
+	Host     string `yaml:"Host"`
+	Port     string `yaml:"Port"`
+	Username string `yaml:"Username"`
+	Password string `yaml:"Password"`
 }
