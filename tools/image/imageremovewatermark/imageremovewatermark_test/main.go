@@ -19,6 +19,7 @@ import (
 	"golang.org/x/image/bmp"
 )
 
+// input.png 图片水印格式参数
 // const (
 // 	imagePath        = "./input/input.png"
 // 	rectTopRightX    = 300
@@ -27,7 +28,7 @@ import (
 // 	rectBottomRightY = 60
 // )
 
-// ypl参数
+// 1699934865230.png 图片水印格式参数
 const (
 	imagePath        = "./input/1699934865230.png"
 	rectTopRightX    = 300
@@ -104,6 +105,7 @@ func WalkDirImageWatermarkProcess() {
 		}
 		
 		img, format, derr := image.Decode(f)
+		f.Close()
 		if derr != nil {
 			fmt.Printf("Error image.Decode %v\n", derr)
 			continue
@@ -115,7 +117,6 @@ func WalkDirImageWatermarkProcess() {
 			return
 		}
 		
-		f.Close()
 		fmt.Println("ImageWatermarkProcess success:", file.Name())
 	}
 	return
