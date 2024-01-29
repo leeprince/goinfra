@@ -82,3 +82,5 @@ cover.html
 .rdb
 **/config.yaml
 **/tmp/*
+**/tmpinput/*
+**/tmpoutput/*

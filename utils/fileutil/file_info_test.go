@@ -49,3 +49,8 @@ func TestGetFileInfoByUrl(t *testing.T) {
 		})
 	}
 }
+
+func TestGetFilePathOfName(t *testing.T) {
+	fmt.Println(GetFilePathOfName("./dd.png"))
+	fmt.Println(GetFilePathOfName("dd.png"))
+}
