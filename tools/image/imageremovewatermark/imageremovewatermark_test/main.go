@@ -19,7 +19,7 @@ import (
 	"golang.org/x/image/bmp"
 )
 
-// input.png 图片水印格式参数
+// 示例input.png：图片水印格式参数
 // const (
 // 	imagePath        = "./input/input.png"
 // 	rectTopRightX    = 300
@@ -28,12 +28,12 @@ import (
 // 	rectBottomRightY = 60
 // )
 
-// 1699934865230.png 图片水印格式参数
+// 临时任务：图片水印格式参数
 const (
 	imagePath        = "./input/1699934865230.png"
 	rectTopRightX    = 300
 	rectTopRightY    = 35
-	rectBottomRightX = 535
+	rectBottomRightX = 575
 	rectBottomRightY = 36
 )
 
