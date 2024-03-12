@@ -68,19 +68,23 @@ pnpm-debug.log*
 
 package-lock.json
 
-
 # ------------------------
-# Custom
+# tmp
 .vscode
 __debug_bin
 */logs/*
 *.log
+*.rdb
+
 experiments
 go.sum
 build
 cover.html
-.rdb
+
+# ------------
+# config
 **/config.yaml
 **/tmp/*
 **/tmpinput/*
 **/tmpoutput/*
+**/local.env.go

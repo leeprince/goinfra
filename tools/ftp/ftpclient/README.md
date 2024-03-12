@@ -1,5 +1,10 @@
+# FTP 客户端
+---
 
-
+# 使用
+```
+go run main.go 绝对路径文件1 绝对路径文件2 ...
+```
 
 # FTP 的两种工作模式
 FTP（文件传输协议）有两种工作模式：主动模式（Active Mode）和被动模式（Passive Mode）。

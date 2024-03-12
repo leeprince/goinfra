@@ -7,10 +7,11 @@ package config
  */
 
 type Config struct {
-	AI   `yaml:"AI"`
-	COS  `yaml:"COS"`
-	Host `yaml:"FileAccessHost"`
-	FTP  `yaml:"FTP"`
+	AI        `yaml:"AI"`
+	COS       `yaml:"COS"`
+	Host      `yaml:"FileAccessHost"`
+	FTP       `yaml:"FTP"`
+	WordPress `yaml:"WordPress"`
 }
 
 type AI struct {
@@ -36,6 +37,12 @@ type Host struct {
 type FTP struct {
 	Host     string `yaml:"Host"`
 	Port     string `yaml:"Port"`
+	Username string `yaml:"Username"`
+	Password string `yaml:"Password"`
+}
+
+type WordPress struct {
+	Host     string `yaml:"Host"`
 	Username string `yaml:"Username"`
 	Password string `yaml:"Password"`
 }

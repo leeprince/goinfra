@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"github.com/spf13/pflag"
 	"golang.org/x/image/font"
 	"golang.org/x/image/font/basicfont"
 	"golang.org/x/image/font/opentype"
@@ -19,22 +20,74 @@ import (
 	"golang.org/x/image/bmp"
 )
 
-// 示例input.png：图片水印格式参数
+// 生产：图片水印格式参数
+// // ddkk -v1
 // const (
-// 	imagePath        = "./input/input.png"
-// 	rectTopRightX    = 300
-// 	rectTopRightY    = 60
-// 	rectBottomRightX = 550
-// 	rectBottomRightY = 60
+// 	rectTopRightX    = 100 // 顶部：靠右，右向左偏移
+// 	rectTopRightY    = 20  // 顶部：靠右：上向下偏移
+// 	rectBottomRightX = 350 // 底部：靠右，右向左偏移
+// 	rectBottomRightY = 18  // 底部：靠右：上向下偏移
+// )
+// const (
+// 	FontSize = 14 // 字体大小
+// 	FontDPI  = 75 // 字体分辨率
 // )
 
-// 临时任务：图片水印格式参数
+// // ddkk -v2.
+// const (
+// 	rectTopRightX    = 300 // 顶部：靠右，右向左偏移
+// 	rectTopRightY    = 50  // 顶部：靠右：上向下偏移
+// 	rectBottomRightX = 580 // 底部：靠右，右向左偏移
+// 	rectBottomRightY = 30  // 底部：靠右：上向下偏移
+// )
+// const (
+// 	FontSize = 24 // 字体大小
+// 	FontDPI  = 75 // 字体分辨率
+// )
+
+// // ddkk -v2.1
+// const (
+// 	rectTopRightX    = 300 // 顶部：靠右，右向左偏移
+// 	rectTopRightY    = 50  // 顶部：靠右：上向下偏移
+// 	rectBottomRightX = 650 // 底部：靠右，右向左偏移
+// 	rectBottomRightY = 30  // 底部：靠右：上向下偏移
+// )
+// const (
+// 	FontSize = 24 // 字体大小
+// 	FontDPI  = 75 // 字体分辨率
+// )
+
+// // ddkk -v2.2
 const (
-	imagePath        = "./input/1699934865230.png"
-	rectTopRightX    = 300
-	rectTopRightY    = 35
-	rectBottomRightX = 575
-	rectBottomRightY = 36
+	rectTopRightX    = 300 // 顶部：靠右，右向左偏移
+	rectTopRightY    = 50  // 顶部：靠右：上向下偏移
+	rectBottomRightX = 850 // 底部：靠右，右向左偏移
+	rectBottomRightY = 40  // 30 // 35 // 底部：靠右：上向下偏移
+)
+const (
+	FontSize = 34 // 字体大小
+	FontDPI  = 75 // 字体分辨率
+)
+
+// // ddkk -v3
+// const (
+// 	rectTopRightX    = 300 // 顶部：靠右，右向左偏移
+// 	rectTopRightY    = 50  // 顶部：靠右：上向下偏移
+// 	rectBottomRightX = 770 // 底部：靠右，右向左偏移
+// 	rectBottomRightY = 37  // 底部：靠右：上向下偏移
+// )
+// const (
+// 	FontSize = 34 // 字体大小
+// 	FontDPI  = 75 // 字体分辨率
+// )
+
+// 示例：input.png：图片水印格式参数
+const (
+	tmpImagePath = "./input/input.png"
+	// 	rectTopRightX    = 300 // 顶部：靠右，右向左偏移
+	// 	rectTopRightY    = 60 // 顶部：靠右：上向下偏移
+	// 	rectBottomRightX = 550 // 底部：靠右，右向左偏移
+	// 	rectBottomRightY = 60 // 底部：靠右：上向下偏移
 )
 
 const (
@@ -43,21 +96,34 @@ const (
 )
 
 var (
-	// 输出的文件夹，结尾必须带上/否则会连在一起
-	outputFileDir = "./output/"
+	// 输入的文件夹
+	intputFileDir *string
+	// 输出的文件夹
+	outputFileDir *string
 )
 
 func main() {
+	// 定义并解析命令行标志
+	intputFileDir = pflag.String("i", "", "Input directory containing images")
+	outputFileDir = pflag.String("o", ".", "Output directory for .md files")
+	
+	pflag.Parse()
+	
+	if *intputFileDir == "" {
+		fmt.Println("Please provide the path to the title file using the --t flag.")
+		return
+	}
+	
 	// 单个图片水印处理
 	// SingleImageWatermarkProcess()
 	
-	// 应用：遍历文件夹
+	// 应用：遍历指定文件夹下的所有图片格式
 	WalkDirImageWatermarkProcess()
 }
 
 func SingleImageWatermarkProcess() {
 	// 打开图片文件
-	file, err := os.Open(imagePath)
+	file, err := os.Open(tmpImagePath)
 	if err != nil {
 		panic(err)
 	}
@@ -68,7 +134,7 @@ func SingleImageWatermarkProcess() {
 	if err != nil {
 		panic(err)
 	}
-	err = ImageWatermarkProcess(img, imagePath, format)
+	err = ImageWatermarkProcess(img, tmpImagePath, format)
 	if err != nil {
 		fmt.Println("ImageWatermarkProcess", err)
 		return
@@ -78,13 +144,8 @@ func SingleImageWatermarkProcess() {
 
 // WalkDirImageWatermarkProcess 遍历文件夹并进行单个图片水印处理
 func WalkDirImageWatermarkProcess() {
-	// 输入的文件夹，结尾必须带上/否则会连在一起
-	intputFileDir := "./tmpintput/"
-	// 输出的文件夹，结尾必须带上/否则会连在一起
-	outputFileDir = "./tmpoutput/"
-	
 	// 遍历文件夹取出图片列表
-	files, err := os.ReadDir(intputFileDir)
+	files, err := os.ReadDir(*intputFileDir)
 	if err != nil {
 		fmt.Printf("Error reading directory %v: %v\n", "path/to/your/directory", err)
 		return
@@ -96,7 +157,7 @@ func WalkDirImageWatermarkProcess() {
 			continue
 		}
 		
-		path := filepath.Join(intputFileDir, file.Name())
+		path := filepath.Join(*intputFileDir, file.Name())
 		f, ferr := os.Open(path)
 		if ferr != nil {
 			fmt.Printf("Error opening file %v: %v\n", path, ferr)
@@ -117,7 +178,7 @@ func WalkDirImageWatermarkProcess() {
 			return
 		}
 		
-		fmt.Println("ImageWatermarkProcess success:", file.Name())
+		fmt.Println("ImageWatermarkProcess success:", *outputFileDir, file.Name())
 	}
 	return
 }
@@ -131,19 +192,16 @@ func ImageWatermarkProcess(img image.Image, filePath, format string) (err error)
 	draw.Draw(rgba, rgba.Bounds(), img, image.Point{}, draw.Src)
 	
 	// 覆盖指定区域像素的方式
-	// OverWhiteColor 取白色像素覆盖指定区域像素
-	// OverWhiteColor(rgba)
-	// OverAverageColor 取指定区域平均颜色像素覆盖指定区域像素
-	// OverAverageColor(rgba)
-	// OverDominantColor 取指定区域平均颜色像素覆盖指定区域像素
-	err = OverDominantColor(rgba)
+	// OverWhiteColor(rgba) // 取白色像素覆盖指定区域像素
+	// OverAverageColor(rgba) // 取指定区域平均颜色像素覆盖指定区域像素
+	err = OverDominantColor(rgba) // 取指定区域中占大部分的颜色覆盖指定区域像素
 	if err != nil {
 		fmt.Println("OverDominantColor error:", err)
 		return
 	}
 	
 	// 创建一个新的图片文件
-	outFilePath := fmt.Sprintf("%s%s.%s", outputFileDir, GetFilePathOfName(filePath), format)
+	outFilePath := filepath.Join(*outputFileDir, GetFilePathOfName(filePath)+"."+format)
 	out, err := os.Create(outFilePath)
 	if err != nil {
 		fmt.Println("os.Create error:", err)
@@ -226,16 +284,16 @@ func OverAverageColor(rgba *image.RGBA) {
 	return
 }
 
-// OverDominantColor 取指定区域平均颜色像素覆盖指定区域像素
+// OverDominantColor 取指定区域中占大部分的颜色覆盖指定区域像素
 func OverDominantColor(rgba *image.RGBA) (err error) {
 	// 定义要覆盖的区域，这里我们覆盖右上角和右下角的部分
 	rectTopRight := image.Rect(rgba.Bounds().Max.X-rectTopRightX, 0, rgba.Bounds().Max.X, rectTopRightY)
 	rectBottomRight := image.Rect(rgba.Bounds().Max.X-rectBottomRightX, rgba.Bounds().Max.Y-rectBottomRightY, rgba.Bounds().Max.X, rgba.Bounds().Max.Y)
 	
-	// 计算区域的平均像素颜色：存在一个问题是字体较多时使用到了字体颜色
+	// 计算图像指定区域中占大部分的颜色：存在一个问题是字体较多时使用到了字体颜色
 	// dominantColorTopRight := dominantColor(rgba, rectTopRight)
 	// dominantColorBottomRight := dominantColor(rgba, rectBottomRight)
-	// 计算区域的平均像素颜色：优化取整个高度的头部/底部作为右上角的区域判断
+	// 计算图像指定区域中占大部分的颜色：优化取整个高度的头部/底部作为右上角的区域判断
 	dominantColorTopRight := dominantColor(rgba, image.Rect(0, 0, rgba.Bounds().Max.X, rectTopRightY))
 	dominantColorBottomRight := dominantColor(rgba, image.Rect(0, rgba.Bounds().Max.Y-rectBottomRightY, rgba.Bounds().Max.X, rgba.Bounds().Max.Y))
 	
@@ -320,8 +378,8 @@ func addLabel(img *image.RGBA, label string, rect image.Rectangle, col color.RGB
 		return
 	}
 	fontFace, err = opentype.NewFace(opentypeFont, &opentype.FaceOptions{
-		Size:    24,
-		DPI:     72,
+		Size:    FontSize, // 字体大小
+		DPI:     FontDPI,  // 字体分辨率
 		Hinting: font.HintingFull,
 	})
 	if err != nil {

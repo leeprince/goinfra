@@ -1,6 +1,19 @@
 # 图片处理
 ---
 
+# 功能
+1、去除水印
+
+# 运行
+```
+go run main.go --i {输入指定目录路径} --o {输出的目录}
+```
+
+示例：
+```
+go run main.go --i ./tmpinput --o ./tmpoutput
+```
+
 # image.Decode
 image.Decode(file) 函数会自动检测图像的格式并进行解码，所以你不需要手动区分图像的格式。
 当你调用 image.Decode(file) 函数时，它会读取文件的前几个字节来确定图像的格式，然后调用对应的解码函数。例如，如果文件的前几个字节匹配 JPEG 格式的签名，它就会调用 jpeg.Decode(file) 函数。

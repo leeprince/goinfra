@@ -1,4 +1,14 @@
+AI:
+  OpenAIChatGPT:
+    SecretKey: xxx
 
-Config:
-  AI:
-    OpenAIChatGPT: ""
+FTP:
+  Host: xxx
+  Port: 21
+  Username: xxx
+  Password: xxx
+
+WordPress:
+  Host: https://www.xxx.cn
+  Username: xxx
+  Password: xxx
