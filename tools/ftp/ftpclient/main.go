@@ -22,7 +22,6 @@ const isDebug = true
 
 const (
 	getFilePartPathFromPathDelimiter = "typora"
-	accessHost                       = "https://cloud.itgogogo.cn"
 )
 
 func main() {
@@ -140,7 +139,7 @@ func uploadImage(path string) (remoteAccessUrl string) {
 	mylog("uploadImage Stor success")
 	
 	// 访问地址
-	remoteAccessUrl = accessHost + remoteFilePath
+	remoteAccessUrl = CFG.AccessHost + remoteFilePath
 	mylog("remoteAccessUrl:", remoteAccessUrl)
 	
 	return
@@ -161,14 +160,15 @@ func getFilePartPathFromPath(path string, delimiter string) (remoteFileDir, remo
 	return
 }
 
-type FTP struct {
-	Host     string `yaml:"Host"`
-	Port     string `yaml:"Port"`
-	Username string `yaml:"Username"`
-	Password string `yaml:"Password"`
+type Config struct {
+	Host       string `yaml:"Host"`
+	Port       string `yaml:"Port"`
+	Username   string `yaml:"Username"`
+	Password   string `yaml:"Password"`
+	AccessHost string `yaml:"AccessHost"`
 }
 
-var CFG *FTP
+var CFG *Config
 
 // InitConfig 初始化配置
 // 	configPathList：只取第一个元素，并且配置的文件路径相对于项目所在的"工作目录working directory"
@@ -185,7 +185,7 @@ func InitConfig(configPathList ...string) {
 	}
 	
 	// 解析配置文件
-	CFG = &FTP{}
+	CFG = &Config{}
 	mylog("configPath:", configPath)
 	content, err := os.ReadFile(configPath)
 	if err != nil {
@@ -193,7 +193,7 @@ func InitConfig(configPathList ...string) {
 		return
 	}
 	
-	err = yaml.Unmarshal(content, &CFG)
+	err = yaml.Unmarshal(content, CFG)
 	if err != nil {
 		mylog("解析配置文件错误" + configPath + "错误原因" + err.Error())
 	}

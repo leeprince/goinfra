@@ -1,4 +1,4 @@
-package skilldoublepointer
+package listnode
 
 /**
  * @Author: prince.lee <leeprince@foxmail.com>
@@ -57,10 +57,10 @@ func PartitionV1(head *ListNode, x int) *ListNode {
 	}
 	// 左右链表复制可移动指针的链表
 	l, r := left, right
-
+	
 	// 初始链表复制可移动指针的链表
 	h := head
-
+	
 	// 遍历初始链表
 	for h != nil {
 		// 左右链表赋值，并初始化
@@ -79,9 +79,9 @@ func PartitionV1(head *ListNode, x int) *ListNode {
 	}
 	// 合并左右链表: 左链表指向去除虚拟头节点后的右链表
 	l.Next = right.Next
-
+	
 	// 新链表指向去除虚拟头节点后的左链表
 	newListNode := left.Next
-
+	
 	return newListNode
 }

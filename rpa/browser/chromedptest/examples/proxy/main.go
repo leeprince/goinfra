@@ -9,7 +9,7 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"net/http/httputil"
-
+	
 	"github.com/chromedp/cdproto/fetch"
 	"github.com/chromedp/chromedp"
 )
@@ -18,13 +18,13 @@ func main() {
 	// create a simple proxy that requires authentication
 	p := httptest.NewServer(newProxy())
 	defer p.Close()
-
+	
 	// create a web server
 	s := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		_, _ = fmt.Fprint(w, "test")
 	}))
 	defer s.Close()
-
+	
 	opts := append(chromedp.DefaultExecAllocatorOptions[:],
 		// 1) specify the proxy server.
 		// Note that the username/password is not provided here.
@@ -41,8 +41,8 @@ func main() {
 	// log the protocol messages to understand how it works.
 	ctx, cancel = chromedp.NewContext(ctx, chromedp.WithDebugf(log.Printf))
 	defer cancel()
-
-	// 3) handle the Fetch.AuthRequired event and provide the username/password to the proxy
+	
+	// 3) handle the FetchMarkdown.AuthRequired event and provide the username/password to the proxy
 	// We will disable the fetch domain and cancel the event handler once the proxy is
 	// authenticated to reduce the overhead. If your project needs the fetch domain to be enabled,
 	// then you should change the code accordingly.
@@ -73,15 +73,15 @@ func main() {
 			}
 		}
 	})
-
+	
 	if err := chromedp.Run(ctx,
-		// 2) enable the fetch domain to handle the Fetch.AuthRequired event
+		// 2) enable the fetch domain to handle the FetchMarkdown.AuthRequired event
 		fetch.Enable().WithHandleAuthRequests(true),
 		chromedp.Navigate(s.URL),
 	); err != nil {
 		log.Fatal(err)
 	}
-
+	
 	// to show that further requests (even in new tabs) are authenticated.
 	tctx, cancel := chromedp.NewContext(ctx)
 	defer cancel()

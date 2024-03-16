@@ -1,4 +1,4 @@
-package skilldoublepointer
+package listnode
 
 /**
  * @Author: prince.lee <leeprince@foxmail.com>
@@ -8,29 +8,6 @@ package skilldoublepointer
 
 /*
 将两个升序链表合并为一个新的 升序 链表并返回。新链表是通过拼接给定的两个链表的所有节点组成的。
-
-示例 1：
-
-输入：l1 = [1,2,4], l2 = [1,3,4]
-输出：[1,1,2,3,4,4]
-
-示例 2：
-
-输入：l1 = [], l2 = []
-输出：[]
-
-示例 3：
-
-输入：l1 = [], l2 = [0]
-输出：[0]
-
-
-
-提示：
-
-    两个链表的节点数目范围是 [0, 50]
-    -100 <= Node.val <= 100
-    l1 和 l2 均按 非递减顺序 排列
 
 https://leetcode.cn/problems/merge-two-sorted-lists/
 */
@@ -43,44 +20,31 @@ https://leetcode.cn/problems/merge-two-sorted-lists/
 	总结下：当你需要创造一条新链表的时候，可以使用虚拟头结点简化边界情况的处理。比如说，让你把两条有序链表合并成一条新的有序链表，是不是要创造一条新链表？再比你想把一条链表分解成两条链表，是不是也在创造新链表？这些情况都可以使用虚拟头结点简化边界情况的处理。
 */
 
-func MergeTwoLists() {
-	MergeTwoListsV1(&ListNode{}, &ListNode{})
-}
-
-func MergeTwoListsV1(list1 *ListNode, list2 *ListNode) *ListNode {
-	// 虚拟头节点
-	newListNode := &ListNode{
-		Val:  -1,
-		Next: nil,
-	}
-
-	// 保持原始链表：复制为可移动指针的新链表
-	p := newListNode
-	p1 := list1
-	p2 := list2
-
-	for p1 != nil && p2 != nil {
-		// 比较 p1 和 p2 两个指针
-		// 将值较小的的节点接到 p 指针
-		if p1.Val < p2.Val {
-			p.Next = p1
-			p1 = p1.Next
+func MergeTwoLists(l1 *ListNode, l2 *ListNode) *ListNode {
+	// 创建一个虚拟头节点，便于处理边界情况
+	dummy := &ListNode{Val: 0, Next: nil} // 虚拟头节点
+	tail := dummy                         // 尾部指针，初始指向虚拟头节点
+	
+	// 使用循环遍历两个链表直到至少有一个链表遍历完
+	for l1 != nil && l2 != nil {
+		// 比较当前节点的值，将值较小的节点链接到结果链表上
+		if l1.Val < l2.Val {
+			tail.Next = l1 // 连接l1节点
+			l1 = l1.Next   // 移动l1指针到下一个节点
 		} else {
-			p.Next = p2
-			p2 = p2.Next
+			tail.Next = l2 // 连接l2节点
+			l2 = l2.Next   // 移动l2指针到下一个节点
 		}
-		// p 指针不断前进
-		p = p.Next
+		tail = tail.Next // 更新结果链表的尾部指针
 	}
-	if p1 != nil {
-		p.Next = p1
+	
+	// 当一个链表遍历完后，将另一个未遍历完的链表剩余部分接到结果链表后面
+	if l1 != nil {
+		tail.Next = l1 // 若l1还未遍历完，将其余部分接到结果链表
+	} else {
+		tail.Next = l2 // 若l2还未遍历完，将其余部分接到结果链表
 	}
-	if p2 != nil {
-		p.Next = p2
-	}
-
-	// 易错点：必须使用原有的newListNode变量非p变量去除虚拟节点，因为p变量的Next指针是在不断变化的。
-	newListNode = newListNode.Next
-
-	return newListNode
+	
+	// 返回新链表的实际头部（即虚拟头节点的下一个节点）
+	return dummy.Next
 }

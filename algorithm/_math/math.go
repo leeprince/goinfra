@@ -1,6 +1,4 @@
-package algorithm
-
-import "github.com/leeprince/goinfra/algorithm/_math"
+package _math
 
 /**
  * @Author: prince.lee <leeprince@foxmail.com>
@@ -9,5 +7,5 @@ import "github.com/leeprince/goinfra/algorithm/_math"
  */
 
 func Math() {
-	_math.RomanToInt() // 罗马数字转整数
+	RomanToInt() // 罗马数字转整数
 }

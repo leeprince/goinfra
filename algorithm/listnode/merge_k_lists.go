@@ -1,4 +1,4 @@
-package skilldoublepointer
+package listnode
 
 import "container/heap"
 
@@ -68,22 +68,22 @@ func MergeKListsV1(lists []*ListNode) *ListNode {
 	if len(lists) == 0 {
 		return nil
 	}
-
+	
 	newList := &ListNode{
 		Val:  -1,
 		Next: nil,
 	}
 	dumpNewList := newList
-
+	
 	minHeap := make(MinHeap, 0)
 	heap.Init(&minHeap)
-
+	
 	for _, list := range lists {
 		if list != nil {
 			heap.Push(&minHeap, list)
 		}
 	}
-
+	
 	for minHeap.Len() > 0 {
 		minNode := heap.Pop(&minHeap).(*ListNode)
 		dumpNewList.Next = minNode
@@ -92,10 +92,10 @@ func MergeKListsV1(lists []*ListNode) *ListNode {
 		}
 		dumpNewList = dumpNewList.Next
 	}
-
+	
 	// 取出虚拟节点
 	newList = newList.Next
-
+	
 	return newList
 }
 

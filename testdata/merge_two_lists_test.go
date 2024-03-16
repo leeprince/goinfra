@@ -1,7 +1,6 @@
 package testdata
 
 import (
-	"github.com/leeprince/goinfra/algorithm/skilldoublepointer"
 	"github.com/smartystreets/goconvey/convey"
 	"reflect"
 	"testing"
@@ -15,29 +14,29 @@ import (
 
 func TestMergeTwoListsV1(t *testing.T) {
 	type args struct {
-		list1 *skilldoublepointer.ListNode
-		list2 *skilldoublepointer.ListNode
+		list1 *listnode.ListNode
+		list2 *listnode.ListNode
 	}
 	tests := []struct {
 		name string
 		args args
-		want *skilldoublepointer.ListNode
+		want *listnode.ListNode
 	}{
 		{
 			name: "",
 			args: args{
-				list1: &skilldoublepointer.ListNode{
+				list1: &listnode.ListNode{
 					Val: 1,
-					Next: &skilldoublepointer.ListNode{
+					Next: &listnode.ListNode{
 						Val:  2,
 						Next: nil,
 					},
 				},
 				list2: nil,
 			},
-			want: &skilldoublepointer.ListNode{
+			want: &listnode.ListNode{
 				Val: 1,
-				Next: &skilldoublepointer.ListNode{
+				Next: &listnode.ListNode{
 					Val:  2,
 					Next: nil,
 				},
@@ -46,23 +45,23 @@ func TestMergeTwoListsV1(t *testing.T) {
 		{
 			name: "",
 			args: args{
-				list1: &skilldoublepointer.ListNode{
+				list1: &listnode.ListNode{
 					Val:  1,
 					Next: nil,
 				},
-				list2: &skilldoublepointer.ListNode{
+				list2: &listnode.ListNode{
 					Val: 1,
-					Next: &skilldoublepointer.ListNode{
+					Next: &listnode.ListNode{
 						Val:  2,
 						Next: nil,
 					},
 				},
 			},
-			want: &skilldoublepointer.ListNode{
+			want: &listnode.ListNode{
 				Val: 1,
-				Next: &skilldoublepointer.ListNode{
+				Next: &listnode.ListNode{
 					Val: 1,
-					Next: &skilldoublepointer.ListNode{
+					Next: &listnode.ListNode{
 						Val:  2,
 						Next: nil,
 					},
@@ -72,26 +71,26 @@ func TestMergeTwoListsV1(t *testing.T) {
 		{
 			name: "",
 			args: args{
-				list1: &skilldoublepointer.ListNode{
+				list1: &listnode.ListNode{
 					Val: 1,
-					Next: &skilldoublepointer.ListNode{
+					Next: &listnode.ListNode{
 						Val: 3,
-						Next: &skilldoublepointer.ListNode{
+						Next: &listnode.ListNode{
 							Val: 5,
-							Next: &skilldoublepointer.ListNode{
+							Next: &listnode.ListNode{
 								Val:  7,
 								Next: nil,
 							},
 						},
 					},
 				},
-				list2: &skilldoublepointer.ListNode{
+				list2: &listnode.ListNode{
 					Val: 2,
-					Next: &skilldoublepointer.ListNode{
+					Next: &listnode.ListNode{
 						Val: 4,
-						Next: &skilldoublepointer.ListNode{
+						Next: &listnode.ListNode{
 							Val: 6,
-							Next: &skilldoublepointer.ListNode{
+							Next: &listnode.ListNode{
 								Val:  8,
 								Next: nil,
 							},
@@ -99,21 +98,21 @@ func TestMergeTwoListsV1(t *testing.T) {
 					},
 				},
 			},
-			want: &skilldoublepointer.ListNode{
+			want: &listnode.ListNode{
 				Val: 1,
-				Next: &skilldoublepointer.ListNode{
+				Next: &listnode.ListNode{
 					Val: 2,
-					Next: &skilldoublepointer.ListNode{
+					Next: &listnode.ListNode{
 						Val: 3,
-						Next: &skilldoublepointer.ListNode{
+						Next: &listnode.ListNode{
 							Val: 4,
-							Next: &skilldoublepointer.ListNode{
+							Next: &listnode.ListNode{
 								Val: 5,
-								Next: &skilldoublepointer.ListNode{
+								Next: &listnode.ListNode{
 									Val: 6,
-									Next: &skilldoublepointer.ListNode{
+									Next: &listnode.ListNode{
 										Val: 7,
-										Next: &skilldoublepointer.ListNode{
+										Next: &listnode.ListNode{
 											Val:  8,
 											Next: nil,
 										},
@@ -130,7 +129,7 @@ func TestMergeTwoListsV1(t *testing.T) {
 		// reflect.DeepEqual 和 遍历链表都可以判断结果与期望值是否一致
 		// 判断结果与期望值是否一致方法一【推荐：简单、原生】
 		t.Run(tt.name, func(t *testing.T) {
-			if got := skilldoublepointer.MergeTwoListsV1(tt.args.list1, tt.args.list2); !reflect.DeepEqual(got, tt.want) {
+			if got := listnode.MergeTwoListsV1(tt.args.list1, tt.args.list2); !reflect.DeepEqual(got, tt.want) {
 				t.Errorf(">1: MergeTwoListsV1() = %v, want %v", got, tt.want)
 			}
 		})
@@ -151,47 +150,47 @@ func TestMergeTwoListsV1(t *testing.T) {
 }
 
 func TestMergeTwoListsV11(t *testing.T) {
-	list1 := &skilldoublepointer.ListNode{
+	list1 := &listnode.ListNode{
 		Val: 1,
-		Next: &skilldoublepointer.ListNode{
+		Next: &listnode.ListNode{
 			Val: 3,
-			Next: &skilldoublepointer.ListNode{
+			Next: &listnode.ListNode{
 				Val: 5,
-				Next: &skilldoublepointer.ListNode{
+				Next: &listnode.ListNode{
 					Val:  7,
 					Next: nil,
 				},
 			},
 		},
 	}
-	list2 := &skilldoublepointer.ListNode{
+	list2 := &listnode.ListNode{
 		Val: 2,
-		Next: &skilldoublepointer.ListNode{
+		Next: &listnode.ListNode{
 			Val: 4,
-			Next: &skilldoublepointer.ListNode{
+			Next: &listnode.ListNode{
 				Val: 6,
-				Next: &skilldoublepointer.ListNode{
+				Next: &listnode.ListNode{
 					Val:  8,
 					Next: nil,
 				},
 			},
 		},
 	}
-	want := &skilldoublepointer.ListNode{
+	want := &listnode.ListNode{
 		Val: 1,
-		Next: &skilldoublepointer.ListNode{
+		Next: &listnode.ListNode{
 			Val: 2,
-			Next: &skilldoublepointer.ListNode{
+			Next: &listnode.ListNode{
 				Val: 3,
-				Next: &skilldoublepointer.ListNode{
+				Next: &listnode.ListNode{
 					Val: 4,
-					Next: &skilldoublepointer.ListNode{
+					Next: &listnode.ListNode{
 						Val: 5,
-						Next: &skilldoublepointer.ListNode{
+						Next: &listnode.ListNode{
 							Val: 6,
-							Next: &skilldoublepointer.ListNode{
+							Next: &listnode.ListNode{
 								Val: 7,
-								Next: &skilldoublepointer.ListNode{
+								Next: &listnode.ListNode{
 									Val:  8,
 									Next: nil,
 								},
@@ -203,6 +202,6 @@ func TestMergeTwoListsV11(t *testing.T) {
 		},
 	}
 	convey.Convey("合并两个有序链表", t, func() {
-		convey.So(skilldoublepointer.MergeTwoListsV1(list1, list2), convey.ShouldResemble, want)
+		convey.So(listnode.MergeTwoListsV1(list1, list2), convey.ShouldResemble, want)
 	})
 }

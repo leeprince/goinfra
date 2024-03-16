@@ -2,11 +2,11 @@ package fileutil
 
 import (
 	"bytes"
-	"fmt"
 	errors2 "github.com/pkg/errors"
 	"io"
 	"net/http"
 	"os"
+	"path/filepath"
 	"strings"
 )
 
@@ -71,7 +71,7 @@ func WriteFileByIoReader(data io.Reader, fileName string, filePath ...string) (p
 	if len(filePath) > 0 {
 		path = filePath[0]
 	}
-	pathFile = fmt.Sprintf("%s%s", path, fileName) // 本地环境中当前项目是在F:盘中，所以使用根路径/即指向的根路径就是F:盘
+	pathFile = filepath.Join(path, fileName) // 本地环境中当前项目是在F:盘中，所以使用根路径/即指向的根路径就是F:盘
 	
 	// 创建文件
 	if _, err := os.Stat(pathFile); err != nil {

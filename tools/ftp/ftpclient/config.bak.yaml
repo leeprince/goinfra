@@ -3,3 +3,4 @@ FTP:
   Port: 21
   Username: xx
   Password: xx
+  AccessHost: https://xx.xx.cn
