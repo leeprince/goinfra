@@ -2,6 +2,7 @@ package fileutil
 
 import (
 	"fmt"
+	"path/filepath"
 	"testing"
 )
 
@@ -16,4 +17,14 @@ func TestCopyFile(t *testing.T) {
 	dstFile := "cache/" + srcFile
 	err := CopyFile(srcFile, dstFile)
 	fmt.Println(err)
+}
+
+func TestFilePath(t *testing.T) {
+	a1 := "a1"
+	a2 := "/a2"
+	a3 := "a3/"
+	a4 := "/a4/"
+	
+	a := filepath.Join(a1, a2, a3, a4)
+	fmt.Println(a)
 }
