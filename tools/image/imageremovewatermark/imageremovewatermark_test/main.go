@@ -1,6 +1,7 @@
 package main
 
 import (
+	"errors"
 	"fmt"
 	"github.com/spf13/pflag"
 	"golang.org/x/image/font"
@@ -16,6 +17,7 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
+	"sync"
 	
 	"golang.org/x/image/bmp"
 )
@@ -61,11 +63,11 @@ import (
 const (
 	rectTopRightX    = 300 // 顶部：靠右，右向左偏移
 	rectTopRightY    = 50  // 顶部：靠右：上向下偏移
-	rectBottomRightX = 850 // 底部：靠右，右向左偏移
-	rectBottomRightY = 40  // 30 // 35 // 底部：靠右：上向下偏移
+	rectBottomRightX = 310 // 底部：靠右，右向左偏移
+	rectBottomRightY = 20  // 30 // 35 // 底部：靠右：上向下偏移
 )
 const (
-	FontSize = 34 // 字体大小
+	FontSize = 15 // 字体大小
 	FontDPI  = 75 // 字体分辨率
 )
 
@@ -92,7 +94,7 @@ const (
 
 const (
 	textTopRight    = "itgogogo.cn"
-	textBottomRight = "itgogogo.cn IT go go go 编程资料站"
+	textBottomRight = "itgogogo.cn IT gogogo 编程资料站"
 )
 
 var (
@@ -110,8 +112,11 @@ func main() {
 	pflag.Parse()
 	
 	if *intputFileDir == "" {
-		fmt.Println("Please provide the path to the title file using the --t flag.")
+		fmt.Println("Please provide the path to the title file using the --i flag.")
 		return
+	}
+	if *outputFileDir == "" {
+		*outputFileDir = *intputFileDir
 	}
 	
 	// 单个图片水印处理
@@ -196,7 +201,7 @@ func ImageWatermarkProcess(img image.Image, filePath, format string) (err error)
 	// OverAverageColor(rgba) // 取指定区域平均颜色像素覆盖指定区域像素
 	err = OverDominantColor(rgba) // 取指定区域中占大部分的颜色覆盖指定区域像素
 	if err != nil {
-		fmt.Println("OverDominantColor error:", err)
+		fmt.Println("overDominantColor error:", err)
 		return
 	}
 	
@@ -204,7 +209,7 @@ func ImageWatermarkProcess(img image.Image, filePath, format string) (err error)
 	outFilePath := filepath.Join(*outputFileDir, GetFilePathOfName(filePath)+"."+format)
 	out, err := os.Create(outFilePath)
 	if err != nil {
-		fmt.Println("os.Create error:", err)
+		fmt.Println("ImageWatermarkProcess os.Create error:", err)
 		return
 	}
 	defer out.Close()
@@ -359,6 +364,9 @@ func dominantColor(img *image.RGBA, rect image.Rectangle) color.RGBA {
 	return dominantColor
 }
 
+var opentypeFont *opentype.Font
+var addLabelOnce sync.Once
+
 // addLabel 在图像的指定位置添加文本标签
 func addLabel(img *image.RGBA, label string, rect image.Rectangle, col color.RGBA) (err error) {
 	// 字体
@@ -367,16 +375,25 @@ func addLabel(img *image.RGBA, label string, rect image.Rectangle, col color.RGB
 	fontFace = basicfont.Face7x13
 	
 	// 加载字体
-	fontBytes, err := os.ReadFile("./Arial Unicode.ttf")
-	if err != nil {
-		fmt.Println("os.ReadFile ttf", err)
+	addLabelOnce.Do(func() {
+		fontBytes, fonterr := os.ReadFile("./Arial Unicode.ttf")
+		if fonterr != nil {
+			fmt.Println("os.ReadFile ttf", fonterr)
+			err = fonterr
+			return
+		}
+		opentypeFont, err = opentype.Parse(fontBytes)
+		if err != nil {
+			fmt.Println("oopentypes.Parse", err)
+			return
+		}
+	})
+	if opentypeFont == nil {
+		fmt.Println("opentypeFont is nil")
+		err = errors.New("opentypeFont is nil")
 		return
 	}
-	opentypeFont, err := opentype.Parse(fontBytes)
-	if err != nil {
-		fmt.Println("oopentypes.Parse", err)
-		return
-	}
+	
 	fontFace, err = opentype.NewFace(opentypeFont, &opentype.FaceOptions{
 		Size:    FontSize, // 字体大小
 		DPI:     FontDPI,  // 字体分辨率
