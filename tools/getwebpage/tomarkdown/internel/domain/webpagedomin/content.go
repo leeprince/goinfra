@@ -103,7 +103,7 @@ func (r *WebPageService) GetContentToMarkdown(doc *goquery.Document, title strin
 		case TagImg:
 			err = r.ConvertImg(&markdownContent, s, title)
 			if err != nil {
-				fmt.Println("ContentToMarkdown TagUl err:", err)
+				fmt.Println("ContentToMarkdown TagImg err:", err)
 				return
 			}
 		case TagTable:

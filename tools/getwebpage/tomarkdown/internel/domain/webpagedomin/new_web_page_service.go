@@ -3,6 +3,7 @@ package webpagedomin
 import (
 	"getwebpage-tomarkdown/internel/Infrastructure/config"
 	"getwebpage-tomarkdown/internel/pkg/ftpclient"
+	"getwebpage-tomarkdown/internel/pkg/imagewaterhander"
 )
 
 /**
@@ -43,7 +44,8 @@ var TagHtmlDouble = map[Tag][2]string{
 }
 
 type WebPageService struct {
-	ftpClient *ftpclient.FtpClient
+	ftpClient        *ftpclient.FtpClient
+	imageWaterHander *imagewaterhander.ImageWaterHander
 }
 
 func NewWebPageService() *WebPageService {
@@ -54,20 +56,24 @@ func NewWebPageService() *WebPageService {
 		Username: ftp.Conf.Username,
 		Password: ftp.Conf.Password,
 	}
-	if ftpConf.Host == "" {
-		panic("ftpConf.Host must config")
+	
+	water := config.C.SaveLocal.Water
+	WaterPosition := imagewaterhander.WaterPosition{
+		RectTopRightX:    water.WaterPosition.RectTopRightX,
+		RectTopRightY:    water.WaterPosition.RectTopRightY,
+		RectBottomRightX: water.WaterPosition.RectBottomRightX,
+		RectBottomRightY: water.WaterPosition.RectBottomRightY,
 	}
-	if ftpConf.Port == "" {
-		panic("ftpConf.Port must config")
-	}
-	if ftpConf.Username == "" {
-		panic("ftpConf.Username must config")
-	}
-	if ftpConf.Password == "" {
-		panic("ftpConf.Password must config")
+	WaterText := imagewaterhander.WaterText{
+		TtfFilePath:     water.ConvertWaterText.TtfFilePath,
+		TextTopRight:    water.ConvertWaterText.TextTopRight,
+		TextBottomRight: water.ConvertWaterText.TextBottomRight,
+		FontSize:        water.ConvertWaterText.FontSize,
+		Dpi:             water.ConvertWaterText.Dpi,
 	}
 	
 	return &WebPageService{
-		ftpClient: ftpclient.NewFtpClient(ftpConf, ftp.AccessHost),
+		ftpClient:        ftpclient.NewFtpClient(ftpConf, ftp.AccessHost),
+		imageWaterHander: imagewaterhander.NewImageWaterHander(WaterPosition, WaterText),
 	}
 }

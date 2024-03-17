@@ -15,6 +15,11 @@ import (
  */
 
 func (r *FtpClient) UploadImage(imgDataBytes []byte, remoteFileDir, remoteFilePath string) (remoteAccessUrl string, err error) {
+	if err = r.checkInit(); err != nil {
+		fmt.Println("UploadImage checkInit err:", err)
+		return
+	}
+	
 	// 连接FTP服务器
 	client, err := ftp.Dial(fmt.Sprintf("%s:%s", r.Conf.Host, r.Conf.Port))
 	fmt.Println("UploadImage Dial")
@@ -71,6 +76,10 @@ func (r *FtpClient) UploadImage(imgDataBytes []byte, remoteFileDir, remoteFilePa
 	
 	fmt.Println("UploadImage Stor ...")
 	imgDataReader := bytes.NewReader(imgDataBytes)
+	// Code=553;Msg=Can't open that file: No such file or directory 可能的原因：项目根目录remoteFilePath不对
+	if remoteFilePath[0] != filepath.Separator {
+		remoteFilePath = filepath.Join(string(filepath.Separator), remoteFilePath)
+	}
 	err = client.Stor(remoteFilePath, imgDataReader)
 	if err != nil {
 		fmt.Println("UploadImage Stor err:", err.Error())

@@ -5,6 +5,7 @@ import (
 	"getwebpage-tomarkdown/internel/domain/webpagedomin/webpageentity"
 	"github.com/PuerkitoBio/goquery"
 	"io"
+	"strings"
 )
 
 /**
@@ -45,7 +46,9 @@ func (r *WebPageService) ConvertMarkdown(httpBody io.Reader) (entity *webpageent
 	fmt.Println("tag:", tag)
 	
 	// 将正文区域的HTML转换为Markdown
-	content, err := r.GetContentToMarkdown(doc, title)
+	// 将 title用于做上级目录
+	useDirTitle := strings.Replace(title, " ", "", -1)
+	content, err := r.GetContentToMarkdown(doc, useDirTitle)
 	if err != nil {
 		err = fmt.Errorf("GetContentToMarkdown err: %w", err)
 		return

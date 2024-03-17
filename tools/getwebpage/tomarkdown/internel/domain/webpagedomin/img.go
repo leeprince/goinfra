@@ -5,11 +5,14 @@ import (
 	"errors"
 	"fmt"
 	"getwebpage-tomarkdown/internel/Infrastructure/config"
+	"getwebpage-tomarkdown/internel/pkg/imagewaterhander"
 	"github.com/PuerkitoBio/goquery"
-	"github.com/leeprince/goinfra/utils/fileutil"
+	"image"
 	"io"
 	"net/http"
 	"net/url"
+	"os"
+	"path/filepath"
 	"strings"
 )
 
@@ -63,30 +66,46 @@ func (r *WebPageService) ConvertImg(markdownContent *strings.Builder, s *goquery
 	}
 	urlPathList := strings.Split(urlParse.Path, "/")
 	fileName := urlPathList[len(urlPathList)-1]
-	title = strings.TrimSpace(title)
-	remoteFileDir := fmt.Sprintf("/%s/%s", config.C.SaveImagePathPrefix, title)
-	remoteFilePath := fmt.Sprintf("%s/%s", remoteFileDir, fileName)
-	fmt.Println("UploadImage remoteFileDir:", remoteFileDir, "remoteFilePath:", remoteFilePath)
+	saveDir := filepath.Join(config.C.SaveImagePathPrefix, title)
+	filePath := filepath.Join(saveDir, fileName)
+	fmt.Println("UploadImage saveDir:", saveDir, "filePath:", filePath)
+	
+	// 判断是否需要保存到本地，如果保存则先将图片保存; 只有保存本地才会进行处理水印
+	if config.C.SaveLocal.IsSave {
+		saveLocalDir := filepath.Join(config.C.SaveLocal.SaveDir, saveDir)
+		fmt.Println("UploadImage SaveLocal  saveLocalDir:", saveLocalDir)
+		
+		// 解码图片
+		fileReader := bytes.NewReader(imgDataBytes)
+		img, format, decodeerr := image.Decode(fileReader)
+		if decodeerr != nil {
+			err = decodeerr
+			fmt.Println("Decode err:", err)
+			return
+		}
+		
+		err = r.imageWaterHander.ImageWatermarkProcess(img, imagewaterhander.ImageFormat(format), saveLocalDir, fileName)
+		if err != nil {
+			fmt.Println("UploadImage ImageWatermarkProcess err:", err)
+			return
+		}
+		
+		localFile := filepath.Join(saveLocalDir, fileName)
+		fmt.Println("UploadImage SaveLocal  localFile:", localFile)
+		imgDataBytes, err = os.ReadFile(localFile)
+		if err != nil {
+			fmt.Println("Open localFile err:", err)
+			return
+		}
+	}
 	
 	// 重新保存到其他服务器远程服务
-	accessImgUrl, err := r.ftpClient.UploadImage(imgDataBytes, remoteFileDir, remoteFilePath)
+	accessImgUrl, err := r.ftpClient.UploadImage(imgDataBytes, saveDir, filePath)
 	if err != nil {
 		fmt.Println("UploadImage err:", err)
 		return
 	}
 	markdownContent.WriteString(fmt.Sprintf("<p><img src='%s'></p>\n\n", accessImgUrl))
-	
-	// 判断是否需要保存到本地，如果保存则先将图片保存
-	if config.C.SaveLocal.IsSave {
-		saveDir := fmt.Sprintf("%s/%s/", config.C.SaveLocal.SaveDir, config.C.SaveImagePathPrefix)
-		fmt.Println("ConvertImg SaveLocalFileByIoReader:", fileName, "-saveDir:", saveDir)
-		
-		_, err = fileutil.SaveLocalFileByIoReader(bytes.NewReader(imgDataBytes), fileName, saveDir)
-		if err != nil {
-			fmt.Println("UploadImage SaveLocalFileByIoReader err:", err)
-			return
-		}
-	}
 	
 	return
 }
