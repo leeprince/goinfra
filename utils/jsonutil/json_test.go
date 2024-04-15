@@ -3,7 +3,7 @@ package jsonutil
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/leeprince/goinfra/test/message"
+	"github.com/leeprince/goinfra/testdata/message"
 	"github.com/leeprince/goinfra/utils/dumputil"
 	"testing"
 )

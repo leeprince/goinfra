@@ -6,7 +6,7 @@ import (
 	"github.com/chromedp/chromedp"
 	"github.com/leeprince/goinfra/perror"
 	"github.com/leeprince/goinfra/plog"
-	"github.com/leeprince/goinfra/test/constants"
+	"github.com/leeprince/goinfra/testdata/constants"
 	"github.com/leeprince/goinfra/utils/idutil"
 	"log"
 	"strings"

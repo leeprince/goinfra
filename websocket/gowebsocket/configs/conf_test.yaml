@@ -1,0 +1,9 @@
+env: test
+log_level: 5
+model: test
+gin_host:
+  host: 0.0.0.0
+  port: 8080
+# websocket 心跳时间，单位：秒
+heartbeat: 60
+jaegeragenturl: jaeger-agent.monitoring.svc.cluster.local:6831

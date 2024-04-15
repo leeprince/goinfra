@@ -1,0 +1,10 @@
+/*.exe
+/permission-center
+
+.idea
+/runtime
+
+*.log
+
+# 指定文件
+conf.yaml
