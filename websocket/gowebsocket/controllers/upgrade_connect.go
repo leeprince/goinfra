@@ -3,7 +3,7 @@ package controllers
 /**
  * @Author: prince.lee <leeprince@foxmail.com>
  * @Date:   2024/4/15 16:47
- * @Desc:	创建连接：通过 HTTP 协议升级到 WebSocket 协议；发起连接的请求格式为：ws://host:port/ws
+ * @Desc:	创建连接：通过 HTTP 协议升级到 WebSocket 协议；根据规范只能发起Get请求，请求格式为：ws://host:port/ws
  */
 
 import (
