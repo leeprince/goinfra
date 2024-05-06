@@ -1,11 +1,9 @@
 <!--
- * @Date: 2020-08-12 21:16:57
- * @LastEditors: aiden.deng (Zhenpeng Deng)
- * @LastEditTime: 2020-09-04 17:05:51
+
 -->
 # risk-common
 
-`gitlab.yewifi.com/risk-control/risk-common`，是风控系统各个微服务的公共包，包括`gostreaming`流式计算框架、`riskcontrol`业务公共变量等。
+`/risk-control/risk-common`，是风控系统各个微服务的公共包，包括`gostreaming`流式计算框架、`riskcontrol`业务公共变量等。
 
 下图为风控系统的数据流处理，均依赖与`risk-common`包：
 ![风控系统](docs/images/风控系统.png)
@@ -69,7 +67,7 @@ type Event struct {
 使用gostreaming编写一个实时 word count 的程序非常简单。
 
 
-具体的完整代码可以查看`gitlab.yewifi.com/risk-control/risk-common/cmd/examples/word-count`。
+具体的完整代码可以查看`/risk-control/risk-common/cmd/examples/word-count`。
 
 
 #### DataSource 数据源
@@ -105,8 +103,8 @@ package main
 // File: cmd/examples/word-count/main.go
 
 import (
-	"gitlab.yewifi.com/risk-control/risk-common/cmd/examples/word-count/wordcount"
-	"gitlab.yewifi.com/risk-control/risk-common/pkg/gostreaming"
+	"/risk-control/risk-common/cmd/examples/word-count/wordcount"
+	"/risk-control/risk-common/pkg/gostreaming"
 )
 
 func main() {
@@ -187,7 +185,7 @@ package wordcount
 
 import (
 	"strings"
-	"gitlab.yewifi.com/risk-control/risk-common/pkg/gostreaming"
+	"/risk-control/risk-common/pkg/gostreaming"
 )
 
 var _ gostreaming.DataStreamInterface = (*WordSpliter)(nil)
@@ -233,8 +231,8 @@ package main
 
 
 import (
-	"gitlab.yewifi.com/risk-control/risk-common/cmd/examples/word-count/wordcount"
-	"gitlab.yewifi.com/risk-control/risk-common/pkg/gostreaming"
+	"/risk-control/risk-common/cmd/examples/word-count/wordcount"
+	"/risk-control/risk-common/pkg/gostreaming"
 )
 
 func main() {
@@ -343,7 +341,7 @@ package wordcount
 // File: cmd/examples/word-count/wordcount/word_counter.go
 
 import (
-	"gitlab.yewifi.com/risk-control/risk-common/pkg/gostreaming"
+	"/risk-control/risk-common/pkg/gostreaming"
 )
 
 var _ gostreaming.DataStreamInterface = (*WordCounter)(nil)
@@ -388,7 +386,7 @@ import (
 	"time"
 
 	"github.com/emirpasic/gods/sets/treeset"
-	"gitlab.yewifi.com/risk-control/risk-common/pkg/gostreaming"
+	"/risk-control/risk-common/pkg/gostreaming"
 )
 
 var _ gostreaming.DataStreamInterface = (*WordCountPrinter)(nil)
@@ -471,8 +469,8 @@ package main
 // File: cmd/examples/word-count/main.go
 
 import (
-	"gitlab.yewifi.com/risk-control/risk-common/cmd/examples/word-count/wordcount"
-	"gitlab.yewifi.com/risk-control/risk-common/pkg/gostreaming"
+	"/risk-control/risk-common/cmd/examples/word-count/wordcount"
+	"/risk-control/risk-common/pkg/gostreaming"
 )
 
 func main() {

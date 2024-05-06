@@ -1,6 +1,6 @@
 package constants
 
-import "gitlab.yewifi.com/golden-cloud/common/constval2"
+import "github.com/leeprince/goinfra/consts/constval"
 
 /**
  * @Author: prince.lee <leeprince@foxmail.com>
@@ -21,9 +21,9 @@ import "gitlab.yewifi.com/golden-cloud/common/constval2"
 type RiskRuleCode string
 
 var (
-	RiskRuleCodeSingleDayAllChannelTotalAmount = constval2.NewString("A01000", "单日出款总额（所有通道汇总金额）")
-	RiskRuleCodeSingleDayOneChannelTotalAmount = constval2.NewString("A01001", "日出款总额度（按通道汇总）")
-	RiskRuleCodeSingleDayTotalCount            = constval2.NewString("A02001", "日出款总笔数（按通道汇总）")
+	RiskRuleCodeSingleDayAllChannelTotalAmount = constval.NewString("A01000", "单日出款总额（所有通道汇总金额）")
+	RiskRuleCodeSingleDayOneChannelTotalAmount = constval.NewString("A01001", "日出款总额度（按通道汇总）")
+	RiskRuleCodeSingleDayTotalCount            = constval.NewString("A02001", "日出款总笔数（按通道汇总）")
 )
 
 // 触发风控后的决策，默认都是终止交易（STOP：终止交易）
