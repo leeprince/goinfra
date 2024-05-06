@@ -3,7 +3,7 @@ package jsonutil
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/leeprince/goinfra/test/message"
+	"github.com/leeprince/goinfra/testdata/message"
 	"github.com/leeprince/goinfra/utils/dumputil"
 	"testing"
 )
@@ -44,7 +44,7 @@ func TestJsonList(t *testing.T) {
 		]
 	  }
 	}`
-	
+
 	var err error
 	// 报错：json: Unmarshal(nil *message.QueryBankListMonthBalanceResp)，因为传值到 json.Unmarshal 的第二个参数时是空指针
 	var respError *message.QueryBankListMonthBalanceResp
@@ -55,13 +55,13 @@ func TestJsonList(t *testing.T) {
 			fmt.Println("json.Unmarshal respError Error:", err)
 		}
 		fmt.Println(">>>")
-		
+
 		err = JsoniterCompatible.Unmarshal([]byte(jsonStr), respError)
 		if err != nil {
 			fmt.Println("JsoniterCompatible.Unmarshal respError Error:", err)
 		}
 	}
-	
+
 	// 正确，因为传值到 json.Unmarshal 的第二个参数时不会是空指针
 	resp1 := &message.QueryBankListMonthBalanceResp{}
 	fmt.Printf("resp1-------------------\n")
@@ -73,14 +73,14 @@ func TestJsonList(t *testing.T) {
 		}
 		fmt.Printf("json.Unmarshal resp1: %+v\n", resp1)
 		fmt.Println(">>>")
-		
+
 		err = JsoniterCompatible.Unmarshal([]byte(jsonStr), resp1)
 		if err != nil {
 			fmt.Println("JsoniterCompatible.Unmarshal resp1 Error:", err)
 			return
 		}
 		fmt.Printf("JsoniterCompatible.Unmarshal resp1: %+v\n", resp1)
-		
+
 		// Now you can work with the populated QueryBankListMonthBalanceResp structure
 		fmt.Printf("Code: %d\n", resp1.Code)
 		fmt.Printf("Message: %s\n", resp1.Message)
@@ -94,11 +94,11 @@ func TestJsonList(t *testing.T) {
 			fmt.Println("Year Month 03:", balance.YearMonth_03)
 			fmt.Println("------------")
 		}
-		
+
 		fmt.Println("+++++++++++++++++++++++++++++++")
 		dumputil.Println(resp1)
 	}
-	
+
 	// 正确，因为传值到 json.Unmarshal 的第二个参数时不会是空指针
 	var resp2 message.QueryBankListMonthBalanceResp
 	fmt.Printf("resp2-------------------\n")
@@ -110,14 +110,14 @@ func TestJsonList(t *testing.T) {
 		}
 		fmt.Printf("json.Unmarshal resp2: %+v\n", resp2)
 		fmt.Println(">>>")
-		
+
 		err = JsoniterCompatible.Unmarshal([]byte(jsonStr), &resp2)
 		if err != nil {
 			fmt.Println("JsoniterCompatible.Unmarshal resp2 Error:", err)
 			return
 		}
 		fmt.Printf("JsoniterCompatible.Unmarshal resp2: %+v\n", resp2)
-		
+
 		// Now you can work with the populated QueryBankListMonthBalanceResp structure
 		fmt.Printf("Code: %d\n", resp2.Code)
 		fmt.Printf("Message: %s\n", resp2.Message)
@@ -131,9 +131,9 @@ func TestJsonList(t *testing.T) {
 			fmt.Println("Year Month 03:", balance.YearMonth_03)
 			fmt.Println("------------")
 		}
-		
+
 		fmt.Println("+++++++++++++++++++++++++++++++")
 		dumputil.Println(resp2)
 	}
-	
+
 }

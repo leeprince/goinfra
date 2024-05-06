@@ -6,7 +6,7 @@ import (
 	"github.com/chromedp/chromedp"
 	"github.com/leeprince/goinfra/perror"
 	"github.com/leeprince/goinfra/plog"
-	"github.com/leeprince/goinfra/test/constants"
+	"github.com/leeprince/goinfra/testdata/constants"
 	"github.com/leeprince/goinfra/utils/idutil"
 	"log"
 	"strings"
@@ -29,7 +29,7 @@ var (
 )
 
 func main() {
-	
+
 	// --- 创建有头浏览器 ---
 	// 设置Chrome浏览器的启动参数
 	opts := append(chromedp.DefaultExecAllocatorOptions[:],
@@ -39,18 +39,18 @@ func main() {
 	)
 	allocCtx, cancel := chromedp.NewExecAllocator(context.Background(), opts...)
 	defer cancel()
-	
+
 	// 创建一个Chrome浏览器实例
 	ctx, cancel := chromedp.NewContext(allocCtx)
 	defer cancel()
 	// --- 创建有头浏览器-end ---
-	
+
 	// --- 创建无头浏览器：默认 ---
 	// // create context
 	// ctx, cancel := chromedp.NewContext(context.Background())
 	// defer cancel()
 	// --- 创建无头浏览器：默认-end ---
-	
+
 	// 打开目标网页
 	err := chromedp.Run(ctx,
 		chromedp.Navigate(navigateRPAHtmlUrl),
@@ -58,28 +58,28 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	
+
 	var (
 		orderId = "HT20230819184809OH63YOGY1426"
 		// 是否是占座订单
 		IsOccupySeat = true
-		
+
 		waitSeletorSecond = time.Second * 8
 	)
-	
+
 	logID := idutil.UniqIDV3()
 	plogEntry := plog.LogID(logID).
 		WithField("orderId", orderId).
 		WithField("method", "RPAOrderTaskService.HandlerCallbackResultNoTicket")
 	plogEntry.Info("request")
-	
+
 	var selector string
 	/*
 		// 非占座票-出票成功
 		document.querySelector("#BookSucTBody{订单ID} input.btn.btn-primary.btn-lg")
 		// 非占座票-出票失败
 		document.querySelector("#BookSucTBody{订单ID} input.btn.btn-default.btn-lg")
-	
+
 		// 占座票-占座成功
 		document.querySelector("#BookSucTBody{订单ID} input.btn.btn-success.btn-lg")
 		// 占座票-占座失败
@@ -98,7 +98,7 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	
+
 	chromeCtx := ctx
 	// 检查选择器
 	selctx, _ := context.WithTimeout(chromeCtx, waitSeletorSecond)
@@ -114,7 +114,7 @@ func main() {
 		plogEntry.WithError(err).Error("点击出票失败 失败")
 		log.Fatal(constants.CallBackErrSelect.Key(), constants.CallBackErrSelect.Value())
 	}
-	
+
 	// 检查选择器
 	selector = "#FailResonGroup"
 	fmt.Println("选择失败的原因 selector:", selector)
@@ -125,7 +125,7 @@ func main() {
 		log.Fatal(constants.CallBackErrSelect.Key(), constants.CallBackErrSelect.Value())
 	}
 	plogEntry.Info("选择失败的原因 selector 已存在")
-	
+
 	var (
 		reason                 = ""
 		seatPositionTypeString = ""
@@ -153,7 +153,7 @@ func main() {
 				err = perror.BizErrOpreate.SetMessage("操作失败：坐席无法满足的具体单选框：无上铺")
 				return
 			}
-			
+
 		} else if strings.Contains(seatPositionTypeString, "中铺") {
 			// 坐席无法满足的具体单选框：无中铺
 			err = chromedp.Run(chromeCtx,
@@ -169,7 +169,7 @@ func main() {
 				err = perror.BizErrOpreate.SetMessage("操作失败：坐席无法满足的具体单选框：无中铺")
 				return
 			}
-			
+
 		} else if strings.Contains(seatPositionTypeString, "下铺") {
 			// 坐席无法满足的具体单选框：无下铺
 			err = chromedp.Run(chromeCtx,
@@ -185,7 +185,7 @@ func main() {
 				err = perror.BizErrOpreate.SetMessage("操作失败：坐席无法满足的具体单选框：无下铺")
 				return
 			}
-			
+
 		} else if strings.Contains(seatPositionTypeString, "窗") {
 			// 坐席无法满足的具体单选框：无靠窗
 			err = chromedp.Run(chromeCtx,
@@ -201,7 +201,7 @@ func main() {
 				err = perror.BizErrOpreate.SetMessage("操作失败：坐席无法满足的具体单选框：无靠窗")
 				return
 			}
-			
+
 		} else if strings.Contains(seatPositionTypeString, "过道") {
 			// 坐席无法满足的具体单选框：无过道
 			err = chromedp.Run(chromeCtx,
@@ -217,7 +217,7 @@ func main() {
 				err = perror.BizErrOpreate.SetMessage("操作失败：坐席无法满足的具体单选框：无过道")
 				return
 			}
-			
+
 		} else if strings.Contains(seatPositionTypeString, "DF") {
 			// 坐席无法满足的具体单选框：无DF
 			err = chromedp.Run(chromeCtx,
@@ -233,7 +233,7 @@ func main() {
 				err = perror.BizErrOpreate.SetMessage("操作失败：坐席无法满足的具体单选框：无DF")
 				return
 			}
-			
+
 		} else if strings.Contains(seatPositionTypeString, "F") {
 			// 坐席无法满足的具体单选框：无F
 			err = chromedp.Run(chromeCtx,
@@ -264,7 +264,7 @@ func main() {
 				err = perror.BizErrOpreate.SetMessage("操作失败：坐席无法满足的具体单选框：无连坐")
 				return
 			}
-			
+
 		} else if strings.Contains(seatPositionTypeString, "同车厢") {
 			// 坐席无法满足的具体单选框：无同车厢
 			err = chromedp.Run(chromeCtx,
@@ -280,7 +280,7 @@ func main() {
 				err = perror.BizErrOpreate.SetMessage("操作失败：坐席无法满足的具体单选框：无同车厢")
 				return
 			}
-			
+
 		} else if strings.Contains(seatPositionTypeString, "同包厢") {
 			// 坐席无法满足的具体单选框：无同包厢
 			err = chromedp.Run(chromeCtx,
@@ -296,7 +296,7 @@ func main() {
 				err = perror.BizErrOpreate.SetMessage("操作失败：坐席无法满足的具体单选框：无同包厢")
 				return
 			}
-			
+
 		} else if strings.Contains(seatPositionTypeString, "不接受无座") {
 			// 坐席无法满足的具体单选框：只有无座，用户不接受无座
 			err = chromedp.Run(chromeCtx,
@@ -312,7 +312,7 @@ func main() {
 				err = perror.BizErrOpreate.SetMessage("操作失败：坐席无法满足的具体单选框：只有无座，用户不接受无座")
 				return
 			}
-			
+
 		} else {
 			err = HandlerCallbackResultNoTicketOfNoTicket(chromeCtx, transferNo)
 			if err != nil {
@@ -320,7 +320,7 @@ func main() {
 				err = perror.BizErrOpreate.SetMessage("操作失败：车次已无票")
 				return
 			}
-			
+
 		}
 	} else if strings.Contains(reason, "冲突") {
 		// 行程冲突
@@ -330,7 +330,7 @@ func main() {
 			// 选择具体乘客：默认选择第一个即可
 			chromedp.Sleep(waitKeyEventTime),
 			chromedp.Click("//*[@id='SubFailReasonForPassengerForm']/span/input", chromedp.BySearch),
-		
+
 		)
 		if err != nil {
 			plogEntry.WithError(err).Error("行程冲突 err")
@@ -359,7 +359,7 @@ func main() {
 			// 选择具体乘客：默认选择第一个即可
 			chromedp.Sleep(waitKeyEventTime),
 			chromedp.Click("//*[@id='SubFailReasonForPassengerForm']/span/input", chromedp.BySearch),
-		
+
 		)
 		if err != nil {
 			plogEntry.WithError(err).Error("限制高消费 err")
@@ -510,7 +510,7 @@ func main() {
 			return
 		}
 	}
-	
+
 	// 设置占座失败-点击确定
 	fmt.Println("设置占座失败-点击确定 selector:", selector)
 	err = chromedp.Run(chromeCtx,
@@ -520,7 +520,7 @@ func main() {
 		plogEntry.WithError(err).Error("设置占座失败-点击确定 err")
 		log.Fatal(constants.CallBackErrConfirmFail.Key(), constants.CallBackErrConfirmFail.Value())
 	}
-	
+
 	select {}
 }
 
@@ -530,7 +530,7 @@ func HandlerCallbackResultNoTicketOfNoTicket(chromeCtx context.Context, transfer
 	plogEntry := plog.LogID(logID).
 		WithField("method", "RPAOrderTaskService.HandlerCallbackResultNoTicket")
 	plogEntry.Info("request")
-	
+
 	if transferNo <= 1 {
 		// 车次已无票
 		// 选择原因并按键: 按下，并且松开
