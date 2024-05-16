@@ -59,6 +59,39 @@ func HistoryMonthListByMonth(date string, oldMonth int) (monthList []int64, err 
 	return
 }
 
+// ConvertOneDateStringToTimestamps 将一个日期字符串（格式为"20240901"）转换为日期对应的开始时间和结束时间戳
+func ConvertOneDateStringToTimestamps(dateString string) (startTime, endTime int64) {
+	// 解析日期字符串为time.Time类型
+	dateFormat := "20060102"
+	parsedDate, _ := time.Parse(dateFormat, dateString)
+
+	// 获取当天的开始时间戳（即00:00:00）
+	startTime = parsedDate.Unix()
+
+	// 计算结束时间戳（即第二天的00:00:00减一秒）
+	endOfDay := parsedDate.AddDate(0, 0, 1)
+	endTime = endOfDay.Add(-time.Second).Unix()
+
+	return
+}
+
+// ConvertDateStringToTimestamps 计算指定日期的开始时间和结束时间戳 将开始/结束日期字符串（格式为"20240901"）转换为日期对应的开始时间和结束时间戳
+func ConvertDateStringToTimestamps(dateStartString, dateEndString string) (startTime, endTime int64) {
+	// 解析日期字符串为time.Time类型
+	dateFormat := "20060102"
+	dateStartData, _ := time.Parse(dateFormat, dateStartString)
+	dateEndData, _ := time.Parse(dateFormat, dateEndString)
+
+	// 获取当天的开始时间戳（即00:00:00）
+	startTime = dateStartData.Unix()
+
+	// 计算结束时间戳（即第二天的00:00:00减一秒）
+	endOfDay := dateEndData.AddDate(0, 0, 1)
+	endTime = endOfDay.Add(-time.Second).Unix()
+
+	return
+}
+
 // 计算指定时间过去的时间:月
 func HistoryMonthByUseMonth(useYear, useMonth, month int) time.Time {
 	useTime := time.Date(useYear, time.Month(useMonth), 1, 0, 0, 0, 0, time.Local)
