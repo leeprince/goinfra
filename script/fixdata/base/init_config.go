@@ -33,8 +33,7 @@ func InitConfig(env string) error {
 	confFilePath := fmt.Sprintf("./conf/conf-%s.yaml", env)
 	fmt.Println("配置文件路径：", confFilePath)
 
-	Config = &Conf{}
-	yamlutil.ParseYaml(confFilePath, Config)
+	yamlutil.ParseYaml(confFilePath, &Config)
 	fmt.Println("InitConfig Config:", Config)
 
 	return nil
