@@ -2,7 +2,6 @@ package setcorpid
 
 import (
 	"fmt"
-	"github.com/leeprince/goinfra/script/fixdata/base"
 	"github.com/spf13/cobra"
 	"log"
 	"strings"

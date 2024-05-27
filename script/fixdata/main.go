@@ -1,10 +1,12 @@
 package main
 
 import (
+	"fmt"
 	"github.com/leeprince/goinfra/script/fixdata/delrepeatinvoice"
 	"github.com/leeprince/goinfra/script/fixdata/setcorpid"
 	"github.com/leeprince/goinfra/script/fixdata/version"
 	"github.com/spf13/cobra"
+	"runtime/debug"
 )
 
 /**
@@ -40,7 +42,7 @@ go run main.go setcorpid --user_id 16007312,23935025,16702494,15896309,24621220 
 go run main.go delrepeatinvoice -e test
 go run main.go delrepeatinvoice --env test
 
-# 注意：--after_updated_at 参数是有空格的，所以flag必须要用括号""包起来
+# 注意：--after_updated_at 参数是有空格的，所以flag必须要用括号""包起来；--is_update 是布尔类型，所以flag也必须适用等于号（=）跟着键值；
 go run main.go delrepeatinvoice -e test --after_updated_at "2023-08-19 00:00:00"
 go run main.go delrepeatinvoice -e test --after_updated_at="2023-08-19 00:00:00"
 go run main.go delrepeatinvoice -e test --after_updated_at="2023-08-19 00:00:00" --is_update=false
@@ -67,6 +69,12 @@ GOOS=linux GOARCH=amd64 go build -o fixdata_linux_64 main.go
 */
 
 func main() {
+	defer func() {
+		if p := recover(); p != nil {
+			fmt.Printf("main panic: %v stack: %s", p, string(debug.Stack()))
+		}
+	}()
+
 	if err := New().Execute(); err != nil {
 		panic(err)
 	}

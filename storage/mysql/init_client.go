@@ -22,6 +22,7 @@ type MysqlClient struct {
 }
 
 type MysqlConfs map[string]MysqlConf
+
 type MysqlConf struct {
 	Dsn             string           `yaml:"Dsn" json:"Dsn"`         // eg: "user:password@/dbname?charset=utf8&parseTime=True&loc=Local"
 	IsDebug         bool             `yaml:"IsDebug" json:"IsDebug"` // 调试启动调试模式
