@@ -67,7 +67,6 @@ require (
 	github.com/speps/go-hashids v2.0.0+incompatible
 	github.com/tarm/serial v0.0.0-20180830185346-98f6abe2eb07
 	github.com/zcalusic/sysinfo v1.0.1
-	gitlab.yewifi.com/golden-cloud/common v0.8.48-0.20231019082256-6a5843e02c67
 	gitlab.yewifi.com/golden-cloud/transaction-risk-control v0.0.0-20231106095017-3b32ef3c0d5d
 	go.mongodb.org/mongo-driver v1.12.1
 	go.uber.org/ratelimit v0.3.0
@@ -105,6 +104,7 @@ require (
 	github.com/xdg-go/scram v1.1.2 // indirect
 	github.com/xdg-go/stringprep v1.0.4 // indirect
 	github.com/youmark/pkcs8 v0.0.0-20181117223130-1be2e3e5546d // indirect
+	gitlab.yewifi.com/golden-cloud/common v0.8.48-0.20231019082256-6a5843e02c67 // indirect
 	golang.org/x/arch v0.4.0 // indirect
 	golang.org/x/exp v0.0.0-20220328175248-053ad81199eb // indirect
 	golang.org/x/tools v0.16.1 // indirect
