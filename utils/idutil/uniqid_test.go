@@ -2,6 +2,7 @@ package idutil
 
 import (
 	"fmt"
+	"sync"
 	"testing"
 )
 
@@ -71,4 +72,17 @@ func BenchmarkUniqIDV3(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		UniqIDV3()
 	}
+}
+
+func TestUniqIDV3Goroutine(T *testing.T) {
+	count := 100
+	var wg sync.WaitGroup
+	wg.Add(count)
+	for i := 0; i < count; i++ {
+		go func() {
+			defer wg.Done()
+			fmt.Println(UniqIDV3())
+		}()
+	}
+	wg.Wait()
 }
