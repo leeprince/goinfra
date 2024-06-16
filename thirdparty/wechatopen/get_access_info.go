@@ -22,7 +22,7 @@ type AccessTokenInfo struct {
 }
 
 // GetAccessTokenInfo 通过code获取access_token
-func (c *WechatClient) GetAccessTokenInfo(code string) (resp *AccessTokenInfo, err error) {
+func (c *WechatOpenSDK) GetAccessTokenInfo(code string) (resp *AccessTokenInfo, err error) {
 	resp = &AccessTokenInfo{}
 	
 	url := fmt.Sprintf("https://api.weixin.qq.com/sns/oauth2/access_token?appid=%s&secret=%s&code=%s&grant_type=authorization_code",

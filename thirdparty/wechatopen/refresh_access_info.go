@@ -13,7 +13,7 @@ import (
  */
 
 // RefreshAccessToken 刷新或续期access_token使用
-func (c *WechatClient) RefreshAccessToken(refreshToken string) (resp *AccessTokenInfo, err error) {
+func (c *WechatOpenSDK) RefreshAccessToken(refreshToken string) (resp *AccessTokenInfo, err error) {
 	resp = &AccessTokenInfo{}
 	
 	url := fmt.Sprintf("https://api.weixin.qq.com/sns/oauth2/refresh_token?appid=%s&grant_type=refresh_token&refresh_token=%s",

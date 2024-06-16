@@ -6,13 +6,13 @@ package wechatopen
  * @Desc:
  */
 
-type WechatClient struct {
+type WechatOpenSDK struct {
 	appid  string
 	secret string
 }
 
-func NewWechatClient(appid string, secret string) *WechatClient {
-	return &WechatClient{
+func NewWechatOpenSDK(appid string, secret string) *WechatOpenSDK {
+	return &WechatOpenSDK{
 		appid:  appid,
 		secret: secret,
 	}

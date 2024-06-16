@@ -25,7 +25,7 @@ type UserInfo struct {
 }
 
 // GetUserInfo 获取用户个人信息（UnionID机制）
-func (c *WechatClient) GetUserInfo(accessToken, openid string) (resp *UserInfo, err error) {
+func (c *WechatOpenSDK) GetUserInfo(accessToken, openid string) (resp *UserInfo, err error) {
 	resp = &UserInfo{}
 	
 	url := fmt.Sprintf("https://api.weixin.qq.com/sns/userinfo?access_token=%s&openid=%s",
