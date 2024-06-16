@@ -1,6 +1,7 @@
 package wechatopen
 
 import (
+	"context"
 	"fmt"
 	"github.com/leeprince/goinfra/http/httpcli"
 	"net/http"
@@ -26,13 +27,14 @@ type UserInfo struct {
 
 // GetUserInfo 获取用户个人信息（UnionID机制）
 // 官方文档：https://developers.weixin.qq.com/doc/oplatform/Website_App/WeChat_Login/Authorized_Interface_Calling_UnionID.html
-func (c *WechatOpenSDK) GetUserInfo(accessToken, openid string) (resp *UserInfo, err error) {
+func (c *WechatOpenSDK) GetUserInfo(ctx context.Context, accessToken, openid string) (resp *UserInfo, err error) {
 	resp = &UserInfo{}
 	
 	url := fmt.Sprintf("https://api.weixin.qq.com/sns/userinfo?access_token=%s&openid=%s",
 		accessToken, openid)
 	cli := httpcli.NewHttpClient()
-	_, _, err = cli.WithNotLogging(false).
+	_, _, err = cli.WithContext(ctx).
+		WithNotLogging(false).
 		WithMethod(http.MethodGet).
 		WithURL(url).
 		WithResponse(resp).

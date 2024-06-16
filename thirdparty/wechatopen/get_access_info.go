@@ -1,6 +1,7 @@
 package wechatopen
 
 import (
+	"context"
 	"fmt"
 	"github.com/leeprince/goinfra/http/httpcli"
 	"net/http"
@@ -23,13 +24,14 @@ type AccessTokenInfo struct {
 
 // GetAccessTokenInfo 通过code获取access_token
 // 官方文档：https://developers.weixin.qq.com/doc/oplatform/Website_App/WeChat_Login/Authorized_Interface_Calling_UnionID.html
-func (c *WechatOpenSDK) GetAccessTokenInfo(code string) (resp *AccessTokenInfo, err error) {
+func (c *WechatOpenSDK) GetAccessTokenInfo(ctx context.Context, code string) (resp *AccessTokenInfo, err error) {
 	resp = &AccessTokenInfo{}
 	
 	url := fmt.Sprintf("https://api.weixin.qq.com/sns/oauth2/access_token?appid=%s&secret=%s&code=%s&grant_type=authorization_code",
 		c.appid, c.secret, code)
 	cli := httpcli.NewHttpClient()
-	_, _, err = cli.WithNotLogging(false).
+	_, _, err = cli.WithContext(ctx).
+		WithNotLogging(false).
 		WithMethod(http.MethodGet).
 		WithURL(url).
 		WithResponse(resp).
