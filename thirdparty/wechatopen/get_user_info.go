@@ -25,6 +25,7 @@ type UserInfo struct {
 }
 
 // GetUserInfo 获取用户个人信息（UnionID机制）
+// 官方文档：https://developers.weixin.qq.com/doc/oplatform/Website_App/WeChat_Login/Authorized_Interface_Calling_UnionID.html
 func (c *WechatOpenSDK) GetUserInfo(accessToken, openid string) (resp *UserInfo, err error) {
 	resp = &UserInfo{}
 	

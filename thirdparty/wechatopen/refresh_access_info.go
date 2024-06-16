@@ -13,6 +13,7 @@ import (
  */
 
 // RefreshAccessToken 刷新或续期access_token使用
+// 官方文档：https://developers.weixin.qq.com/doc/oplatform/Website_App/WeChat_Login/Authorized_Interface_Calling_UnionID.html
 func (c *WechatOpenSDK) RefreshAccessToken(refreshToken string) (resp *AccessTokenInfo, err error) {
 	resp = &AccessTokenInfo{}
 	

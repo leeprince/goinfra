@@ -22,6 +22,7 @@ type AccessTokenInfo struct {
 }
 
 // GetAccessTokenInfo 通过code获取access_token
+// 官方文档：https://developers.weixin.qq.com/doc/oplatform/Website_App/WeChat_Login/Authorized_Interface_Calling_UnionID.html
 func (c *WechatOpenSDK) GetAccessTokenInfo(code string) (resp *AccessTokenInfo, err error) {
 	resp = &AccessTokenInfo{}
 	
