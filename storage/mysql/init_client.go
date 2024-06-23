@@ -21,33 +21,41 @@ type MysqlClient struct {
 	db *gorm.DB
 }
 
-type MysqlConfs map[string]MysqlConf
+type MysqlConfMap map[string]MysqlConf
 
 type MysqlConf struct {
-	Dsn             string           `yaml:"Dsn" json:"Dsn"`         // eg: "user:password@/dbname?charset=utf8&parseTime=True&loc=Local"
-	IsDebug         bool             `yaml:"IsDebug" json:"IsDebug"` // 调试启动调试模式
-	MaxOpenConns    int              `yaml:"MaxOpenConns" json:"MaxOpenConns"`
-	MaxIdleConns    int              `yaml:"MaxIdleConns" json:"MaxIdleConns"`
-	ConnMaxLifetime time.Duration    `yaml:"ConnMaxLifetime" json:"ConnMaxLifetime"`
-	Logger          logger.Interface `yaml:"-" json:"-"`
+	Dsn             string           `yaml:"Dsn" json:"Dsn"`                         // eg: "user:password@/dbname?charset=utf8&parseTime=True&loc=Local"
+	IsDebug         bool             `yaml:"IsDebug" json:"IsDebug"`                 // 调试启动调试模式
+	MaxOpenConns    int              `yaml:"MaxOpenConns" json:"MaxOpenConns"`       // 设置打开数据库连接的最大数量
+	MaxIdleConns    int              `yaml:"MaxIdleConns" json:"MaxIdleConns"`       // 设置空闲连接池中连接的最大数量
+	ConnMaxLifetime time.Duration    `yaml:"ConnMaxLifetime" json:"ConnMaxLifetime"` // 设置了连接可复用的最大时间
+	Logger          logger.Interface `yaml:"-" json:"-"`                             // SQL 日志
 }
 
-func InitMysqlClientMap(confs MysqlConfs) (err error) {
+func InitMysqlClientMap(confs MysqlConfMap) (err error) {
 	mysqlClients = make(map[string]MysqlClient, len(confs))
-
+	
 	for name, conf := range confs {
 		db, initErr := InitMysqlClient(conf)
 		if initErr != nil {
 			err = errors.Wrap(initErr, "InitMysqlClient error")
 			return
 		}
-
+		
 		mysqlClients[name] = MysqlClient{
 			db: db,
 		}
 	}
-
+	
 	return
+}
+
+func MustInitMysqlClient(conf MysqlConf) (db *gorm.DB) {
+	db, err := InitMysqlClient(conf)
+	if err != nil {
+		panic("初始化数据库连接池失败：" + err.Error())
+	}
+	return db
 }
 
 func InitMysqlClient(conf MysqlConf) (db *gorm.DB, err error) {
@@ -55,7 +63,7 @@ func InitMysqlClient(conf MysqlConf) (db *gorm.DB, err error) {
 		err = errors.Wrap(err, "checkMysqlConf error")
 		return
 	}
-
+	
 	gormConfig := &gorm.Config{
 		PrepareStmt: false,
 		Logger:      nil,
@@ -63,22 +71,22 @@ func InitMysqlClient(conf MysqlConf) (db *gorm.DB, err error) {
 	if conf.Logger != nil {
 		gormConfig.Logger = conf.Logger
 	}
-
+	
 	db, err = gorm.Open(mysql.Open(conf.Dsn), gormConfig)
 	if err != nil {
 		err = errors.Wrap(err, "gorm.Open error")
 		return
 	}
-
+	
 	if conf.IsDebug {
 		// 默认使用：Logger: db.Logger.LogMode(logger.Info)
 		db = db.Debug()
 	}
-
+	
 	if err = setSqlConf(db, conf); err != nil {
 		err = errors.Wrap(err, "setSqlConf error")
 	}
-
+	
 	return
 }
 
@@ -109,7 +117,7 @@ func setSqlConf(db *gorm.DB, conf MysqlConf) error {
 	if conf.ConnMaxLifetime > 0 {
 		sqlDB.SetConnMaxLifetime(conf.ConnMaxLifetime)
 	}
-
+	
 	return nil
 }
 

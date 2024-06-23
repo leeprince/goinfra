@@ -42,7 +42,7 @@ func TestInitMysqlClient(t *testing.T) {
 	tmpMysql := "tmp"
 	
 	type args struct {
-		confs MysqlConfs
+		confs MysqlConfMap
 	}
 	tests := []struct {
 		name    string
@@ -51,7 +51,7 @@ func TestInitMysqlClient(t *testing.T) {
 	}{
 		{
 			args: args{
-				confs: MysqlConfs{
+				confs: MysqlConfMap{
 					tmpMysql: MysqlConf{
 						Dsn:     "root:leeprince@tcp(127.0.0.1:3306)/tmp?charset=utf8mb4&parseTime=true&loc=Local&interpolateParams=True",
 						IsDebug: true,
