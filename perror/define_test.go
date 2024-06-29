@@ -62,12 +62,12 @@ func TestBizErr(t *testing.T) {
 		fmt.Println("BizErrRequired>>>>>>>>>>not errors.Is(error, &perror.BizErr{})")
 	}
 	if errors.Is(err, perror.BizErrRequired) {
-		fmt.Println("BizErrRequired>>>>>>>>>>errors.Is(error, code.BizErrRequired)")
+		fmt.Println("BizErrRequired>>>>>>>>>>errors.Is(error, perror.BizErrRequired)")
 		fmt.Println(err)
 		fmt.Println(err.GetCode())
 		fmt.Println(err.GetMessage())
 	} else {
-		fmt.Println("BizErrRequired>>>>>>>>>>not errors.Is(error, code.BizErrRequired)")
+		fmt.Println("BizErrRequired>>>>>>>>>>not errors.Is(error, perror.BizErrRequired)")
 	}
 	if errors.As(err, &perror.BizErr{}) {
 		fmt.Println("BizErrRequired>>>>>>>>>>errors.As(error, &perror.BizErr{})")
@@ -78,12 +78,56 @@ func TestBizErr(t *testing.T) {
 		fmt.Println("BizErrRequired>>>>>>>>>>not errors.As(error, &perror.BizErr{})")
 	}
 	if errors.As(err, &perror.BizErrRequired) {
-		fmt.Println("BizErrRequired>>>>>>>>>>errors.As(error, code.BizErrRequired)")
+		fmt.Println("BizErrRequired>>>>>>>>>>errors.As(error, perror.BizErrRequired)")
 		fmt.Println(err)
 		fmt.Println(err.GetCode())
 		fmt.Println(err.GetMessage())
 	} else {
-		fmt.Println("BizErrRequired>>>>>>>>>>not errors.As(error, code.BizErrRequired)")
+		fmt.Println("BizErrRequired>>>>>>>>>>not errors.As(error, perror.BizErrRequired)")
+	}
+	
+	// ---
+	fmt.Println("---重新设置Message")
+	err = perror.BizErrRequired.SetMessage("重新设置Message")
+	if errors.Is(err, &perror.BizErr{}) {
+		fmt.Println("BizErrRequired>>>>>>>>>>errors.Is(error, &perror.BizErr{})")
+		fmt.Println(err)
+		fmt.Println(err.GetCode())
+		fmt.Println(err.GetMessage())
+	} else {
+		fmt.Println("BizErrRequired>>>>>>>>>>not errors.Is(error, &perror.BizErr{})")
+	}
+	if errors.Is(err, perror.BizErrRequired) {
+		fmt.Println("BizErrRequired>>>>>>>>>>errors.Is(error, perror.BizErrRequired)")
+		fmt.Println(err)
+		fmt.Println(err.GetCode())
+		fmt.Println(err.GetMessage())
+	} else {
+		fmt.Println("BizErrRequired>>>>>>>>>>not errors.Is(error, perror.BizErrRequired)")
+	}
+	if errors.As(err, &perror.BizErr{}) {
+		fmt.Println("BizErrRequired>>>>>>>>>>errors.As(error, &perror.BizErr{})")
+		fmt.Println(err)
+		fmt.Println(err.GetCode())
+		fmt.Println(err.GetMessage())
+	} else {
+		fmt.Println("BizErrRequired>>>>>>>>>>not errors.As(error, &perror.BizErr{})")
+	}
+	if errors.As(err, &perror.BizErrRequired) {
+		fmt.Println("BizErrRequired>>>>>>>>>>errors.As(error, perror.BizErrRequired)")
+		fmt.Println(err)
+		fmt.Println(err.GetCode())
+		fmt.Println(err.GetMessage())
+	} else {
+		fmt.Println("BizErrRequired>>>>>>>>>>not errors.As(error, perror.BizErrRequired)")
+	}
+	if errors.As(err, &perror.Success) {
+		fmt.Println("BizErrRequired>>>>>>>>>>errors.As(error, perror.Success)")
+		fmt.Println(err)
+		fmt.Println(err.GetCode())
+		fmt.Println(err.GetMessage())
+	} else {
+		fmt.Println("BizErrRequired>>>>>>>>>>not errors.As(error, perror.Success)")
 	}
 	fmt.Println("----------------errors.Is()/errros.As()-end")
 }
@@ -212,7 +256,7 @@ func TestErrorWrap(t *testing.T) {
 func TestBizErrFmtErrorfWrap(t *testing.T) {
 	// --- 定义方式
 	// ---1
-	// err := code.BizErr{} // 测试
+	// err := perror.BizErr{} // 测试
 	// ---2
 	err := perror.BizErrRequired
 	
@@ -245,10 +289,10 @@ func TestBizErrFmtErrorfWithErrorAssert(t *testing.T) {
 		fmt.Println("BizErrRequired>>>>>>>>>>not errors.Is(error, &perror.BizErr{})")
 	}
 	if errors.Is(err, perror.BizErrRequired) {
-		fmt.Println("BizErrRequired>>>>>>>>>>errors.Is(error, code.BizErrRequired)")
+		fmt.Println("BizErrRequired>>>>>>>>>>errors.Is(error, perror.BizErrRequired)")
 		fmt.Println(err)
 	} else {
-		fmt.Println("BizErrRequired>>>>>>>>>>not errors.Is(error, code.BizErrRequired)")
+		fmt.Println("BizErrRequired>>>>>>>>>>not errors.Is(error, perror.BizErrRequired)")
 	}
 	if errors.As(err, &perror.BizErr{}) {
 		fmt.Println("BizErrRequired>>>>>>>>>>errors.As(error, &perror.BizErr{})")
@@ -267,16 +311,16 @@ func TestBizErrFmtErrorfWithErrorAssert(t *testing.T) {
 		fmt.Println("BizErrRequired>>>>>>>>>>not errors.Is(error, &perror.BizErr{})")
 	}
 	if errors.Is(err, perror.BizErrRequired) {
-		fmt.Println("BizErrRequired>>>>>>>>>>errors.Is(error, code.BizErrRequired)")
+		fmt.Println("BizErrRequired>>>>>>>>>>errors.Is(error, perror.BizErrRequired)")
 		fmt.Println(err)
 	} else {
-		fmt.Println("BizErrRequired>>>>>>>>>>not errors.Is(error, code.BizErrRequired)")
+		fmt.Println("BizErrRequired>>>>>>>>>>not errors.Is(error, perror.BizErrRequired)")
 	}
 	if errors.Is(err, perror.BizErrFormatConvert) {
-		fmt.Println("BizErrRequired>>>>>>>>>>errors.Is(error, code.BizErrFormatConvert)")
+		fmt.Println("BizErrRequired>>>>>>>>>>errors.Is(error, perror.BizErrFormatConvert)")
 		fmt.Println(err)
 	} else {
-		fmt.Println("BizErrRequired>>>>>>>>>>not errors.Is(error, code.BizErrFormatConvert)")
+		fmt.Println("BizErrRequired>>>>>>>>>>not errors.Is(error, perror.BizErrFormatConvert)")
 	}
 	if errors.As(err, &perror.BizErr{}) {
 		fmt.Println("BizErrRequired>>>>>>>>>>errors.As(error, &perror.BizErr{})")
@@ -298,10 +342,10 @@ func TestBizErrFmtErrorfWrapAssert(t *testing.T) {
 		fmt.Println("BizErrRequired>>>>>>>>>>not errors.Is(error, &perror.BizErr{})")
 	}
 	if errors.Is(err, perror.BizErrRequired) {
-		fmt.Println("BizErrRequired>>>>>>>>>>errors.Is(error, code.BizErrRequired)")
+		fmt.Println("BizErrRequired>>>>>>>>>>errors.Is(error, perror.BizErrRequired)")
 		fmt.Println(err)
 	} else {
-		fmt.Println("BizErrRequired>>>>>>>>>>not errors.Is(error, code.BizErrRequired)")
+		fmt.Println("BizErrRequired>>>>>>>>>>not errors.Is(error, perror.BizErrRequired)")
 	}
 	if errors.As(err, &perror.BizErr{}) {
 		fmt.Println("BizErrRequired>>>>>>>>>>errors.As(error, &perror.BizErr{})")

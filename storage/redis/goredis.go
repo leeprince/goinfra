@@ -14,7 +14,7 @@ import (
  * @Date:   2022/2/26 下午10:31
  * @Desc:   redis
  *              关于 value 参数为 interface{} 时
- *                  value 为切片：对于lpush(rpush)会当作列表中的多个元素。c.cli.LPush 的 value 支持传入`...interface{}`
+ *                  value 为切片：对于lpush(rpush)会当作列表中的多个元素。r.cli.LPush 的 value 支持传入`...interface{}`
  *                  value 为结构体或者部分命令传入切片（ZAdd 方法的 Z.Member 为切片）时：需实现 `encoding.BinaryMarshaler` 接口(MarshalBinary 方法), 否则报错`redis: can't marshal []string (implement encoding.BinaryMarshaler)`。建议直接转成 json string 或者 []byte
  */
 
@@ -81,77 +81,100 @@ func GetGoredis(name string) *Goredis {
 	return client
 }
 
-func (c *Goredis) WithContext(ctx context.Context) RedisClient {
-	c.ctx = ctx
-	return c
+func (r *Goredis) WithContext(ctx context.Context) RedisClient {
+	r.ctx = ctx
+	return r
 }
 
-func (c *Goredis) SelectDB(index int) error {
-	return c.cli.Conn(c.ctx).Select(c.ctx, index).Err()
+func (r *Goredis) SelectDB(index int) error {
+	return r.cli.Conn(r.ctx).Select(r.ctx, index).Err()
 }
 
-func (c *Goredis) Set(key string, value interface{}, expiration time.Duration) error {
-	return c.cli.Set(c.ctx, key, value, expiration).Err()
+func (r *Goredis) Set(key string, value interface{}, expiration time.Duration) error {
+	return r.cli.Set(r.ctx, key, value, expiration).Err()
 }
 
-func (c *Goredis) SetNx(key string, value interface{}, expiration time.Duration) (bool, error) {
-	boolCmd := c.cli.SetNX(c.ctx, key, value, expiration)
+func (r *Goredis) SetNx(key string, value interface{}, expiration time.Duration) (bool, error) {
+	boolCmd := r.cli.SetNX(r.ctx, key, value, expiration)
 	return boolCmd.Val(), boolCmd.Err()
 }
 
-func (c *Goredis) GetAndDel(key string, value interface{}) error {
-	ok, err := c.cli.Eval(c.ctx, luaRedisGetAndDelScript, []string{key}, value).Bool()
+func (r *Goredis) GetAndDel(key string, value interface{}) error {
+	ok, err := r.cli.Eval(r.ctx, getAndDelLuaScript, []string{key}, value).Bool()
 	if !ok || err != nil {
 		return fmt.Errorf("[GetAndDel] Fail key:%v;val:%v;ok:%v;err:%v", key, value, ok, err)
 	}
 	return nil
 }
 
-func (c *Goredis) Eval(script string, keys []string, args ...interface{}) (resutl interface{}, err error) {
-	return c.cli.Eval(c.ctx, script, keys, args...).Result()
+// 批量删除脚本的散列值：加载Lua脚本到Redis服务器的，并获取该脚本的SHA1散列值以便后续复用。
+var delBatchKeySha string
+
+func (r *Goredis) DelBatchKey(keys []string) (deletedCount int64, err error) {
+	if delBatchKeySha == "" {
+		delBatchKeySha, err = r.cli.ScriptLoad(context.Background(), delBatchKeyLuaScript).Result()
+		if err != nil {
+			return
+		}
+	}
+	result, err := r.EvalSha(delBatchKeySha, keys)
+	if err != nil {
+		return
+	}
+	
+	deletedCount, _ = result.(int64)
+	return
 }
 
-func (c *Goredis) GetString(key string) string {
-	return c.cli.Get(c.ctx, key).String()
+func (r *Goredis) Eval(script string, keys []string, args ...interface{}) (result interface{}, err error) {
+	return r.cli.Eval(r.ctx, script, keys, args...).Result()
 }
 
-func (c *Goredis) GetInt64(key string) (int64, error) {
-	return c.cli.Get(c.ctx, key).Int64()
+func (r *Goredis) EvalSha(sha string, keys []string, args ...interface{}) (result interface{}, err error) {
+	return r.cli.EvalSha(r.ctx, sha, keys, args...).Result()
 }
 
-func (c *Goredis) GetBytes(key string) ([]byte, error) {
-	return c.cli.Get(c.ctx, key).Bytes()
+func (r *Goredis) GetString(key string) string {
+	return r.cli.Get(r.ctx, key).String()
 }
 
-func (c *Goredis) GetScanStruct(key string, value interface{}) error {
-	return c.cli.Get(c.ctx, key).Scan(value)
+func (r *Goredis) GetInt64(key string) (int64, error) {
+	return r.cli.Get(r.ctx, key).Int64()
+}
+
+func (r *Goredis) GetBytes(key string) ([]byte, error) {
+	return r.cli.Get(r.ctx, key).Bytes()
+}
+
+func (r *Goredis) GetScanStruct(key string, value interface{}) error {
+	return r.cli.Get(r.ctx, key).Scan(value)
 }
 
 // Push 和 Pop 默认的方向是相反的，符合队列的：先进先出
 //  value参数说明: 关于 value 说明参考该文件顶部`关于 value 参数为 interface{} 时`
-func (c *Goredis) Push(key string, value interface{}, isRight ...bool) error {
+func (r *Goredis) Push(key string, value interface{}, isRight ...bool) error {
 	if len(isRight) > 0 && isRight[0] {
-		return c.cli.RPush(c.ctx, key, value).Err()
+		return r.cli.RPush(r.ctx, key, value).Err()
 	}
-	return c.cli.LPush(c.ctx, key, value).Err()
+	return r.cli.LPush(r.ctx, key, value).Err()
 }
 
 // Push 和 Pop 默认的方向是相反的，符合队列的：先进先出
-func (c *Goredis) Pop(key string, isLeft ...bool) (data []byte, err error) {
+func (r *Goredis) Pop(key string, isLeft ...bool) (data []byte, err error) {
 	if len(isLeft) > 0 && isLeft[0] {
-		return c.cli.LPop(c.ctx, key).Bytes()
+		return r.cli.LPop(r.ctx, key).Bytes()
 	}
-	return c.cli.RPop(c.ctx, key).Bytes()
+	return r.cli.RPop(r.ctx, key).Bytes()
 }
 
 // Push 和 BPop 默认的方向是相反的，符合队列的：先进先出
-func (c *Goredis) BPop(key string, timeout time.Duration, isLeft ...bool) (data interface{}, err error) {
+func (r *Goredis) BPop(key string, timeout time.Duration, isLeft ...bool) (data interface{}, err error) {
 	// keyValueSlic: 0:key 1:value
 	var keyValueSlice []string
 	if len(isLeft) > 0 && isLeft[0] {
-		err = c.cli.BLPop(c.ctx, timeout, key).ScanSlice(&keyValueSlice)
+		err = r.cli.BLPop(r.ctx, timeout, key).ScanSlice(&keyValueSlice)
 	} else {
-		err = c.cli.BRPop(c.ctx, timeout, key).ScanSlice(&keyValueSlice)
+		err = r.cli.BRPop(r.ctx, timeout, key).ScanSlice(&keyValueSlice)
 	}
 	// fmt.Printf("(c *Goredis) BPop error = %v, keyValueSlice=%v, keyValueSlice Type=%T \n", err, keyValueSlice, keyValueSlice)
 	// fmt.Println(cast.ToString(keyValueSlice[0]), cast.ToString(keyValueSlice[1]))
@@ -171,7 +194,7 @@ func (c *Goredis) BPop(key string, timeout time.Duration, isLeft ...bool) (data 
 }
 
 // value参数说明: 关于 value 说明参考该文件顶部`关于 value 参数为 interface{} 时`
-func (c *Goredis) ZAdd(key string, members ...*Z) error {
+func (r *Goredis) ZAdd(key string, members ...*Z) error {
 	if len(members) == 0 {
 		return errors.New("(c *Goredis) ZAdd len(members) == 0")
 	}
@@ -183,10 +206,10 @@ func (c *Goredis) ZAdd(key string, members ...*Z) error {
 			Member: i2.Member,
 		})
 	}
-	return c.cli.ZAdd(c.ctx, key, redisMembers...).Err()
+	return r.cli.ZAdd(r.ctx, key, redisMembers...).Err()
 }
 
-func (c *Goredis) ZRangeByScore(key string, opt *ZRangeBy) (data []string, err error) {
+func (r *Goredis) ZRangeByScore(key string, opt *ZRangeBy) (data []string, err error) {
 	if opt.Max == "" {
 		err = errors.New("opt.Max can not empty")
 		return
@@ -205,7 +228,7 @@ func (c *Goredis) ZRangeByScore(key string, opt *ZRangeBy) (data []string, err e
 	//  []string 返回的顺序与 redigo 兼容。
 	if opt.isReturnScore {
 		var zSlice []redis.Z
-		zSlice, err = c.cli.ZRangeByScoreWithScores(c.ctx, key, ZRangeBy).Result()
+		zSlice, err = r.cli.ZRangeByScoreWithScores(r.ctx, key, ZRangeBy).Result()
 		// fmt.Printf("zSlice type:%T zSlice:%v \n", zSlice, zSlice)
 		if err != nil {
 			return
@@ -216,49 +239,49 @@ func (c *Goredis) ZRangeByScore(key string, opt *ZRangeBy) (data []string, err e
 		}
 		return
 	}
-	data, err = c.cli.ZRangeByScore(c.ctx, key, ZRangeBy).Result()
+	data, err = r.cli.ZRangeByScore(r.ctx, key, ZRangeBy).Result()
 	// fmt.Printf("data type:%T data:%v \n", data, data)
 	
 	return
 }
 
 // 移除有序集合中的一个或多个成员
-func (c *Goredis) ZRem(key string, members ...interface{}) error {
+func (r *Goredis) ZRem(key string, members ...interface{}) error {
 	if len(members) == 0 {
 		return errors.New("(c *Goredis) ZAdd len(members) == 0")
 	}
 	
-	return c.cli.ZRem(c.ctx, key, members...).Err()
+	return r.cli.ZRem(r.ctx, key, members...).Err()
 }
 
 // 将 key 中储存的数字值增一。
-func (c *Goredis) Incr(key string) (int64, error) {
-	cmd := c.cli.Incr(c.ctx, key)
+func (r *Goredis) Incr(key string) (int64, error) {
+	cmd := r.cli.Incr(r.ctx, key)
 	return cmd.Val(), cmd.Err()
 }
 
-func (c *Goredis) Decr(key string) (int64, error) {
-	cmd := c.cli.Decr(c.ctx, key)
+func (r *Goredis) Decr(key string) (int64, error) {
+	cmd := r.cli.Decr(r.ctx, key)
 	return cmd.Val(), cmd.Err()
 }
 
 // 将 key 所储存的值加上给定的增量值（increment） 。
-func (c *Goredis) IncrBy(key string, value int64) (int64, error) {
-	cmd := c.cli.IncrBy(c.ctx, key, value)
+func (r *Goredis) IncrBy(key string, value int64) (int64, error) {
+	cmd := r.cli.IncrBy(r.ctx, key, value)
 	return cmd.Val(), cmd.Err()
 }
 
-func (c *Goredis) DecrBy(key string, value int64) (int64, error) {
-	cmd := c.cli.DecrBy(c.ctx, key, value)
+func (r *Goredis) DecrBy(key string, value int64) (int64, error) {
+	cmd := r.cli.DecrBy(r.ctx, key, value)
 	return cmd.Val(), cmd.Err()
 }
 
-func (c *Goredis) Publish(channel string, message interface{}) error {
-	return c.cli.Publish(c.ctx, channel, message).Err()
+func (r *Goredis) Publish(channel string, message interface{}) error {
+	return r.cli.Publish(r.ctx, channel, message).Err()
 }
 
-func (c *Goredis) Subscribe(channels ...string) *SubscribeMessage {
-	subscribeChannel := c.cli.Subscribe(c.ctx, channels...).Channel()
+func (r *Goredis) Subscribe(channels ...string) *SubscribeMessage {
+	subscribeChannel := r.cli.Subscribe(r.ctx, channels...).Channel()
 	
 	// for 与 select...case... 都能接收通道（channel）的数据
 	// for 通道（channel）只有一个参数, 并且需要返回时外面也需要 return

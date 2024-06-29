@@ -16,8 +16,7 @@ import (
  * @Desc:   不可逆加密: 对应函数称为：散列函数/hash函数/哈希函数，如：MD5、SHA、HMAC 等
  */
 
-// MD5:
-//
+// MD5 MD5
 //	encryptOpts.isToHex: 默认转十六进制
 func MD5(src string, opts ...OptionFunc) string {
 	h := md5.New()
@@ -27,7 +26,7 @@ func MD5(src string, opts ...OptionFunc) string {
 	return OutputFormat(h.Sum(nil), opt.outputType)
 }
 
-// SHA256:
+// SHA256 SHA256
 //	encryptOpts.isToHex: 默认转十六进制
 func SHA256(src string, opts ...OptionFunc) string {
 	h := sha256.New()
@@ -37,7 +36,7 @@ func SHA256(src string, opts ...OptionFunc) string {
 	return OutputFormat(h.Sum(nil), opt.outputType)
 }
 
-// Hmac+Hash函数
+// HMACHash Hmac+Hash函数
 //	encryptOpts.isToHex: 默认转十六进制
 func HMACHash(src, key string, opts ...OptionFunc) (string, error) {
 	opt := initOption(opts...)
@@ -59,6 +58,7 @@ func HMACHash(src, key string, opts ...OptionFunc) (string, error) {
 	return OutputFormat(h.Sum(nil), opt.outputType), nil
 }
 
+// Bcrypt 密码加密
 func Bcrypt(src string, opts ...OptionFunc) (string, error) {
 	opt := initOption(opts...)
 	
