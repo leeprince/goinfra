@@ -26,12 +26,36 @@ func TestBizErr(t *testing.T) {
 		fmt.Println("Success>>>>>>>>>>not errors.Is(&perror.BizErr{})")
 	}
 	if errors.Is(err, perror.Success) {
-		fmt.Println("Success>>>>>>>>>>errors.Is(err, code.Success)")
+		fmt.Println("Success>>>>>>>>>>errors.Is(err, perror.Success)")
 		fmt.Println(err)
 		fmt.Println(err.GetCode())
 		fmt.Println(err.GetMessage())
 	} else {
-		fmt.Println("Success>>>>>>>>>>not errors.Is(error, code.Success)")
+		fmt.Println("Success>>>>>>>>>>not errors.Is(error, perror.Success)")
+	}
+	if errors.Is(err, &perror.Success) {
+		fmt.Println("Success>>>>>>>>>>errors.Is(err, &perror.Success)")
+		fmt.Println(err)
+		fmt.Println(err.GetCode())
+		fmt.Println(err.GetMessage())
+	} else {
+		fmt.Println("Success>>>>>>>>>>not errors.Is(error, &perror.Success)")
+	}
+	if errors.Is(err, perror.Fail) {
+		fmt.Println("Success>>>>>>>>>>errors.Is(err, perror.Fail)")
+		fmt.Println(err)
+		fmt.Println(err.GetCode())
+		fmt.Println(err.GetMessage())
+	} else {
+		fmt.Println("Success>>>>>>>>>>not errors.Is(error, perror.Fail)")
+	}
+	if errors.Is(err, &perror.Fail) {
+		fmt.Println("Success>>>>>>>>>>errors.Is(err, &perror.Fail)")
+		fmt.Println(err)
+		fmt.Println(err.GetCode())
+		fmt.Println(err.GetMessage())
+	} else {
+		fmt.Println("Success>>>>>>>>>>not errors.Is(error, &perror.Fail)")
 	}
 	if errors.As(err, &perror.BizErr{}) {
 		fmt.Println("Success>>>>>>>>>>errors.As(error, &perror.BizErr{})")
@@ -42,12 +66,20 @@ func TestBizErr(t *testing.T) {
 		fmt.Println("Success>>>>>>>>>>not errors.As(error, &perror.BizErr{})")
 	}
 	if errors.As(err, &perror.Success) {
-		fmt.Println("Success>>>>>>>>>>errors.As(error, code.Success)")
+		fmt.Println("Success>>>>>>>>>>errors.As(error, perror.Success)")
 		fmt.Println(err)
 		fmt.Println(err.GetCode())
 		fmt.Println(err.GetMessage())
 	} else {
-		fmt.Println("Success>>>>>>>>>>not errors.As(error, code.Success)")
+		fmt.Println("Success>>>>>>>>>>not errors.As(error, perror.Success)")
+	}
+	if errors.As(err, &perror.Fail) {
+		fmt.Println("Success>>>>>>>>>>errors.As(error, perror.Fail)")
+		fmt.Println(err)
+		fmt.Println(err.GetCode())
+		fmt.Println(err.GetMessage())
+	} else {
+		fmt.Println("Success>>>>>>>>>>not errors.As(error, perror.Fail)")
 	}
 	
 	// ---
@@ -135,78 +167,79 @@ func TestBizErr(t *testing.T) {
 func TestErrorNew(t *testing.T) {
 	fmt.Println("----------------errors.New")
 	err := errors.New("ddd")
-	if bizErr, ok := err.(perror.BizErr); ok {
-		fmt.Println("errors.New>>>>>>>>>>err.(perror.BizErr)")
+	var bizErr perror.BizErr
+	if errors.As(err, &bizErr) {
+		fmt.Println("errors.New>>>>>>>>>>errors.As(err, &bizErr)")
 		fmt.Println(bizErr)
 		fmt.Println(bizErr.GetCode())
 		fmt.Println(bizErr.GetMessage())
-	} else {
-		fmt.Println("errors.New>>>>>>>>>>not err.(perror.BizErr)")
 	}
 	
-	if bizErr, ok := err.(*perror.BizErr); ok {
-		fmt.Println("errors.New>>>>>>>>>>err.(*perror.BizErr)")
+	if errors.As(err, &bizErr) {
+		fmt.Println("errors.New>>>>>>>>>>errors.As(err, &bizErr)")
 		fmt.Println(bizErr)
 		fmt.Println(bizErr.GetCode())
 		fmt.Println(bizErr.GetMessage())
-	} else {
-		fmt.Println("errors.New>>>>>>>>>>not err.(*perror.BizErr)")
 	}
 	
 	if errors.Is(err, &perror.BizErr{}) {
-		fmt.Println("errors.New>>>>>>>>>>errors.Is(error, &perror.BizErr{})")
+		fmt.Println("errors.New>>>>>>>>>>errors.Is(error, errors.Is(err, &perror.BizErr{})")
 		fmt.Println(err)
 	} else {
-		fmt.Println("errors.New>>>>>>>>>>not errors.Is(error, &perror.BizErr{})")
+		fmt.Println("errors.New>>>>>>>>>>not errors.Is(error, errors.Is(err, &perror.BizErr{})")
 	}
 	
 	if errors.As(err, &perror.BizErr{}) {
-		fmt.Println("errors.New>>>>>>>>>>errors.As(error, &perror.BizErr{})")
+		fmt.Println("errors.New>>>>>>>>>>errors.As(error, errors.As(err, &perror.BizErr{})")
 		fmt.Println(err)
 	} else {
-		fmt.Println("errors.New>>>>>>>>>>not errors.As(error, &perror.BizErr{})")
+		fmt.Println("errors.New>>>>>>>>>>not errors.As(error, errors.As(err, &perror.BizErr{})")
 	}
 	
 	// ---
 	fmt.Println("---")
 	err = perror.Success
-	if bizErr, ok := err.(perror.BizErr); ok {
-		fmt.Println("Success>>>>>>>>>>err.(perror.BizErr)")
+	if errors.As(err, &bizErr) {
+		fmt.Println("Success>>>>>>>>>>errors.As(err, &bizErr)")
 		fmt.Println(bizErr)
 		fmt.Println(bizErr.GetCode())
 		fmt.Println(bizErr.GetMessage())
 	} else {
-		fmt.Println("Success>>>>>>>>>>not err.(perror.BizErr)")
-	}
-	
-	if bizErr, ok := err.(*perror.BizErr); ok {
-		fmt.Println("errors.New>>>>>>>>>>err.(*perror.BizErr)")
-		fmt.Println(bizErr)
-		fmt.Println(bizErr.GetCode())
-		fmt.Println(bizErr.GetMessage())
-	} else {
-		fmt.Println("errors.New>>>>>>>>>>not err.(*perror.BizErr)")
+		fmt.Println("Success>>>>>>>>>>not errors.As(err, &bizErr)")
 	}
 	
 	if errors.Is(err, &perror.BizErr{}) {
-		fmt.Println("Success>>>>>>>>>>errors.Is(error, &perror.BizErr{})")
+		fmt.Println("Success>>>>>>>>>>errors.Is(err, &perror.BizErr{})")
 		fmt.Println(err)
 	} else {
-		fmt.Println("Success>>>>>>>>>>not errors.Is(error, &perror.BizErr{})")
+		fmt.Println("Success>>>>>>>>>>not errors.Is(err, &perror.BizErr{})")
 	}
 	if errors.Is(err, perror.BizErr{}) {
-		fmt.Println("Success>>>>>>>>>>errors.Is(error, perror.BizErr{})")
+		fmt.Println("Success>>>>>>>>>>errors.Is(err, perror.BizErr{})")
 		fmt.Println(err)
 	} else {
-		fmt.Println("Success>>>>>>>>>>not errors.Is(error, perror.BizErr{})")
+		fmt.Println("Success>>>>>>>>>>not errors.Is(err, perror.BizErr{})")
+	}
+	
+	if errors.Is(err, perror.Success) {
+		fmt.Println("Success>>>>>>>>>>errors.Is(err, perror.Success)")
+		fmt.Println(err)
+	} else {
+		fmt.Println("Success>>>>>>>>>>not errors.Is(err, perror.Success)")
+	}
+	if errors.Is(err, &perror.Success) {
+		fmt.Println("Success>>>>>>>>>>errors.Is(err, &perror.Success)")
+		fmt.Println(err)
+	} else {
+		fmt.Println("Success>>>>>>>>>>not errors.Is(err, &perror.Success)")
 	}
 	
 	// perror.BizErr{} 必须是指针类型，否则报错：must be a pointer to an interface or to a type implementing the interface
 	if errors.As(err, &perror.BizErr{}) {
-		fmt.Println("Success>>>>>>>>>>errors.As(error, &perror.BizErr{})")
+		fmt.Println("Success>>>>>>>>>>errors.As(error, errors.As(err, &perror.BizErr{})")
 		fmt.Println(err)
 	} else {
-		fmt.Println("Success>>>>>>>>>>not errors.As(error, &perror.BizErr{})")
+		fmt.Println("Success>>>>>>>>>>not errors.As(error, errors.As(err, &perror.BizErr{})")
 	}
 	fmt.Println("----------------errors.New-end")
 }

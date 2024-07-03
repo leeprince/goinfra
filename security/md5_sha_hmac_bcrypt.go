@@ -64,7 +64,7 @@ func Bcrypt(src string, opts ...OptionFunc) (string, error) {
 	
 	cryptByte, err := bcrypt.GenerateFromPassword([]byte(src), opt.bcryptCost)
 	if err != nil {
-	
+		return "", err
 	}
 	return OutputFormat(cryptByte, opt.outputType), nil
 }
