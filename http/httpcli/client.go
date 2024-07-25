@@ -171,7 +171,7 @@ func (s *HttpClient) Do() ([]byte, *http.Response, error) {
 	}
 	err = jsoniter.Unmarshal(bodyBytes, s.resp)
 	if err != nil {
-		return nil, nil, err
+		return bodyBytes, httpResp, err
 	}
 	
 	return bodyBytes, httpResp, nil
