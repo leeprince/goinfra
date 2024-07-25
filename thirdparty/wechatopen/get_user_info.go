@@ -16,7 +16,7 @@ import (
 type UserInfo struct {
 	Openid     string   `json:"openid"`     // 	普通用户的标识，对当前开发者账号唯一
 	Nickname   string   `json:"nickname"`   // 	普通用户昵称
-	Sex        string   `json:"sex"`        // 	普通用户性别，1为男性，2为女性
+	Sex        int32    `json:"sex"`        // 	普通用户性别，1为男性，2为女性
 	Province   string   `json:"province"`   // 	普通用户个人资料填写的省份
 	City       string   `json:"city"`       // 	普通用户个人资料填写的城市
 	Country    string   `json:"country"`    // 	国家，如中国为CN

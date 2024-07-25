@@ -38,11 +38,17 @@ const (
 
 var defaultHeader = map[string]string{"Content-Type": "application/json"}
 
+type Logger interface {
+	Info(...any)
+	Error(...any)
+}
+
 type HttpClient struct {
 	url           string
 	method        string          // http包中的字符串。如：http.MethodGet
 	ctx           context.Context // 默认：context.Background()
 	logID         string
+	logger        Logger
 	timeout       time.Duration
 	header        map[string]string
 	requestBody   interface{}
@@ -116,6 +122,11 @@ func (s *HttpClient) WithBody(body interface{}) *HttpClient {
 
 func (s *HttpClient) WithResponse(resp interface{}) *HttpClient {
 	s.resp = resp
+	return s
+}
+
+func (s *HttpClient) WithLogger(logger Logger) *HttpClient {
+	s.logger = logger
 	return s
 }
 
