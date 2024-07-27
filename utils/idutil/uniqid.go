@@ -30,5 +30,11 @@ func UniqIDV2() string {
 }
 
 func UniqIDV3() string {
-	return fmt.Sprintf("%016x", NewSnowflake(1).NextId())
+	snowflakeGenerator := &SnowflakeGenerator{}
+	return fmt.Sprintf("%016x", snowflakeGenerator.Generate())
+}
+
+func UniqIDV4() int64 {
+	snowflakeGenerator := &SnowflakeGenerator{}
+	return snowflakeGenerator.Generate()
 }

@@ -12,21 +12,6 @@ import (
  * @Desc:
  */
 
-func TestSnowflakeID(t *testing.T) {
-	var idNO int64
-	idNO = idutil.NewSnowflake(10).NextId()
-	fmt.Println("NewSnowflake NextId int64:", idNO)
-	id := fmt.Sprintf("%016x", idNO)
-	fmt.Println("NewSnowflake NextId string:", id)
-}
-func BenchmarkSnowflakeID(b *testing.B) {
-	var idNO int64
-	for i := 0; i < b.N; i++ {
-		idNO = idutil.NewSnowflake(1).NextId()
-		fmt.Sprintf("%016x", idNO)
-	}
-}
-
 func TestUniqID(t *testing.T) {
 	fmt.Println(idutil.UniqIDV1())
 	fmt.Println(idutil.UniqIDV2())
@@ -48,5 +33,11 @@ func BenchmarkUniqIDV2(b *testing.B) {
 func BenchmarkUniqIDV3(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		idutil.UniqIDV3()
+	}
+}
+
+func BenchmarkUniqIDV4(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		idutil.UniqIDV4()
 	}
 }
