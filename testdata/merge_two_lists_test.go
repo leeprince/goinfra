@@ -1,6 +1,7 @@
 package testdata
 
 import (
+	"github.com/leeprince/goinfra/algorithm/listnode"
 	"github.com/smartystreets/goconvey/convey"
 	"reflect"
 	"testing"
@@ -129,7 +130,7 @@ func TestMergeTwoListsV1(t *testing.T) {
 		// reflect.DeepEqual 和 遍历链表都可以判断结果与期望值是否一致
 		// 判断结果与期望值是否一致方法一【推荐：简单、原生】
 		t.Run(tt.name, func(t *testing.T) {
-			if got := listnode.MergeTwoListsV1(tt.args.list1, tt.args.list2); !reflect.DeepEqual(got, tt.want) {
+			if got := listnode.MergeTwoLists(tt.args.list1, tt.args.list2); !reflect.DeepEqual(got, tt.want) {
 				t.Errorf(">1: MergeTwoListsV1() = %v, want %v", got, tt.want)
 			}
 		})
@@ -202,6 +203,6 @@ func TestMergeTwoListsV11(t *testing.T) {
 		},
 	}
 	convey.Convey("合并两个有序链表", t, func() {
-		convey.So(listnode.MergeTwoListsV1(list1, list2), convey.ShouldResemble, want)
+		convey.So(listnode.MergeTwoLists(list1, list2), convey.ShouldResemble, want)
 	})
 }

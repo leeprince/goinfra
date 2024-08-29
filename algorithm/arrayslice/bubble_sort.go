@@ -11,7 +11,11 @@ package arrayslice
  */
 
 // 升序
-func BubbleSort(arr []int64) []int64 {
+func BubbleSort() {
+	BubbleSortV1([]int64{3, 2, 1, 4, 5, 6, 7, 8, 9, 10})
+}
+
+func BubbleSortV1(arr []int64) []int64 {
 	for i := 0; i < len(arr)-1; i++ {
 		for j := 1; j < len(arr)-i; j++ {
 			if arr[j-1] > arr[j] {
