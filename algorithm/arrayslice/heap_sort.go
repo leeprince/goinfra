@@ -21,27 +21,27 @@ import "github.com/leeprince/goinfra/algorithm/pkg"
  *              4. 重复步骤 2，直到堆的尺寸为 1
  */
 
-func HeapSort() {
+func heapSort() {
 	arr := []int{5, 3, 2, 1, 4}
-	HeapSortV1(arr)
+	HeapSort(arr)
 }
 
-func HeapSortV1(arr []int) []int {
+func HeapSort(arr []int) []int {
 	l := len(arr)
 	// 获取节点，在从下往上每个节点上构建大根堆，最终得到完整的大根堆
 	for i := l / 2; i >= 0; i-- {
 		heapMaxRoot(arr, i, l)
 	}
-
+	
 	for i := l - 1; i >= 0; i-- {
 		// 把堆首（最大值）和堆尾互换
 		pkg.SwapInt(arr, 0, i)
-
+		
 		// 重新构建大根堆
 		l--
 		heapMaxRoot(arr, 0, l)
 	}
-
+	
 	return arr
 }
 

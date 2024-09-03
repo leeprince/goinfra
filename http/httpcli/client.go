@@ -6,7 +6,6 @@ import (
 	"crypto/tls"
 	jsoniter "github.com/json-iterator/go"
 	"github.com/leeprince/goinfra/consts"
-	"github.com/leeprince/goinfra/perror"
 	"github.com/leeprince/goinfra/plog"
 	"github.com/leeprince/goinfra/trace/opentracing/jaegerclient"
 	"github.com/leeprince/goinfra/utils/contextutil"
@@ -14,7 +13,7 @@ import (
 	"github.com/leeprince/goinfra/utils/stringutil"
 	"github.com/pkg/errors"
 	"github.com/sirupsen/logrus"
-	"io/ioutil"
+	"io"
 	"net"
 	"net/http"
 	"net/url"
@@ -39,17 +38,24 @@ const (
 
 var defaultHeader = map[string]string{"Content-Type": "application/json"}
 
+type Logger interface {
+	Info(...any)
+	Error(...any)
+}
+
 type HttpClient struct {
 	url           string
 	method        string          // http包中的字符串。如：http.MethodGet
 	ctx           context.Context // 默认：context.Background()
 	logID         string
+	logger        Logger
 	timeout       time.Duration
 	header        map[string]string
 	requestBody   interface{}
-	skipVerify    bool // 是否跳过安全校验
-	notLogging    bool // 不打印日志标记
-	isHttpTrace   bool // 是否使用jaeger中间件进行链路追踪：注入调用链跟踪标记到请求头中 能开启的必要条件是：s.isHttpTrace && jaeger_client.SpanFromContext(ctx) != nil，也就是需要初始化jaeger获得span的context后才能正常开启链路追踪
+	resp          interface{} // 响应。不能为nil
+	skipVerify    bool        // 是否跳过安全校验
+	notLogging    bool        // 不打印日志标记
+	isHttpTrace   bool        // 是否使用jaeger中间件进行链路追踪：注入调用链跟踪标记到请求头中 能开启的必要条件是：s.isHttpTrace && jaeger_client.SpanFromContext(ctx) != nil，也就是需要初始化jaeger获得span的context后才能正常开启链路追踪
 	proxyURL      *url.URL
 	checkRedirect func(req *http.Request, via []*http.Request) error // 检查重定向的方法
 }
@@ -74,7 +80,7 @@ func NewHttpClient() *HttpClient {
 		proxyURL:      nil,
 		checkRedirect: nil,
 	}
-
+	
 	return hc
 }
 
@@ -111,6 +117,16 @@ func (s *HttpClient) WithHeader(header map[string]string) *HttpClient {
 
 func (s *HttpClient) WithBody(body interface{}) *HttpClient {
 	s.requestBody = body
+	return s
+}
+
+func (s *HttpClient) WithResponse(resp interface{}) *HttpClient {
+	s.resp = resp
+	return s
+}
+
+func (s *HttpClient) WithLogger(logger Logger) *HttpClient {
+	s.logger = logger
 	return s
 }
 
@@ -152,7 +168,24 @@ func (s *HttpClient) WithCheckRedirect(checkRedirect func(req *http.Request, via
 }
 
 func (s *HttpClient) Do() ([]byte, *http.Response, error) {
-	return s.do()
+	bodyBytes, httpResp, err := s.do()
+	if err != nil {
+		return nil, nil, err
+	}
+	
+	if s.resp == nil {
+		return bodyBytes, httpResp, nil
+	}
+	
+	if len(bodyBytes) <= 0 {
+		return nil, nil, errors.New("响应为空")
+	}
+	err = jsoniter.Unmarshal(bodyBytes, s.resp)
+	if err != nil {
+		return bodyBytes, httpResp, err
+	}
+	
+	return bodyBytes, httpResp, nil
 }
 
 func (s *HttpClient) DoRequest(ctx context.Context, logID string, url string, method string, headers map[string]string, body interface{}) ([]byte, *http.Response, error) {
@@ -163,7 +196,7 @@ func (s *HttpClient) do() ([]byte, *http.Response, error) {
 	if s.url == "" {
 		return nil, nil, errors.New("无效的URL")
 	}
-
+	
 	if s.ctx != nil {
 		if s.logID == "" {
 			s.logID = contextutil.LogIdByContext(&s.ctx)
@@ -172,20 +205,20 @@ func (s *HttpClient) do() ([]byte, *http.Response, error) {
 		s.ctx = context.Background()
 		s.logID = idutil.UniqIDV3()
 	}
-
+	
 	if s.header == nil {
 		s.header = defaultHeader
 	}
 	if _, ok := s.header[consts.HeaderXLogID]; !ok {
 		s.header[consts.HeaderXLogID] = s.logID
 	}
-
+	
 	var (
 		reqBytes []byte
 		ok       bool
 		err      error
 	)
-
+	
 	if s.requestBody != nil {
 		if reqBytes, ok = s.requestBody.([]byte); !ok {
 			reqBytes, err = jsoniter.Marshal(s.requestBody)
@@ -194,19 +227,19 @@ func (s *HttpClient) do() ([]byte, *http.Response, error) {
 			}
 		}
 	}
-
+	
 	method := s.method
 	fields := logrus.Fields{}
 	fields["http.req.url"] = s.url
 	fields["http.req.method"] = method
-
+	
 	fields["http.req.body"] = stringutil.Bytes2String(reqBytes)
-
+	
 	req, err := http.NewRequest(method, s.url, bytes.NewReader(reqBytes))
 	if err != nil {
 		return nil, nil, err
 	}
-
+	
 	hasContentType := false
 	for k, v := range s.header {
 		req.Header.Set(k, v)
@@ -214,13 +247,13 @@ func (s *HttpClient) do() ([]byte, *http.Response, error) {
 			hasContentType = true
 		}
 	}
-
+	
 	if method == http.MethodPost && !hasContentType {
 		req.Header.Set("Content-Type", "application/json")
 	}
-
+	
 	req = req.WithContext(s.ctx)
-
+	
 	// 链路追踪。
 	fields["http.req.isHttpTrace"] = s.isHttpTrace
 	if s.isHttpTrace {
@@ -236,7 +269,7 @@ func (s *HttpClient) do() ([]byte, *http.Response, error) {
 		}
 	}
 	fields["http.req.header"] = req.Header
-
+	
 	fields["http.req.isProxy"] = false
 	if s.proxyURL != nil {
 		fields["http.req.isProxy"] = true
@@ -253,17 +286,17 @@ func (s *HttpClient) do() ([]byte, *http.Response, error) {
 			InsecureSkipVerify: s.skipVerify,
 		},
 	}
-
+	
 	client := &http.Client{
 		Transport:     transport,
 		CheckRedirect: s.checkRedirect,
-		Timeout:       0,
+		Timeout:       s.timeout,
 	}
-
+	
 	if !s.notLogging {
 		plog.LogID(s.logID).WithFields(fields).Info("发起Http请求")
 	}
-
+	
 	resp, err := client.Do(req)
 	if err != nil {
 		if !s.notLogging {
@@ -273,8 +306,8 @@ func (s *HttpClient) do() ([]byte, *http.Response, error) {
 		}
 		return nil, nil, err
 	}
-
-	body, err := ioutil.ReadAll(resp.Body)
+	
+	body, err := io.ReadAll(resp.Body)
 	_ = resp.Body.Close()
 	if err != nil {
 		if !s.notLogging {
@@ -282,9 +315,9 @@ func (s *HttpClient) do() ([]byte, *http.Response, error) {
 				WithField("url", s.url).
 				Error("读取http响应结果失败")
 		}
-		return nil, nil, perror.ReplaceIPErr(err)
+		return nil, nil, err
 	}
-
+	
 	if resp.StatusCode != http.StatusOK {
 		if !s.notLogging {
 			plog.LogID(s.logID).WithError(err).
@@ -295,7 +328,7 @@ func (s *HttpClient) do() ([]byte, *http.Response, error) {
 		}
 		return nil, nil, errors.Errorf("上游服务报错,http status code:%d", resp.StatusCode)
 	}
-
+	
 	if !s.notLogging {
 		respBodyLog := body
 		if len(body) > 1024 {
@@ -306,7 +339,7 @@ func (s *HttpClient) do() ([]byte, *http.Response, error) {
 			WithField("http.resp.body", stringutil.Bytes2String(respBodyLog)).
 			Info("接收http响应")
 	}
-
+	
 	return body, resp, nil
 }
 

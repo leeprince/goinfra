@@ -1,7 +1,7 @@
 package model
 
 import (
-	"gitlab.yewifi.com/golden-cloud/transaction-risk-control/pkg/constants"
+	"github.com/leeprince/goinfra/storage/mongodb/mongogodrivertest/gd/constants"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 

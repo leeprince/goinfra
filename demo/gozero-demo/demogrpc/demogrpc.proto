@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+package demogrpc;
+option go_package="./demogrpc";
+
+message Request {
+  string ping = 1;
+}
+
+message Response {
+  string pong = 1;
+}
+
+service Demogrpc {
+  rpc Ping(Request) returns(Response);
+}

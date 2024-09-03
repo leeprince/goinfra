@@ -33,7 +33,7 @@ type Redigo struct {
 
 func InitRedigo(confs RedisConfs) error {
 	ctx := context.Background()
-
+	
 	redigos = make(map[string]*Redigo, len(confs))
 	for name, conf := range confs {
 		dialFunc := func() (redis.Conn, error) {
@@ -49,7 +49,7 @@ func InitRedigo(confs RedisConfs) error {
 			}
 			return conn, nil
 		}
-
+		
 		pool := redis.Pool{
 			Dial:            dialFunc,
 			DialContext:     nil,
@@ -60,13 +60,13 @@ func InitRedigo(confs RedisConfs) error {
 			Wait:            false,
 			MaxConnLifetime: redigoMaxConnLifetime,
 		}
-
+		
 		redigos[name] = &Redigo{
 			ctx:  ctx,
 			Pool: pool,
 		}
 	}
-
+	
 	return nil
 }
 
@@ -86,7 +86,7 @@ func GetRedigo(name string) *Redigo {
 func (c *Redigo) SelectDB(index int) error {
 	redisPool := c.Get()
 	defer redisPool.Close()
-
+	
 	if _, err := redisPool.Do("SELECT", index); err != nil {
 		return err
 	}
@@ -96,7 +96,7 @@ func (c *Redigo) SelectDB(index int) error {
 func (c *Redigo) Set(key string, value interface{}, expiration time.Duration) error {
 	redisPool := c.Get()
 	defer redisPool.Close()
-
+	
 	if _, err := redisPool.Do("SET", key, value, "EX", int(expiration)); err != nil {
 		return err
 	}
@@ -107,7 +107,7 @@ func (c *Redigo) Set(key string, value interface{}, expiration time.Duration) er
 func (c *Redigo) SetNx(key string, value interface{}, expiration time.Duration) (bool, error) {
 	redisPool := c.Get()
 	defer redisPool.Close()
-
+	
 	var str string
 	var err error
 	if timeutil.UseMillisecondUnit(expiration) {
@@ -125,17 +125,17 @@ func (c *Redigo) SetNx(key string, value interface{}, expiration time.Duration) 
 	if str != redigoStringOk {
 		return false, nil
 	}
-
+	
 	return true, nil
 }
 
 func (c *Redigo) GetAndDel(key string, value interface{}) error {
 	redisPool := c.Get()
 	defer redisPool.Close()
-
-	s := redis.NewScript(1, luaRedisGetAndDelScript)
+	
+	s := redis.NewScript(1, getAndDelLuaScript)
 	ok, err := redis.Bool(s.Do(redisPool, key, value))
-
+	
 	if !ok || err != nil {
 		return fmt.Errorf("[GetAndDel] Fail key:%v;val:%v;ok:%v;err:%v", key, value, ok, err)
 	}
@@ -145,7 +145,7 @@ func (c *Redigo) GetAndDel(key string, value interface{}) error {
 func (c *Redigo) GetString(key string) string {
 	redisPool := c.Get()
 	defer redisPool.Close()
-
+	
 	str, err := redis.String(redisPool.Do("GET", key))
 	if err != nil {
 		return ""
@@ -156,7 +156,7 @@ func (c *Redigo) GetString(key string) string {
 func (c *Redigo) GetBytes(key string) ([]byte, error) {
 	redisPool := c.Get()
 	defer redisPool.Close()
-
+	
 	str, err := redis.Bytes(redisPool.Do("GET", key))
 	return str, err
 }
@@ -164,7 +164,7 @@ func (c *Redigo) GetBytes(key string) ([]byte, error) {
 func (c *Redigo) GetScanStruct(key string, value interface{}) error {
 	redisPool := c.Get()
 	defer redisPool.Close()
-
+	
 	valInterface, err := redisPool.Do("GET", key)
 	if err != nil {
 		return err
@@ -186,12 +186,12 @@ func (c *Redigo) GetScanStruct(key string, value interface{}) error {
 func (c *Redigo) Push(key string, value interface{}, isRight ...bool) error {
 	redisPool := c.Get()
 	defer redisPool.Close()
-
+	
 	if len(isRight) > 0 && isRight[0] {
 		_, err := redisPool.Do("RPUSH", redis.Args{}.Add(key).AddFlat(value)...)
 		return err
 	}
-
+	
 	// _, err := redisPool.Do("LPUSH", key, value)
 	_, err := redisPool.Do("LPUSH", redis.Args{}.Add(key).AddFlat(value)...)
 	return err
@@ -201,7 +201,7 @@ func (c *Redigo) Push(key string, value interface{}, isRight ...bool) error {
 func (c *Redigo) Pop(key string, isLeft ...bool) (data []byte, err error) {
 	redisPool := c.Get()
 	defer redisPool.Close()
-
+	
 	if len(isLeft) > 0 && isLeft[0] {
 		return redis.Bytes(redisPool.Do("LPOP", key))
 	}
@@ -214,7 +214,7 @@ func (c *Redigo) Pop(key string, isLeft ...bool) (data []byte, err error) {
 func (c *Redigo) BPop(key string, timeout time.Duration, isLeft ...bool) (data interface{}, err error) {
 	redisPool := c.Get()
 	defer redisPool.Close()
-
+	
 	// keyValueSlic: 0:key 1:value
 	var keyValueSlice []interface{}
 	if len(isLeft) > 0 && isLeft[0] {
@@ -224,7 +224,7 @@ func (c *Redigo) BPop(key string, timeout time.Duration, isLeft ...bool) (data i
 	}
 	// fmt.Printf("(c *Redigo) BPop error = %v, keyValueSlice=%v, keyValueSlice Type=%T \n", err, keyValueSlice, keyValueSlice)
 	// fmt.Println(cast.ToString(keyValueSlice[0]), cast.ToString(keyValueSlice[1]))
-
+	
 	if err == redis.ErrNil {
 		err = nil
 		return
@@ -245,17 +245,17 @@ func (c *Redigo) ZAdd(key string, members ...*Z) error {
 	if len(members) == 0 {
 		return errors.New("(c *Redigo) ZAdd len(members) == 0")
 	}
-
+	
 	redisPool := c.Get()
 	defer redisPool.Close()
-
+	
 	args := redis.Args{}.Add(key)
 	for _, i2 := range members {
 		args = args.AddFlat(i2.Score)
 		args = args.AddFlat(i2.Member)
 	}
 	_, err := redisPool.Do("ZADD", args...)
-
+	
 	return err
 }
 
@@ -267,12 +267,12 @@ func (c *Redigo) ZRangeByScore(key string, opt *ZRangeBy) (data []string, err er
 	if opt.Count == 0 || opt.Count > ZRangeByMaxCount {
 		opt.Count = ZRangeByMaxCount
 	}
-
+	
 	redisPool := c.Get()
 	defer redisPool.Close()
-
+	
 	var sliceInterface []interface{}
-
+	
 	// 返回分数的格式为：[]string{成员1 分数1 成员2 分数2}
 	if opt.isReturnScore {
 		sliceInterface, err = redis.Values(redisPool.Do("ZRANGEBYSCORE", key, opt.Min, opt.Max, "WITHSCORES", "LIMIT", opt.Offset, opt.Count))
@@ -280,16 +280,16 @@ func (c *Redigo) ZRangeByScore(key string, opt *ZRangeBy) (data []string, err er
 		sliceInterface, err = redis.Values(redisPool.Do("ZRANGEBYSCORE", key, opt.Min, opt.Max, "LIMIT", opt.Offset, opt.Count))
 	}
 	// fmt.Printf("sliceInterface data type:%T data:%v \n", sliceInterface, sliceInterface)
-
+	
 	if err == redis.ErrNil {
 		err = nil
 		return
 	}
-
+	
 	for _, i2 := range sliceInterface {
 		data = append(data, cast.ToString(i2))
 	}
-
+	
 	// fmt.Printf("data type:%T data:%v \n", data, data)
 	return
 }
@@ -298,11 +298,11 @@ func (c *Redigo) ZRem(key string, members ...interface{}) error {
 	if len(members) == 0 {
 		return errors.New("(c *Redigo) ZAdd len(members) == 0")
 	}
-
+	
 	redisPool := c.Get()
 	defer redisPool.Close()
-
+	
 	_, err := redisPool.Do("ZREM", redis.Args{}.Add(key).AddFlat(members)...)
-
+	
 	return err
 }

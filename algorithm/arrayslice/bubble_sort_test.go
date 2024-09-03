@@ -65,7 +65,7 @@ func TestBubbleSortV1(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := BubbleSortV1(tt.args.arr); !reflect.DeepEqual(got, tt.want) {
+			if got := BubbleSortTest(tt.args.arr); !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("BubbleSortV1() = %v, want %v", got, tt.want)
 			}
 		})

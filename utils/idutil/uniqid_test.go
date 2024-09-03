@@ -2,7 +2,9 @@ package idutil
 
 import (
 	"fmt"
+	"sync"
 	"testing"
+	"time"
 )
 
 /**
@@ -15,24 +17,6 @@ func TestUUID(t *testing.T) {
 	var id string
 	id = UniqIDV2()
 	fmt.Println("UUID:", id)
-}
-
-func TestMaxWorker(t *testing.T) {
-	fmt.Println(maxWorker)
-}
-func TestSnowflakeID(t *testing.T) {
-	var idNO int64
-	idNO = NewSnowflake(10).NextId()
-	fmt.Println("NewSnowflake NextId int64:", idNO)
-	id := fmt.Sprintf("%016x", idNO)
-	fmt.Println("NewSnowflake NextId string:", id)
-}
-func BenchmarkSnowflakeID(b *testing.B) {
-	var idNO int64
-	for i := 0; i < b.N; i++ {
-		idNO = NewSnowflake(1).NextId()
-		fmt.Sprintf("%016x", idNO)
-	}
 }
 
 func TestUniqID(t *testing.T) {
@@ -71,4 +55,34 @@ func BenchmarkUniqIDV3(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		UniqIDV3()
 	}
+}
+
+func TestUniqIDV3Goroutine(T *testing.T) {
+	count := 100
+	var wg sync.WaitGroup
+	wg.Add(count)
+	for i := 0; i < count; i++ {
+		go func() {
+			defer wg.Done()
+			fmt.Println(UniqIDV3())
+		}()
+	}
+	wg.Wait()
+}
+
+func TestGenerate(t *testing.T) {
+	var wg sync.WaitGroup
+	snowflakeGen := &SnowflakeGenerator{}
+	startTime := time.Now()
+	for i := 0; i < 5; i++ {
+		wg.Add(1)
+		go func() {
+			defer wg.Done()
+			id := snowflakeGen.Generate()
+			fmt.Printf("Generated ID: %d\n", id)
+		}()
+	}
+	wg.Wait()
+	endTime := time.Now()
+	fmt.Printf("Generated 100 IDs in %v\n", endTime.Sub(startTime))
 }

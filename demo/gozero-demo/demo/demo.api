@@ -1,0 +1,35 @@
+syntax = "v1"
+
+type Request {
+	Name string `path:"name,options=you|me"`
+}
+
+type Response {
+	Message string `json:"message"`
+}
+
+service demo-api {
+	@handler DemoHandler
+	get /from/:name (Request) returns (Response)
+}
+
+type User {
+	Id          int64  `json:"id"`
+	Name        string `json:"name"`
+	Age         int    `json:"age"`
+	Description string `json:"description"`
+}
+
+type Student {
+	Id          int64  `json:"id"`
+	No          int64  `json:"no"`
+	Name        string `json:"name"`
+	Age         int    `json:"age"`
+	Description string `json:"description"`
+}
+
+service User {
+	@handler ping
+	get /ping
+}
+

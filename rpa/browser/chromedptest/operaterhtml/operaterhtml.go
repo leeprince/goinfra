@@ -140,7 +140,7 @@ func main() {
 	                "passengerId": "21998005_1938898",
 	                "creditType": "证件类型:ED(居民身份证)；LS(临时身份证)；WJ(警官证)；JG(军官证)；YW(义务兵证)；SG(士官证)；WG(文职干部证)；WY(文职人员证)；WH(外国人护照，需选择国家)；HZ(中国护照)；GN(港澳居民来往内地通行证)；QT(其他)。暂仅支持ED(居民身份证)",
 	                "creditTypeName": "证件类型名称",
-	                "creditNo": "44152120010116824X",
+	                "creditNo": "441521XXXXXXXX824X",
 	                "fullName": "余余余",
 	                "ticketType": "票种:Adult(成人票)、Child(小孩票)",
 	                "seatType": "座位类型",

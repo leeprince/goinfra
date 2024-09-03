@@ -1,0 +1,9 @@
+Name: demogrpc.rpc
+ListenOn: 0.0.0.0:8080
+Mode: dev
+# 注意
+# goctl 生成最小化 gRPC 服务默认启动会向 ETCD 注册中心注册当前服务的信息，本次演示就不需要注册中心，所以删除了配置文件中的注册中心配置。
+#Etcd:
+#  Hosts:
+#  - 127.0.0.1:2379
+#  Key: demogrpc.rpc
