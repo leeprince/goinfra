@@ -10,27 +10,21 @@ package arrayslice
  *				4. 重复上述过程，可以看出，这是一个递归定义。通过递归将左侧部分排好序后，再递归排好右侧部分的顺序。当左、右两个部分各数据排序完成后，整个数组的排序也就完成了。
  */
 
-func QuickSort() {
-	req := []int64{5, 2, 1, 3, 4}
-
-	// 需要创建较多切片
-	QuickSortV1(req)
-
-	// 无需创建较多切片：结合左右指针
-	QuickSortV2(req)
+func quickSort() {
+	QuickSort([]int{5, 2, 1, 3, 4})
 }
 
 // 升序
-func QuickSortV1(arr []int64) []int64 {
+func QuickSort(arr []int) []int {
 	if len(arr) <= 1 {
 		return arr
 	}
-	var left []int64
-	var right []int64
-	var resp []int64
-
+	// 选择基准值，这里选择第一个元素
 	midd := arr[0]
-
+	
+	var left []int
+	var right []int
+	
 	for i := 1; i < len(arr); i++ {
 		if midd < arr[i] {
 			right = append(right, arr[i])
@@ -38,49 +32,11 @@ func QuickSortV1(arr []int64) []int64 {
 			left = append(left, arr[i])
 		}
 	}
-
-	left = QuickSortV1(left)
-	right = QuickSortV1(right)
-
-	resp = append(left, midd)
+	
+	left = QuickSort(left)
+	right = QuickSort(right)
+	
+	resp := append(left, midd)
 	resp = append(resp, right...)
 	return resp
-}
-
-func QuickSortV2(arr []int64) []int64 {
-	quickSortV21(arr, 0, len(arr)-1)
-	return arr
-}
-
-func quickSortV21(arr []int64, left, right int) {
-	if left >= right {
-		return
-	}
-
-	midd := arr[left]
-	i, j := left, right
-
-	for left < right {
-		if arr[left] >= midd && arr[right] <= midd {
-			arr[left], arr[right] = arr[right], arr[left]
-			left++
-			right--
-			continue
-		}
-		if arr[left] <= midd {
-			left++
-		}
-		if arr[right] >= midd {
-			right--
-		}
-	}
-
-	// 易漏点：出现这个情况的原因是：左右指针相邻，且需要满足`arr[left] >= midd && arr[right] <= midd`时
-	if left > right {
-		left--
-		right++
-	}
-
-	quickSortV21(arr, i, left)
-	quickSortV21(arr, right, j)
 }

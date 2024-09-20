@@ -21,9 +21,9 @@ func BinarySearch() {
 func BinarySearchV1(arr []int, v int) int {
 	left := 0
 	right := len(arr) - 1
-
+	
 	for left <= right {
-		midIndex := (right-left)/2 + left
+		midIndex := (right-left)/2 + left // 推荐。比 midIndex := (right + left) / 2 写法更易读
 		midNum := arr[midIndex]
 		if midNum == v {
 			return midIndex
@@ -34,8 +34,6 @@ func BinarySearchV1(arr []int, v int) int {
 			left = midIndex + 1
 		}
 	}
-
+	
 	return -1
 }
-
-// 生成二分法查找

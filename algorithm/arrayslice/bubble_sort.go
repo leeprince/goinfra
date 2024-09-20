@@ -3,27 +3,26 @@ package arrayslice
 /**
  * @Author: prince.lee <leeprince@foxmail.com>
  * @Date:   2023/3/21 00:19
- * @Desc:	冒泡排序
- *				1. 比较相邻的元素。如果第一个比第二个大，就交换他们两个。
- *				2. 对每一对相邻元素做同样的工作，从开始第一对到结尾的最后一对。在这一点，最后的元素应该会是最大的数。
- *				3. 针对所有的元素重复以上的步骤，除了最后一个。
- *				4. 持续每次对越来越少的元素重复上面的步骤，直到没有任何一对数字需要比较
- */
+ * @Desc:	冒泡排序：
+			外层循环控制需要进行多少轮比较
+			每一轮比较后，最大的元素会被移动到最后的位置，因此后续的比较就不需要再考虑这个元素了。
+			如果当前元素大于下一个元素，则交换它们
+*/
 
-// 升序
-func BubbleSort() {
-	bubbleSort([]int64{3, 2, 1, 5, 4})
+// bubbleSort 升序
+func bubbleSort() {
+	BubbleSort([]int{3, 2, 1, 5, 4})
 }
 
-func BubbleSortTest(arr []int64) []int64 {
-	return bubbleSort(arr)
-}
-
-func bubbleSort(arr []int64) []int64 {
-	for i := 0; i < len(arr)-1; i++ {
-		for j := 1; j < len(arr)-i; j++ {
-			if arr[j-1] > arr[j] {
-				arr[j], arr[j-1] = arr[j-1], arr[j]
+func BubbleSort(arr []int) []int {
+	n := len(arr)
+	// 外层循环控制需要进行多少轮比较
+	for i := 0; i < n; i++ {
+		// 每一轮比较后，最大的元素会被移动到最后的位置，因此后续的比较就不需要再考虑这个元素了
+		for j := 0; j < n-i-1; j++ {
+			// 如果当前元素大于下一个元素，则交换它们
+			if arr[j] > arr[j+1] {
+				arr[j], arr[j+1] = arr[j+1], arr[j]
 			}
 		}
 	}
