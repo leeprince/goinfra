@@ -56,6 +56,8 @@ func TestParams(t *testing.T) {
 	
 }
 
+// slice在append后，会改变原slice的cap，不管是否分配足够的容量cap都会修改到底层数组。因此如果需要将切片传递到函数进行append，并希望函数内部的改动能同步修改外部切片，需要传入指针
+// 切片（切片是引用类型）如果容量足够的情况下，将切片传递到函数中，并且直接根据索引修改值时，不会修改底层数组，因此函数中的修改能同步修改函数外部的切片变量
 func TestSlice(t *testing.T) {
 	i := []int{1, 2, 3}
 	Slice(i)
@@ -84,7 +86,7 @@ func TestSlice(t *testing.T) {
 	fmt.Println("----Slice2")
 	
 	// ---
-	in := make([]int, 4)
+	in := make([]int, 5)
 	in = []int{1, 2, 3}
 	SliceAppend(in)
 	fmt.Println(in)

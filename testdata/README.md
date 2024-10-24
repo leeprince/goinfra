@@ -192,10 +192,10 @@ ok      github.com/leeprince/goinfra/test       1.793s
 
 ```
 # 测试当前包的所有 `*_test.go` 中的所有单元测试 `TestXxx` 方法和基准测试 `BenchmarkXxx` 方法
-go test -v -bench=.
+go test -bench=.
 
 # 测试当前包的所有 `*_test.go` 中的所有基准测试 `BenchmarkXxx` 方法。通过 `-run=none` 忽略所有单元测试 `TestXxx` 方法
-go test -v -bench=. -run=none
+go test -bench=. -run=none
 
 # 测试当前包的所有 `*_test.go` 中符合 `BenchmarkXxx` 或者 `BenchmarkXxx` 中的 `Xxx` 前缀匹配的方法。。需匹配的前缀推荐写 `TestXxx` 格式
 #   需匹配的前缀分别为 `BenchmarkBinarySearchV1`、`BinarySearchV1`。 
@@ -296,10 +296,28 @@ func BenchmarkTemplateParallel(b *testing.B) {
 ```
 
 ### 3. 代码覆盖率测试
+
+测试覆盖率（Test Coverage）是指在测试过程中，测试代码覆盖了被测代码的比例。
+
+实际业务中要求方法的测试覆盖率要达到 100%，但是实际中很难达到 100%，所以一般要求达到 95% 以上。
+而代码覆盖率是测试覆盖率的一种，是测试代码覆盖了被测代码的比例，通过代码覆盖率可以知道哪些代码没有被测试到，进而可以针对性的进行测试，考虑到很多代码是不可测试的（如：第三方库的代码、依赖的配置文件、if 分支判断的代码等），所以实际业务中很难达到 100% 的测试覆盖率，正常要求60%以上。
+
+```
+go test -v -cover
+
+go test -cover -run=<前缀匹配方法名(`TestXxx` 或者 `TestXxx` 中的 `Xxx` 前缀匹配的方法)>
+```
+
 go test 工具就为我们提供了一个度量测试覆盖率的能力。
 ```
-go test -v -coverprofile=c.out
+go test -cover [-run=<...>] -coverprofile=c.out
 ```
+
+通过 go tool 来将 c.out 转换成 html 格式的测试覆盖率报告。
+```
+go tool cover -html=c.out
+```
+
 再通过 go tool 来将 c.out 转换成 html 格式的测试覆盖率报告。
 ```
 go tool cover -html=c.out -o=tag.html
@@ -310,7 +328,7 @@ go tool cover -html=c.out -o=tag.html
 # 生成指定 package 的测试覆盖率（fib.out 后面不带参数的，默认是命令所在目录）
 $ go test -v -covermode=count -coverprofile fib.out
 # 查看汇总的 fib 测试覆盖率
-$ go tool cover -func=fib.out
+$ go test cover -func=fib.out
 # 生成 html
 $ go tool cover -html=fib.out -o fib.html
 ```
@@ -634,6 +652,193 @@ Go 官方有一个 `github.com/golang/mock/gomock` 和 `https://github.com/travi
 - 应用场景不同： 基准测试通常用于评估和改进代码、算法等实现，而压力测试主要用于验证系统在负载增加时的行为和稳定性。
 
 在实际应用中，这两种测试通常结合使用，帮助开发者全面了解系统、算法或代码的性能特征，从而优化和改进系统。
+
+## 性能分析
+
+### （一）性能分析 pprof
+pprof是golang内置的性能分析工具，在进行性能问题分析(入内存泄露，goroutine泄露,cpu资源占用较高等分析)时使用，其可成为我们进行golang开发时，调试应用性能的常用工具。 
+
+#### 简介
+profile在计算机领域，我们可以将其理解为当前应用程序运行状态的画像。当程序性能不佳时，我们希望知道应用在 什么地方耗费了多少 CPU、memory等资源，golang是非常注重性能的语言，其内置的pprof就是为了分析调优程序运行性能而生。
+
+pprof主要模块介绍：
+- CPU profile：当前程序的CPU使用情况，pprof按照一定频率去采集应用程序在CPU和寄存器上面的数据
+- Memory Profile（Heap Profile）：当前程序的内存使用情况，可查看heap和alloc的情况
+- Block Profiling：程序当前goroutines不在运行状态的情况，可以用来分析和查找死锁等性能瓶颈
+- Goroutine Profiling：程序当前goroutines的使用情况，查看所有goroutine，产看调用关系，可发现未释放的go程
+
+#### pprof 引入方式
+pprof引入代码有两种方式，
+- runtime/pprof：一种是项目中导入runtime/pprof,主要用来产生dump文件，然后再使用 Go Tool PProf 来分析这运行日志，此种方式在普通的单机程序未使用http网络服务上使用。
+- pkg/profile：runtime/pprof使用起来有些不便，因为要重复编写打开文件，开启分析，结束分析的代码。所以出现了包装了runtime/pprof的库：pkg/profile。
+- net/http/pprof：另一种方式是项目中导入net/http/pprof,net/http/pprof是对runtime/pprof的封装，如果当前程序已启用http服务，使用此种方式非常方便，以做到直接在web上看到当前 web 服务的状态，包括 CPU 占用情况和内存使用情况等
+
+##### 1、项目中导入runtime/pprof
+
+添加启动分析CPU、内存
+```
+import (
+	"flag"
+	"fmt"
+	"os"
+	"runtime/pprof"
+	"strings"
+	"time"
+)
+// --- pprof 性能分析
+var isCpuPprof bool
+var isMemPprof bool
+flag.BoolVar(&isCpuPprof, "cpu", false, "是否开启cpu测试")
+flag.BoolVar(&isMemPprof, "mem", false, "是否开启内存测试")
+flag.Parse()
+
+if isCpuPprof {
+    fmt.Println("开启cpu测试")
+    file, err := os.Create("cpu.pprof")
+    if err != nil {
+        fmt.Println("create cpu.pprof file error:", err)
+    }
+    defer file.Close()
+    pprof.StartCPUProfile(file)
+    defer pprof.StopCPUProfile()
+} else {
+    fmt.Println("不开启cpu测试")
+}
+
+if isMemPprof {
+    fmt.Println("开启内存测试")
+    file, err := os.Create("mem.pprof")
+    if err != nil {
+        fmt.Println("create mem.pprof file error:", err)
+    }
+    defer file.Close()
+    pprof.WriteHeapProfile(file)
+    defer pprof.StopCPUProfile()
+} else {
+    fmt.Println("不开启内存测试")
+}
+fmt.Println("> 业务逻辑运行入口 开始运行")
+// ... 业务逻辑运行入口
+fmt.Println("> 业务逻辑运行入口 运行结束")
+time.Sleep(time.Second * 1)
+```
+查看分析报告如果使用runtime/pprof的导入方式，则只能通过如下方式进行查看。
+```
+go tool pprof <cpu.pprof报告文件自定义文件名/扩展名>
+
+
+--- 会进入命令终端
+进入后可以通过输入help查看帮助；或者"help <cmd|option>" 查看具体命令帮助
+
+常用的命令
+整体运行状态：top
+整体运行状态前10：top10
+具体函数分析：list <函数名>
+通过web端查看：web
+
+---
+```
+
+go tool pprof ...参数解释：
+- flat：指的是该方法所占用的CPU时间（不包含这个方法中调用其他方法所占用的时间）
+- flat%: 指的是该方法flat时间占全部采样时间的比例
+- cum：指的是该方法以及方法中调用其他方法所占用的CPU时间总和，这里注意区别于flat
+- cum%:指的是该方法cum时间占全部采样时间的比例
+- sum%: 指的是执行到当前方法累积占用的CPU时间总和，也即是前面flat%总和
+
+**火焰图**
+通过命令行查看 CPU 或内存情况不够直观。Bredan Gregg 大神发明了火焰图（Flame Graph）可以很直观地看到内存和 CPU 消耗情况。
+新版本的 go tool pprof 工具已经集成了火焰图（我使用的是 Go1.20 已经集成）。旧版本想要生成火焰图，必须安装 graphviz。
+
+在 Mac 上：
+```
+brew install graphviz
+```
+
+在 Ubuntu 上：
+```
+apt install graphviz
+```
+
+在 Windows 上，官网下载页http://www.graphviz.org/download/有可执行安装文件，下载安装即可。注意设置 PATH 路径。
+
+上面程序生成的 cpu.profile 和 mem.profile 我们可以直接在网页上查看火焰图。执行下面命令：
+
+```
+go tool pprof -http :8080 <本地cpu.profile文件，或者远程profile文件https://ip:port/debug/pprof/profile>
+```
+
+默认会打开浏览器窗口，我们可以在 VIEW 菜单栏中切换显示火焰图：
+![img.png](typora/img.png)
+
+可以用鼠标在火焰图上悬停、点击，来查看具体的某个调用。
+
+
+#### 2、项目中导入pkg/profile
+runtime/pprof使用起来有些不便，因为要重复编写打开文件，开启分析，结束分析的代码。所以出现了包装了runtime/pprof的库：pkg/profile。pkg/profile的 GitHub 仓库地址为：https://github.com/pkg/profile。pkg/profile只是对runtime/pprof做了一层封装，让它更好用。使用pkg/profile可以将代码简化为一行。使用前需要使用go get github.com/pkg/profile获取这个库。
+
+默认启用的是 CPU profiling
+```
+defer profile.Start().Stop()
+```
+
+如果要启用 Memory profiling，可以传入函数选项MemProfile：
+```
+defer profile.Start(profile.MemProfile).Stop()
+```
+
+另外还可以通过函数选项控制内存采样率，默认为 4096。我们可以改为 1：
+```
+defer profile.Start(profile.MemProfile, profile.MemProfileRate(1)).Stop()
+```
+
+#### 3、项目中导入net/http/pprof
+```
+//再main包中加入
+import _ "net/http/pprof"
+```
+
+其调用pprof的init函数如下：
+```
+//pprof.go
+func init() {
+ http.HandleFunc("/debug/pprof/", Index)
+ http.HandleFunc("/debug/pprof/cmdline", Cmdline)
+ http.HandleFunc("/debug/pprof/profile", Profile)
+ http.HandleFunc("/debug/pprof/symbol", Symbol)
+ http.HandleFunc("/debug/pprof/trace", Trace)
+}
+```
+可以看到其把相关的路由加到DefaultServeMux路由器中了，如果我们程序开启了http服务，并使用HTTP默认路由分发器DefaultServeMux，则只需要再main包中导入import _ "net/http/pprof",即可通过"http://ip:port/debug/pprof"进行pprof接口访问，如果程序未开启使用默认路由器的http服务，可再main函数中开启一个httpserver即可，如下例子：
+```
+package main
+
+import (
+    "log"
+    "net/http"
+    _ "net/http/pprof"
+)
+
+func main() {
+    go func() {
+        http.ListenAndServe("0.0.0.0:9009", nil)//开启一个http服务，nil表示绑定默认路由器DefaultServeMux
+    }()
+  // ... rest of the program ...
+}
+
+```
+
+如果程序开启了http服务器，并自定义了路由器ServeMux，则只需要把pprof相关的路径加入到自定义的ServeMux中即可，不需要单独开启http服务：
+```
+r := http.NewServeMux()
+r.HandleFunc("/debug/pprof/", pprof.Index)
+r.HandleFunc("/debug/pprof/cmdline", pprof.Cmdline)
+r.HandleFunc("/debug/pprof/profile", pprof.Profile)
+r.HandleFunc("/debug/pprof/symbol", pprof.Symbol)
+r.HandleFunc("/debug/pprof/trace", pprof.Trace)
+http.ListenAndServe("0.0.0.0:9009", r)//程序业务的httpserver，自定义了mux，需要把pprof的路径加进去ike
+```
+
 
 ## wrk
 
