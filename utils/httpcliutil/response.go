@@ -1,4 +1,4 @@
-package httpcli
+package httpcliutil
 
 import (
 	"fmt"

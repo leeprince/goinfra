@@ -1,6 +1,7 @@
 package ginutil
 
 import (
+	"errors"
 	"github.com/gin-gonic/gin"
 	"github.com/leeprince/goinfra/perror"
 	"github.com/leeprince/goinfra/plog"
@@ -21,7 +22,8 @@ func MiddlewareBizErr(code int32, message string) gin.HandlerFunc {
 			
 			// ctx.Error(err) 时会添加到 c.Errors 中
 			for _, err := range c.Errors {
-				bizErr, ok := err.Err.(perror.BizErr)
+				var bizErr perror.BizErr
+				ok := errors.As(err.Err, &bizErr)
 				if !ok {
 					// 如果err是系统错误(error)，则替换为bizerr.Error，并将原err打log
 					plog.LogID(logId).WithError(err).Error("系统出错 MiddlewareBizErr")
