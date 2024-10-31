@@ -22,20 +22,20 @@ func OpenBrowser() {
 		chromedp.Flag("disable-gpu", true),
 		chromedp.Flag("remote-debugging-port", "9222"),
 	)
-	allocCtx, cancel := chromedp.NewExecAllocator(context.Background(), opts...)
-	defer cancel()
-
+	allocCtx, allocCancel := chromedp.NewExecAllocator(context.Background(), opts...)
+	defer allocCancel()
+	
 	// 创建一个Chrome浏览器实例
 	ctx, cancel := chromedp.NewContext(allocCtx)
 	defer cancel()
 	// --- 创建有头浏览器-end ---
-
+	
 	// --- 创建无头浏览器：默认 ---
 	// // create context
 	// ctx, cancel := chromedp.NewContext(context.Background())
 	// defer cancel()
 	// --- 创建无头浏览器：默认-end ---
-
+	
 	// 打开目标网页
 	err := chromedp.Run(ctx,
 		chromedp.Navigate("http://www.baidu.com"),
@@ -43,6 +43,6 @@ func OpenBrowser() {
 	if err != nil {
 		log.Fatal(err)
 	}
-
+	
 	time.Sleep(time.Second * 20)
 }
