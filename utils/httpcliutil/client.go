@@ -4,19 +4,20 @@ import (
 	"bytes"
 	"context"
 	"crypto/tls"
-	jsoniter "github.com/json-iterator/go"
-	"github.com/leeprince/check-xet-player/internal/infrastructure/consts"
-	"github.com/leeprince/check-xet-player/internal/infrastructure/plog"
-	"github.com/leeprince/check-xet-player/internal/infrastructure/utils/contextutil"
-	"github.com/leeprince/check-xet-player/internal/infrastructure/utils/idutil"
-	"github.com/leeprince/check-xet-player/internal/infrastructure/utils/stringutil"
-	"github.com/pkg/errors"
-	"github.com/sirupsen/logrus"
 	"io"
 	"net"
 	"net/http"
 	"net/url"
 	"time"
+
+	jsoniter "github.com/json-iterator/go"
+	"github.com/leeprince/goinfra/consts"
+	"github.com/leeprince/goinfra/plog"
+	"github.com/leeprince/goinfra/utils/contextutil"
+	"github.com/leeprince/goinfra/utils/idutil"
+	"github.com/leeprince/goinfra/utils/stringutil"
+	"github.com/pkg/errors"
+	"github.com/sirupsen/logrus"
 )
 
 // 1.基于httpclient_v2版本实现
@@ -58,11 +59,10 @@ type HttpClient struct {
 	checkRedirect func(req *http.Request, via []*http.Request) error // 检查重定向的方法
 }
 
-//
 // NewHttpClient
-//  @Description: http 客户端
-//  @return *HttpClient
 //
+//	@Description: http 客户端
+//	@return *HttpClient
 func NewHttpClient() *HttpClient {
 	hc := &HttpClient{
 		url:           "",
@@ -77,7 +77,7 @@ func NewHttpClient() *HttpClient {
 		proxyURL:      nil,
 		checkRedirect: nil,
 	}
-	
+
 	return hc
 }
 
@@ -164,11 +164,11 @@ func (s *HttpClient) Do() ([]byte, *http.Response, error) {
 	if err != nil {
 		return nil, nil, err
 	}
-	
+
 	if s.resp == nil {
 		return bodyBytes, httpResp, nil
 	}
-	
+
 	if len(bodyBytes) <= 0 {
 		return nil, nil, errors.New("响应为空")
 	}
@@ -176,7 +176,7 @@ func (s *HttpClient) Do() ([]byte, *http.Response, error) {
 	if err != nil {
 		return bodyBytes, httpResp, err
 	}
-	
+
 	return bodyBytes, httpResp, nil
 }
 
@@ -188,7 +188,7 @@ func (s *HttpClient) do() ([]byte, *http.Response, error) {
 	if s.url == "" {
 		return nil, nil, errors.New("无效的URL")
 	}
-	
+
 	if s.ctx != nil {
 		if s.logID == "" {
 			s.logID = contextutil.LogIdByContext(&s.ctx)
@@ -197,20 +197,20 @@ func (s *HttpClient) do() ([]byte, *http.Response, error) {
 		s.ctx = context.Background()
 		s.logID = idutil.UniqIDV3()
 	}
-	
+
 	if s.header == nil {
 		s.header = defaultHeader
 	}
 	if _, ok := s.header[consts.HeaderXLogID]; !ok {
 		s.header[consts.HeaderXLogID] = s.logID
 	}
-	
+
 	var (
 		reqBytes []byte
 		ok       bool
 		err      error
 	)
-	
+
 	if s.requestBody != nil {
 		if reqBytes, ok = s.requestBody.([]byte); !ok {
 			reqBytes, err = jsoniter.Marshal(s.requestBody)
@@ -219,19 +219,19 @@ func (s *HttpClient) do() ([]byte, *http.Response, error) {
 			}
 		}
 	}
-	
+
 	method := s.method
 	fields := logrus.Fields{}
 	fields["http.req.url"] = s.url
 	fields["http.req.method"] = method
-	
+
 	fields["http.req.body"] = stringutil.Bytes2String(reqBytes)
-	
+
 	req, err := http.NewRequest(method, s.url, bytes.NewReader(reqBytes))
 	if err != nil {
 		return nil, nil, err
 	}
-	
+
 	hasContentType := false
 	for k, v := range s.header {
 		req.Header.Set(k, v)
@@ -239,13 +239,13 @@ func (s *HttpClient) do() ([]byte, *http.Response, error) {
 			hasContentType = true
 		}
 	}
-	
+
 	if method == http.MethodPost && !hasContentType {
 		req.Header.Set("Content-Type", "application/json")
 	}
-	
+
 	req = req.WithContext(s.ctx)
-	
+
 	fields["http.req.header"] = req.Header
 	fields["http.req.isProxy"] = false
 	if s.proxyURL != nil {
@@ -263,17 +263,17 @@ func (s *HttpClient) do() ([]byte, *http.Response, error) {
 			InsecureSkipVerify: s.skipVerify,
 		},
 	}
-	
+
 	client := &http.Client{
 		Transport:     transport,
 		CheckRedirect: s.checkRedirect,
 		Timeout:       s.timeout,
 	}
-	
+
 	if !s.notLogging {
 		plog.LogID(s.logID).WithFields(fields).Info("发起Http请求")
 	}
-	
+
 	resp, err := client.Do(req)
 	if err != nil {
 		if !s.notLogging {
@@ -283,7 +283,7 @@ func (s *HttpClient) do() ([]byte, *http.Response, error) {
 		}
 		return nil, nil, err
 	}
-	
+
 	body, err := io.ReadAll(resp.Body)
 	_ = resp.Body.Close()
 	if err != nil {
@@ -294,7 +294,7 @@ func (s *HttpClient) do() ([]byte, *http.Response, error) {
 		}
 		return nil, nil, err
 	}
-	
+
 	if resp.StatusCode != http.StatusOK {
 		if !s.notLogging {
 			plog.LogID(s.logID).WithError(err).
@@ -305,7 +305,7 @@ func (s *HttpClient) do() ([]byte, *http.Response, error) {
 		}
 		return nil, nil, errors.Errorf("上游服务报错,http status code:%d", resp.StatusCode)
 	}
-	
+
 	if !s.notLogging {
 		respBodyLog := body
 		if len(body) > 1024 {
@@ -316,7 +316,7 @@ func (s *HttpClient) do() ([]byte, *http.Response, error) {
 			WithField("http.resp.body", stringutil.Bytes2String(respBodyLog)).
 			Info("接收http响应")
 	}
-	
+
 	return body, resp, nil
 }
 

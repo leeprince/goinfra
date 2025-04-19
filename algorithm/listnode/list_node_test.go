@@ -54,10 +54,7 @@ func TestMergeTwoLists(t *testing.T) {
 		{
 			name: "",
 			args: args{
-				list1: &ListNode{
-					Val:  1,
-					Next: nil,
-				},
+				list1: &ListNode{},
 				list2: &ListNode{
 					Val: 1,
 					Next: &ListNode{

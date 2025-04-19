@@ -63,10 +63,7 @@ func TestBinarySearchV1(t *testing.T) {
 		},
 		{
 			name: "",
-			args: args{
-				arr: []int{1, 3, 5, 7, 9},
-				v:   9,
-			},
+			args: args{},
 			want: 4,
 		},
 	}
