@@ -1,0 +1,37 @@
+// 使用：protoc --go_out=. *.proto
+syntax = "proto3";
+
+package user;
+
+// option go_package = "import_path;package_name";
+// option go_package = "github.com/yourorg/yourrepo/proto/user;user";
+// 主要作用：让生成的 Go 代码有正确的包名和 import 路径，方便跨项目/跨模块引用，避免包名冲突。
+/* 实际开发建议:
+go_package 一定要写对，尤其是多人协作和多 proto 文件依赖时，推荐写完整路径+包名。
+--go_out= 只要保证生成的文件在你想要的位置即可。
+*/
+option go_package = ".;user";
+
+// 示例消息
+message User {
+    int32 id = 1;
+    string name = 2;
+    string email = 3;
+    int32 is_active = 4; // 1:激活；2:禁用；3:删除
+}
+
+// 示例服务
+service UserService {
+    rpc GetUser (GetUserRequest) returns (User);
+}
+
+message GetUserRequest {
+    int32 id = 1;
+}
+
+message GetUserResponse {
+    int32 code = 1;
+    string message = 2;
+    string log_id = 3;
+    User data = 4;
+}
